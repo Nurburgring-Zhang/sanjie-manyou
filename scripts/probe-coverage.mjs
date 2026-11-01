@@ -1,0 +1,40 @@
+/** 屏幕覆盖率探针：给定机位，按投影半径算出每个网格占屏面积，列出真正「遮住画面」的前 10 名 */
+import puppeteer from 'puppeteer-core';
+const [cx, cy, cz, tx, ty, tz] = process.argv.slice(2).map(Number);
+const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
+const p = await b.newPage();
+await p.setViewport({ width:1280, height:720 });
+await p.goto('http://localhost:4173/', { waitUntil:'domcontentloaded', timeout:180000 });
+await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:180000 });
+await new Promise(r=>setTimeout(r,1200));
+const out = await p.evaluate(([X,Y,Z,TX,TY,TZ]) => {
+  const e = window.__qingming.engine;
+  e.stopCinema();
+  e.camera.position.set(X,Y,Z); e.lookTarget.set(TX,TY,TZ);
+  const dx=TX-X, dy=TY-Y, dz=TZ-Z, d=Math.max(1,Math.hypot(dx,dy,dz));
+  e.yaw=Math.atan2(-dx,-dz); e.pitch=Math.asin(dy/d);
+  e.camera.updateMatrixWorld(true);
+  e.camera.updateProjectionMatrix();
+  const H = e.renderer.domElement.height || 720;
+  const fov = e.camera.fov * Math.PI / 180;
+  const rows = [];
+  e.scene.traverse((o) => {
+    if (!o.isMesh || o.visible === false) return;
+    const g = o.geometry; if (!g) return;
+    if (!g.boundingSphere) g.computeBoundingSphere();
+    const bs = g.boundingSphere; if (!bs) return;
+    const c = bs.center.clone().applyMatrix4(o.matrixWorld);
+    const v = c.clone().project(e.camera);
+    if (v.z < -1 || v.z > 1) return;
+    if (Math.abs(v.x) > 1.6 || Math.abs(v.y) > 1.6) return;
+    const dist = c.distanceTo(e.camera.position);
+    const pxR = (bs.radius / (dist * Math.tan(fov / 2))) * (H / 2);
+    if (!isFinite(pxR) || pxR < 12) return;
+    const mat = o.material || {};
+    rows.push({ name: (o.name || '(unnamed)').slice(0, 34), px: Math.round(pxR), color: mat.color ? '#' + mat.color.getHexString() : '-', op: mat.opacity ?? 1, fog: mat.fog, transparent: !!mat.transparent, type: o.type });
+  });
+  rows.sort((a, b) => b.px - a.px);
+  return rows.slice(0, 12);
+}, [cx,cy,cz,tx,ty,tz]);
+for (const r of out) console.log(JSON.stringify(r));
+await b.close();

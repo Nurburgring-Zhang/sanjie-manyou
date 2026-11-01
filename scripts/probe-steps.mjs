@@ -1,0 +1,30 @@
+import puppeteer from 'puppeteer-core';
+const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required'] });
+const p = await b.newPage();
+await p.evaluateOnNewDocument(() => {
+  window.__steps = 0;
+  const AC = window.AudioContext; if (!AC) return;
+  const orig = AC.prototype.createBufferSource;
+  AC.prototype.createBufferSource = function (...a) { if (window.__countAll) window.__steps++; return orig.apply(this, a); };
+});
+await p.goto('http://localhost:4173/', { waitUntil:'domcontentloaded', timeout:180000 });
+await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:180000 });
+await new Promise(r=>setTimeout(r,1200));
+await p.mouse.click(640, 400);
+await new Promise(r=>setTimeout(r,800));
+await p.evaluate(() => { window.__countAll = false; });
+const read = () => p.evaluate(() => window.__steps | 0);
+// 只统计按住 W 期间的 bufferSource 新建次数（脚步是唯一的 bufferSource 高频来源）
+const before = await p.evaluate(() => { window.__countAll = true; window.__steps = 0; return 0; });
+await p.keyboard.down('KeyW');
+await new Promise(r=>setTimeout(r,3000));
+await p.keyboard.up('KeyW');
+await new Promise(r=>setTimeout(r,300));
+const after = await read();
+await p.evaluate(() => { window.__countAll = false; });
+await new Promise(r=>setTimeout(r,1500));
+const idle = await p.evaluate(() => { window.__steps = 0; return 0; });
+await new Promise(r=>setTimeout(r,2000));
+const idleCount = await read();
+console.log(JSON.stringify({ walkSources: after, idleSources: idleCount, stepsOk: after >= 2 && idleCount === 0 }));
+await b.close();

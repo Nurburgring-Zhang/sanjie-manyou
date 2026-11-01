@@ -1,0 +1,32 @@
+/** 桥东裸带归属判定：复刻 three-view 的 bridge-top 机位（同一套公式），A/B 两张图只差 city_earth 的显隐 */
+import puppeteer from 'puppeteer-core';
+const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
+const p = await b.newPage();
+await p.setViewport({ width:1280, height:720 });
+await p.goto('http://localhost:4173/', { waitUntil:'domcontentloaded', timeout:180000 });
+await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:180000 });
+await new Promise(r=>setTimeout(r,1200));
+const cam = await p.evaluate(() => {
+  const w = window.__qingming.world, e = w.engine;
+  w.teleport('bridge');
+  const t = e.lookTarget;
+  const poi = [t.x, t.y - 2.5, t.z];
+  const d = Math.max(12, Math.hypot(t.x - e.camera.position.x, t.y - e.camera.position.y, t.z - e.camera.position.z));
+  const az = Math.atan2(t.z - e.camera.position.z, t.x - e.camera.position.x);
+  const r = 56 * 1.9, el = (68 * Math.PI) / 180;
+  const out = { poi, az: +az.toFixed(3), cam: [+(poi[0] + Math.cos(az) * r * Math.cos(el)).toFixed(1), +(poi[1] + r * Math.sin(el)).toFixed(1), +(poi[2] + Math.sin(az) * r * Math.cos(el)).toFixed(1)] };
+  return out;
+});
+const setCam = (c) => { const e = window.__qingming.engine; e.stopCinema(); e.camera.position.set(c[0], c[1], c[2]); e.lookTarget.set(...c[3]); const dx = c[3][0]-c[0], dy = c[3][1]-c[1], dz = c[3][2]-c[2]; const d = Math.max(1, Math.hypot(dx,dy,dz)); e.yaw = Math.atan2(-dx,-dz); e.pitch = Math.asin(dy/d); };
+await p.evaluate(setCam, [cam.cam[0], cam.cam[1], cam.cam[2], cam.poi]);
+await new Promise(r=>setTimeout(r,1200));
+await p.screenshot({ path: 'screenshots/plaza-A.png' });
+const hid = await p.evaluate(() => { let n = 0; window.__qingming.engine.scene.traverse((o) => { if (o.isMesh && o.name === 'city_earth') { o.visible = false; n++; } }); return n; });
+await new Promise(r=>setTimeout(r,1000));
+await p.screenshot({ path: 'screenshots/plaza-B-noearth.png' });
+await p.evaluate(() => { window.__qingming.engine.scene.traverse((o) => { if (o.isMesh && o.name === 'city_earth') o.visible = true; }); });
+const hidG = await p.evaluate(() => { let n = 0; window.__qingming.engine.scene.traverse((o) => { if (o.isMesh && o.name === 'city_ground') { o.visible = false; n++; } }); return n; });
+await new Promise(r=>setTimeout(r,1000));
+await p.screenshot({ path: 'screenshots/plaza-C-noground.png' });
+console.log(JSON.stringify({ cam, hidEarth: hid, hidGround: hidG }));
+await b.close();

@@ -1,0 +1,345 @@
+[
+ {
+  "id": "C-ITM-0004",
+  "name": "匾额「宣德門」",
+  "file": "src/city/imperial.ts",
+  "needle": "xuande",
+  "line": 164
+ },
+ {
+  "id": "C-ITM-0013",
+  "name": "殿匾「大庆殿」",
+  "file": "src/city/imperial.ts",
+  "needle": "hall",
+  "line": 167
+ },
+ {
+  "id": "C-ITM-0014",
+  "name": "丹陛石",
+  "file": "src/city/imperial.ts",
+  "needle": "wall",
+  "line": 229
+ },
+ {
+  "id": "C-ITM-0023",
+  "name": "日晷",
+  "file": "src/city/imperial.ts",
+  "needle": "日晷",
+  "line": 256
+ },
+ {
+  "id": "C-ITM-0015",
+  "name": "蟠龙金柱",
+  "file": "src/sky/palace.ts",
+  "needle": "glow",
+  "line": 29
+ },
+ {
+  "id": "C-ITM-0020",
+  "name": "斗八藻井",
+  "file": "src/sky/palace.ts",
+  "needle": "斗八藻井",
+  "line": 34
+ },
+ {
+  "id": "C-ITM-0005",
+  "name": "石狮",
+  "file": "src/sky/creatures.ts",
+  "needle": "shishi",
+  "line": 72
+ },
+ {
+  "id": "T-ITM-0021",
+  "name": "貔貅门墩",
+  "file": "src/sky/creatures.ts",
+  "needle": "pixiu",
+  "line": 73
+ },
+ {
+  "id": "C-ITM-0057",
+  "name": "桥面板",
+  "file": "src/city/bridge.ts",
+  "needle": "桥面板",
+  "line": 10
+ },
+ {
+  "id": "C-ITM-0059",
+  "name": "望柱",
+  "file": "src/city/bridge.ts",
+  "needle": "wood",
+  "line": 44
+ },
+ {
+  "id": "C-ITM-0060",
+  "name": "桥头华表",
+  "file": "src/city/bridge.ts",
+  "needle": "桥头华表",
+  "line": 50
+ },
+ {
+  "id": "C-ITM-0062",
+  "name": "匾额「虹橋」",
+  "file": "src/city/bridge.ts",
+  "needle": "bridgename",
+  "line": 88
+ },
+ {
+  "id": "C-ITM-0296",
+  "name": "门匾「上東門」",
+  "file": "src/city/buildings.ts",
+  "needle": "gateTower.plaque",
+  "line": 707
+ },
+ {
+  "id": "C-ITM-0294",
+  "name": "城楼",
+  "file": "src/city/buildings.ts",
+  "needle": "城楼",
+  "line": 626
+ },
+ {
+  "id": "C-ITM-0113",
+  "name": "匾额「趙太丞家」",
+  "file": "src/city/buildings.ts",
+  "needle": "趙太丞家",
+  "line": 996
+ },
+ {
+  "id": "C-ITM-0121",
+  "name": "「解」字大字牌",
+  "file": "src/city/buildings.ts",
+  "needle": "解",
+  "line": 997
+ },
+ {
+  "id": "C-ITM-0129",
+  "name": "匾额「王家紙馬」",
+  "file": "src/city/buildings.ts",
+  "needle": "王家紙馬",
+  "line": 998
+ },
+ {
+  "id": "C-ITM-0136",
+  "name": "主牌「香藥鋪」",
+  "file": "src/city/buildings.ts",
+  "needle": "香藥鋪",
+  "line": 999
+ },
+ {
+  "id": "C-ITM-0168",
+  "name": "观匾「上清觀」",
+  "file": "src/city/buildings.ts",
+  "needle": "上清觀",
+  "line": 1001
+ },
+ {
+  "id": "C-ITM-0137",
+  "name": "侧招「劉家上色沉檀揀香」",
+  "file": "src/city/buildings.ts",
+  "needle": "劉家上色沉檀揀香",
+  "line": 915
+ },
+ {
+  "id": "C-ITM-0252",
+  "name": "匾额「綢緞莊」",
+  "file": "src/city/buildings.ts",
+  "needle": "綢緞莊",
+  "line": 915
+ },
+ {
+  "id": "C-ITM-0259",
+  "name": "匾额「果子鋪」",
+  "file": "src/city/buildings.ts",
+  "needle": "果子鋪",
+  "line": 915
+ },
+ {
+  "id": "C-ITM-0266",
+  "name": "匾额「飯鋪」",
+  "file": "src/city/buildings.ts",
+  "needle": "飯鋪",
+  "line": 915
+ },
+ {
+  "id": "C-ITM-0273",
+  "name": "匾额「唐家酒店」",
+  "file": "src/city/buildings.ts",
+  "needle": "唐家酒店",
+  "line": 915
+ },
+ {
+  "id": "C-ITM-0280",
+  "name": "匾额「久住王員外家」",
+  "file": "src/city/buildings.ts",
+  "needle": "久住王員外家",
+  "line": 915
+ },
+ {
+  "id": "C-ITM-0287",
+  "name": "匾额「明家靴店」",
+  "file": "src/city/buildings.ts",
+  "needle": "明家靴店",
+  "line": 915
+ },
+ {
+  "id": "C-ITM-0069",
+  "name": "排叉柱",
+  "file": "src/city/buildings.ts",
+  "needle": "排叉柱",
+  "line": 601
+ },
+ {
+  "id": "C-ITM-0299",
+  "name": "马道",
+  "file": "src/city/buildings.ts",
+  "needle": "马道",
+  "line": 572
+ },
+ {
+  "id": "C-ITM-0154",
+  "name": "戏台",
+  "file": "src/city/buildings.ts",
+  "needle": "wood",
+  "line": 855
+ },
+ {
+  "id": "C-ITM-0402",
+  "name": "影壁",
+  "file": "src/city/buildings.ts",
+  "needle": "影壁",
+  "line": 376
+ },
+ {
+  "id": "C-ITM-0454",
+  "name": "招幌",
+  "file": "src/city/props.ts",
+  "needle": "招幌",
+  "line": 438
+ },
+ {
+  "id": "C-ITM-0465",
+  "name": "院门楼",
+  "file": "src/city/buildings.ts",
+  "needle": "house",
+  "line": 362
+ },
+ {
+  "id": "C-ITM-0319",
+  "name": "祠匾「碧霞祠」",
+  "file": "src/world/terrain.ts",
+  "needle": "mt",
+  "line": 184
+ },
+ {
+  "id": "C-ITM-0326",
+  "name": "庙匾「镇江王庙」",
+  "file": "src/world/terrain.ts",
+  "needle": "鎮江王廟",
+  "line": 185
+ },
+ {
+  "id": "C-ITM-0332",
+  "name": "殿匾「祝融殿」",
+  "file": "src/world/terrain.ts",
+  "needle": "祝融殿",
+  "line": 186
+ },
+ {
+  "id": "C-ITM-0338",
+  "name": "殿匾「北岳庙」",
+  "file": "src/world/terrain.ts",
+  "needle": "北嶽廟",
+  "line": 187
+ },
+ {
+  "id": "C-ITM-0344",
+  "name": "殿匾「中岳庙」",
+  "file": "src/world/terrain.ts",
+  "needle": "中嶽廟",
+  "line": 188
+ },
+ {
+  "id": "C-ITM-0351",
+  "name": "山门匾「雪簾禪院」",
+  "file": "src/world/terrain.ts",
+  "needle": "雪簾禪院",
+  "line": 189
+ },
+ {
+  "id": "C-ITM-0346",
+  "name": "神道石翁仲",
+  "file": "src/world/terrain.ts",
+  "needle": "嵩山",
+  "line": 224
+ },
+ {
+  "id": "C-ITM-0212",
+  "name": "石砌平台",
+  "file": "src/city/buildings.ts",
+  "needle": "wall",
+  "line": 758
+ },
+ {
+  "id": "C-ITM-0205",
+  "name": "风铎",
+  "file": "src/city/detailKit.ts",
+  "needle": "eave.windBell",
+  "line": 109
+ },
+ {
+  "id": "D-ITM-0114",
+  "name": "南·丰都门",
+  "file": "src/sky/fengduGround.ts",
+  "needle": "fengdu-gate",
+  "line": 167
+ },
+ {
+  "id": "D-ITM-0076",
+  "name": "门匾「返阳门」",
+  "file": "src/sky/underworld.ts",
+  "needle": "fanyang",
+  "line": 1009
+ },
+ {
+  "id": "C-ITM-0055",
+  "name": "贯木拱纵梁",
+  "file": "src/city/bridge.ts",
+  "needle": "贯木拱肋",
+  "line": 19
+ },
+ {
+  "id": "C-ITM-0058",
+  "name": "朱漆栏杆",
+  "file": "src/city/bridge.ts",
+  "needle": "栏杆 + 霓虹沿口",
+  "line": 35
+ },
+ {
+  "id": "C-ITM-0153",
+  "name": "勾栏大棚",
+  "file": "src/city/buildings.ts",
+  "needle": "棚架 + 大顶",
+  "line": 849
+ },
+ {
+  "id": "C-ITM-0201",
+  "name": "塔刹宝顶",
+  "file": "src/city/buildings.ts",
+  "needle": "pagoda.dewPlate",
+  "line": 817
+ },
+ {
+  "id": "D-ITM-0117",
+  "name": "丰都街尾城门",
+  "file": "src/sky/fengduGround.ts",
+  "needle": "过街城门：两墩一门洞",
+  "line": 468
+ },
+ {
+  "id": "D-ITM-0067",
+  "name": "丰都城门台",
+  "file": "src/sky/fengduGround.ts",
+  "needle": "过街城门",
+  "line": 253
+ }
+]

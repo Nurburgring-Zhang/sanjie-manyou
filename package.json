@@ -1,0 +1,48 @@
+{
+  "name": "cyber-qingming",
+  "private": true,
+  "version": "1.2.0",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 4173",
+    "test": "vitest run",
+    "electron": "electron electron/main.cjs",
+    "dist:win": "electron-builder --win portable --publish never"
+  },
+  "build": {
+    "appId": "cyber.qingming.neonbianjing",
+    "productName": "CyberQingming",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "output": "release-v11"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "artifactName": "赛博上河-CyberQingming-${version}-${arch}.${ext}",
+      "signAndEditExecutable": false,
+      "sign": null
+    },
+    "electronDist": "node_modules/electron/dist"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.180.0",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "puppeteer-core": "^23.11.1",
+    "source-map": "^0.7.6",
+    "typescript": "^5.6.3",
+    "vite": "^7.1.0",
+    "vitest": "^3.0.5"
+  }
+}

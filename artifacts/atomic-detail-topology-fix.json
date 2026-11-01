@@ -1,0 +1,202 @@
+{
+  "checks": {
+    "auditPresent": true,
+    "eaveRafters": true,
+    "tileDrips": true,
+    "lattice": true,
+    "stools": true,
+    "bowls": true,
+    "kitchen": true,
+    "newMaterials": true,
+    "nonBlankExterior": true,
+    "nonBlankInterior": true,
+    "exteriorBloomNormal": true,
+    "interiorBloomReduced": true,
+    "noErrors": true
+  },
+  "detail": {
+    "ceramic.bowl": 20,
+    "ceramic.vase": 4,
+    "ceramic.wineCup": 20,
+    "eave.flyingRafter": 19428,
+    "eave.purlin": 3888,
+    "eave.rafter": 25336,
+    "eave.tileDrip": 37584,
+    "eave.windBell": 1944,
+    "facade.columnBase": 1096,
+    "facade.doorStud": 4752,
+    "facade.latticeSlat": 2760,
+    "facade.sideWindow": 528,
+    "facade.stoneSkirt": 264,
+    "facade.thresholdStep": 528,
+    "interior.ceilingBeam": 18,
+    "interior.ceilingBoard": 10,
+    "interior.fabricCurtain": 4,
+    "interior.fabricCushion": 8,
+    "interior.hangingPainting": 6,
+    "interior.stool": 40,
+    "interior.tableSetting": 10,
+    "kitchen.utensil": 8,
+    "metal.winePot": 4
+  },
+  "exterior": {
+    "audit": {
+      "groups": {
+        "wood": {
+          "vertices": 2728152,
+          "triangles": 909384
+        },
+        "wall": {
+          "vertices": 613812,
+          "triangles": 204604
+        },
+        "roof": {
+          "vertices": 3666006,
+          "triangles": 1222002
+        },
+        "ground": {
+          "vertices": 3348,
+          "triangles": 1116
+        },
+        "glow": {
+          "vertices": 603834,
+          "triangles": 201278
+        },
+        "leaf": {
+          "vertices": 26172,
+          "triangles": 8724
+        },
+        "trunk": {
+          "vertices": 7152,
+          "triangles": 2384
+        },
+        "water": {
+          "vertices": 144,
+          "triangles": 48
+        },
+        "ceramic": {
+          "vertices": 3360,
+          "triangles": 1120
+        },
+        "metal": {
+          "vertices": 359160,
+          "triangles": 119720
+        },
+        "fabric": {
+          "vertices": 576,
+          "triangles": 192
+        },
+        "lacquer": {
+          "vertices": 124440,
+          "triangles": 41480
+        }
+      },
+      "detail": {
+        "ceramic.bowl": 20,
+        "ceramic.vase": 4,
+        "ceramic.wineCup": 20,
+        "eave.flyingRafter": 19428,
+        "eave.purlin": 3888,
+        "eave.rafter": 25336,
+        "eave.tileDrip": 37584,
+        "eave.windBell": 1944,
+        "facade.columnBase": 1096,
+        "facade.doorStud": 4752,
+        "facade.latticeSlat": 2760,
+        "facade.sideWindow": 528,
+        "facade.stoneSkirt": 264,
+        "facade.thresholdStep": 528,
+        "interior.ceilingBeam": 18,
+        "interior.ceilingBoard": 10,
+        "interior.fabricCurtain": 4,
+        "interior.fabricCushion": 8,
+        "interior.hangingPainting": 6,
+        "interior.stool": 40,
+        "interior.tableSetting": 10,
+        "kitchen.utensil": 8,
+        "metal.winePot": 4
+      },
+      "detailBounds": {
+        "ceramic.bowl": {
+          "minY": 1.55,
+          "maxY": 1.55
+        },
+        "ceramic.vase": {
+          "minY": 1.9,
+          "maxY": 1.9
+        },
+        "ceramic.wineCup": {
+          "minY": 1.58,
+          "maxY": 1.58
+        },
+        "interior.ceilingBeam": {
+          "minY": 3.96,
+          "maxY": 4
+        },
+        "interior.ceilingBoard": {
+          "minY": 4.08,
+          "maxY": 4.08
+        },
+        "interior.fabricCurtain": {
+          "minY": 8.45,
+          "maxY": 8.45
+        },
+        "interior.fabricCushion": {
+          "minY": 1.16,
+          "maxY": 1.16
+        },
+        "interior.hangingPainting": {
+          "minY": 2.75,
+          "maxY": 2.75
+        },
+        "interior.stool": {
+          "minY": 0.72,
+          "maxY": 0.72
+        },
+        "interior.tableSetting": {
+          "minY": 1.54,
+          "maxY": 1.54
+        },
+        "kitchen.utensil": {
+          "minY": 1,
+          "maxY": 1
+        },
+        "metal.winePot": {
+          "minY": 2.05,
+          "maxY": 2.05
+        }
+      }
+    },
+    "renderer": {
+      "calls": 186,
+      "triangles": 77498171,
+      "geometries": 129,
+      "textures": 37
+    },
+    "camera": [
+      240,
+      16,
+      32
+    ],
+    "bloomScale": 1
+  },
+  "interior": {
+    "renderer": {
+      "calls": 59,
+      "triangles": 75721967,
+      "geometries": 129,
+      "textures": 37
+    },
+    "camera": [
+      222.2,
+      1.9,
+      63.2
+    ],
+    "bloomScale": 0.22
+  },
+  "screenshot": [
+    "screenshots/atomic-sunyang-exterior.png",
+    "screenshots/atomic-sunyang-interior.png"
+  ],
+  "errors": []
+}

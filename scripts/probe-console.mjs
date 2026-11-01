@@ -1,0 +1,13 @@
+import puppeteer from 'puppeteer-core';
+const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
+const p = await b.newPage();
+const seen = new Map();
+p.on('console', (m) => { const t = m.text(); const k = t.slice(0,90); seen.set(k, (seen.get(k)||0)+1); });
+await p.goto('http://localhost:4173/', { waitUntil:'networkidle2', timeout:120000 });
+await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:120000 }).catch(()=>{});
+await new Promise(r=>setTimeout(r,1500));
+const info = await p.evaluate(()=>({ atlas: window.__qingming?.world?.atlas?.overflowCount ?? null, tri: window.__qingming?.engine?.renderer?.info?.render?.triangles ?? null }));
+console.log('ATLAS_OVERFLOW', JSON.stringify(info));
+console.log('CONSOLE_MESSAGES');
+for (const [k,v] of [...seen.entries()].sort((a,b)=>b[1]-a[1]).slice(0,25)) console.log(v, '|', k);
+await b.close();

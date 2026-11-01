@@ -1,0 +1,22 @@
+import puppeteer from 'puppeteer-core';
+const target = process.argv[2];
+const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--window-size=1600,900','--no-sandbox','--enable-unsafe-swiftshader'] });
+const p = await b.newPage();
+await p.setViewport({ width:1600, height:900 });
+await p.goto('http://localhost:4173/', { waitUntil:'networkidle2', timeout:120000 });
+await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:120000 });
+await new Promise(r=>setTimeout(r,1000));
+const n = await p.evaluate(([t, px,py,pz,ax,ay,az]) => {
+  const e = window.__qingming.engine;
+  e.stopCinema();
+  e.camera.position.set(px,py,pz); e.lookTarget.set(ax,ay,az);
+  const dx=ax-px,dy=ay-py,dz=az-pz,d=Math.max(1,Math.hypot(dx,dy,dz));
+  e.yaw=Math.atan2(-dx,-dz); e.pitch=Math.asin(dy/d);
+  let off=0, on=0;
+  e.scene.traverse((o)=>{ if(!o.isMesh||!o.name) return; if(o.name.startsWith('city_')||o.name.startsWith('infill_')||o.name.startsWith('court_')){ if(o.name===t){o.visible=true;on++;} else {o.visible=false;off++;} } });
+  return {off,on};
+}, [target, 1180,26,1180, 1230,6,1230]);
+await new Promise(r=>setTimeout(r,1200));
+await p.screenshot({ path: 'screenshots/only_' + target + '.png' });
+await b.close();
+console.log(JSON.stringify(n));

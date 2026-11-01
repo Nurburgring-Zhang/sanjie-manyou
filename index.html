@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>赛博上河 · NEON BIANJING</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>汴</text></svg>" />
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <script>
+    window.__errs = [];
+    window.addEventListener('error', (e) => { window.__errs.push(String(e.message || e.filename)); });
+    window.addEventListener('unhandledrejection', (e) => { const r = e.reason; window.__errs.push('rej:' + (r && r.stack ? String(r.stack).slice(0, 600) : String(r))); });
+  </script>
+  <div id="app"></div>
+  <div id="ui"></div>
+  <div id="loading">
+    <div class="load-title">赛博上河</div>
+    <div class="load-sub">NEON BIANJING · 汴京十二时辰</div>
+    <div class="load-poem">一朝步入画卷，一日梦回千年</div>
+    <div class="load-bar"><i></i></div>
+    <div class="load-tip">开天辟地……</div>
+  </div>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>

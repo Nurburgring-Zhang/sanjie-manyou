@@ -1,0 +1,10142 @@
+import type { WorldAtomCatalog } from './worldAtoms';
+
+export const WORLD_ATOM_CATALOG: WorldAtomCatalog = {
+  "schemaVersion": 1,
+  "totals": {
+    "regions": 37,
+    "buildings": 139,
+    "organismSpecies": 69,
+    "landforms": 30,
+    "items": 838,
+    "characterCards": 243,
+    "characterIndividuals": 373,
+    "materialCards": 25,
+    "patternCards": 22
+  },
+  "buildings": [
+    {
+      "id": "C-GZ-001",
+      "realm": "human",
+      "kind": "building",
+      "name": "景龍門·南墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-002",
+      "realm": "human",
+      "kind": "building",
+      "name": "朝陽門·南墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-003",
+      "realm": "human",
+      "kind": "building",
+      "name": "宣化門·南墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-004",
+      "realm": "human",
+      "kind": "building",
+      "name": "天波門·东墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-005",
+      "realm": "human",
+      "kind": "building",
+      "name": "金耀門·东墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-006",
+      "realm": "human",
+      "kind": "building",
+      "name": "通天門·东墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-007",
+      "realm": "human",
+      "kind": "building",
+      "name": "景龍門·北墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-008",
+      "realm": "human",
+      "kind": "building",
+      "name": "朝陽門·北墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-009",
+      "realm": "human",
+      "kind": "building",
+      "name": "宣化門·北墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-010",
+      "realm": "human",
+      "kind": "building",
+      "name": "天波門·西墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-011",
+      "realm": "human",
+      "kind": "building",
+      "name": "金耀門·西墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-012",
+      "realm": "human",
+      "kind": "building",
+      "name": "通天門·西墙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-013",
+      "realm": "human",
+      "kind": "building",
+      "name": "城垣与马面体系",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-014",
+      "realm": "human",
+      "kind": "building",
+      "name": "宣德门",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-015",
+      "realm": "human",
+      "kind": "building",
+      "name": "大庆殿",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-016",
+      "realm": "human",
+      "kind": "building",
+      "name": "垂拱殿",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-017",
+      "realm": "human",
+      "kind": "building",
+      "name": "紫宸殿",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-018",
+      "realm": "human",
+      "kind": "building",
+      "name": "虹桥",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-019",
+      "realm": "human",
+      "kind": "building",
+      "name": "州桥",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-020",
+      "realm": "human",
+      "kind": "building",
+      "name": "五、孙羊正店",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-021",
+      "realm": "human",
+      "kind": "building",
+      "name": "六、十千脚店",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-022",
+      "realm": "human",
+      "kind": "building",
+      "name": "赵太丞家",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-023",
+      "realm": "human",
+      "kind": "building",
+      "name": "解当铺",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-024",
+      "realm": "human",
+      "kind": "building",
+      "name": "王家纸马铺",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-025",
+      "realm": "human",
+      "kind": "building",
+      "name": "香药铺",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-026",
+      "realm": "human",
+      "kind": "building",
+      "name": "茶坊",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-027",
+      "realm": "human",
+      "kind": "building",
+      "name": "瓦子勾栏",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-028",
+      "realm": "human",
+      "kind": "building",
+      "name": "上清观",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-029",
+      "realm": "human",
+      "kind": "building",
+      "name": "七、府衙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-030",
+      "realm": "human",
+      "kind": "building",
+      "name": "开宝寺塔",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-031",
+      "realm": "human",
+      "kind": "building",
+      "name": "汴河码头",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-032",
+      "realm": "human",
+      "kind": "building",
+      "name": "东市市楼",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-033",
+      "realm": "human",
+      "kind": "building",
+      "name": "西市市楼",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-034",
+      "realm": "human",
+      "kind": "building",
+      "name": "綢緞莊",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-035",
+      "realm": "human",
+      "kind": "building",
+      "name": "果子鋪",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-036",
+      "realm": "human",
+      "kind": "building",
+      "name": "飯鋪",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-037",
+      "realm": "human",
+      "kind": "building",
+      "name": "唐家酒店",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-038",
+      "realm": "human",
+      "kind": "building",
+      "name": "久住王員外家",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-039",
+      "realm": "human",
+      "kind": "building",
+      "name": "明家靴店",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-040",
+      "realm": "human",
+      "kind": "building",
+      "name": "上東門",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-041",
+      "realm": "human",
+      "kind": "building",
+      "name": "东墙旧城墙遗址段",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-042",
+      "realm": "human",
+      "kind": "building",
+      "name": "南岸市集",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-043",
+      "realm": "human",
+      "kind": "building",
+      "name": "郊野柳林茶亭",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-044",
+      "realm": "human",
+      "kind": "building",
+      "name": "泰山碧霞祠",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-045",
+      "realm": "human",
+      "kind": "building",
+      "name": "华山镇江王庙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-046",
+      "realm": "human",
+      "kind": "building",
+      "name": "衡山祝融殿",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-047",
+      "realm": "human",
+      "kind": "building",
+      "name": "恒山北岳庙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-048",
+      "realm": "human",
+      "kind": "building",
+      "name": "嵩山中岳庙",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-049",
+      "realm": "human",
+      "kind": "building",
+      "name": "天山雪帘禅院",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-050",
+      "realm": "human",
+      "kind": "building",
+      "name": "昆仑西王母瑶池行宫",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-051",
+      "realm": "human",
+      "kind": "building",
+      "name": "大漠丝路驿站",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-052",
+      "realm": "human",
+      "kind": "building",
+      "name": "草原敖包祭坛",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-053",
+      "realm": "human",
+      "kind": "building",
+      "name": "东河渔村",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-054",
+      "realm": "human",
+      "kind": "building",
+      "name": "西河昆仑渡口",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-055",
+      "realm": "human",
+      "kind": "building",
+      "name": "东洋巨泽漕运转运仓",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-GZ-056",
+      "realm": "human",
+      "kind": "building",
+      "name": "金耀门漕运仓",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-HOU-01",
+      "realm": "human",
+      "kind": "template",
+      "name": "豪宅",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "44-材质色彩总谱.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-HOU-02",
+      "realm": "human",
+      "kind": "template",
+      "name": "官宅",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-HOU-03",
+      "realm": "human",
+      "kind": "template",
+      "name": "士人宅",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-HOU-04",
+      "realm": "human",
+      "kind": "template",
+      "name": "商人宅",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-HOU-05",
+      "realm": "human",
+      "kind": "template",
+      "name": "标准民居",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-HOU-06",
+      "realm": "human",
+      "kind": "template",
+      "name": "小店附宅",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-HOU-07",
+      "realm": "human",
+      "kind": "template",
+      "name": "贫户",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "C-HOU-08",
+      "realm": "human",
+      "kind": "template",
+      "name": "坊墙宅院",
+      "sources": [
+        "20-汴京城市资产全录.md",
+        "45-人间建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-001",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "八、阎罗殿",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-002",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "九、奈何桥含桥畔碑亭",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-003",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "十、孟婆庄",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-004",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "十一、三生石含石台",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-005",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "十二、望乡台",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-006",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "鬼门关",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-007",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "返阳门",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-008",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "忘川双渡口",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-009",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "血池湖祭台",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-010",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "枉死城墙垣 ＋ D-GZ-011 枉死城衙署",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-011",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-010 枉死城墙垣 ＋ 枉死城衙署",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-012",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "轮回归墟六道盘",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-013",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "阴阳界井亭",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-014",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "黄泉路牌坊",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-015",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "引魂灯柱系",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-016",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "丰都城墙四门 ＋ D-GZ-017 鬼市牌楼",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-017",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-016 丰都城墙四门 ＋ 鬼市牌楼",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-018",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "十八狱环",
+      "sources": [
+        "30-地府资产全录.md",
+        "43-地府角色全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-019",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-019",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-020",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-020",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-021",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-021",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-022",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-022",
+      "sources": [
+        "30-地府资产全录.md",
+        "43-地府角色全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-023",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-023",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-024",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-024",
+      "sources": [
+        "30-地府资产全录.md",
+        "43-地府角色全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-025",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-025",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-026",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-026",
+      "sources": [
+        "30-地府资产全录.md",
+        "43-地府角色全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-027",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-027",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-028",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-028",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-029",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-029",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-030",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-030",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-031",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-031",
+      "sources": [
+        "30-地府资产全录.md",
+        "43-地府角色全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-032",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-032",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-033",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-033",
+      "sources": [
+        "30-地府资产全录.md",
+        "43-地府角色全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-034",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "D-GZ-034",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-GZ-035",
+      "realm": "underworld",
+      "kind": "building",
+      "name": "十八狱环",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-01",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "赌鬼坊",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-02",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "饿鬼食肆",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-03",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "纸扎铺",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-04",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "棺材铺",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-05",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "义庄",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-06",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "城隍分殿",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-07",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "鬼客栈",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-08",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "怨妇楼",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-09",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "戏鬼楼",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-10",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "杂货鬼铺",
+      "sources": [
+        "30-地府资产全录.md",
+        "44-材质色彩总谱.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-11",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "坟墓宅",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "D-HOU-12",
+      "realm": "underworld",
+      "kind": "template",
+      "name": "游魂庙",
+      "sources": [
+        "30-地府资产全录.md",
+        "46-地府建筑材质逐座全表.md"
+      ],
+      "hasMaterialDetail": true
+    },
+    {
+      "id": "T-GZ-001",
+      "realm": "sky",
+      "kind": "building",
+      "name": "一、凌霄宝殿",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md",
+        "44-材质色彩总谱.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-002",
+      "realm": "sky",
+      "kind": "building",
+      "name": "南天门【已实装】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-003",
+      "realm": "sky",
+      "kind": "building",
+      "name": "蟠桃园【已实装】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-004",
+      "realm": "sky",
+      "kind": "building",
+      "name": "三、兜率宫",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-005",
+      "realm": "sky",
+      "kind": "building",
+      "name": "二、瑶池水榭",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-006",
+      "realm": "sky",
+      "kind": "building",
+      "name": "四、广寒宫",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-007",
+      "realm": "sky",
+      "kind": "building",
+      "name": "莲台法坛【已实装】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-008",
+      "realm": "sky",
+      "kind": "building",
+      "name": "东朝房【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-009",
+      "realm": "sky",
+      "kind": "building",
+      "name": "西朝房【二期】",
+      "sources": [
+        "10-天宫资产全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-010",
+      "realm": "sky",
+      "kind": "building",
+      "name": "御膳房【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-011",
+      "realm": "sky",
+      "kind": "building",
+      "name": "天库【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-012",
+      "realm": "sky",
+      "kind": "building",
+      "name": "武库【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-013",
+      "realm": "sky",
+      "kind": "building",
+      "name": "钟楼【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md",
+        "47-重点建筑室内装修全表.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-014",
+      "realm": "sky",
+      "kind": "building",
+      "name": "鼓楼【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-015",
+      "realm": "sky",
+      "kind": "building",
+      "name": "角木蛟府【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-016",
+      "realm": "sky",
+      "kind": "building",
+      "name": "亢金龙府【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-017",
+      "realm": "sky",
+      "kind": "building",
+      "name": "奎木狼府【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-018",
+      "realm": "sky",
+      "kind": "building",
+      "name": "斗牛宫【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-019",
+      "realm": "sky",
+      "kind": "building",
+      "name": "昴日鸡宫【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-020",
+      "realm": "sky",
+      "kind": "building",
+      "name": "心月狐府【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-021",
+      "realm": "sky",
+      "kind": "building",
+      "name": "毕月乌府【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-022",
+      "realm": "sky",
+      "kind": "building",
+      "name": "虚日鼠府【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-023",
+      "realm": "sky",
+      "kind": "building",
+      "name": "弥罗宫【已实装·外观层】",
+      "sources": [
+        "10-天宫资产全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-024",
+      "realm": "sky",
+      "kind": "building",
+      "name": "通明殿【已实装·外观层】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-025",
+      "realm": "sky",
+      "kind": "building",
+      "name": "大罗宫【已实装·外观层】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-026",
+      "realm": "sky",
+      "kind": "building",
+      "name": "太玄都省【已实装·外观层】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-027",
+      "realm": "sky",
+      "kind": "building",
+      "name": "九光阙【已实装·外观层】",
+      "sources": [
+        "10-天宫资产全录.md"
+      ],
+      "hasMaterialDetail": false
+    },
+    {
+      "id": "T-GZ-028",
+      "realm": "sky",
+      "kind": "building",
+      "name": "巡天将台【二期】",
+      "sources": [
+        "10-天宫资产全录.md",
+        "41-天宫角色全录.md"
+      ],
+      "hasMaterialDetail": false
+    }
+  ],
+  "detailedBuildings": [
+    {
+      "id": "C-GZ-001",
+      "name": "景龍門·南墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01，瓦灰黑 #3B4045（南向受光面泛 #5A6472）；压七露三，垄宽 0.24m，勾头滴水间隔 0.32m，檐口一线误差 ≤10mm；正脊吻兽一对 M-12 铁灰 #4A4E54 高 0.6m；檐角风铎 M-10 铜 8 枚；南檐向阳，苔斑 ≤1%",
+        "墙体": "城台 M-03 青砖一顺一丁，城砖深灰 #4E545E（受光面 #5A6472）；灰缝横 12mm 竖 10mm；城台收分 8%；垛口高 1.2m 间距 0.5m；南向日足，缝霜线宽 ≤3mm",
+        "台基": "门洞地袱与门槛 M-08 青石 #4E545E，平缝 8mm；农贡车辙双槽磨亮带（反光 +0.15，槽深 30mm，辙距 1.8m）；吊桥桥面 M-08 厚 250mm",
+        "门窗": "门扇木胎 M-05 包铁钉 M-12 高 6m；门额凸字石额玄墨 #2B2B2B 填金漆「景龍門」；戍铺直棂窗糊 M-15 纸 #F4ECD8，格条 25mm",
+        "彩画纹样": "门楼额枋斗拱 M-06 旋子简作：石青 #3A6B8C／石绿 #4A8B6F、朱底 #A63A2B；外城门档禁金地，无枋心贴金",
+        "霓虹件": "门洞轮廓灯带 NH-01 官霓 #00E5FF：M-25 灯管 Φ12mm 沿券面砖缝走 P-06 回纹形，转角即弯头；坊级 30m；日灭／黄昏 40%／夜 100% 常亮禁闪",
+        "老化磨损": "门洞内阴壁苔线 #4A8B6F ≤2%；门钉孔铜绿 #4E7A5E 结壳 ≤40%；车辙石磨亮；门簪漆粉化 10%；券面砖撞击缺角 ≤2 处",
+        "形制备注": "农贡晨集：门前 30m 内路面粉尘层 ±2mm；粪渍水冲痕自门洞向外呈扇形"
+      }
+    },
+    {
+      "id": "C-GZ-002",
+      "name": "朝陽門·南墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045（受光 #5A6472）；压七露三，垄 0.24m，滴水 0.32m，檐口误差 ≤10mm；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚音准齐整（常校）；瓦面五年内拣漏，无苔",
+        "墙体": "城台 M-03 一顺一丁 #4E545E（受光 #5A6472）；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；禁军常扫，泛霜无；垛口盾木 M-05 常换漆",
+        "台基": "门洞地袱 M-08 #4E545E 磨光态（反光 0.40）；宫用车驾辙距 2.2m 单槽深 15mm；门前御道石墁 M-08 接宫城",
+        "门窗": "门扇 M-05＋M-12 高 6m 油漆新；石额玄墨 #2B2B2B 填金漆「朝陽門」金漆完整率 95%；千斤闸槽 M-12 常保养",
+        "彩画纹样": "门楼 M-06 旋子彩画近新：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B，粉化 ≤5%；额枋 P-06 回纹边线石刻态 #4E545E",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪；因禁军驻地，黄昏提前至 30% 预亮（灯务官办）",
+        "老化磨损": "新档：仅门洞地袱中带磨亮 +0.15；拒马叉子 M-05/M-12 底足磨地凹 5mm；无泛霜无苔",
+        "形制备注": "百姓禁行：门前 20m 设拒马线；强闯触发战斗——门扇包叶撞痕为零（威慑存量）"
+      }
+    },
+    {
+      "id": "C-GZ-003",
+      "name": "宣化門·南墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045（受光 #5A6472）；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚；南檐口下香烛熏色 #7A8A99 自檐底向上 200mm",
+        "墙体": "城台 M-03 一顺一丁 #4E545E（受光 #5A6472）；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；香客常年抚墙，券门两侧砖面手泽包浆发亮带宽 800mm",
+        "台基": "门洞地袱 M-08 #4E545E；香客步行磨亮带三条各宽 600mm（反光 +0.15）；平安符摊位区石面油渍晕",
+        "门窗": "门扇 M-05＋M-12 高 6m；石额玄墨 #2B2B2B 填金漆「宣化門」；门簪系红绳平安符 #9D2933，褪色分三档（#9D2933→#8C4A3C→#7A8A99）",
+        "彩画纹样": "门楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；檐底熏黑处彩画粉化 25%（全门最重）",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪；符摊灯笼 #FFC66E 两盏为物级补充",
+        "老化磨损": "檐底熏黑 #7A8A99；红绳符褪色分层；券面香灰沉积 1mm；苔 ≤2%（向阳）",
+        "形制备注": "香客 NPC 群像动线沿磨亮带分布；平安符售点挂旗 #F0EAD6 底玄墨字"
+      }
+    },
+    {
+      "id": "C-GZ-004",
+      "name": "天波門·东墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚；东向晨晒面瓦色偏 #5A6472、西背阴面垄底倒苔 4%（M-02 老化条款延伸）",
+        "墙体": "城台 M-03 一顺一丁 #4E545E；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；东面苔线 #4A8B6F 沿缝 4%，西面泛霜带高 300mm",
+        "台基": "门洞地袱 M-08 #4E545E；驿马道蹄痕密度 3 眼/m²、深 8mm；马道砖坡 M-03 踩踏磨凹 10mm 中带",
+        "门窗": "门扇 M-05＋M-12 高 6m；石额玄墨 #2B2B2B 填金漆「天波門」；递铺窗口木框 M-05 直棂，糊 M-15 #F4ECD8",
+        "彩画纹样": "门楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；东面彩画受晨光粉化 12%",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪；驿旗杆挂幌 #F0EAD6",
+        "老化磨损": "蹄铁刮痕石面成组；马道中带磨凹；西面泛霜沿缝走；门枢磨亮半径 80mm",
+        "形制备注": "换骑场设拴马石桩 6 根（M-08，桩顶缰磨亮）"
+      }
+    },
+    {
+      "id": "C-GZ-005",
+      "name": "金耀門·东墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚；漕口湿气重，北阴面瓦缝生草 ≤3 簇/m²（草高 30～80mm，#4A8B6F）",
+        "墙体": "城台 M-03 一顺一丁 #4E545E；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；近河侧盐霜白带高 400mm（泛霜加重档），砖面粉化起麻",
+        "台基": "门洞地袱 M-08 #4E545E；漕车重辙单槽深 40mm、辙距 2.0m；吊桥缆孔 M-12 锈晕环；泊岸石鼻 M-08 磨亮",
+        "门窗": "门扇 M-05＋M-12 高 6m 铁钉锈晕沿钉周 20mm；石额玄墨 #2B2B2B 填金漆「金耀門」金漆受潮起泡 3 处；闸门槽内积水渍线",
+        "彩画纹样": "门楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；潮面彩画粉化 18%，沥粉线断续",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪；漕闸号灯 #FFC66E 一盏（夜航）",
+        "老化磨损": "盐霜带 400mm；铁件锈晕；瓦缝草；地袱辙槽 40mm；潮面金漆起泡",
+        "形制备注": "与 C-GZ-056 仓区隔街相望；漕船闸门剧本点位在吊桥侧"
+      }
+    },
+    {
+      "id": "C-GZ-006",
+      "name": "通天門·东墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚；东面垄底苔斑 5%（青绿 #4A8B6F 条状）",
+        "墙体": "城台 M-03 一顺一丁 #4E545E；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；券门下半部水产汁渍油晕带宽 1.2m，色向 #7A8A99 靠（M-03 老化终点）",
+        "台基": "门洞地袱 M-08 #4E545E；水产车辙槽深 25mm 带腥渍；冲洗排水沟沿门洞两侧，沟宽 150mm 石槽磨光",
+        "门窗": "门扇 M-05＋M-12 高 6m 下部 300mm 汁渍层；石额玄墨 #2B2B2B 填金漆「通天門」；门洞内冰盐渍冬生夏留白晕",
+        "彩画纹样": "门楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；下层彩画受渍粉化 20%",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪",
+        "老化磨损": "汁渍油晕；排水沟磨光；苔 5%；辙槽 25mm；门扇下渍层翘皮",
+        "形制备注": "水产车队过门时段地面湿滑系数上调；冰盐渍为季节性贴花层"
+      }
+    },
+    {
+      "id": "C-GZ-007",
+      "name": "景龍門·北墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045（北阴面整面偏 #4E545E）；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚锈哑 3 枚；北向阴面苔最重 6%（#4A8B6F 沿垄底条状），冬季檐口冰棱痕",
+        "墙体": "城台 M-03 一顺一丁 #4E545E；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；北面泛霜白带高 300mm；驼队擦痕高 2.2m 一线（货垛蹭墙）",
+        "台基": "门洞地袱 M-08 #4E545E；驼队踩面无辙槽但沙尘积 3mm；马市侧门洞石面羊毛脂渍（油亮暗面，反光 +0.05）",
+        "门窗": "门扇 M-05＋M-12 高 6m；石额玄墨 #2B2B2B 填金漆「景龍門」金漆氧化发暗；马市便门高 2.4m 木门 M-05",
+        "彩画纹样": "门楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；北阴面彩画粉化 15% 且色偏 #7A8A99",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪；马市灯笼串 #FFC66E",
+        "老化磨损": "苔 6% 全门最重；泛霜 300mm；风铎锈哑；脂渍油亮带；金漆氧化",
+        "形制备注": "皮货暗线点位：马市便门外 15m 为交易锚点"
+      }
+    },
+    {
+      "id": "C-GZ-008",
+      "name": "朝陽門·北墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045（仪仗门前拣漏新瓦 20%，新瓦色 #5A6472 与旧瓦 #3B4045 拼布）；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m 重描漆；风铎 M-10 8 枚全响",
+        "墙体": "城台 M-03 一顺一丁 #4E545E；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；迎面重墁砖 20%（灰缝新白 10mm 与旧缝 12mm 并存）；仪仗道侧墙面手摸包浆带高 1.5m",
+        "台基": "门洞地袱 M-08 #4E545E 磨光（反光 0.40）；仪仗御道石墁 M-08 宽 6m 踩亮带 +0.15；石阶前二层截水槽深 20mm",
+        "门窗": "门扇 M-05＋M-12 高 6m 重刷桐油（油膜亮）；石额玄墨 #2B2B2B 填金漆「朝陽門」新描金；千斤闸槽 M-12 试落无阻",
+        "彩画纹样": "门楼 M-06 旋子彩画五年内重描：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B，粉化 ≤5%；檐口 P-06 回纹石刻边线重錾",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪；仪仗日加挂宫灯 8 盏 #FFC66E",
+        "老化磨损": "新档：新旧瓦拼布为唯一年代痕；御道磨亮；其余按新档零损耗",
+        "形制备注": "北面仪门规制高于同名南门：金漆字描金层数 2 道（南门 1 道）"
+      }
+    },
+    {
+      "id": "C-GZ-009",
+      "name": "宣化門·北墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚锈哑 2 枚；北阴面苔 5%，瓦缝草 2 簇/m²",
+        "墙体": "城台 M-03 一顺一丁 #4E545E；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；北面泛霜带高 250mm；便门侧砖有撬痕 3 组（每组 4 条，痕宽 6mm）",
+        "台基": "门洞地袱 M-08 #4E545E；皮捆拖拽磨槽宽 100mm 深 12mm；暗线过墙处封条残胶黑印 2 处（各 120×280mm，符纸 M-22 基底 #C9B380 残边）",
+        "门窗": "门扇 M-05＋M-12 高 6m；石额玄墨 #2B2B2B 填金漆「宣化門」；便门木门 M-05 门枢换新（新木色 #6B4A2B 与旧框 #4A3220 色差一档）",
+        "彩画纹样": "门楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；北阴面粉化 18%",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪",
+        "老化磨损": "撬痕 3 组；拖槽 12mm；封条残胶；新枢旧框色差；苔 5%",
+        "形制备注": "走私暗线叙事点全部做在材质层（撬痕／残胶／新枢），不加额外道具"
+      }
+    },
+    {
+      "id": "C-GZ-010",
+      "name": "天波門·西墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚；西晒面瓦釉失光至 0.25、开细冰裂纹（M-01 老化条款）",
+        "墙体": "城台 M-03 一顺一丁 #4E545E；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；西面砖面风蚀起麻（颗粒感加深一档），药材渍渗石黄晕 #955539 3 处",
+        "台基": "门洞地袱 M-08 #4E545E；山货担歇脚磨亮坑 4 处（各 Φ400mm 深 5mm）；药材散落渗色斑",
+        "门窗": "门扇 M-05＋M-12 高 6m 西晒面漆粉化 25%；石额玄墨 #2B2B2B 填金漆「天波門」金漆褪 20%",
+        "彩画纹样": "门楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；西面彩画粉化 25%，降饱和 20%（M-06 老化条款）",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪",
+        "老化磨损": "西晒失光冰裂；风蚀起麻；药渍黄晕；漆粉化 25%",
+        "形制备注": "药材集散味景：门前空气尘埃粒子带药色 #955539 微染"
+      }
+    },
+    {
+      "id": "C-GZ-011",
+      "name": "金耀門·西墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚；西晒失光同 010 档，垄间积沙尘 2mm",
+        "墙体": "城台 M-03 一顺一丁 #4E545E；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；驼粪氨蚀墙脚带高 300mm（砖面起粉剥蚀，色向 #955539 靠）；西面风蚀起麻",
+        "台基": "门洞地袱 M-08 #4E545E；驼蹄磨坑密度 2 眼/m²、深 6mm；沙尘积层 3mm（踏之扬尘）",
+        "门窗": "门扇 M-05＋M-12 高 6m；石额玄墨 #2B2B2B 填金漆「金耀門」；驼鞍蹭门框油亮带高 1.8m",
+        "彩画纹样": "门楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；西面粉化 28%（十二门中最高）",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪；驼队出发旗 #2E4E7E 一面",
+        "老化磨损": "氨蚀带 300mm；驼蹄坑；积沙；门框油亮带；彩画粉化 28%",
+        "形制备注": "骆驼交通单元始发点；门前置驼粪清理位（每日辰时剧本）"
+      }
+    },
+    {
+      "id": "C-GZ-012",
+      "name": "通天門·西墙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "门楼重檐歇山：布筒瓦 M-01 #3B4045；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；风铎 M-10 8 枚缺 1 枚（锈断，断口新亮）；西晒失光开冰裂",
+        "墙体": "城台 M-03 一顺一丁 #4E545E；缝横 12/竖 10mm；收分 8%；垛口 1.2m/0.5m；戍卒刻字 7 组（ 刻痕深 2mm，多在垛口内侧与门洞阴角，字口无苔为新刻，字口含苔为旧刻，新旧比 4:3）",
+        "台基": "门洞地袱 M-08 #4E545E；火盆长期置位熏黑圆斑 Φ600mm（洞内侧 2 处，#2B2B2B 熏层）",
+        "门窗": "门扇 M-05＋M-12 高 6m 戍卒倚靠磨亮带高 1.1m；石额玄墨 #2B2B2B 填金漆「通天門」金漆褪 15%",
+        "彩画纹样": "门楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；西面粉化 22%",
+        "霓虹件": "NH-01 #00E5FF 门洞轮廓 P-06 回纹形 Φ12mm（M-25）；坊级 30m 常亮禁闪；戍铺火盆灯 #FFC66E 夜间常燃",
+        "老化磨损": "刻字 7 组（新旧 4:3）；火盆熏斑；倚靠磨亮；风铎缺 1",
+        "形制备注": "思乡支线触发读吸收藏在刻字内容（凝视注解）"
+      }
+    },
+    {
+      "id": "C-GZ-013",
+      "name": "城垣与马面体系",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "无瓦顶。墙顶内侧砖铺道面 M-03 一顺一丁 #4E545E（走道磨亮带 +0.15，宽 1.2m 居中）；顶帽 1.2m 压顶砖 M-03 出檐 60mm 滴水线",
+        "墙体": "夯土墙心 M-04（版筑每版高 0.5m，层理 80～100mm，掺草筋 4%，收分每米内倾 30mm）外包城砖 M-03 一顺一丁 #4E545E，总高 11m；垛口高 1.2m 垛距 1.5m；马面 64 座（8×13×8m，每墙 16 座），台顶女墙与墙顶相接；重要段落砖面工部窑户戳记（戳记深 3mm，拓印可辨）",
+        "台基": "基础条石 M-08 三层（每层出挑 60mm，#4E545E）；护城河侧基础水上水下分色：水下 #33393F（M-08 暗端），水上 #4E545E",
+        "门窗": "无窗；烽屋直棂窗糊 M-15 #F4ECD8；马面战棚门板 M-05；瓮城（做法同 040 上東門弧墙）：砖 M-03 弧砌，灰缝外 12mm 内 15mm",
+        "彩画纹样": "全线无彩画（军防建筑素面）；唯窑户戳记与界止刻线（阴刻 20mm）为石作纹",
+        "霓虹件": "全线禁霓虹；敌台角灯一盏 #FFC66E（每马面一盏，物级 1.5m）；雨夜烽盆点燃为明火 #FFC66E 系",
+        "老化磨损": "雨蚀竖沟宽 20～40mm 深 10mm（M-04 老化条款在包砖缺失处露出夯土芯呈沟槽）；泛碱白带高 200mm 沿墙脚；缝草 ≤3 簇/m²（#4A8B6F，草高 30～80mm）；垛口盾木磨痕；擂石滚木堆位地面凹 20mm",
+        "形制备注": "巡卒每半个时辰一巡；翻墙锁定点位优先选泛霜与苔重段（攀爬手感做旧）"
+      }
+    },
+    {
+      "id": "C-GZ-014",
+      "name": "宣德门",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "五凤楼重檐歇山门楼＋双阙观楼：琉璃筒瓦 M-01 凌霄金 #F5C542（人间唯一金瓦）；压七露三，垄宽 0.24m，勾头滴水间隔 0.32m，檐口一线误差 ≤8mm（宫城档收紧）；正脊 M-11 鎏金鸱吻 #FFD700 高 1.8m（人间档，低于天宫 2.4m），走兽 7 件；双阙观楼同瓦，走兽 5 件",
+        "墙体": "墩台 30×15m 高 11m：M-03 城砖一顺一丁 #4E545E，外皮涂朱浆 CJ-07 市井朱 #A63A2B（朱浆皮厚 3mm，收分 8%）；双阙夯土包砖同涂朱；朱皮老化指定终点 CJ-08 土朱 #8C4A3C",
+        "台基": "石阶与御道 M-08 青石磨光（反光 0.40），地铺金龙浮雕石墁道（浮雕线贴金 #FFD700，御路金阶）；御道尽端屏石 M-08 浮 P-04 龙纹（双龙戏珠，珠径 80mm 居中）；石狮 4 蹲踞高 2.2m：M-07 汉白玉 #F2EFE9，干摆缝 ≤2mm",
+        "门窗": "朱漆宫门扇 4（木胎 M-05，朱漆 #A63A2B，金钉 M-11 贴金 #FFD700）高 6.5m；铺首衔环 M-11 鎏金 P-19 饕餮（双目凸起 5mm，人间禁发光条款）；掖门 2 樘；门楼升座殿隔扇 M-06 边框＋M-15 纸 #F4ECD8",
+        "彩画纹样": "檐下金青彩画 M-06：箍头:藻头:枋心＝1:2:1；枋心 P-03 宝相花（瓣 #3A6B8C／#4A8B6F、心 #FFD700、地 #F5C542——宫城内金部只反光禁发光，P-03 条款）；额枋缘道 P-06 回纹线",
+        "霓虹件": "禁霓虹（宫城全域）。夜间朱纱宫灯 8 盏 #FFC66E（M-13 纱＋M-10 铜架，长笼灯）列廊柱；门洞无灯带",
+        "老化磨损": "新档基准：朱皮向光面微褪 #A63A2B→#8C4A3C 达 15%；金钉磨亮露铜 #B87333 点 ≤10%；石狮爪部圆化半径 5mm；御道车辙中凹 20mm；匾「宣德門」金箔残缺率 ≤5%",
+        "形制备注": "双阙高 11m 上起观楼；楹联「九重阊阖开宫殿／万国衣冠拜冕旒」为匾联贴金字样（#FFD700 凸字）"
+      }
+    },
+    {
+      "id": "C-GZ-015",
+      "name": "大庆殿",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "重檐庑殿：琉璃筒瓦 M-01 #F5C542；压七露三，垄 0.24m，滴水 0.32m；正脊 M-11 鎏金鸱吻 #FFD700 高 3m，檐角走兽 10 件；两层檐滴水各一排间距 0.32m；连台基总高 24m",
+        "墙体": "殿身面阔 9 间（45m）进深 6 间（27m）：金柱 12 根 M-05 木胎贴金蟠龙 P-04（绕柱 270°，贴金凸起 1.5mm，M-11 #FFD700）；余柱朱 #A63A2B 直径 0.8m；山墙粉壁 #E8E4DA，裙肩（下碱）M-03 磨砖高 1.2m #5A6472 对缝 ≤2mm",
+        "台基": "三层汉白玉须弥座 M-07 总高 6m（每层收分 2m，#F2EFE9）；束腰 P-14 莲瓣（仰覆瓣高 90mm，组宽 180mm，勾线 #4A8B6F）；御路 P-17 海水江崖（下缘立水高 256mm 斜纹八层，崖 #FFD700、水 #223A5E／#3A6B8C）；栏板望柱间距 1.5m 高 0.8m；丹陛石 M-08 青石云龙浮雕 P-04",
+        "门窗": "隔扇 42 樘：M-05 木框＋格心 P-03 宝相花线刻＋糊 M-15 高档宫纸 #F4ECD8；门钉 M-11 贴金",
+        "彩画纹样": "和玺彩画 M-06（宫城殿宇专用）：青绿 #3A6B8C／#4A8B6F、朱底 #A63A2B、金线 #FFD700 沥粉凸起 1.5mm；藻井斗八（C-ITM-0020）井心盘龙 P-04 贴金；殿内地衣红罗 M-14 #9D2933，织金线 #FFD700 宽 2mm",
+        "霓虹件": "禁霓虹。「夜间殿脊灯带」按禁霓虹律以宫光暖黄 #FFC66E 灯槽实现（灯槽藏正脊下皮，照亮鸱吻与走兽剪影）；廊庑宫灯 #FFC66E 夜列；铜鹤灯 4、银烛台 8 为室内光点",
+        "老化磨损": "新档：台阶磨凹 5mm 起步（丹陛中道最深）；金钉露铜点 ≤10%；金砖 M-09 走道磨雾映像 80%→70%；红罗地衣踩痕洗白带（中道宽 1.5m）",
+        "形制备注": "嘉量居丹陛东、日晷居西；大朝会为全服日历事件，殿脊灯带仅事件夜全亮"
+      }
+    },
+    {
+      "id": "C-GZ-016",
+      "name": "垂拱殿",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单檐庑殿：琉璃筒瓦 M-01 #F5C542（44 卷归型 4「垂拱单檐同瓦」）；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-11 #FFD700 高 1.2m，走兽 7 件；连脊高 16m",
+        "墙体": "面阔 7 间（31.5m）进深 4 间（18m）：朱柱 M-05 直径 0.62m 涂 #A63A2B；山墙竹编夹泥 #E8E4DA；裙肩 M-03 磨砖高 1.2m #5A6472（对缝 ≤2mm）；周匝副阶围廊",
+        "台基": "单层台基高 1.2m：M-08 青石阶条 1.2×0.4m 平缝 8mm；副阶柱础 M-08 露高 100mm；殿前小广场置更漏台 M-08",
+        "门窗": "格扇帘幕：M-05 框＋格心 P-10 锦地纹（龟背锦，地 #3A6B8C 深、线 #88ABDA 细）＋糊 M-15 #F4ECD8；绣帘 4 幅 M-14 #9D2933 缠枝织纹（P-02 花头间隔 300mm 降饱和 20%）",
+        "彩画纹样": "旋子彩画 M-06 素朴档：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；金量 ≤5%（仅箍头一线 #FFD700）；无枋心贴金",
+        "霓虹件": "禁霓虹。暖阁地龙火道口蒸汽 M-20 微量（冬日）；铜壶滴漏廊下置；夜灯银烛架 4 #FFC66E",
+        "老化磨损": "常档（日常听政高频）：暖阁金砖映像 60%；绣帘日光面褪偏 #D4B76A；更漏台石面磨凹 8mm；格扇纸角雨渍晕扇形",
+        "形制备注": "御案、舆图屏风（绢木）等室内件按 44 卷 §8.1 人间室内标准执行"
+      }
+    },
+    {
+      "id": "C-GZ-017",
+      "name": "紫宸殿",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "重檐歇山：屋面布筒瓦 M-01 #3B4045＋天青剪边 M-01 #88ABDA（44 卷归型 4「紫宸天青剪边」）；压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 铁灰 #4A4E54 高 1.2m；连脊高 19m",
+        "墙体": "面阔 7 间（31.5m）进深 5 间（22.5m）：朱柱金槅——柱 #A63A2B，隔扇边框贴金 M-11 #FFD700（本殿唯一金阶）；山墙粉壁 #E8E4DA；裙肩 M-03 磨砖高 1.2m #5A6472",
+        "台基": "单层台基高 1.5m：M-08 青石；东西陛散席路线踩亮带反光 +0.15（宴罢人流密集段）",
+        "门窗": "隔扇 M-05 框＋P-10 锦地格心＋M-15 纸 #F4ECD8；瑞鹤旗 2 幅（M-14 绸，底 #F0EAD6、鹤纹玄墨 #2B2B2B）悬殿前",
+        "彩画纹样": "青绿斗拱彩画 M-06 为全殿视觉母题：214 攒五铺作双杪、转角铺作 45° 斜栱，青 #3A6B8C／绿 #4A8B6F；藻井顶心 P-20 星宿纹（圆天盘 Φ400mm，星点 Φ3mm 凸起——人间复制版星点 #00E5FF 一档微光，P-20 卡条款，非灯管不违禁霓虹律）；殿内幡幢 4 P-03 宝相花；地衣团窠纹 P-15（地 #9D2933、联珠 #FFD700）",
+        "霓虹件": "禁霓虹。琉璃灯 6 盏：彩色罩灯罩体 M-19（罩色 #2E8B57／#33A1C9），芯光 #FFC66E",
+        "老化磨损": "常档：斗拱彩画粉化 15%（檐口层最重，降饱和 20% 内）；团窠地衣联珠磨暗（反光 −0.1）；宴席区金砖划痕随机；瑞鹤旗日晒面褪 #D4B76A",
+        "形制备注": "檐下 214 攒斗拱为全项目斗拱实装锚点（每攒独立建模）；瑞鹤图屏为天宫层伏笔件"
+      }
+    },
+    {
+      "id": "C-GZ-018",
+      "name": "虹桥",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "无顶无瓦（敞桥）。桥市摊棚覆 M-13 绸幔／苇席 #D4B76A（雨棚随摊，非建筑顶）；桥头华表十字云板 M-05 朱漆",
+        "墙体": "桥体即「墙」：贯木拱 5 道纵梁长短骨相贯（拱骨圆木直径 300mm 交叠），M-05 桐油木——受光面 #8B5E3C（CJ-22 全城唯一暖亮木色）、背光面 #4A3220；绳箍五道（M-12 铁箍＋木楔，节点固件）；排叉柱 6 根斜撑护脚",
+        "台基": "桥面 M-05 厚木板横铺（宽 12m，跨径 96m，拱顶高 9.1m）；桥心垫石 M-08 青石车辙垫板（双辙槽深 15mm）；两岸驳岸 M-08＋泊船石鼻 4",
+        "门窗": "无门窗。朱漆栏杆上下双横杆（漆 #A63A2B）；望柱 20 根柱头雕莲 P-14（石刻态勾线 #4A8B6F，柱身高 1.2m）；桥头华表 4（白木朱漆，顶立木雕仙鹤引颈）；匾「虹橋」木金漆",
+        "彩画纹样": "栏板 P-08 卷草纹（C 形连续，波高 80mm，一波三叶——木刻填绿 #4A8B6F）；云头部位 P-16 如意云头（石刻单色 #4E545E 语法）；钢索锚板与节点固件底板 P-11 电路纹（底板 #1A2430，线随 NH-01，线路终止于发光元件禁悬空）",
+        "霓虹件": "拱底五段灯带 NH-01 官霓 #00E5FF：M-25 Φ12mm 沿拱骨走（五段对应五纵梁），常亮禁闪，坊级 30m；桥头灯楼 #FFC66E 灯笼 2；桥灯 4 盏纸铜风灯 #FFC66E（望柱加高柱）",
+        "老化磨损": "桥面板中带磨凹 30mm（人马道）；油面磨亮（反光 +0.1）；绳箍新旧差（新箍 #4A4E54、旧箍锈晕）；木楔铁箍铆周锈晕环 20mm；栏板漆剥露木胎 8%",
+        "形制备注": "桥下净空 6.2m 供漕船过洞；水尺刻度 2 处（排叉柱上，刻深 5mm）；漕船过桥为整点事件"
+      }
+    },
+    {
+      "id": "C-GZ-019",
+      "name": "州桥",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "无顶。桥头灯柱 4（石座铜柱头，M-08＋M-10）",
+        "墙体": "桥体三孔石拱：M-08 青石拱券（粗晶粒 1～2mm 可见，砌缝平缝 8mm 灰浆勾缝）；分水尖墩 3 座迎水面圆弧；桥宽 30m 与御街同宽，跨径 3×20m，桥面高 4.5m",
+        "台基": "桥面 M-08 错缝铺砌；桥心青石御道衔接段车辙双槽深 25mm；泊船石鼻 4（分水尖上，鼻环磨亮）",
+        "门窗": "无门窗。石栏板高 0.9m 镌海马瑞兽（本卷无专卡——兽身圆雕，衬纹取 P-17 海水江崖立水段作栏板下基线衬底）；望柱 16 根柱头圆雕狮子（风化圆化半径 8mm）",
+        "彩画纹样": "无彩画（石作素面）；栏板浮雕做旧：雕花下缘竖向雨渍黑带宽 30mm（M-07 老化条款在青石上的对应做法）",
+        "霓虹件": "不设霓虹（官桥无匾额字管载体，44 卷未予霓虹归属）；夜间照明为灯柱 4 柱头灯笼 #FFC66E（17:00 夜市点亮）",
+        "老化磨损": "水线苔带 #4A8B6F 高 300mm（常水位线，点状 ≤3%）；桥洞挂水痕钙白垂带；分水尖撞擦痕（船头擦刮成组，方向顺水）；桥面中带磨亮 +0.15",
+        "形制备注": "与虹桥呈十字桥景（木拱刚柔对照）；杨志卖刀点位在桥头夜市带"
+      }
+    },
+    {
+      "id": "C-GZ-020",
+      "name": "孙羊正店",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "顶层歇山十字脊：筒瓦 M-01 瓦灰黑 #3B4045，压七露三，垄宽 0.24m，勾头滴水间隔 0.32m；正脊 0.5m 高鸱吻一对 M-12 铁灰 #4A4E54；檐口滴子勾头间隔 0.32m 一线误差 ≤10mm；两层平坐腰檐同瓦规格递缩（腰檐垄 0.24m）；瓦面苔痕自檐部向上 15%",
+        "墙体": "三层木构楼阁 20×13m 总高 15m：M-05 桐油木版壁，本色 #6B4A2B／浸油深褐 #4A3220；砖裙肩 M-03 高 1.2m #5A6472 一顺一丁；二层格扇雕缠枝花 P-02（花头间隔 300mm，枝 #4A8B6F 降饱和 20%）；三层美人靠通长凭栏 M-05",
+        "台基": "砖石台基高 0.9m：M-03 青砖 #5A6472，收边 M-08 青石阶条 1.2×0.4m；门前踏跺三级磨凹 10mm",
+        "门窗": "底层可卸板门（晨卸暮装，板门 M-05 油亮手印带高 1.1m）；二层格扇 8 间：雕花格心 P-02＋糊 M-15 #F4ECD8；三层天阁开敞凭栏",
+        "彩画纹样": "檐垫板 P-22 蝠纹五福捧寿（环径 300mm，蝠 #9D2933、寿字 #FFD700、地 #F4ECD8；蝠目 5 点嵌 NH-02 3mm 微点——全城唯一蝠纹发光点，P-22 条款）；枋心青绿 #3A6B8C／#4A8B6F；芙蓉屏风（绢木六扇）居二楼主雅间",
+        "霓虹件": "彩楼欢门五层缚彩：木架缠 M-14 绸 #9D2933；「孫羊店」字管 M-25 Φ12mm 商霓 NH-02 #FF2E88（匾额位，铺级 8m，8% 概率 2Hz 闪）；灯球 Φ0.3m×24 只（物级 1.5m）；红纱灯笼 12 串挂檐下 #FFC66E；酒旗 #F0EAD6 底玄墨「孫羊正店」",
+        "老化磨损": "酒旗褪 #F0EAD6→#D4B76A（日晒面）；欢门年扎新旧差（新缚彩饱和、旧缚彩褪 30%）；竹架弯曲下垂 50mm；门槛 M-08 磨凹 20mm；底层大堂金砖 M-09（44 卷 §8.1 酒楼档）走道磨雾映像 50%",
+        "形制备注": "底层散座 40 桌／二层雅间 8／三层天阁凭栏望虹桥；后院双眼大灶砖铁＋酒瓮 24（陶 #955539，封泥红签 #A63A2B）"
+      }
+    },
+    {
+      "id": "C-GZ-021",
+      "name": "十千脚店",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "悬山顶主楼（两层 16×11m 总高 9.5m）：筒瓦 M-01 #3B4045，压七露三，垄 0.24m，滴水 0.32m；正脊无吻兽（降档素脊），仅脊端收头瓦；前出平坐腰檐一重；瓦缝草 ≤3 簇/m²",
+        "墙体": "木构 M-05 #6B4A2B；砖裙肩 M-03 高 1.2m #5A6472；二层小阁子 2 间木雕格扇；竹帘半卷 M-16（篾宽 2mm，卷起 1/2 档，上层褪浅下层深色差一档）",
+        "台基": "砖石台基高 0.6m：M-03 #5A6472；门前踏跺两级；素方砖地（室内）以磨砖 M-03 干铺，缝 ≤2mm",
+        "门窗": "底层柜台＋散座 8 组开敞；格心直棂＋糊 M-15 #F4ECD8；后院客舍木榻 6、马槽 2（石木）",
+        "彩画纹样": "降档素作：无枋心彩画；仅楹联「十千沽一斗／一醉解千愁」木底玄墨字；欢门井字形缚彩缠 M-14 #9D2933",
+        "霓虹件": "双灯箱「十千」「脚店」（门东／门西，木绢方箱 0.6×0.6×0.15m）：内嵌 NH-02 商霓 #FF2E88 字管 M-25 Φ8mm 透烛光，允许 2Hz 闪（8% 概率）；铺级 8m；檐下灯笼 6 盏 #FFC66E；酒旗青布 #2E4E7E 白字「十千脚店」",
+        "老化磨损": "灯箱绢面黄变（M-15 老化语汇：黄斑）；欢门缚彩褪 25%；柜台油手印带；后院水线糟朽 200mm（缸座）；瓦缝草",
+        "形制备注": "灯箱为清明上河图名物还原（实装梗）；兼营客舍 20 文/夜"
+      }
+    },
+    {
+      "id": "C-GZ-022",
+      "name": "赵太丞家",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层三间悬山（14×9m，脊高 7m）：合瓦 M-01 布筒瓦降为 M-02 合瓦 #3B4045——44 卷临街专业铺型基准为合瓦；一仰一合节距 0.48m，檐口花边滴水；正脊素脊收头；前出檐廊深 1.8m；瓦缝草 2 簇/m²",
+        "墙体": "明间敞开＋次间粉墙 #F4ECD8（44 卷归型 7 赵太丞粉墙档）；裙肩（下碱）M-03 青砖高 1.0m #5A6472；粉墙面雨渍晕自檐口垂带 3 道",
+        "台基": "青石门槛 M-08 磨凹 20mm；台基高 0.45m M-03；檐廊地坪方砖 M-03 干铺",
+        "门窗": "板门昼卸夜装（M-05）；直棂窗 M-05 格条 25mm＋M-15 纸 #F4ECD8；药橱百眼柜 4 贴签（签纸 #F4ECD8 玄墨字）",
+        "彩画纹样": "素作无彩画；招幌「治酒所伤真方集香丸」竖幌（M-15 纸底 #F4ECD8，玄墨 #2B2B2B 书）；药葫芦串 3 挂檐下（葫芦 #955539）",
+        "霓虹件": "「醫」药字管 NH-04 工霓 #B8FF2E：M-25 Φ8mm 沿招幌字走线（铺级 8m，常亮）；匾「趙太丞家」木金漆无霓虹（医幌与匾双系统，霓虹只挂字管）",
+        "老化磨损": "粉墙雨渍垂带；门槛磨凹 20mm；药戥铜面手泽亮；幌纸褪 #D4B76A；瓦缝草",
+        "形制备注": "前堂候诊→中柜抓药→后房煎药动线；安道全坐堂"
+      }
+    },
+    {
+      "id": "C-GZ-023",
+      "name": "解当铺",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层悬山（12×9m，脊高 6.5m）：合瓦 M-02 #3B4045，节距 0.48m，花边滴水；素正脊；瓦面北阴倒苔 3%",
+        "墙体": "前墙高砌只留高窗：M-03 青砖实砌 #5A6472（一顺一丁，缝横 12/竖 10mm）高 3.6m；高窗台高 2.4m；裙肩与墙同材连砌；墙面撞击缺角 ≤2 处",
+        "台基": "青砖地（室内）M-03 磨砖干铺缝 ≤2mm；入口侧开，门前石阶一级 M-08",
+        "门窗": "入口侧门 M-05 板门厚 60mm＋门闩 M-12；高窗 3 樘：木框 M-05＋铁栅 M-12（栅条 20×20mm，间距 120mm）＋糊 M-15；库房铁门 M-12（门板包叶，兽头铜锁 M-10）",
+        "彩画纹样": "素作；「解」字大字牌（木白粉书，牌面 0.9×1.2m，白 #F4ECD8 粉底玄墨字）；高柜台 1.4m 木铁包角（角件 M-12）",
+        "霓虹件": "「解」字暗匾 NH-02 商霓 #FF2E88：M-25 Φ8mm 字管藏于大字牌字口（暗闪制——日间不显，入夜 100% 且允许 2Hz 闪 8% 概率）；铺级 8m；发光面 ≤3%（一眼深严的防盗气质）",
+        "老化磨损": "铁栅锈 #4E7A5E 结壳 ≤30%；铜锁棱角磨亮；门槛侧开位磨凹 25mm；高柜包角漆剥露铁 #4A4E54；库门枢磨亮",
+        "形制备注": "高柜台仰面交易（柜高 1.4m）；库房为时迁线盗点之一；蒋敬平账点位"
+      }
+    },
+    {
+      "id": "C-GZ-024",
+      "name": "王家纸马铺",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层两间悬山（11×8m，脊高 6m）：合瓦 M-02 #3B4045，节距 0.48m；前檐出深远挑篷（挑出 1.5m，篷柱 M-05 直径 0.24m）；正脊素；檐口挂白钱串 8（纸绳，纸白 #F4ECD8 褪 #C9B380）",
+        "墙体": "板壁 M-05 #6B4A2B；次间灰泥墙 #E8E4DA；无裙肩（板壁落地）；门首白幡素帐（M-13 纱幔人间档 #D4B76A 漂白处理至 #F0EAD6）",
+        "台基": "台基高 0.4m M-03；挑篷下陈列区地面 M-03 砖干铺；纸扎陈列架脚位磨地凹 5mm",
+        "门窗": "板门 M-05；直棂窗 M-15 纸 #F4ECD8；作坊雕版印版 6（木雕，版面墨层发亮）",
+        "彩画纹样": "素作；纸扎楼库 4（竹骨纸面：纸 #C9B380／#F4ECD8，彩扎点 #B03A2E）；冥钱串、白事幡 2；匾「王家紙馬」木墨书＋「紙馬鋪」招并存（两招牌均实装）",
+        "霓虹件": "冥气灯 NH-03 玄霓 #8A2BE2：M-25 Φ6mm 灯串沿挑篷下缘走（夜半转亮——子时前 20% 待机、子时后 100%，常亮微闪 1Hz）；物级 1.5m；内堂纵深 3m 光环境按 44 卷 §4 人→地过渡带四站：#FFC66E→#A8B88C→#6E8F86→#3DFF9C（禁与 DF 判官暗朱同框）",
+        "老化磨损": "纸扎黄变（十年档）；挑篷席面补丁 2 块色差；白钱串褪 #C9B380；门槛磨凹 15mm",
+        "形制备注": "中元节事件营业翻倍；鲍旭白天扎纸夜里锄奸（内外光环境切换即叙事）"
+      }
+    },
+    {
+      "id": "C-GZ-025",
+      "name": "香药铺",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层三间歇山小顶（13×9m，脊高 6.8m）：合瓦 M-02 #3B4045，节距 0.48m，花边滴水；歇山山花封板 M-05（板缝 CJ-01 汴京土黄 #C8B48A 勾缝）；博风板带悬鱼惹草 M-05",
+        "墙体": "明间板壁 M-05 #6B4A2B 木槅扇可全开；次间灰泥 #E8E4DA；裙肩 M-03 高 0.9m #5A6472；室内木地板防潮（M-05 架空 300mm）",
+        "台基": "台基高 0.5m：M-03 砖砌＋M-08 阶条收边；香窖入口（半地下防潮）石阶 M-08 三级",
+        "门窗": "木槅扇全开制：槅心腰板 P-09 海石榴纹（单元 200mm，壳 #A63A2B、籽 #FFD700 镜面反光点 0.7 承接街面霓虹——禁直接发光条款）；直棂窗糊 M-15",
+        "彩画纹样": "腰板 P-09 海石榴；博山炉 2 镂孔出烟 M-20 微量烟柱；主牌「香藥鋪」木金漆＋侧招「劉家上色沉檀揀香」木墨书（双招牌实装）",
+        "霓虹件": "「香」字管 NH-04 工霓 #B8FF2E：M-25 Φ8mm 沿主牌字走线（铺级 8m，常亮）；香窖口界灯 #FFC66E 物级 1.5m",
+        "老化磨损": "香气沁木（板壁包浆深一档至 #4A3220）；槅扇腰板油手印带高 1.1m；门槛磨凹 20mm；窖口石阶苔 ≤2%",
+        "形制备注": "龙涎香剧情物触发点；西域商队暗线衔接丝路驿站 C-GZ-051"
+      }
+    },
+    {
+      "id": "C-GZ-026",
+      "name": "茶坊",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层悬山（12×9m，脊高 6.2m）：合瓦 M-02 #3B4045，节距 0.48m；前檐敞廊深 2.2m（廊柱 M-05 直径 0.28m 共 4 根）；正脊素；瓦缝草 1 簇/m²（草高 30～80mm）",
+        "墙体": "板壁 M-05 #6B4A2B；雅间阁子 2 木格扇；裙肩 M-03 高 0.9m #5A6472；灶间墙面油烟熏色 #7A8A99 向上 1.5m",
+        "台基": "台基高 0.45m M-03；敞廊地坪 M-03 砖干铺（茶渍晕斑 6 处，浸深 0.5mm）；门槛 M-08 磨凹 20mm",
+        "门窗": "敞廊无门扇；阁子格扇 M-05＋P-07 万字纹槛窗（窗格棒料 20×20mm，卍字单元 60×60mm）；窗纸 M-15 #F4ECD8",
+        "彩画纹样": "槛窗 P-07 万字纹；水墨挂轴 2（纸底 #F4ECD8、玄墨 #2B2B2B）；茶旗「茶」字旗：CJ-16 酒旗白 #F0EAD6 底玄墨字、旗缘靛蓝 #2E4E7E 滚边",
+        "霓虹件": "「茶」字管 NH-05 食霓琥珀 #FF9E00：M-25 Φ8mm 沿旗杆侧竖走（铺级 8m，呼吸明暗 0.5Hz）；槛窗内嵌 NH-05 Φ6mm（P-07 条款：亮时纸窗透光同步转琥珀，禁 NH-02）",
+        "老化磨损": "茶渍晕斑；灶间油烟层；旗面褪 #D4B76A（缘边先褪）；阁子格扇推拉磨亮",
+        "形制备注": "吴用常驻说书论势（情报交换核心点）；点茶汤瓶出汽 M-20；小唱交互挂点"
+      }
+    },
+    {
+      "id": "C-GZ-027",
+      "name": "瓦子勾栏",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "勾栏大棚圆锥攒尖席棚（直径 30m）：顶苇席 #D4B76A 搭接 0.3m＋布幔 M-13 压边（人间档 #D4B76A）；麻绳扎结间距 200mm；说书棚 15m／傀儡棚 12m／影戏棚 12m 同构缩尺；席顶补丁块 8 处（新席 #D4B76A、旧席 #8A5A2B 色差一档）",
+        "墙体": "无墙——棚柱网 M-05 直径 0.5m 间距 3m；入口木牌坊 M-05 彩绘（#A63A2B／#2E4E7E）；棚外水牌满书戏码（木底玄墨字）",
+        "台基": "沙土垫地 CJ-01 素土夯实 #C8B48A；相扑沙圈 20m 单独铺细沙层 80mm；门钱栅箱 5 位地面磨凹",
+        "门窗": "无门窗；戏台 8×8m 方台 M-05 台面磨亮 +0.1；影戏亮子白幕（M-15 纸绷框，透光均匀度 ≥90%）",
+        "彩画纹样": "彩旗幡 24 面成列（#9D2933／#2E4E7E 双色系，幡脚褪色分层三档至 #8A5A2B）；台幔青布 #2E4E7E；棚匾「瓦子勾栏」木金漆；楹联「三五步走遍天下／六七人百万雄兵」",
+        "霓虹件": "NH-02 商霓最盛处：棚顶灯串双排 M-25 Φ6mm 沿棚骨走（物级 1.5m，闪 4Hz 概率 2%）；「瓦舍」竖匾字管 Φ12mm #FF2E88 铺级 8m；入夜灯笼成海 #FFC66E 约 60 点位",
+        "老化磨损": "席顶补丁新旧差；旗幡褪色分层；条凳 200 条磨损随机；沙圈边界绳磨毛起须",
+        "形制备注": "全境 180×120m 容三千人；时迁棚顶支线（棚骨攀爬点做旧加强）；燕青擂台日赛"
+      }
+    },
+    {
+      "id": "C-GZ-028",
+      "name": "上清观",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "山门单檐悬山＋三清殿重檐歇山（面阔 5 间 18m，殿高 12m）：筒瓦 M-01 青瓦 #5A6472，压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54；钟鼓楼攒尖方亭覆瓦同色；三清殿正脊预埋云雷纹灯槽（槽宽 12mm 深 10mm）",
+        "墙体": "粉墙 #E8E4DA；裙肩 M-03 高 1.0m #5A6472；三清殿檐柱 M-05 直径 0.5m 涂 #A63A2B；观区 90×70m 中轴甬道青砖 M-03 干铺",
+        "台基": "三清殿石阶 M-08 三级；醮坛露台 M-08 露天法坛（坛心火烧痕 #2B2B2B 直径 500mm）；钟鼓楼砖台 M-03",
+        "门窗": "三清殿隔扇 M-05＋糊 M-15 #F4ECD8；山门板门 M-05 贴门神年画（纸底 #F4ECD8、彩 #A63A2B／#D9A40E，岁末更换层叠 2 层）；卦幡 #F0EAD6 挂廊下",
+        "彩画纹样": "檐下 P-01 云雷纹（单元 40×40mm 浮雕深 2mm）＋P-07 万字纹（栏杆寻杖）；殿内青绿旋子彩画 M-06（青 #3A6B8C／绿 #4A8B6F）；观匾「上清觀」木金漆",
+        "霓虹件": "观脊云雷纹槽 NH-03 玄霓 #8A2BE2：M-25 Φ8mm 嵌 P-01 刻槽走线（刻槽即灯槽条款），夜半转亮（子时前 20% 待机微光、子时后 100%），常亮微闪 1Hz；坊级 30m；卦摊 NH-03 物级一处",
+        "老化磨损": "香烟熏黑檐底 #7A8A99（前檐最重向上 400mm）；卦幡褪 #D4B76A；古柏根胀裂甬道砖缝 3 处（缝宽 25mm）；大铜鼎 #B87333 锈壳 ≤40%",
+        "形制备注": "观后开宝寺塔塔影入庭（借景取景框）；公孙胜步罡踏斗教学；仙鹤坐骑点"
+      }
+    },
+    {
+      "id": "C-GZ-029",
+      "name": "府衙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "仪门悬山＋大堂单檐歇山（面阔 5 间 20m，大堂高 11m）：筒瓦 M-01 官式布筒瓦 #3B4045，压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.8m；谯楼更鼓位覆瓦同制；二堂内宅递降为合瓦 M-02",
+        "墙体": "八字墙 M-03 #5A6472（撇角 30°）；照壁獬豸砖雕 M-03 #4E545E（雕深 20mm）；仪门板壁 M-05 #6B4A2B；牢城单坡瓦房 M-02＋木栅；衙区 160×120m 院墙 M-03 高 2.4m 带墙帽",
+        "台基": "大堂台基高 0.9m：M-08 阶条＋踏跺三级（中级磨凹 15mm）；大堂内金砖 M-09 640×640mm 对缝 ≤1mm；点将台 M-04 夯土芯包 M-03 砖高 1.5m",
+        "门窗": "仪门中门常闭（M-05 板门＋M-12 包叶）；大堂隔扇 M-05＋P-10 锦地格心＋M-15 纸；牢栅 M-05＋M-12；肃静回避牌夹道（木底 #F4ECD8 玄墨字）",
+        "彩画纹样": "旋子彩画 M-06：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；大堂罩面 P-22 蝠纹（府衙版禁发光——蝠目不嵌灯点）；照壁底衬 P-17 海水江崖阴刻描 #00E5FF 极细线 1mm（44 卷特批件，宫城外唯一）；匾「明鏡高懸」木金漆；戒石亭刻石玄墨填「尔俸尔禄，民膏民脂」",
+        "霓虹件": "NH-01 官霓 #00E5FF：仪门轮廓灯带 Φ12mm 沿门框 P-06 回纹形走＋「開封府」衙名匾字管 Φ12mm——常亮禁闪，坊级 30m；登闻鼓位灯笼 #FFC66E",
+        "老化磨损": "鼓楼木顺纹裂宽 3mm；石狮一对 M-08 狮面风化圆化半径 5mm；照壁 #00E5FF 阴刻线积尘（亮度 −20%，剧情除尘恢复）；牢栅锈晕；金砖走道映像 60%",
+        "形制备注": "登闻鼓告状主线入口；六房案牍架 12；宋江押司文牍线、林冲教枪（教场）点位"
+      }
+    },
+    {
+      "id": "C-GZ-030",
+      "name": "开宝寺塔",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "各层塔檐：檐砖赤金琉璃 #D4A017（M-19 琉璃构件态）＋塔檐木椽 M-05；攒尖塔刹宝顶 M-10 铜胎＋M-11 鎏金 #FFD700（磨损露铜 #B87333，残金率 ≥70%）；八角十三层，总高 55m，逐层收分",
+        "墙体": "塔身铁色琉璃砖 M-19：砖 320×260×70mm，色 #4A4E54（铁色琉璃，日光下如生铁铸）；千佛砖龛 80（佛像模印，龛 0.32×0.42m）；剥釉露胎斑 ≤5%；塔心柱 M-05 木结构柱",
+        "台基": "莲瓣须弥座塔基径 14m：M-08 青石束腰＋P-14 莲瓣石刻（仰覆瓣高 90mm，勾线 #4A8B6F）；塔院围墙 M-03 高 2.2m；碑亭「京城宝刹」碑 M-08",
+        "门窗": "塔窗 48 处砖券洞（券脸石 M-08）；旋梯 168 级砖石（梯心磨凹 30mm，顺时针盘旋）；顶层舍利函室",
+        "彩画纹样": "无彩画（琉璃模印为饰）；塔匾「開寶禪塔」石金漆；香客棚 6 座席木 #D4B76A 为塔院辅件",
+        "霓虹件": "塔刹光针 NH-01 官霓 #00E5FF：垂直光针一道高 8m 自刹顶（坊级 30m，常亮禁闪——全城夜景第一锚点）；灯龛 13 处上元节逐层燃灯 #FFC66E（事件限定）；塔檐铜风铎 104 枚 M-10／M-12",
+        "老化磨损": "釉面失光至 0.30＋表面开片网纹；风铎缺 3 只（挂环空位留痕）；铜绿 #4E7A5E 沿檐口滴痕垂带；须弥座莲瓣踩磨圆化半径 5mm",
+        "形制备注": "登塔眺望解锁全图；上元十三层燃灯全城事件；鲁智深塔下借宿衔接线"
+      }
+    },
+    {
+      "id": "C-GZ-031",
+      "name": "汴河码头",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "货栈雨棚 2 座：席木棚顶 #D4B76A（苇席搭接 0.3m）＋M-13 布幔压边；棚柱 M-05 直径 0.3m；鱼市带露天无棚",
+        "墙体": "无墙（露天平台作业区）。塔吊平衡吊臂木架 M-05（臂长 8m，绞盘 M-12、吊索麻绳）；麻袋垛 30 码齐（麻布 #D4B76A，缝线玄墨，粉尘层 1mm）",
+        "台基": "石砌平台 42×14m：M-08 条石厚 250mm 错缝铺砌平缝 8mm，高于水面 1.2m；石阶步道磨亮带 +0.15；系船桩 12 根（桩身 M-05、铁箍 M-12）缆痕深 20mm",
+        "门窗": "无门窗。跳板 3 块 M-05（防滑刻痕深 3mm）；官秤木铜（杆 M-05、锤 M-10）",
+        "彩画纹样": "无彩画（作业区素面，做旧即装饰：缆痕、车辙、粉尘三层语言）",
+        "霓虹件": "吊臂轮廓 NH-04 工霓 #B8FF2E：M-25 Φ8mm 沿吊臂与立架走线（铺级 8m，常亮——夜间作业标识）；泊位号灯 #FFC66E 3 盏",
+        "老化磨损": "桩木水线糟朽 300mm（糟朽色 #57534E）；石阶缆磨槽 30mm；平台边缘崩茬；跳板翘裂 2 块；塔吊绳股起毛",
+        "形制备注": "漕船三列泊位；开船点 W1；码头斗殴事件位；凌振绞盘炮位（事件替换件）；漕粮入仓任务链起点"
+      }
+    },
+    {
+      "id": "C-GZ-032",
+      "name": "东市市楼",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "两层重檐歇山旗亭（12×12m，总高 14m）：筒瓦 M-01 布筒瓦 #3B4045，压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；重檐滴水两排各 0.32m；檐角风铎 M-10 8 枚；瓦面苔 ≤2%",
+        "墙体": "砖木合构：底层砖墙 M-03 #5A6472（一顺一丁），上层白灰粉墙 #E8E4DA＋朱柱 M-05 直径 0.6m 涂 #A63A2B（红白相间旗亭制）；裙肩与底层砖墙连体；楼侧值事房 2 砖木",
+        "台基": "底土台高 1.5m：M-04 夯土版筑收分 30mm/m 外包 M-03 砖；四向踏跺（中带磨凹 12mm）；楼前公秤亭石座 M-08",
+        "门窗": "底层市署值房板门 M-05＋直棂窗 M-15 #F4ECD8；二楼茶肆歌台四面开敞装 M-16 竹帘（吊环 400mm，卷起三档并用）；楼上悬市鼓一面（皮木）",
+        "彩画纹样": "素作为主；额枋单线刷绿 #4A8B6F；市旗「東市」白字红旗（底 #A63A2B、字 #F0EAD6）；楹联木底玄墨「市声千载聚／货殖四方通」",
+        "霓虹件": "「市」字双面牌 NH-04 工霓 #B8FF2E：M-25 Φ12mm 楼顶牌位双面（坊级 30m，常亮）；开市牌 #B8FF2E／闭市牌 #FF9E00 切换（卯时开／酉时闭联动市鼓）；夜市灯笼 30 盏棚檐串挂 #FFC66E",
+        "老化磨损": "常档：朱柱西面漆粉化 15%；粉墙雨渍垂带 4 道；市旗褪（旗角先破）；楼板踩磨（歌台中心磨亮 +0.15）；土台砖脚泛碱带高 200mm",
+        "形制备注": "楼下人流如织：四向街入；摊位列棚 40 席竹 #D4B76A 十字街两侧；午市开鼓事件"
+      }
+    },
+    {
+      "id": "C-GZ-033",
+      "name": "西市市楼",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "两层重檐歇山旗亭（12×12m，总高 14m）：筒瓦 M-01 #3B4045，压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.6m；西晒面瓦釉失光至 0.26、垄间积沙尘 2mm；风铎锈哑 2 枚",
+        "墙体": "底层砖墙 M-03 #5A6472＋上层粉墙 #E8E4DA＋朱柱 M-05 #A63A2B（同东市制）；西面墙体风蚀起麻、漆粉化 22%；楼后驼栈席木货仓（席 #D4B76A）",
+        "台基": "底土台高 1.5m：M-04 夯土包 M-03 砖；驼队踏跺磨坑（密度 2 眼/m² 深 6mm）；楼侧拴马桩 8 石 M-08（桩顶缰磨亮）",
+        "门窗": "底层值房板门 M-05＋直棂窗 M-15；二楼开敞装 M-16 竹帘；金银铺柜（木铁 M-05＋M-12）居底层东；胡毯挂帘装饰 M-14（地 #9D2933、联珠 #FFD700，P-15 团窠纹）二三层栏外悬",
+        "彩画纹样": "栏外胡毯 P-15 团窠（窠径 220mm，窠心 #2E4E7E）；市旗「西市」白字红旗（#A63A2B／#F0EAD6）；楹联「驼铃来绝域／宝货聚中华」木底玄墨",
+        "霓虹件": "「市」字双面牌 NH-04 #B8FF2E Φ12mm（坊级 30m，常亮）；开市 #B8FF2E／闭市 #FF9E00 切换；夜市灯笼 24 盏 #FFC66E；更铺巡丁提灯 #FFC66E",
+        "老化磨损": "西晒漆粉化 22%；胡毯日晒褪向 #D4B76A；驼粪氨蚀土台墙脚带 300mm；水井辘轳井台石磨凹 15mm；市旗褪",
+        "形制备注": "驼队雇佣始发（衔接大漠丝路驿站）；胡商珠宝支线；牙帖公示榜（木底）挂楼壁"
+      }
+    },
+    {
+      "id": "C-GZ-034",
+      "name": "綢緞莊",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层三间悬山（13×9m，脊高 6.6m）：合瓦 M-02 #3B4045，节距 0.48m，花边滴水；素正脊；瓦缝草 1 簇/m²",
+        "墙体": "明间敞开；板壁 M-05 #6B4A2B＋裙板 P-09 海石榴纹腰板（壳 #A63A2B、籽 #FFD700 镜面反光点）；裙肩 M-03 高 0.9m #5A6472；室内木地板（M-05 架空）",
+        "台基": "台基高 0.5m M-03＋M-08 阶条；青石门槛 M-08 磨凹 20mm",
+        "门窗": "槅扇可开（槅心糊 M-15 #F4ECD8）；门前绸架 3 次第铺开（架 M-05）；后院作坊裁缝位",
+        "彩画纹样": "垂幔 M-14 绸 #9D2933 织金线 #FFD700 嵌边 2mm，P-15 团窠纹（窠心 #2E4E7E）；匾「綢緞莊」木金漆；绣屏双面（绢 #F4ECD8）",
+        "霓虹件": "匾管 NH-02 商霓 #FF2E88：M-25 Φ8mm 沿匾字走线（铺级 8m，常亮，8% 概率 2Hz 闪）；垂幔受 #FF2E88 环境光时联珠逐颗点亮反光（P-15 条款，非直接发光）",
+        "老化磨损": "板壁油手印带；垂幔日光面褪偏 #D4B76A（须边翻卷）；门槛磨凹 20mm；绸架横杆手泽亮",
+        "形制备注": "量体裁衣换装系统入口（侯健）；卢俊义最大主顾暗线"
+      }
+    },
+    {
+      "id": "C-GZ-035",
+      "name": "果子鋪",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层两间悬山（10×7m，脊高 5.6m）：合瓦 M-02 #3B4045，节距 0.48m；出深挑檐 1.2m 摆摊位；素正脊；檐口滴水线水渍晕",
+        "墙体": "板壁 M-05 #6B4A2B；次间灰泥 #E8E4DA；裙肩 M-03 高 0.8m #5A6472；果渍渗木深斑 3 处",
+        "台基": "素土砖地（室内）：素土 CJ-01 #C8B48A 夯实＋砖 M-03 干铺相间；门槛 M-08 磨凹 15mm",
+        "门窗": "前摊开敞；直棂窗 M-15 纸 #F4ECD8；檐前吊果篮 6（竹 #D4B76A，吊绳麻）",
+        "彩画纹样": "素作；匾「果子鋪」木墨书；干货柜 2 贴纸签（#F4ECD8 玄墨字）；果桶 4 木箍",
+        "霓虹件": "匾管 NH-05 食霓琥珀 #FF9E00：M-25 Φ8mm 沿匾字走线（铺级 8m，呼吸 0.5Hz——食业统一琥珀）；无其他霓虹",
+        "老化磨损": "衰-常之间：果渍渗斑；挑檐下缘烟熏（邻铺饼炉串烟 #7A8A99）；纸包沓受潮软角；门槛磨凹 15mm",
+        "形制备注": "上元节限时机果；馈赠好感道具供货点；地窖存果（窖口 M-08 石阶）"
+      }
+    },
+    {
+      "id": "C-GZ-036",
+      "name": "飯鋪",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层三间悬山（14×9m，脊高 6.4m）：合瓦 M-02 #3B4045，节距 0.48m；敞门三间；素正脊；灶间上空瓦面油烟熏黑斑 2m²（#2B2B2B 熏层）",
+        "墙体": "板壁 M-05 #6B4A2B；灶间隔墙刷洗白灰 #E8E4DA（刷洗如镜态，反光 +0.1）；裙肩 M-03 高 0.9m #5A6472",
+        "台基": "青砖地刷洗如镜：M-03 磨砖＋水刷态（反光 0.35）；门槛 M-08 磨凹 20mm（苦力客流最重）",
+        "门窗": "敞门无扇；条凳外摆 6 组；蒸笼塔 4 叠（竹 #D4B76A，白汽 M-20 常态）",
+        "彩画纹样": "素作；匾「飯鋪」木墨书；菜牌水牌木粉书（白粉 #F4ECD8 字）；楹联木底玄墨",
+        "霓虹件": "匾管 NH-05 食霓 #FF9E00 Φ8mm（铺级 8m，呼吸 0.5Hz）；灶间气窗夜透 #FFC66E 火光",
+        "老化磨损": "灶间墙面油烟层 1.5m 高；条凳面磨亮；门槛磨凹 20mm；泔水桶后门位地面油晕",
+        "形制备注": "曹正刀工表演点；苦力饭点廉价体力恢复选项"
+      }
+    },
+    {
+      "id": "C-GZ-037",
+      "name": "唐家酒店",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层两间悬山（10×8m，脊高 5.8m）：合瓦 M-02 #3B4045 节距 0.48m＋檐口草檐沿一排（茅草 #D4B76A 出檐 300mm，下垂 80mm，衰档枯色端 #8A5A2B）；正脊素",
+        "墙体": "板壁 M-05 #6B4A2B；灰泥墙 #E8E4DA；无正式裙肩（砖脚 M-03 高 0.5m 简砌）；墙根垒粗陶酒瓮 10（陶 #955539，封泥 #C8B48A）",
+        "台基": "夯土地 CJ-01 #C8B48A（室外）；堂内素土＋砖边带；门槛 M-08 磨凹 18mm",
+        "门窗": "板门 M-05 昼开夜闭；直棂窗糊 M-15；酒垆遮阳棚席竹 #D4B76A（棚柱竹 #D4B76A，弯曲 30mm）",
+        "彩画纹样": "素作；匾「唐家酒店」木墨书；酒旗青布 #2E4E7E「酒」字白书斜挑檐杆",
+        "霓虹件": "匾管 NH-05 食霓 #FF9E00 Φ8mm 沿匾字（铺级 8m，呼吸 0.5Hz）；酒垆灯笼 #FFC66E 一盏",
+        "老化磨损": "草檐沿枯朽（衰档）；酒瓮身酒渍晕；席棚补丁 2 处色差；夯土地酒渍浸斑 5 处；李逵闹酒位桌角缺损",
+        "形制备注": "施恩托请（快活林线改写）；村酿浊醪三盏尽楹联"
+      }
+    },
+    {
+      "id": "C-GZ-038",
+      "name": "久住王員外家",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "两层悬山腰檐（12×10m，总高 9m）：腰檐一层筒瓦 M-01 #3B4045（垄 0.24m）＋顶层合瓦 M-02 #3B4045（节距 0.48m）混作；素脊；瓦缝草 2 簇/m²",
+        "墙体": "木构 M-05 #6B4A2B；底层堂口粉墙 #E8E4DA；裙肩 M-03 高 1.0m #5A6472；楼上客房 6 间格扇排布",
+        "台基": "台基高 0.6m M-03；素方砖地（堂口）M-03 干铺缝 ≤2mm；门槛 M-08 磨凹 20mm（行商客流）",
+        "门窗": "素格扇：M-05 框＋直棂格心＋糊 M-15 #F4ECD8（补丁纸深一档 #E8DCC0 共 4 处）；门房夜灯纸笼 #FFC66E 通宵",
+        "彩画纹样": "素作；匾「久住王員外家」木金漆（久住二字招客长住名物梗）；楹联「门迎四海三江客／户纳千山万水宾」玄墨",
+        "霓虹件": "匾管 NH-02 商霓 #FF2E88 Φ8mm 沿长匾字走线（铺级 8m，常亮——客舍属商系）；门房灯 #FFC66E 为物级常明",
+        "老化磨损": "客流门槛磨凹 20mm；格扇纸补丁 4 处；楼梯踏步磨凹 8mm；后院汤房木桶箍锈晕；草料槽啃痕",
+        "形制备注": "客房情报偷听触发支线；长住包月折扣；30 文/夜"
+      }
+    },
+    {
+      "id": "C-GZ-039",
+      "name": "明家靴店",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "单层两间悬山（10×7m，脊高 5.6m）：合瓦 M-02 #3B4045，节距 0.48m，花边滴水；素正脊；瓦面苔 ≤2%",
+        "墙体": "板壁 M-05 #6B4A2B＋裙板 P-09 海石榴腰板（壳 #A63A2B、籽 #FFD700 反光点）；裙肩 M-03 高 0.8m #5A6472",
+        "台基": "台基高 0.45m M-03；青石门槛 M-08 磨凹 20mm；前敞架区砖地 M-03 干铺",
+        "门窗": "前敞架（靴架 2：皮靴麻鞋成排）；直棂窗 M-15 纸 #F4ECD8；作坊楦头 8、皮料架 1（皮革色取 CJ-04 #6B4A2B～CJ-05 #4A3220 区间）、锥线筐 2",
+        "彩画纹样": "裙板 P-09 海石榴；匾「明家靴店」木墨书；楹联「足下生辉行千里／掌中选履稳一程」玄墨",
+        "霓虹件": "匾管 NH-02 商霓 #FF2E88 Φ8mm 沿匾字（铺级 8m，常亮 8% 概率 2Hz 闪）",
+        "老化磨损": "试靴凳面磨亮；门槛磨凹 20mm；靴架横杆变形下弯 20mm；作坊地面线头碎皮堆积",
+        "形制备注": "疾行靴（移速加成）供货点；军靴订单支线衔接城防"
+      }
+    },
+    {
+      "id": "C-GZ-040",
+      "name": "上東門",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "城楼单檐歇山（面阔 3 间）：布筒瓦 M-01 #3B4045（受光 #5A6472），压七露三，垄 0.24m，滴水 0.32m；正脊吻 M-12 #4A4E54 高 0.5m；风铎 M-10 6 枚锈哑 2 枚；北阴面苔 4%",
+        "墙体": "门墩 14×10m（小于外城 22×22m 制）：M-04 夯土芯外包 M-03 城砖一顺一丁 #4E545E，灰缝横 12/竖 10mm，收分 8%；瓮城弧墙围合 30×26m（弧砌灰缝外 12mm 内 15mm）；灰砖斑驳、城砖窑记斑驳（戳记可辨率 60%）；垛口高 1.2m 间距 0.5m",
+        "台基": "门洞地袱 M-08 #4E545E；瓮城内车马盘旋磨环带（反光 +0.15，环径 12m）；马道砖坡 M-03 磨凹 10mm；千斤闸槽 M-12",
+        "门窗": "门扇 2 木胎包铁钉 M-12 高 5.5m；门匾「上東門」石墨金（石底 #4E545E 墨底 #2B2B2B、金字）；戍铺 2 直棂窗 M-15 #F4ECD8；火盆灯 2 铁陶 #FFC66E 夜间",
+        "彩画纹样": "城楼 M-06 旋子简作：青 #3A6B8C／绿 #4A8B6F、朱底 #A63A2B；瓮墙无彩画；匾联金字氧化发暗 15%",
+        "霓虹件": "NH-01 官霓 #00E5FF：门洞轮廓灯带 Φ12mm 沿券面砖缝走 P-06 回纹形（坊级 30m 常亮禁闪）；瓮城内不设灯带（瓮城战术暗区，仅火盆灯 #FFC66E）",
+        "老化磨损": "灰砖斑驳（缺角率 5%）；窑记斑驳；瓮墙车马擦痕成组；门枢磨亮；风铎锈哑",
+        "形制备注": "出城赴郊野柳林／东郊主通道；武松扮行者常经此；宵禁后闭门"
+      }
+    },
+    {
+      "id": "C-GZ-041",
+      "name": "东墙旧城墙遗址段",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "无顶无瓦。残墙顶面 M-04 夯土裸露，雨蚀沟槽纵横（宽 20～40mm 深 10mm+）；荒草没顶（草高 200～600mm，#4A8B6F 与枯黄 #D4B76A 混生）",
+        "墙体": "夯土残墙 M-04（人间色域 #C8B48A→#955539，全段取衰-残两端混布）：残高 2～4m，基宽 4m，沿 x=462 段长约 860m；版筑层理外露 70% 面积、层间剥落露草筋 8%；塌垛口 8 处（崩塌豁口圆钝）；穿墙老槐 3 株（树根胀裂缝宽 50mm）；断口三处供通行（断口圆化半径 300mm）",
+        "台基": "无台基；墙根阴凉带素土 CJ-01 #C8B48A 压实（歇脚摊位区）；界碑 2 处 M-08 刻「舊垣」（字口含苔）",
+        "门窗": "无门窗；通行断口即「门」；歇脚摊席棚 2 组 #D4B76A 附墙根",
+        "彩画纹样": "无彩画；唯界碑刻字与工部旧戳记残痕 4 处（风化仅余轮廓）",
+        "霓虹件": "禁霓虹（遗址无归属体系；44 卷未予霓虹——全段无发光件，夜间仅歇脚摊灯笼 #FFC66E 两盏）",
+        "老化磨损": "全卷唯一残档：雨蚀竖沟＋层间剥落 8%＋塌垛口 8＋树根胀裂 50mm＋草筋外露；陶宗旺修墙任务可逆修复点（修复段为新夯土 #C8B48A 与旧墙 #955539 分界清晰）",
+        "形制备注": "年代感符号资产：修墙捐工换声望线；墙根歇脚脚夫群像"
+      }
+    },
+    {
+      "id": "C-GZ-042",
+      "name": "南岸市集",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "摊棚 30 组席棚竹架：苇席顶 #D4B76A 搭接 0.3m（新补席与旧席色差一档 #8A5A2B）；帆布（M-13 布幔 #D4B76A）相接成带；无正脊无瓦",
+        "墙体": "无墙；木牌楼一座四柱冲天：柱 M-05 直径 0.35m 涂 #A63A2B（底部 600mm 油浸防潮深褐 #4A3220）；牌楼匾「南岸市集」木金漆；彩纸招子（纸 #F4ECD8 彩点 #A63A2B／#2E4E7E／#D9A40E）",
+        "台基": "沿南岸街带状 140×40m 素土 CJ-01 #C8B48A；食摊带油渍浸斑（深度 2mm 密度 4 处/10m）；肉案排水沟明槽宽 120mm",
+        "门窗": "无门窗；摊棚开面即门；饼炉 2 砖陶（炉口熏黑 #2B2B2B）；石秀肉案木铁（案面刀痕密度 12 条/dm²）",
+        "彩画纹样": "素作；牌楼额枋彩点纹（无专卡，取 P-09 海石榴籽点语法单色简作 #A63A2B）；招幌彩纸成串",
+        "霓虹件": "不设霓虹（露天集市无匾额灯管载体，44 卷未予归属）；入夜变夜市：棚檐灯笼串 #FFC66E 约 40 点位；饼炉火光明火",
+        "老化磨损": "衰档：席棚补丁 10 处；棚柱底 200mm 潮朽；彩纸招褪色分层；土面油渍浸斑；肉案沟槽污垢层",
+        "形制备注": "石秀切肉观演、孙二娘馒头铺暗线、白胜酒担 5 文——群像剧场区"
+      }
+    },
+    {
+      "id": "C-GZ-043",
+      "name": "郊野柳林茶亭",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "草亭六柱攒尖茅顶（亭 8×8m）：茅草顶 #D4B76A（枯端 #8A5A2B），草层厚 150mm 压席脊；攒尖顶心木宝顶 M-05；顶面塌陷补席 1 处色差",
+        "墙体": "无墙——六柱：竹木柱 M-05 直径 0.22m（柱脚 200mm 潮朽色 #57534E，油浸端 #4A3220）；亭内石凳 4（M-08，凳面磨亮 +0.15）",
+        "台基": "亭基素土＋碎石 CJ-01 #C8B48A；林带 200×120m；射柳箭道三程柳桩（桩径 80mm，红绳 #9D2933 系靶心，绳褪三档）",
+        "门窗": "无门窗四面开敞；茶担竹铜（炉铜 M-10、担竹 #D4B76A）；茶幌「茶」字帘 #F0EAD6（帘 M-16 竹帘改制，篾宽 2mm）",
+        "彩画纹样": "素作；柳桩红绳即「彩」；弓矢摊竹木",
+        "霓虹件": "不设霓虹（郊野无归属）；茶炉炭火明光 #FFC66E 夜间；无其他发光件",
+        "老化磨损": "柱脚潮朽 200mm；茅顶补席色差；老柳断干一株（鲁智深拔柳遗址——断口风化圆化灰白 #7A8A99）；石凳磨亮；红绳褪三档",
+        "形制备注": "鲁智深拔柳名场面整点复演；花荣射柳授艺（5 文租弓）；茶 2 文"
+      }
+    },
+    {
+      "id": "C-GZ-044",
+      "name": "泰山碧霞祠",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "元君殿重檐歇山（殿高 10m）：铜瓦覆顶 M-10（瓦 #B87333，映日提亮近 #D4A017；铜绿结壳 ≤40% 沿滴水线）＋檐口石绿琉璃剪边 M-01 #4A8B6F（44 卷归型 14 碧霞剪边）；正脊吻 M-11 贴金 #FFD700 高 0.8m；山门香亭卷棚同剪边",
+        "墙体": "殿墙土朱 CJ-08 #8C4A3C（44 卷祠庙墙制）；裙肩 M-08 青石高 0.8m；石砌台地三层 M-08（阶条磨凹 10mm）；东西云房 4 石木（石墙 #4E545E 木架 M-05）",
+        "台基": "石砌台地三层：M-08 平缝 8mm；石坊「登峰造极」M-08 雕字深 20mm（字口含苔 30%）；功德碑林 12 通 M-08（碑面风化起麻）",
+        "门窗": "元君殿隔扇 M-05＋P-05 凤纹裙板（回眸立凤，身 #E8556D 降饱和 20%、尾贴金 #FFD700——祠内金线反光禁发光）；直棂窗糊 M-15 #F4ECD8",
+        "彩画纹样": "裙板 P-05 凤纹为殿身母题；香亭石铁（亭柱铁件 M-12）；大铁鼎 M-12（鼎身锈皮 #6E1F1F 翘边 ≤3mm）；祠匾「碧霞祠」铜金漆",
+        "霓虹件": "庙名灯 NH-01 官霓 #00E5FF 一盏 Φ12mm 悬山门（坊级 30m，常亮）；长明灯 2 铜油 #FFC66E 殿前（明火系）；云海时段 #FFC66E 全祠微环境光",
+        "老化磨损": "旧档：铜瓦锈绿沿滴水垂带；香熏檐底 #7A8A99 向上 300mm；碑林风化起麻＋字口苔；高山强紫外线使剪边石绿褪 15%",
+        "形制备注": "卯时观日出事件（云海玉盘）；香客还愿支线；峰顶 1550m 风荷载——瓦件松动声效点位"
+      }
+    },
+    {
+      "id": "C-GZ-045",
+      "name": "华山镇江王庙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "大殿单檐歇山（殿高 8m）：筒瓦 M-01 #3B4045＋灰剪边（同瓦色剪边，无彩色）；正脊吻 M-12 #4A4E54 高 0.6m；依岩而建，北坡面瓦压条石镇（山风防掀做法）",
+        "墙体": "庙墙土朱 #8C4A3C 与岩体咬合（嵌岩缝处砖石混砌：M-03 ＋M-08）；裙肩 M-08 高 0.6m；岩渗水渍沿墙垂直带 5 道（钙白 #E8E4DA 与苔绿 #4A8B6F 交替）",
+        "台基": "庙区 40×30m 依岩台地 M-08；旗杆一对石木（杆座 M-08，幡杆 M-05）；庙前绝壁千尺护栏石桩 M-08 间距 1.5m",
+        "门窗": "山门板门 M-05；大殿隔扇 M-05＋糊 M-15 #F4ECD8；直棂窗；签筒竹（廊下）",
+        "彩画纹样": "廊柱裙 P-21 波曲纹（山形起伏宽 150mm 阴阳双线，石刻态 #4E545E）——波曲内积水反光即「水纹活线」（P-21 条款）；船模供架 9 具还愿（木 M-05，帆 #F0EAD6）",
+        "霓虹件": "庙名灯 NH-01 #00E5FF 一盏 Φ12mm（坊级 30m，常亮）；香案烛 #FFC66E；无其他发光件",
+        "老化磨损": "旧-衰档：云雾缠腰常年湿蚀——瓦垄苔 5%；木构件顺纹裂 4 条；波曲积水冬季冰胀剥缺 2 处；庙匾金漆褪 20%",
+        "形制备注": "险径坠崖救援任务；船家还愿线；恐高减速区起点在庙前"
+      }
+    },
+    {
+      "id": "C-GZ-046",
+      "name": "衡山祝融殿",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "高台石殿单檐歇山（殿高 8m）：铁瓦覆面 M-12（锻打痕水平条带，瓦 #4A4E54 黑亮态；层状锈剥落翘皮 #6E1F1F 翘边 ≤3mm ≤15% 面积）＋檐口朱剪边 M-01 #A63A2B（44 卷归型 14 祝融朱剪）；檐下檐点 #FF7F50（44 卷归型 14 祝融檐点，作光色渐变禁大面积涂装）",
+        "墙体": "殿墙土朱 #8C4A3C；石殿四角 M-08 青石墙角石（西晒面风蚀起麻）；殿匾「祝融殿」铁金漆；道士舍 2 石木",
+        "台基": "露天丹陛 M-08 磨光（反光 0.40，拜跪区磨凹 8mm）；云海观台 M-08 悬挑（栏杆石桩间距 1.2m）；大香炉铁 M-12 三足火鼎",
+        "门窗": "板门 M-05 厚 70mm（防山风）；高窗小尺洞糊 M-15；殿内祝融像铜铸 M-10（赤衣执简——衣部彩 #A63A2B）",
+        "彩画纹样": "素作（铁瓦黑亮＋朱剪边即配色主体）；檐点 #FF7F50 渐变限定檐口下 200mm",
+        "霓虹件": "庙名灯 NH-01 #00E5FF 一盏 Φ12mm（坊级 30m，常亮）；丹陛香炉明火 #FFC66E；火德符箓任务符纸 M-22（基底 #C9B380、符文 #B03A2E，夜间亮符 30% #FF9E00）",
+        "老化磨损": "铁瓦锈翘皮 15%；峰顶风蚀：瓦角磨圆；丹陛冻裂 2 道（缝宽 8mm）；朱剪边褪 #8C4A3C",
+        "形制备注": "日出云海事件；四望开阔为远景构图锚点（铁瓦反光带）"
+      }
+    },
+    {
+      "id": "C-GZ-047",
+      "name": "恒山北岳庙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "大殿单檐歇山（殿高 9m）半嵌岩洞：筒瓦 M-01 #3B4045＋玄墨剪边 #2B2B2B（44 卷归型 14 北岳玄剪——洞内阴湿面剪边生苔 6%）；正脊素（北岳素条款，无吻兽彩画）",
+        "墙体": "殿墙土朱 #8C4A3C 与岩壁相接；嵌岩段石墙 M-08；洞内墙面凝水湿斑（暗面 #4E545E 加深一档）；守庙人舍 1 石木",
+        "台基": "悬崖栈道接入：栈门木石；石阶 108 级 M-08（阶心磨凹 12mm，级高 150mm）；碑碣 8 通 M-08 院侧",
+        "门窗": "板门 M-05；殿内借岩为顶不开高窗，直棂小窗 2 糊 M-15；栈道木石护栏（条 20×20mm 铁件 M-12 锈晕）",
+        "彩画纹样": "素作（北岳素条款）；北岳大帝像泥金（金 #FFD700 仅像身）；殿匾「北岳庙」木金漆",
+        "霓虹件": "庙名灯 NH-01 #00E5FF 一盏 Φ12mm 悬栈门（坊级 30m，常亮——悬崖夜景唯一光点）；殿内长明烛 #FFC66E 一盏",
+        "老化磨损": "衰档：洞内凝水湿斑；剪边苔 6%；石阶冻融剥缺（每级缺角 ≤1 处）；栈道铁件锈晕 20mm；雪夜封山积雪荷载瓦面下陷 20mm",
+        "形制备注": "雪夜封山事件；寻药攀崖任务；松涛钟声音景"
+      }
+    },
+    {
+      "id": "C-GZ-048",
+      "name": "嵩山中岳庙",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "中岳大殿重檐庑殿（面阔 7 间，大殿高 15m）：筒瓦 M-01 #3B4045＋稻黄琉璃剪边 #D4B76A（44 卷归型 14 中岳剪边——降档黄琉璃）；正脊吻 M-12 #4A4E54 高 1.0m，走兽 7 件；遥参亭攒尖、天中阁歇山同剪边递减",
+        "墙体": "红墙土朱 #8C4A3C（墙高 2.8m 带墙帽 M-03）；裙肩 M-08 高 0.8m；神道两侧石翁仲 8 尊 M-08（文臣武将分列，高 2.6m，风化圆化半径 6mm）",
+        "台基": "五进院落中轴神道 M-08 石墁（中带磨亮 +0.15，宽 4m）；醮坛石台 M-08 露天；古柏 60 株根群胀起神道边缘（胀高 30mm）",
+        "门窗": "大殿隔扇 M-05＋P-02 缠枝莲格心（枝 #4A8B6F、花 #FFB7C5 降饱和 20%、蕊 #FFD700 反光）；天中阁板门 M-05＋M-12 包叶",
+        "彩画纹样": "格心与檐下 P-02 缠枝莲为殿身母题（二方连续绕枋，花头间隔 300mm）；殿匾「中岳庙」木金漆；楹联「嵩呼千古应／岳镇万方宁」",
+        "霓虹件": "庙名灯 NH-01 #00E5FF 一盏 Φ12mm 悬天中阁（坊级 30m，常亮）；三月庙会庙市棚 20 席竹 #D4B76A 檐灯串 #FFC66E",
+        "老化磨损": "旧档：剪边褪 10%；翁仲手泽亮（香客抚胸部位）；古柏根胀台基；庙会期地面糖渍斑；配殿墙根泛碱带 200mm",
+        "形制备注": "三月庙会全图最大庙会；中岳祈福 buff 点；七十二寺观之首叙事"
+      }
+    },
+    {
+      "id": "C-GZ-049",
+      "name": "天山雪帘禅院",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "大雄殿重檐歇山（殿高 10m）：合瓦 M-02 #3B4045，节距 0.48m；檐挂冰凌 M-19（冰凌条 30×200mm 半透 #F8F8FF，成帘下垂 400mm，日融夜冻长短两态）；雪荷载瓦面下陷 20mm；山门雪簾禪院匾",
+        "墙体": "粉墙 #E8E4DA（雪线以上高反射环境——墙体保持本体色 #E8E4DA 不漂移，冷调一律靠雪光染色实现，禁止改 hex）；裙肩 M-08 石高 0.6m；雪廊木柱 M-05（柱脚雪蚀 150mm）",
+        "台基": "院石庭 M-08 砾（粒径 30～50mm 耙纹成波）；苔阶 #4A8B6F（阶缝苔覆盖率 8%，冰点以下冻苔发黑一档）",
+        "门窗": "冰纹格窗 12：木框 M-05＋格心冰裂纹（糊 M-15 双层——内层纸、外层明瓦态半透）；禅房竹帘 M-16 卷起 1/4 档",
+        "彩画纹样": "素作（禅院素面）；经幡塔幡五色（取 #9D2933／#2E4E7E／#D4B76A／#4A8B6F／#F0EAD6，褪色分层）；火塘 2 石铁",
+        "霓虹件": "全域禁霓虹（44 卷 §2.3 第八条雪帘禅院）：唯长明灯一盏 #FFC66E（殿前）；冰凌日间折光为「天然霓虹」效果（禁自发光）",
+        "老化磨损": "苔生阶缝 8%；纸窗补丁 #E8DCC0 2 处；冰凌断落重挂痕；雪廊柱脚雪蚀；铜漆佛坐像（高 3m）指部磨亮",
+        "形制备注": "坐禅修为事件；雪崩避险任务；解珍解宝猎户交易点"
+      }
+    },
+    {
+      "id": "C-GZ-050",
+      "name": "昆仑西王母瑶池行宫",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "王母殿重檐庑殿（殿高 16m）：琉璃筒瓦 M-01 天青 #88ABDA（天宫瑶池降级制——44 卷归型 17）；压七露三，垄 0.24m，滴水 0.32m；正脊宝顶 M-11 鎏金 #FFD700（本殿唯一金阶）；云桥小拱覆 M-13 纱幔 #D4B76A",
+        "墙体": "殿身 M-05 木构＋粉墙 #E8E4DA；前廊玉柱 M-18 白玉 #F2EFE9（直径 0.6m，SSS 透光 2mm 深度——玉不老化条款）；四角结界玉柱 M-18（霞光环绕：霞取 #9B59B6 渐变端，禁大面积涂装）",
+        "台基": "白玉阶九重 M-18／M-07（阶面 #F2EFE9，干摆缝 ≤2mm，踏心微磨 2mm——仙境限磨损上限）；瑶池温泉池 30×20m：池岸 M-08 磨光，水温汽 M-20 常驻（黄昏转浓 +40%）",
+        "门窗": "王母殿隔扇 M-05＋P-16 如意云头挂落（三瓣云勾单元 100mm）；殿内西王母像玉塑 M-18（凤冠金帔——帔金线 #FFD700）；蟠桃供 3（果 #FFB7C5→#E8556D 渐变）",
+        "彩画纹样": "挂落 P-16 如意云头；蟠桃园 12 株（枝 #4A8B6F）；殿匾「瑶池行宫」木金漆",
+        "霓虹件": "禁霓虹（44 卷 §2.3 第八条瑶池行宫）：光色走 44 卷 §4 天→人过渡带四站 #FFF3D8→#FFE9C0→#FFD9A0→#FFC66E（禁跳站）；结界玉柱霞光为叙事发光（M-18＋霞渐变，非灯管）；青鸾栖架 2 玉木",
+        "老化磨损": "仙境低磨损档：玉作不老化（M-18 天宫玉条款）；木构按旧档轻微（顺纹裂 ≤2 条）；池岸踩亮 +0.15；蟠桃随果期换色",
+        "形制备注": "全图最高点 3800m；蟠桃大会月历事件；渡劫任务入口；仙径需仙缘任务开启"
+      }
+    },
+    {
+      "id": "C-GZ-051",
+      "name": "大漠丝路驿站",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "驿楼两层平顶（站区 80×60m，驿楼高 10m）：无瓦平顶为地域变体——面层草泥抹面（土 #C8B48A 掺麦秸 3%）按 M-04 面层规范拍实，排水坡 2%；望楼（烽燧式）顶亦平顶＋烽盆位；驼棚 20 位单坡席顶 #D4B76A",
+        "墙体": "夯土 M-04（#C8B48A→#955539）：版筑每版高 0.5m 层理清晰；风蚀蜂窝孔 5mm 密度 8 个/dm²（西面最重）；墙脚盐霜白带高 200mm；驿卒舍 4 同构缩小",
+        "台基": "站区素沙地 CJ-01 #C8B48A 掺沙；坎儿井口砖木（井圈 M-03 磨绳痕深 15mm）；草料垛 6（干草 #D4B76A）",
+        "门窗": "驿楼券窗小洞糊 M-15 #F4ECD8（外挂苇帘 M-16）；签票房柜台 M-05；驼棚草槽石木；望楼登梯木（踏棍磨亮）",
+        "彩画纹样": "素作；站匾「丝路驿」木底玄墨；胡姬酒旗 #F0EAD6 底靛蓝 #2E4E7E 字；楹联「大漠孤烟直／长河落日圆」",
+        "霓虹件": "禁霓虹（44 卷未予驿站霓虹归属——远郊官驿无商业匾管）：夜间烽盆明火 #FFC66E（烽燧三座西传军情点位）＋驿楼灯笼 #FFC66E",
+        "老化磨损": "衰档：风蚀蜂窝；盐霜 200mm；平顶雨口冲沟 3 道（宽 100mm）；驼棚柱底沙埋半足（埋深 150mm）；井绳磨痕",
+        "形制备注": "丝路护商任务链；沙暴避险事件（沙暴时全部面层覆沙 5mm 动态层）；驼队雇佣始发"
+      }
+    },
+    {
+      "id": "C-GZ-052",
+      "name": "草原敖包祭坛",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "无顶。石堆敖包高 6m（坛区 40×40m）：垒石 M-08（石块 200～400mm 干垒，缝隙插柳枝——柳 #4A8B6F 新枝、枯枝 #8A5A2B）；白石镶嵌面 M-07（卵石 #F2EFE9 嵌面带）",
+        "墙体": "无墙；祭台石木（台面 M-08，供案 M-05）；弓箭架 3 木；赛马旗门 2 彩布（#9D2933／#2E4E7E／#D4B76A 三色拼）",
+        "台基": "环形祭场素土 CJ-01（绕包三匝踩出环带宽 800mm 磨亮 +0.1）；酥油长明灯 6 铜酥油沿祭场周（灯座铜 M-10 绿锈 ≤30%）",
+        "门窗": "无门窗；经幡绳自包顶放射至四角地桩（幡五色 #9D2933／#2E4E7E／#D4B76A／#4A8B6F／#F0EAD6，褪色分层；哈达白 #F0EAD6 系石）",
+        "彩画纹样": "素作；白石镶嵌带即纹饰；无 P 卡适配（草原祭俗不套汉地纹样，如实素作）",
+        "霓虹件": "禁霓虹（无归属）；酥油长明灯明火 #FFC66E×6 为夜间唯一光源（那达慕夜赛时加篝火 #FFC66E）",
+        "老化磨损": "旧档：幡褪分层；石堆风化圆化（棱角半径 20mm）；哈达新旧层叠（新白旧黄）；祭场环带磨亮",
+        "形制备注": "那达慕月赛（赛马/摔跤/射箭）；敖包祈福 buff；萨满祭仪事件"
+      }
+    },
+    {
+      "id": "C-GZ-053",
+      "name": "东河渔村",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "渔舍 10 栋悬山草顶（每栋 6×4.5m）：茅草 #D4B76A（枯端 #8A5A2B）草层 120mm；补草块色差 3 处/栋（均值）；炊烟贴水（M-20 微量常态）",
+        "墙体": "苇席泥墙：M-04 夯土 #C8B48A 掺苇筋＋苇席包面 #D4B76A；墙脚水线糟朽 150mm（#57534E）；晒网架 8 竹木沿岸",
+        "台基": "小埠头碎石木桩（桩水线糟朽 300mm）；村路素土；渔船 6 艘 M-05（船体桐油亮，水线藻附 #5F8A7A）",
+        "门窗": "木条门 M-05（条间距 80mm）；直棂小窗糊 M-15 #F4ECD8；鸬鹚栖架 4 木",
+        "彩画纹样": "素作无彩画；村口石碣「石碣村」刻石 M-08（字深 15mm，字口苔 40%）；渔网晾晒即「软装」（网线 #8A5A2B 浮子陶 #955539）",
+        "霓虹件": "不设霓虹（渔村民居群——民居禁霓虹规则延伸）；渔火 #FFC66E（夜捕灯 2～3 点位，物级）",
+        "老化磨损": "衰档：草顶补块；墙脚水线 150mm；席面霉斑；埠头桩糟朽；石碣字口苔",
+        "形制备注": "三阮渔家；水战教学（巨泽湖汊）；石碣渔宴事件"
+      }
+    },
+    {
+      "id": "C-GZ-054",
+      "name": "西河昆仑渡口",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "渡口草棚一座（茶棚）：茅竹攒尖 3×3m——茅顶 #D4B76A 枯端 #8A5A2B，竹骨 #D4B76A（篾捆扎麻绳间距 150mm）；棚面席补丁 2 块",
+        "墙体": "无墙；埠区 40×24m 开敞；渡资牌木书「渡资五文」（木底玄墨，牌脚石座）",
+        "台基": "石砌马道埠头：M-08 条石缓坡（坡比 1:8，中带磨亮 +0.15，湿滑水线苔 #4A8B6F 高 200mm）；缆桩 4 木铁（缆痕深 30mm）",
+        "门窗": "无门窗；跳板 2 块 M-05；渡船 2 官渡平底船（船帮 M-05 桐油面，舱棚席 #D4B76A）",
+        "彩画纹样": "素作；渡资牌即全部 signage",
+        "霓虹件": "不设霓虹（野渡无归属）；船头灯笼 #FFC66E 夜渡一盏",
+        "老化磨损": "衰档：埠头踩亮带；缆桩缆痕 30mm；草棚席朽边；跳板翘头 30mm；张横板刀磨石位石面凹 40mm",
+        "形制备注": "张横摆渡（板刀面/馄饨汤梗）；西河夜渡事件；汛期涨水动态"
+      }
+    },
+    {
+      "id": "C-GZ-055",
+      "name": "东洋巨泽漕运转运仓",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "仓廒 6 座悬山广厦（仓廒高 8m，仓区 140×100m）：合瓦 M-02 #3B4045，节距 0.48m，花边滴水；正脊素＋山花封板 M-05（缝 #C8B48A）；守仓兵铺 2 砖木覆瓦同制；仓匾「广储仓」",
+        "墙体": "仓墙下部 M-03 青砖高 1.2m #5A6472（防潮下碱）＋上部夯土 M-04 #C8B48A（版筑层理 80～100mm）；高台防潮（台高 0.9m M-08 包边）；砖脚泛碱白带高 200mm",
+        "台基": "高台 M-08 条石包边错缝；水门船闸石木（闸墩 M-08，斗门绞车 M-12＋木绞盘）；官斛量台 M-08（量台面磨亮 +0.15）",
+        "门窗": "仓廒大门 M-05 板门厚 80mm＋M-12 包叶（车撞缺角 2 处）；高窗直棂糊 M-15；封条架仓封文书（封纸 #F4ECD8 印朱 #A63A2B）",
+        "彩画纹样": "素作；仓匾「广储仓」木金漆；楹联「水陆通四海／仓廪实九州」玄墨",
+        "霓虹件": "仓匾字管 NH-04 工霓 #B8FF2E：M-25 Φ8mm 沿匾字（铺级 8m，常亮）；斗门绞车轮廓 NH-04 Φ8mm（夜航闸口标识）；泊位灯 #FFC66E 4 盏",
+        "老化磨损": "旧档：泛碱带 200mm；仓门车撞缺角；麻袋阵压地凹 10mm；闸门水线藻带；封条纸黄变",
+        "形制备注": "漕粮贪墨案支线（与汴河码头联动）；巨泽水盗事件；转运使斛斗吏点位"
+      }
+    },
+    {
+      "id": "C-GZ-056",
+      "name": "金耀门漕运仓",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "仓廒 4 座硬山（仓区 120×90m）：合瓦 M-02 #3B4045，节距 0.48m，花边滴水；正脊素；山花封板 M-05；麻雀群栖位瓦垄积粪白斑 6 处（生态细节，单斑 ≤0.2m²）",
+        "墙体": "仓墙下部 M-03 青砖高 1.2m #5A6472＋上部夯土 M-04 #C8B48A；山花封板；护仓栅栏一周木栅尖桩（桩顶炭化防蛀 #4A3220，尖桩磨亮——翻越点）；粮车棚 1 席顶 #D4B76A",
+        "台基": "仓廒高台 M-08 包边（台高 0.8m）；晒粮场夯土 CJ-01 #C8B48A（翻晒木耙痕间距 200mm，动态层）；斗斛量台 M-08",
+        "门窗": "仓廒板门 M-05＋M-12 包叶；高窗直棂 M-15（通风防潮常开）；押粮官房 1 砖木隔扇糊 M-15",
+        "彩画纹样": "素作；仓匾「丰济仓」木金漆；仓号木牌玄墨字（「漕一」至「漕四」）",
+        "霓虹件": "仓号灯牌 NH-04 工霓 #B8FF2E：M-25 Φ8mm 沿仓号牌字走（铺级 8m，常亮）；量台界灯 #FFC66E 夜间作业段",
+        "老化磨损": "旧档：泛碱带；粮袋粉尘层（场区空气粒子暖黄）；雀粪白斑；栅栏尖桩磨亮；车辙辙距 1.8m 深 20mm",
+        "形制备注": "汴河漕粮入城总仓；朱贵朱富验粮兼酿酒探事；鼠患事件生态链；与金耀門东墙 C-GZ-005 漕口联动"
+      }
+    },
+    {
+      "id": "C-HOU-01",
+      "name": "豪宅",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "悬山筒瓦（01 型特允许筒瓦 M-01）：瓦灰黑 #3B4045，压七露三，垄 0.24m，滴水 0.32m；门楼脊饰吻兽一对 M-12 #4A4E54 高 0.4m；后楼屋面同制；瓦缝草 1 簇/m²",
+        "墙体": "青砖墙 M-03 磨砖对缝（缝 ≤2mm）#5A6472：下碱高 1.2m、上身混砖砌；影壁砖雕「福」字壁（雕深 15mm）；彩画枋心 M-06 简作（青 #3A6B8C／绿 #4A8B6F）",
+        "台基": "台基高 0.6m M-08 阶条；方砖地（室内）M-03 磨砖干铺缝 ≤2mm；后花园叠石水池（叠石 M-08，池岸 M-08）",
+        "门窗": "门楼门簪 4 枚（高档）；格扇 M-05＋糊 M-15 #F4ECD8＋M-16 竹帘；书房直棂窗；架子床 2 木雕帐幔（M-14 #9D2933）",
+        "彩画纹样": "门楼花罩 P-22 蝠纹（蝠 #9D2933、寿字 #FFD700、地 #F4ECD8——民居版禁发光）；彩画枋心青绿；宅匾「積善堂」木金漆",
+        "霓虹件": "禁霓虹：回廊灯笼 8 盏纱灯 #FFC66E（M-13 纱）；门挂灯笼 2 盏 #FFC66E",
+        "老化磨损": "旧档偏新：墙根泛碱 200mm；瓦缝草；门枕石磨凹 15mm；影壁雕缝积尘；石狮 2 手泽亮"
+      }
+    },
+    {
+      "id": "C-HOU-02",
+      "name": "官宅",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "悬山筒瓦 M-01 #3B4045（官宅档），垄 0.24m 滴水 0.32m；正脊素＋脊端收头；瓦缝草 2 簇/m²",
+        "墙体": "青砖墙 M-03 #5A6472（对缝 ≤2mm）：下碱 1.2m；门屋旗杆石 2＋上马石 2（M-08，踏面磨凹 10mm）",
+        "台基": "台基高 0.5m M-08；甬道青石 M-08 中带磨亮 +0.15；院井砖石辘轳（井台石磨绳槽深 15mm）",
+        "门窗": "门簪 4 枚（官档）；格扇 M-05＋P-10 锦地格心（地 #3A6B8C、线 #88ABDA）＋糊 M-15 #F4ECD8；书房直棂窗",
+        "彩画纹样": "花罩 P-22 蝠纹（02 型允许，禁发光）；官服架（木 M-05）堂屋陈设；无额枋彩画（官宅素朴制）",
+        "霓虹件": "禁霓虹：门挂灯笼 1 盏 #FFC66E；廊下太平缸旁灯笼 1 盏 #FFC66E",
+        "老化磨损": "常档：泛碱 200mm；旗杆石灰浆残痕；上马石磨凹 10mm；格扇纸补丁 2 处 #E8DCC0"
+      }
+    },
+    {
+      "id": "C-HOU-03",
+      "name": "士人宅",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "悬山小青瓦 M-02 #3B4045（节距 0.48m，花边滴水）；正脊素；瓦缝草 3 簇/m²（清贫不拣漏）",
+        "墙体": "土墙木构：夯土 M-04 #C8B48A（版筑 0.5m 层理）＋木架 M-05 #6B4A2B；砖脚 M-03 高 0.5m 简砌；院隅竹石花台（砖 #5A6472 围、修竹 #4A8B6F、湖石 M-08）",
+        "台基": "台基高 0.35m 砖 M-03；室内素砖地 M-03 干铺；檐廊浅 0.9m",
+        "门窗": "直棂窗 M-05 格条 25mm＋糊 M-15 #F4ECD8（雨渍晕窗角扇形 2 处）；院门板门 M-05 单扇；门簪 2 枚",
+        "彩画纹样": "无彩画；斋匾「守拙斋」木墨书自题；古籍函套 12（纸函 #F4ECD8）",
+        "霓虹件": "禁霓虹：油灯 2 盏 #FFC66E（夜读灯，物级）——全宅夜窗纸透 #FFC66E 弱档",
+        "老化磨损": "旧档：土墙雨蚀竖沟 3 道；窗纸雨渍晕；门枕磨凹 12mm；书箱竹提手磨亮"
+      }
+    },
+    {
+      "id": "C-HOU-04",
+      "name": "商人宅",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "悬山瓦顶 M-02 #3B4045，节距 0.48m；门脸略阔（面阔加一间制）；素正脊；瓦缝草 2 簇/m²",
+        "墙体": "砖木混构：下碱 M-03 高 1.2m #5A6472＋上身灰泥 #E8E4DA；侧门通货道板门 M-05；护院哨棒 2 立门后（木 M-05）",
+        "台基": "台基高 0.5m M-03；堂屋方砖地 M-03 干铺；库房地木地板架空（M-05 防潮）",
+        "门窗": "门簪 2 枚；堂屋格扇 M-05＋糊 M-15 #F4ECD8；库房门加闩 M-12；账房直棂窗",
+        "彩画纹样": "素作；堂屋陈设八仙桌圈椅（木 M-05）；账簿 6（纸 #F4ECD8 墨 #2B2B2B）",
+        "霓虹件": "禁霓虹：门灯 2＋廊灯 2 纸竹灯笼 #FFC66E",
+        "老化磨损": "常档：门脸板壁油手印带（进货高频）；泛碱 200mm；库门枢磨亮；货箱角磨圆"
+      }
+    },
+    {
+      "id": "C-HOU-05",
+      "name": "标准民居",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "悬山仰瓦 M-02 #3B4045（仰瓦不合，节距 0.4m 一排仰瓦）；正脊砖压顶；瓦缝草 ≤3 簇/m²（草高 30～80mm）",
+        "墙体": "夯土或砖脚土坯墙：砖脚 M-03 高 0.5～0.6m＋土坯上身 #C8B48A（坯缝泥浆 15mm）；墙脚泛碱白带高 200mm（M-04 条款）",
+        "台基": "台基高 0.3m 砖脚；室内素土夯实 CJ-01＋甬道青石 M-08 一条（宽 0.6m 磨亮）",
+        "门窗": "纸窗 M-15 #F4ECD8（糊格 0.18×0.24m，格条 25mm，透光 55%）；院门柴门／薄板门 M-05；门簪 2 枚素作",
+        "彩画纹样": "无彩画；门上桃符位（岁末纸符 #F4ECD8 朱书 #B03A2E——符纸 M-22 语法年换）",
+        "霓虹件": "禁霓虹：门挂灯笼 1 盏 #FFC66E",
+        "老化磨损": "旧档：泛碱 200mm；瓦缝草；土坯墙雨蚀沟 2 道；窗纸补丁 1～2 处 #E8DCC0；门枕磨凹 12mm"
+      }
+    },
+    {
+      "id": "C-HOU-06",
+      "name": "小店附宅",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "悬山 M-02 #3B4045，节距 0.48m；出檐 0.9m 摆摊位（檐下即摊位线）；素正脊；瓦缝草 2 簇/m²",
+        "墙体": "木构排门板制：铺面排门板 6 块（M-05，晨卸暮上，板背编号墨书）；上身灰泥 #E8E4DA；下碱 M-03 高 0.8m",
+        "台基": "台基高 0.4m M-03；铺面素砖地 M-03（油手印与鞋磨带）；后灶间素土",
+        "门窗": "排门板即门面；柜台 M-05（面沿磨亮）；货架 2；阁楼木榻（木梯踏步磨凹 8mm）；招幌布杆（幌布 #F0EAD6 褪 #D4B76A）",
+        "彩画纹样": "无彩画；幌子即视觉主体",
+        "霓虹件": "禁霓虹：檐下灯笼 1 盏 #FFC66E",
+        "老化磨损": "旧档：排门板边角磨损（卸装高频）；柜台油手印带；门槛磨凹 18mm；出檐下烟熏（对面摊位串烟）"
+      }
+    },
+    {
+      "id": "C-HOU-07",
+      "name": "贫户",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "草顶（无瓦）：茅草 #D4B76A 枯端 #8A5A2B，草层 100mm，压草绳网（绳距 400mm）；塌陷补草块 2 处色差；全项目民居最低屋面档",
+        "墙体": "苇席泥墙：M-04 泥掺草筋＋苇席包面 #D4B76A（破洞席边翻卷 2 处）；无砖脚（泥脚直接落地）；墙脚返潮深斑带 150mm #57534E",
+        "台基": "无台基；泥地（室内素土拍平，凹痕保留）；门口小陶灶位",
+        "门窗": "木条门 M-05（条间距 100mm，缝隙透光）；无窗或破 M-15 纸窗一角（纸 #F4ECD8 黄变 #C9B380）；板床粗木",
+        "彩画纹样": "无彩画无匾；豆油灯一盏即全部陈设（壁龛位）",
+        "霓虹件": "禁霓虹：无灯笼（贫户档）——夜里窗缝漏出豆灯火 #FFC66E 一线（物级 0.5m）",
+        "老化磨损": "衰档（全卷民居最衰）：塌陷补草；席破洞 2 处；返潮斑 150mm；共井路泥泞痕"
+      }
+    },
+    {
+      "id": "C-HOU-08",
+      "name": "坊墙宅院",
+      "realm": "human",
+      "source": "45-人间建筑材质逐座全表.md",
+      "fields": {
+        "屋顶": "草瓦混顶：披屋各户草顶 #D4B76A（枯端 #8A5A2B）＋院门楼合瓦 M-02 #3B4045（节距 0.48m）；高低错落（草顶低于瓦顶 300mm 制）",
+        "墙体": "借坊墙为一墙：坊墙砖石 M-03 #5A6472（墙高 2.6m，内侧成排——内侧泛碱带 200mm＋炊烟熏垂带 4 道）；披屋土木（土坯 #C8B48A＋木架 M-05）",
+        "台基": "共院素土 CJ-01（共井台 M-08 磨亮 +0.15，井绳槽深 15mm）；共灶棚砖基",
+        "门窗": "院门楼共门（砖木门楼，门簪 2 枚）：板门 M-05 晨昏开合磨边；各户披屋木条门；晾衣杆 3 竹横空",
+        "彩画纹样": "素作；门楼门楣一年画纸（#F4ECD8 底 #A63A2B／#D9A40E 彩，岁末换）",
+        "霓虹件": "禁霓虹：门楼灯笼 1 盏 #FFC66E（合院共挂）",
+        "老化磨损": "旧档：坊墙内侧泛碱＋熏垂带；共井台磨亮；鸡笼位地面积糠；柴垛位墙皮磨蹭；坐墩陶面裂 1 处"
+      }
+    },
+    {
+      "id": "D-GZ-001",
+      "name": "八、阎罗殿",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "台基一级 52×30×2.0m": "M-08 青石冥制 #33393F 剁斧面，粗晶 1～2mm，收分 5%，平缝 8mm；四面垂带踏跺，踏面中段行磨凹深 20mm——万魂踩迹叠加灵界时律后仍留恒定凹痕（恒凹为「旧档」底层，不随 30 秒渐平）",
+        "台基二级 46×26×2.0m": "同石磨面；加雕业纹石栏——栏板 P-12 冥文符箓连续刻槽深 3mm，刻槽填 #3DFF9C，夜亮 30% 槽位（随机不重复点亮，20 秒轮换一拨，与丰都窗火轮换周期对齐）；望柱头雕小鬼面，P-13 骨纹收边",
+        "前广场 90×70m 黑玉砖": "M-09 金砖冥制变体（640×640mm 对缝 ≤1mm，逐行磨边对号），基色 #2B1B3D 幽冥深紫（禁纯黑），反光 0.50／粗糙 0.15，映像清晰度 80%；判官出行道磨雾降至 50%；雨雾天显魂迹湿足印（30 秒渐平）；白骨苔全域不生（30 卷「王土洁净」），老化只做磨雾与划痕",
+        "御路石 4×2m": "M-08 磨光面反 0.40；浮雕六道轮转图深 3mm 阴刻，刻线填 #3DFF9C 弱档（昼熄夜亮）；边角圆化半径 5mm",
+        "外皮墙 42×22m 高 11m": "30 卷「黑砖实墙」→ M-03 青砖冥制一顺一丁（480×240×120mm，水平缝 12mm／竖缝 10mm），色域 #2E2420→#33393F；墙身微侧脚，收分 8%",
+        "墙芯": "44 卷归型 1 骨粉夯土 M-04 #2E2420：版筑层理每层 80～100mm，骨粉掺料颗粒 1mm、分布率 4%——对位理由：实装为砖皮见 exterior，归型给骨粉芯，两者不冲突，砖皮开洞检修口（叙事用）露芯可见层理",
+        "污染渍": "墙脚返潮深斑高 600mm 覆盖 ≤15%（骨粉返潮，色压深一档 #2B1B3D）；北面砖缝骨藓 #57534E 条状 ≤5%",
+        "檐柱 20 根 Φ0.9m H8.5m": "M-05 阴沉木 #1F1A14，柱身收溜 1%；顺纹干裂 ≤4 条/柱（裂宽 2～5mm）；柱脚 300mm 糟朽灰 #57534E",
+        "金柱 12 根 Φ1.1m": "同材；缠 M-10 铜箍三道（箍高 200mm，铸 P-01 云雷纹单元 40×40mm），云雷刻槽走 #3DFF9C 阴线微光（44 卷 P-01 地府条款：刻槽即灯槽改磷绿焰线）；铜箍锈壳 #6E1F1F 覆盖 ≤30%，翘边 ≤3mm",
+        "斗拱 七踩双昂": "柱头各一攒、补间一攒；M-05 黑漆面（漆膜粗糙 0.35）＋昂头鬼首描金 M-11 #FFD700（本殿金阶限额之一），残金率 ≥70%、凸起棱线先露铜底 #B87333",
+        "重檐歇山": "M-01 冥制筒瓦 #33393F（下檐出 2.4m／上檐出 2.0m）；无釉陶瓦态，反光 0.18／粗糙 0.75；垄距 0.24m 压七露三，勾头滴水间隔 0.32m，檐口一排勾头坠一线误差 ≤10mm",
+        "正脊": "无吻（44 卷归型 1「正脊无吻改骨饰 P-13」）——脊段肩胛骨对拼＋颅骨坐兽 7 只（30 卷「走兽 7 只」对位骨雕），M-17 骨 #E8E3D5；黄变十年一档，沁色 #2E2420 沿管纹走",
+        "勾头老化": "崩釉露胎处按 44 卷 M-01 条款制改冥制胎色 #2E2420（对位注：人间条款露胎 #8C4A3C 系土朱，跨界禁用）",
+        "宝顶 高 3.2m 葫芦形": "黑釉陶 → M-19 器物态铁色釉 #4A4E54，失光至 0.30＋表面开片网纹；顶缀绿焰一点：M-21 火苗 0.3m 档 #3DFF9C，长明稳幅 ±5% 禁闪",
+        "正门双扇板门 高 4.5m": "M-12 铁门（锻打痕水平条带），门钉九路 #26282C Φ80mm；中缝常开一线宽 30mm（「只进不出」之相），门缝透殿内磷绿光；P-19 饕餮铺首一对，双目嵌 #3DFF9C 常亮两点（44 卷 P-19 地府条款）",
+        "匾额「閻羅殿」4.5×1.2m": "金底 M-11（残金率 ≥70%）＋绿字 #3DFF9C：字槽阴刻深 5mm 填发光层；昼间 20% 亮度、入夜 100%，夜自发光（30 卷已实装锚点）",
+        "楹联 东西两副": "M-05 阴沉木联板 300×3600mm，阴刻填 #3DFF9C 弱档 30%；联字剥落处露木胎 #1F1A14",
+        "门簪／门枕": "门簪 2 枚 M-17 骨制（鬼面浮雕深 3mm）；门枕石 M-08 #33393F，磨凹 15mm",
+        "黑玉砖地面 42×22m 整铺": "同 1.1 广场材质延入殿内；烛火倒映如墨渊——反射面映 #3DFF9C 光斑拉长 1.5 倍（镜面黑玉特性）；脚步无声（物理材质粗糙 0.15）",
+        "判官案 6.0×1.2×1.1m": "M-05 阴沉木案体＋M-10 铜嵌线（嵌线宽 8mm）；案围挂 P-12 符帘 7 层、层间错位 15mm（44 卷归型 1「判官案 P-12 符」）；符基底 #C9B380、符文 #B03A2E，夜亮 30%",
+        "生死簿·总册 0.4×0.6m": "靛青封皮 DF-15 #223A5E；字迹自显自隐——显态字 #E8E3D5 骨白、隐态降 90%（材质透明度通道两态）",
+        "生死簿架 高 4.2m 十二格": "M-05 架体；骨签 3600 枚（M-17，签长 120mm，甲子编排），签面刻字填 #C9B380",
+        "孽镜台 铜镜 Φ1.6m 座高 3.6m": "M-10 素铜镜面反 0.65；镜面常蒙红雾——DF-06 #6E1F1F 雾板透 40%，照恶人时雾散现影（雾板 0.5 秒淡出）；殿西侧立",
+        "白烛阵 49 支三阵": "案前七七阵／孽镜前九宫阵／门内双列阵；烛台 M-17 骨制＋M-21 绿焰 #3DFF9C 火苗 0.3m 档；烛泪堆积沿座下垂 ≤100mm（44 卷 M-21 老化条款）",
+        "刑具架 东西两座 高 2.8m 四层": "架体 M-12 铁；东架夹棍、铁尺、铜锤、锁魂枷，西架铁刷、钉板、业秤、勾魂叉——M-12／M-23 制，陈列泛冷光 #4D7CFF 弱档 20%（怨光染，计入 20% 幽蓝份额）",
+        "地藏龛（殿北正中）": "龛体 M-08 青黑；地藏像持锡杖明珠；龛前长明灯一盏 #E8F0FF——**全殿唯一非绿光源**（30 卷）与 44 卷 DF-20「全地府唯一高明度色、单画面 ≤1 处」精确对位；灯焰恒定禁闪，照半径 3m",
+        "兽足香炉 Φ1.0m 三足": "M-10 青铜 #B87333 棱角磨亮露新铜；燃冥香——青烟 M-20 密度 0.4、烟体染色 #57534E，烟柱盘旋结「善」字形不散（超自然定形烟，禁做自然飘散）",
+        "惊堂木 0.08×0.12m": "30 卷「血柏木」对位：木体仍 M-05 阴沉木黑＋「血」取 DF-06 #6E1F1F 渗色沁纹入木纹；拍落触发全殿光件齐伏一息（见 1.6 R4）",
+        "判官朱笔 长 0.5m": "笔杆 M-05 缠红绳 #9D2933（44 卷归型 4 同款人间胭脂绳，织物允许跨界），笔锋赤光 `[待收编 #FF3A4A 弱档，未批前 #6E1F1F 自发光顶替]`",
+        "善恶签筒 高 0.4m": "30 卷「竹签 36 支（善 12/恶 12/迷 12）」对位：地府禁竹，改 M-17 骨签；若实装已出竹材则保留形制、色压灰竹 #57534E",
+        "演出节拍": "材质联动",
+        "升座": "匾额字光 20%→100%（0.5 秒渐升）；案前七烛亮（R3 第一拍）",
+        "宣卷": "生死簿总册自翻（M-22 册页 400×600mm 变规格）；簿架目标卷骨签自行弹出 30mm（机械层）",
+        "断案": "惊堂木拍落→R4 全殿齐伏 0.5 秒；孽镜红雾散开现影（#6E1F1F 雾板淡出）；朱笔落→簿面字迹由隐转显 #E8E3D5",
+        "掷签": "善恶签筒掷出一支骨签（M-17 物理件）；落地朝向联动 §5.7 六道光门预演色",
+        "退堂": "白烛全伏一息复明；匾额回落 20%；孽镜红雾复蒙（0.5 秒淡入）",
+        "编号": "位置 | 形制 | 光色 | 闪烁规则",
+        "R1": "宝顶顶缀 | 火苗 0.3m 档 | #3DFF9C | 长明稳幅 ±5% 禁闪",
+        "R2": "正门铺首双目 | 嵌点 2 粒 | #3DFF9C | 常亮禁闪（P-19 地府条款）",
+        "R3": "白烛阵 49 支 | 火苗 0.3m 档 | #3DFF9C | 审案进度点亮：升座亮 7→宣卷亮 9→断案亮 28→退堂全伏一息再复明；常规态 ≤3 支同「眨焰」（2Hz，概率 5%）",
+        "R4": "全殿同步事件 | 全殿光件含匾额字光 | — | 惊堂木拍落→亮度降至 5% 历时 0.5 秒后恢复；全殿唯一同步熄明事件",
+        "R5": "匾额字光 | 字槽发光层 | #3DFF9C | 昼 20%／夜 100%；不参与 R4 以外的任何闪烁",
+        "R6": "地藏龛长明灯 | 灯焰 | #E8F0FF | 恒定零波动，禁闪禁呼吸",
+        "分区": "材质 · 色 · 做法",
+        "北壁（簿架墙）": "M-03 冥砖墙内面抹骨粉灰泥层厚 20mm、压光 #2E2420；生死簿架靠壁通高 4.2m 十二格×三列，架体 M-05；格签骨签 M-17 3600 枚（§1.5 同源）",
+        "西壁（孽镜区）": "墙面同制；孽镜台 M-08 基座；壁面承镜背光晕反射斑——#4D7CFF 摇曳反射层（8～12Hz 随焰同步）",
+        "东壁（刑具区）": "墙面挂痕两排（刑具架背光位、挂痕深 3mm）；铁架投影恒定不随烛焰摆动（超自然定影——影子层禁用摆动驱动）",
+        "南壁（门内壁）": "壁面刻「只进不出」四字：P-12 刻槽填 #3DFF9C 弱档 20%（进门回首可见的隐藏叙事件）；壁面无烟熏（见 1.7）",
+        "顶部": "无天花、彻上明造露架（44 卷 §8.3 地府室内条款）＋灰雾 M-20 压顶 0.5m——雾底距脊檩 500mm、雾体染色 #57534E；椽望 M-05 阴沉木",
+        "地面分区": "黑玉砖通铺；判官案前磨雾带；出行道（南门→案区）恒定走痕两条宽 400mm"
+      }
+    },
+    {
+      "id": "D-GZ-002",
+      "name": "九、奈何桥含桥畔碑亭",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "无顶；拱腹挂 M-10 铜铃 12 枚——铃身 #B87333 失光 0.30，锈点 #6E1F1F ≤10%；铃舌被雾凝住（雾凝层 #BAFFEF 微透），风过哑响",
+        "② 桥体": "M-08 青石冥制 #33393F 单跨石拱；拱券分节 27 段、每段 1.6m，干摆缝 ≤5mm；拱圈浸水段（拱脚向上 400mm）色深一档 #2E2420 水线糟痕",
+        "③ 桥面": "骨白石 M-08 冥制，色 #33393F，行磨凹痕中段深 20mm（亿人踩迹），凹槽底踩亮反 0.40；雨雾天显湿足印恒指向北岸——「魂痕」为叙事恒留层，不随 30 秒渐平（对位注：与灵界时律的普通踩迹分两层贴图）",
+        "④ 望柱栏板": "望柱 24 根（与桥灯位重合，间距 6m），柱头雕小鬼面、面面朝桥心，P-13 骨纹收边，M-08 石雕；栏高 1.1m，栏板刻渡魂纹夹小额铭「各行其渡」——冥文符箓 P-12，刻槽填磷绿 #3DFF9C，夜间 30% 槽位发光（0.5Hz 缓轮换）",
+        "⑤ 桥灯": "引魂灯·桥列 8 盏，栏柱上间隔 6m——M-21 绿焰 #3DFF9C 火苗 0.6m 档，8m 净雾半径，夜为忘川上唯一光链；第 4、5 盏「回头灯」演出态：亮度 +50%、焰芯 #BAFFEF 占比加大直照回头者脸，触发历时 2 秒",
+        "⑥ 照魂镜": "Φ0.8m 悬桥心上方：M-10 铜镜反 0.65＋红雾蒙板 #6E1F1F 透 40%；倒影延迟半拍（反射采样延迟 500ms）——恶鬼过桥现原形",
+        "⑦ 锁魂链": "九股横江、水下 0.5m：M-23 链径 120mm 上限档，锈皮 #6E1F1F＋摩擦段磨亮；链身刻槽 #3DFF9C 磷光常存（44 卷 M-23 老化条款）；汛期（血月夜）浮出水面，链声如拽锚",
+        "⑧ 导雾槽": "桥面两侧石槽宽 200mm 深 80mm，M-08 凿槽；雾顺槽下泻成帘——M-20 局部密度 +0.002，桥侧雾瀑能见度降至 10m",
+        "拱脚没水段": "水下 0～400mm 色压深 #2E2420 恒湿（反 +0.10）；水线糟痕上缘生骨藓线",
+        "锁魂链水下段": "链体没水段染色融入水体——#1A2430 叠 #6E1F1F 微透（与水面上段锈色 #6E1F1F 断层分色，汛期浮出时翻回锈色）",
+        "桥基海漫石": "M-08 三层海漫（水下不可见面，LOD 关闭面即可，不省材质通道——验收按通道齐备计）",
+        "桥下水域": "水鬼三点位为演出点位（演出卷受理）；桥下水面反射层承桥体倒影＋桥灯光链拉长（#3DFF9C 反射条 1.5 倍拉长）",
+        "南桥头碑 高 2.4m": "M-08 碑体 #33393F（DF-19 石碑青黑归型色）；碑阳「奈何桥」三字阴刻深 8mm 填 #C9B380 冥纸黄（碑字惯例色）；碑阴小字「善者过桥稳如砥，恶者临流无归期」刻槽 #57534E 不发光",
+        "北桥头碑 高 2.4m": "同制；碑阳「回头无岸」四字填 #C9B380；碑阴「桥归桥，路归路；过了此桥，休问来时路」同 #57534E；碑身发丝裂 2 条",
+        "桥头亭位 南北各一": "四柱小亭：柱 4 根 M-05 阴沉木 Φ0.25m H2.8m＋M-02 冥制合瓦攒尖顶 #33393F；亭柱挂 P-12 封符 3 层错位 15mm；守桥岗鬼差常驻（提灯自带光源）",
+        "桥神香案": "桥头北侧：M-08 石案 1.2×0.6×0.8m＋残香三炷（香脚 M-17 骨签 Φ6mm）；香灰自聚小丘不散——M-24 干沙态 #C9B380 灰堆高 120mm（灵界时律下恒存，特行）",
+        "鬼火件": "碑侧地灯 2 点：#3DFF9C 火苗 0.3m 档，长明稳幅；亭内自身无光——守桥鬼差提灯 #3DFF9C，放行挥灯三次（演出：亮-灭-亮-灭-亮节拍 0.8s/拍）"
+      }
+    },
+    {
+      "id": "D-GZ-003",
+      "name": "十、孟婆庄",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "歇山灰顶落地：棚架梁椽 M-05 阴沉木 #1F1A14；顶面 M-02 合瓦冥制 #3B4045→#57534E 灰化（一仰一合节距 0.48m，花边滴水）；破瓦处覆 M-13 冥纱补丁 #2B1B3D，破口以 M-23 锁链缝缀（44 卷 M-13 地府老化条款）",
+        "② 墙体": "半开敞棚制：围合面挂 M-13 冥纱 #2B1B3D 透光率 20%，边缘须边翻卷、横向褪色条纹；棚柱 6 根 Φ0.3m 缠 M-23 链（螺距 200mm）兼「晾符绳」——挂旧络子 20 件＋P-12 符 20 张（基底 #C9B380、符文 #B03A2E，亮符 30%）",
+        "③ 台基/地面": "M-24 沙岩湿地 #6B4226（孟婆汤渍浸染半径 8m，湿干界线清晰即水位线）；踩迹深 20mm、30 秒渐平；灶周 2m 焦渍 #2E2420（对位注：人间焦褐 #4A3220 禁用）",
+        "④ 门窗": "棚口全开无门扇；后门板门 M-05 阴沉木；汤窗直棂骨条窗——M-17 骨条 20×20mm 间距 120mm（对位狱房型栅格制）",
+        "⑤ 纹样": "幌子 P-13「孟婆汤」骨纹幌（44 卷归型 3）；主幡高 3m——M-22 符纸 #C9B380 基底＋墨字 #1F1A14，夜泛 #3DFF9C 弱档 30%，幡脚无风自摆 2Hz",
+        "⑥ 鬼火件": "檐下绿灯笼对 2 盏（庄内唯一照明）：#3DFF9C 火苗 0.6m 档稳幅 ±5%，雨雾中光晕晕开（雾内散射半径 2m）；柴垛垛心绿火 1 点 0.3m 档恒燃；灶膛双眼埋光（左煮汤右温回味汤）#BAFFEF 压暗 60% 恒定；汤锅沸光——液面反 0.2、汤色 #6B4226 气泡爆点提亮",
+        "⑦ 幽冥老化": "粗陶碗 108 只缺角率 40%（磕口锔补）；长凳 6 条凳面坐痕凹陷 15mm 恒定＋坐定微温（材质热图层）；棚柱脚糟朽 300mm #57534E；冥纱破口 3 处链缝"
+      }
+    },
+    {
+      "id": "D-GZ-004",
+      "name": "十一、三生石含石台",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "--- | --- | ---",
+        "① 屋顶": "无顶",
+        "② 石身": "M-08 冥制 #33393F 基（44 卷归型 4「巨石 M-08 青黑」）；30 卷「灰白巨石、夜泛月白微光」对位：三照雾面另贴镜面层反 0.55＋M-20 微雾板（密度 0.3），棱线夜光 #BAFFEF（DF-03 焰芯色收编为「石棱月白」，实测月白统一至此）；棱线如刀刻、磨圆半径 2mm",
+        "③ 台基": "残莲台半埋石座——P-14 莲瓣石刻八枚缺三（石刻态单色 #33393F），缺口 #57534E＋白骨苔 D-PLT-008 覆 60%；基周 M-24 沙岩 #C9B380 干沙",
+        "④ 门窗": "无门窗；止步界桩三枚——M-08 石桩高 0.9m，刻「止步」填 #C9B380；越桩者石面照影转血色（照影层染 #6E1F1F）并低鸣",
+        "⑤ 纹样": "石顶「三生石」三字——DF-17 符纸朱砂 #B03A2E 填刻，笔画下缘渗流痕 #6E1F1F（「渗朱如新滴」）；石基铭「三世轮回……」三行阴刻 #57534E；隐显苔字「来处是归处」——白骨苔贴字（雾浓显、雾散隐，苔层透明度联动雾密度）",
+        "⑥ 鬼火件": "石前双灯 2 盏（引魂灯制）：#3DFF9C 火苗 0.6m 档；轮照三面节律 30 秒/面——照某面时余两面雾板密度 +50%；照影演出：雾面显影 #BAFFEF 剪影（今生实时镜像／来世持判官签方启、启后只见一团光 #BAFFEF 不可辨形）；石周铁环 M-23 系红绳 365 缕 #9D2933（44 卷归型 4 收编色），绳尾木牌字迹自变「勿忘」（刻字层两态）",
+        "⑦ 幽冥老化": "沁纹沿刻槽 #2E2420；红绳新旧三层色阶 #9D2933→#6E1F1F→#57534E（外圈最旧）；莲瓣缺口骨藓；香插石钵 Φ0.5m 内香脚如林、无风自燃烟直上（烟柱 #57534E 恒直）",
+        "面": "朝向 | 雾面材质 | 照影层",
+        "前世面": "南向 | M-20 微雾板密度 0.3＋镜面层反 0.55 | 显影 #BAFFEF 剪影——前身剪影随剧情变化（贴图集三态轮换）",
+        "今生面": "东向 | M-20 微雾板密度 0.3＋镜面层反 0.55（规格与前世面相同：雾板 0.3／反光 0.55，双面共用一套雾板参数） | 实时镜像——反射相机绑定玩家当前装备与随行状态（实时层）",
+        "来世面": "西向 | 雾面常闭（密度 0.8） | 持判官签开启→只见一团光 #BAFFEF，不可辨形（禁出剪影——「天机」的材质表达即拒绝成形）",
+        "轮照": "三面共用 | 石前双灯每 30 秒换面 | 被照面雾板密度 -50%、余两面 +50%（密度跷跷板）"
+      }
+    },
+    {
+      "id": "D-GZ-005",
+      "name": "十二、望乡台",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "无顶",
+        "② 台体": "M-04 夯土冥制 #4A3C33：版筑层理每层 80～100mm、收分每米内倾 30mm；土中掺骨灰呈灰白——面层掺骨粉提亮至 #57534E 灰白档；雨蚀竖沟宽 20～40mm 深 10mm；包石腰线三道 M-08 #33393F",
+        "③ 台面/盘道": "台顶 M-08 石面 26×26m；盘道 64 级螺旋阶石 M-08，阶面行磨凹 15mm，第 33 级「回头阶」凹深 25mm（踏上必闻叹息——演出触发级）；骨阶扶索 M-17 人骨串索、骨珠 Φ60mm，触感冰凉＋轻微颤动（骨节摩挲音效联动）",
+        "④ 台缘围栏": "外圈 M-23 锁链围栏悬垂弧 1/6 跨（44 卷归型 5 刑罚意象）；内圈凭栏段 M-07 汉白玉冥制泛灰版——基 #DCDCE8 压灰至 #B0B8C4 档（跨引 TG-23 云母灰色相、明度降两档；对位注：跨用天宫石作色相属「降档引用」，禁用原亮度 #F2EFE9），望柱 20 根柱头 P-16 如意云头石刻单色；凭栏处踩亮反 +0.15 且触感温润，余处冰凉（材质热图两区分层）",
+        "⑤ 纹样": "台心罗盘刻纹 Φ6m 青铜嵌地 M-10——P-20 星宿纹地府变体：外环二十八宿改刻十二家山方位（可辨即可），针恒指「北偏西 7°」；嵌缝填 #3DFF9C 弱档 20%",
+        "⑥ 鬼火件": "台门双灯 2 盏：#3DFF9C 火苗 0.6m 档，登台自动点亮、下台即熄（响应 ≤1 秒）；焚香鼎 4 尊踞四角——M-10 鼎＋香烟直上不散（烟柱 #57534E），香灰落点围成圆；望乡雾幕台缘高 3m——M-20 幻象灰雾＋阳世场景截图流投幕（工程注：低清倒影），幕缘 #4D7CFF 微光 20%；超时幻象转火场/废墟（幕面内容切换）",
+        "⑦ 幽冥老化": "泪痕石（台心凹石）常年湿润、盐渍泪痕流挂 12 道 #57534E；栏板雾蚀斑驳 30%；遮目垂幡 12 条——M-22 符纸幡 #C9B380 加 P-18 璎珞微焰点（地府版珠 #3DFF9C 作 M-21 微焰，44 卷 P-18 条款），风动如招手、幡影落台如人影排行（投影层）"
+      }
+    },
+    {
+      "id": "D-GZ-006",
+      "name": "鬼门关",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "门楼 M-01 冥制筒瓦 #33393F（归型 6）：垄距 0.24m、勾头崩釉露胎 #2E2420；正脊骨饰同阎罗殿制缩配",
+        "② 墙体": "城台 40×26m 高 12m：M-08 灰黑条石 #33393F（条石 1200×400mm 三层、收分 8%）；墙面刻满历年过关刻痕——刻痕密度 20 道/m²、深浅两档（浅 2mm 旧／深 5mm 新，新刻填 #C9B380）",
+        "③ 台基/门洞": "门洞宽 6m：M-08 地袱车辙无、魂迹恒存；洞内千斤闸 M-12 暗闸（落下时震落墙灰——灰层 M-24 薄尘下坠演出）",
+        "④ 门扇": "M-12 铁门扇高 6m＋门钉铜乳九路八十一钉——碗口 Φ100mm M-10 #B87333 磨亮（触碰嗡鸣示警演出）；P-19 铺首双目 #3DFF9C",
+        "⑤ 纹样": "关外照壁高 5m：砖雕「鬼门关」三字 #4A3C33 地——字缝渗红雾 #6E1F1F（雾渗速率 0.1m/s 恒定）；关匾 #B03A2E 阴刻（归型 6 条款）",
+        "⑥ 鬼火件": "门楼绿灯笼 6 盏：平时半明 50%、游戏内子时齐明 100%（事件点亮，非闪）；守关兵器架铁叉 8 杆 M-12 杵地、叉尖挑残幡 M-22 破幡无风自动 2Hz",
+        "⑦ 幽冥老化": "门枢磨亮；锈层翘皮 ≤3mm；照壁砖缝骨藓 ≤5%；刻痕层逐年增密（进度层）",
+        "节点（顺序）": "材质 · 联动",
+        "① 照壁（关外 15m）": "砖雕「鬼门关」字缝渗红雾 #6E1F1F——过关前最后一次「回头见」的血色提醒",
+        "② 排队区": "M-04 压实面 #2E2420，魂迹密度最高带（踩迹 30 秒渐平但密度恒在）",
+        "③ 门洞地袱": "M-08 磨凹 15mm 恒定；洞内灰风带 M-20 #57534E 流向忘川方向（风速 0.3m/s 定向）",
+        "④ 守关籍案": "长案 M-05＋《过关籍》M-22 纸；验魂后盖朱印「已验」#B03A2E——火印即渡船乘船凭证（与 §2.6 灰钱匣经济链）",
+        "⑤ 千斤闸位": "闸底痕嵌入门洞拱面深 100mm（平时空置，缉拿演出轰落震落墙灰 M-24 薄尘）",
+        "⑥ 门钉铜乳带": "九路 81 钉 M-10——玩家触碰嗡鸣示警（守关鬼差注视演出，材质层钉面振动微光 #3DFF9C 一息）",
+        "⑦ 关内过渡": "门楼灯笼 6 盏半明区→忘川北岸荒野（骨藓路缘线接 §5.1 侧壁条目）"
+      }
+    },
+    {
+      "id": "D-GZ-007",
+      "name": "返阳门",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "② 墙体": "青砖门楼高 14m 双门洞：M-03 **人间窑制 #5A6472**（CJ-02）＋砖缝白灰如新——**全地府唯一「阳色」建材、唯一老化豁免件**（对位理由：44 卷「地府禁崭新面」在此让位于叙事「阳砖阳气未泯」，30 卷原文「砖缝白灰如新」）",
+        "① 屋顶": "门楼顶 M-01 冥制瓦 #33393F——阳砖冥瓦同框即「生死交界」的材质对句",
+        "③ 台基": "门前石阶 M-08 磨亮（唯一有「人气」踩亮的门）；轮回大道接此（§5.7 豁口）",
+        "④ 门匾": "「返阳门」3.6×0.9m：金底 M-11 残金 ≥80%（越新越对——阳面未损）＋红字 #B03A2E；**全城唯一暖色匾额**",
+        "⑤⑥": "门缝温光 #E8F0FF＋光尘浮游（粒子 20 粒/m³）——近门 5m 体感回暖、雾退三尺（雾密度 -50% 球域 R5m）；`[分镜单画面 ≤1 处执行]`；回生鼓架鼓 Φ1.2m：M-14 绸面 #8B1A1A、心跳纹随鼓点明灭 1.2Hz（放魂返阳击三通）",
+        "⑦ 幽冥老化": "除豁免砖体外，门枕/阶石照常旧档；阳籍香案 M-05＋《还魂籍》匣；香烟白色 M-20 #E8F0FF 弱档——全城唯一白烟（与全城青烟 #57534E 对照）"
+      }
+    },
+    {
+      "id": "D-GZ-008",
+      "name": "忘川双渡口",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "--- | ---",
+        "归魂渡（北岸 -52,-258,-152）": "石阶 12 级 M-08 湿滑态（湿面反 +0.10）、青苔骨藓 #57534E 覆 20%＋缆桩；阶石尽头红水拍岸——水线痕 #4A0E0E 高 200mm 恒定",
+        "迎魂渡（南岸 60,-258,-30）": "石阶同制同材；灯桩 2 根——M-12 铁柱高 3.6m（同引魂灯柱制）；登岸处铺新灰层 M-24 干沙 #C9B380 厚 5mm（每渡一铺、灵界时律下不散，「迎新魂之灰」）",
+        "系舟缆桩 4 根": "M-05 阴沉木 Φ0.4m，缆勒痕深陷 30mm、磨亮发白；缆绳 M-13 纤维绳 #2B1B3D——无风自动、泊船时自动缠桩三匝（演出）",
+        "孟婆渡船": "平底乌篷：船身 M-05 漆黑 #1F1A14（反 0.15）无桨痕；乌篷 M-13 冥纱 #2B1B3D 透光 20%，篷骨 M-17 骨材弧骨 6 道；行处红雾自分（船周雾密度 -40% 球域）",
+        "引渡灯桅": "船首绿灯 #3DFF9C 火苗 0.6m 档稳幅——大雾中唯一可见物（8m 净雾半径），对岸见灯即知船至",
+        "渡资灰钱匣": "船上木匣 M-05；匣底灰积 M-24 #C9B380 恒不溢（烧纸经济挂钩点）",
+        "层位": "材质 · 色 · 行为",
+        "水体底层": "DF-10 奈何水黑 #1A2430（44 卷归型 2 编码色）；深水段不透明",
+        "波光层": "DF-02 幽蓝 #4D7CFF：近岸 20m 带状＋波峰提亮，波速 0.3m/s；主航道两侧强、河心弱",
+        "面雾层": "红雾贴水面 0.8m 厚——M-20 体积雾染色 #4a0d12 `[实测待收编]`（材质通道基准改 DF-07 #4A0E0E，见 §0.2）；雾有呼吸节律周期 40 秒 ±8%",
+        "萍让航道": "D-PLT-002 冥河青萍带：主航道两侧各 20m 连片——叶面紫黑 #2B1B3D、叶背银纹 #DCDCE8（跨引 M-07 色域银端）、夜发 #4D7CFF 幽蓝微光；渡船航次前 10 秒自动分开成水道、船过复合",
+        "岸线石堤": "南岸石堤接全环南域：M-08 基础条石三层（层高 400mm）；北岸接彼岸诸区；临水狱段（D-GZ-018／035）堤背渗水湿带高 800mm",
+        "黄泉芦": "D-PLT-009 两岸连片 12 片（南 7 北 5）：秆青灰 #57534E、穗白 #E8E3D5，丛基积水发黑 #1A2430；芦花飞絮为微型鬼火种——漂 3 秒自燃成 #3DFF9C 青点",
+        "汛期态": "血月满相「忘川汛」：水位 +0.6m（淹没层贴图换色 #4A0E0E 加深 10%）、锁魂链浮出、游火密度翻倍（36→72 处）",
+        "段位": "数量 | 铺法",
+        "黄泉路两侧": "120 株（两侧各 60） | 路缘双列交错、株距 3m 随折线铺设；内侧密外侧疏成「花墙夹道」",
+        "奈何桥南引道": "24 株 | 引道两侧各 12 株，收拢成束状指向桥头",
+        "三生石环列": "16 株 | 绕石基座 8m 半径环植，缺口朝孟婆庄方向（让路）",
+        "孟婆庄篱下": "20 株 | 沿茶棚篱笆单列兼作「篱墙」",
+        "望乡台盘道两侧": "22 株 | 沿盘道外侧每 6m 两株，愈近台顶愈密",
+        "幽冥荒野散簇": "18 株 | 6 簇×3 株，簇间 40m 以上，远景记忆点"
+      }
+    },
+    {
+      "id": "D-GZ-009",
+      "name": "血池湖祭台",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "无顶（临湖探出观刑台）",
+        "② 台体": "黑石祭台 12×12m 高 6m：M-08 #33393F 整石砌，台缘雕业纹 P-12 刻槽填 #3DFF9C 弱档",
+        "③ 台面": "台面血渍层层叠压——渍层三档叠压边界：#6E1F1F（新）／#4A0E0E（陈）／#2E2420（旧），层缘清晰不渐变（「层层叠压」为地层语言非污渍晕染）",
+        "④⑤": "无门窗；台周骨缘——白骨 M-17 垒缘、骨隙白骨苔 D-PLT-008 覆 30%，骨堆偶尔自己「坐正」（形变演出）",
+        "⑥ 鬼火件": "锁链桩 8 根湖心环列 R20m：M-23 链径 120mm 粗链没入血池——链身搏动如脉（刻槽磷光呼吸 0.5Hz）；铜柱 6 根台侧 M-10 #B87333 柱身凝血珠不坠（珠体 SSS 红 #6E1F1F）、夜泛暗红反光",
+        "⑦ 湖区": "椭圆湖 140×90m：液体 DF-07 #4A0E0E 液膜反 0.2、气泡爆点 #6E1F1F 提亮；血雾喷口 4 处周期 25 秒——M-20 染 #4a0d12 `[实测待收编]` 喷发高 8m，喷时血珊瑚 D-PLT-007（暗红半透 #6E1F1F 内见液流）齐颤；血月夜顶端结「血珠」坠落"
+      }
+    },
+    {
+      "id": "D-GZ-010",
+      "name": "枉死城墙垣 ＋ D-GZ-011 枉死城衙署",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "北门楼 M-01 冥制瓦 #33393F 残损率 15%；更楼 2 座 M-03 墩台＋M-05 楼亭",
+        "② 墙体": "城垣 220×160m 高 10m：M-03 砖 #4A3C33（DF-13 枉死城土）缺角率 20%（44 卷归型 8 上限＝本卷「半塌档」城级基准）；墙体阴湿泪痕苔成行——湿带高 1.2m＋#57534E 苔线竖向条距 600mm（「苔痕如泪痕成行」）",
+        "③ 城内": "M-24 干沙 #4A3C33＋灰雾层 M-20 #57534E 厚 0.5m 贴地；城内几乎无光（环境照度 <0.1，唯一光为更楼「枉」字灯与城头磷光藓）",
+        "④ 门": "四门唯北门开：门内一片白雾——M-20 染 #BAFFEF 压暗 40%（门内望不见外）；死门三（东/南/西）砖封：封砖 #4A3C33 按满掌印凹印深 5mm、掌印偶有新添（新掌印缘 #6E1F1F 一档）",
+        "⑤ 衙署": "城内北正街 (0,-258,-215)：M-03 #4A3C33 署墙；门前石狮披麻——狮 M-08 风化圆化、麻布 M-13 #C9B380、狮眼以布蒙之（蒙眼布条独立件）；望魂幡高 9m 黑幡 M-13 #2B1B3D、幡面名册墨字 #1F1A14 翻页声不断、翻到新名幡角上挑 10°",
+        "⑥ 鬼火件": "更楼「枉」字灯 2 盏 #3DFF9C 火苗 0.6m（三更梆子自响联动亮度 +20% 一息）；城头磷光藓 #3DFF9C 轮廓线（墙头连续微光带亮度 20%——归型 8「城头磷光藓轮廓线」条款）",
+        "⑦ 幽冥老化": "全城为「半塌档」基准：塌砖堆沿墙脚分布；白骨苔城外大面积斑块；无烟熏无血渍（枉死城是「等」的城，血意象归狱）"
+      }
+    },
+    {
+      "id": "D-GZ-011",
+      "name": "D-GZ-010 枉死城墙垣 ＋ 枉死城衙署",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "北门楼 M-01 冥制瓦 #33393F 残损率 15%；更楼 2 座 M-03 墩台＋M-05 楼亭",
+        "② 墙体": "城垣 220×160m 高 10m：M-03 砖 #4A3C33（DF-13 枉死城土）缺角率 20%（44 卷归型 8 上限＝本卷「半塌档」城级基准）；墙体阴湿泪痕苔成行——湿带高 1.2m＋#57534E 苔线竖向条距 600mm（「苔痕如泪痕成行」）",
+        "③ 城内": "M-24 干沙 #4A3C33＋灰雾层 M-20 #57534E 厚 0.5m 贴地；城内几乎无光（环境照度 <0.1，唯一光为更楼「枉」字灯与城头磷光藓）",
+        "④ 门": "四门唯北门开：门内一片白雾——M-20 染 #BAFFEF 压暗 40%（门内望不见外）；死门三（东/南/西）砖封：封砖 #4A3C33 按满掌印凹印深 5mm、掌印偶有新添（新掌印缘 #6E1F1F 一档）",
+        "⑤ 衙署": "城内北正街 (0,-258,-215)：M-03 #4A3C33 署墙；门前石狮披麻——狮 M-08 风化圆化、麻布 M-13 #C9B380、狮眼以布蒙之（蒙眼布条独立件）；望魂幡高 9m 黑幡 M-13 #2B1B3D、幡面名册墨字 #1F1A14 翻页声不断、翻到新名幡角上挑 10°",
+        "⑥ 鬼火件": "更楼「枉」字灯 2 盏 #3DFF9C 火苗 0.6m（三更梆子自响联动亮度 +20% 一息）；城头磷光藓 #3DFF9C 轮廓线（墙头连续微光带亮度 20%——归型 8「城头磷光藓轮廓线」条款）",
+        "⑦ 幽冥老化": "全城为「半塌档」基准：塌砖堆沿墙脚分布；白骨苔城外大面积斑块；无烟熏无血渍（枉死城是「等」的城，血意象归狱）"
+      }
+    },
+    {
+      "id": "D-GZ-012",
+      "name": "轮回归墟六道盘",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "无顶；三层石坛露天",
+        "② 坛体": "圆坛半径 30m 三层：M-08 #33393F，坛面刻六道纹放射展开——P-01 云雷铺地＋放射主刻线深 3mm 填 #3DFF9C 弱档",
+        "③ 坛缘": "十二「忘言柱」：M-05 阴沉木 Φ0.4m H4m 素柱**无一字**（材质全素、禁加刻痕——「忘言」的材质表达即零纹理）",
+        "④ 轮盘与墨洞": "六道轮盘 Φ18m 悬立：M-08 石轮＋辐条 M-12，缓转一昼夜一周、轮分六格；轮心墨洞 Φ3m——**「近黑」执行**：基色 #2B1B3D（总则禁纯黑）＋反光 0.0／粗糙 1.0 无任何高光，任何光源照入无效（着色器吸收律）；近之闻胎动心跳声（演出）",
+        "⑤⑥": "转轴魂柱 H20m 缠魂链 M-23 环径 120mm——轮转时链环叮当、声源方位失真（声像随机，演出）；六道光门 6 座演出光帘 `[跨界豁免件，仅演出态出现]`：天金白 #FFF3D8（引 TG-03）／人暖黄 #FFC66E（引 CJ-26）／修罗赤 `[待收编 #FF3A4A]`／畜生青灰 #7A8A99（引 CJ-20）／饿鬼浊绿 `[临时对位引 CJ-10 石绿 #4A8B6F 压暗 40%]`／地狱暗红 #4A0E0E（DF-07）",
+        "⑦ 幽冥老化": "坛面骨藓 ≤3%；轮辐锈流痕；忘言柱无老化（素柱恒「旧色」即老化终点，不再变化）"
+      }
+    },
+    {
+      "id": "D-GZ-013",
+      "name": "阴阳界井亭",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "--- | ---",
+        "③ 井口": "坠井井口 Φ6m：M-08 井口石圈厚 400mm、磨圆半径 20mm（万魂坠落磨圆）；井道自地面 (470,2,24) 垂直下贯 262m",
+        "② 井壁": "M-03／M-08 环砌交替＋渗水湿带竖向条带；**井道全程施人→地过渡带四站渐变**（44 卷 §4：#FFC66E→#A8B88C→#6E8F86→#3DFF9C）：0～-60m 暖黄残照段／-60～-140m 灰绿衰减段／-140～-220m 青灰阴起段／-220～-262m 磷绿冥土段——禁跳站；井底仰望一点灰白天光 #E8F0FF `[分镜单画面 ≤1 处执行]`",
+        "①④ 井亭": "六角井亭高 5m：亭柱 6 根 M-05 阴沉木 Φ0.3m 缠幡——M-22 幡串 18 条；亭顶开圆孔 Φ6m 正对井口（坠地者落于亭心软雾堆 M-20 密度 0.8）",
+        "⑤⑥": "界碑高 2.6m：M-08 正面「阴阳界」背面「阴阳一隔，两不相问」填 #C9B380；井旁验籍案 M-05＋殃榜册 M-22 纸（守井鬼差查榜放行）；井口无明火——安全件唯碑侧地灯 1 点 #3DFF9C 火苗 0.3m",
+        "⑦ 幽冥老化": "井圈内缘坠落擦痕环带（恒定）；幡褪三层；井壁湿带骨藓 ≤10%",
+        "段": "里程／范围 | 铺装 | 衔接节点",
+        "东端入路段": "阴阳界井亭→牌坊约 30m | M-04 压实＋过渡带第一站应用：暖黄残照 #FFC66E 30m 内渐灭至失饱和 | 井亭（§5.8）→牌坊（§5.2）",
+        "主段": "(440,24)→(80,24) 长 360m | M-04 #2E2420→#4A3C33 灰黑土路宽 12m；灯柱 21 座 @20m；花墙 120 株 @3m | 沿途无节点，直线段",
+        "折段": "(80,24)→(8,-32) 长 68m | 同制随折线；花墙随折、灯柱照 20m 均布延伸至桥南引道端 | 折点设界石",
+        "桥南引道": "折段端→桥头 30m | M-08 骨白石板 #33393F（板 900×600mm）错缝；彼岸花 24 株束状收拢 | 奈何桥南桥头（§2.1）",
+        "彼岸北道": "桥北岔三向（三生石／望乡台／枉死城） | M-24 干沙路 #C9B380；岔口引魂木 D-PLT-005 3 株（树干刻满姓名层） | 三向岔口各设指路残碑半埋",
+        "衔接纪律": "— | 三种铺装（夯土／石板／干沙）交接处必设 M-08 界桩高 0.6m——「路自为路」的冥界材质语言；禁三种铺装渐变混铺 | 界桩刻制式同三生石止步桩",
+        "类目": "数量 | 本卷位置",
+        "独立建筑／节点（D-GZ-001～017）": "17 座全覆盖 | §1（001）／§2（002、003、004、005、008、015 系）／§3.0（016、017）／§5（006、007、009、010、011、012、013、014）",
+        "十八狱环（D-GZ-018～035）": "18 狱逐狱一行 | §4.2",
+        "丰都鬼屋模板（D-HOU-01～12）": "12 模板（覆盖实装 90 座） | §3.1～3.12",
+        "区级铺装专项": "3 项（黄泉河系 D-ZZ-04／彼岸花花海 D-PLT-001／黄泉路 D-ZZ-02） | §2.7／§2.8／§5.1",
+        "逐座覆盖合计": "50 项 | 全卷",
+        "需求称谓对位": "东碑亭→桥头碑亭（§2.2）；轮回井→井亭＋归墟（§5.8／§5.7） | §0.5",
+        "组": "色值",
+        "DF 系全 20 色（44 卷 §3）": "#3DFF9C｜#4D7CFF｜#BAFFEF｜#2E2420｜#2B1B3D｜#6E1F1F｜#4A0E0E｜#E8E3D5｜#57534E｜#1A2430｜#6B4226｜#26282C｜#4A3C33｜#7E2A20｜#223A5E｜#C9B380｜#B03A2E｜#1F1A14｜#33393F｜#E8F0FF",
+        "跨引 44 卷非 DF 系编码（16）": "#FFD700（M-11）｜#B87333（M-10）｜#DCDCE8（M-07 色域）｜#4A4E54（M-19 铁色釉，宝顶黑釉陶）｜#B0B8C4（TG-23）｜#5A6472（CJ-02）｜#9D2933（CJ-13）｜#F4ECD8（CJ-15）｜#FF9E00（P-12 引魂亮符）｜#FFF3D8（TG-03）｜#FFC66E（CJ-26）｜#8B1A1A（TG-22）｜#7A8A99（CJ-20）｜#4A8B6F（CJ-10，仅六道光门浊绿临时对位）｜#A8B88C／#6E8F86（§4 过渡补色，井道与北门雾段）",
+        "30 卷实测登记（3）": "#4a0d12｜#58ff9b｜#c0182c（均 `[实测待收编]`，处理见 §0.2）",
+        "本卷建议新增（1）": "#FF3A4A `[待收编 DF-21，冥焰红，未批前以 #6E1F1F 自发光档顶替]`",
+        "对照色（8，只出现于禁用注与对位注，不作取用值）": "#3B4045（M-02 原端点，冥制压灰替之）｜#4E545E（M-02 压灰端替注）｜#4E7A5E（禁用对照：人间铜绿）｜#6B4A2B（禁用对照：人间桐油褐／仿木失败态参照）｜#4A3220（禁用对照：人间焦褐）｜#8C4A3C（禁用对照：人间露胎土朱）｜#E8DCC0（对位注：人间补丁纸色，地府改 #C9B380）｜#F2EFE9（对位注：M-07 原亮端，望乡台降档禁用原值）",
+        "状态": "卡号 · 部位",
+        "高频主力（≥8 座引用）": "M-08 青石冥制｜M-12 铁｜M-21 鬼火焰体｜M-22 符纸｜M-24 沙岩｜M-13 冥纱",
+        "中频（3～7 座）": "M-03 冥砖｜M-04 骨粉夯土｜M-05 阴沉木｜M-10 铜｜M-23 锁链｜M-20 云雾体｜M-02 合瓦冥制",
+        "低频（1～2 座）": "M-01 冥制筒瓦｜M-07 汉白玉泛灰版｜M-09 金砖黑玉变体｜M-11 鎏金｜M-17 骨｜M-19 琉璃陶｜M-15 纸窗｜M-16 竹材灰化档｜M-14 绸幔",
+        "未用／禁用": "M-06 彩画木（地府彩画褪至 #57534E 不可辨，无彩画卡位）｜M-18 玉（地府无用玉构件）｜M-25 霓虹灯管（地府全域禁霓虹）",
+        "在用 8 种": "P-01 云雷（金柱铜箍／御路／坊顶收头）｜P-12 冥文符箓（栏板／封符／业纹灯带／判官案符帘／碑字）｜P-13 骨纹（脊饰／幌子／石兽收边）｜P-14 莲瓣（残莲台石刻）｜P-16 如意云头（望乡台柱头）｜P-18 璎珞（幡联／许愿幡微焰点）｜P-19 饕餮（铺首／门钹）｜P-20 星宿变体（望乡台罗盘）",
+        "禁用注记": "P-11 赛博电路纹人间专属，地府零出现；P-12 为全项目唯一「禁霓虹叠加」的发光纹，符文只作 M-22 自发光",
+        "区": "光件构成 | 常驻件数 | 演出／动态件",
+        "阎罗殿区": "白烛阵 49＋铺首目 2＋匾额字光 1＋宝顶焰 1＋楹联刻槽 2＋二级栏板刻槽带 1＋南壁刻字 1＋刑具冷光 2 架＋地藏龛灯 1 | 60 | R4 全殿齐伏（同步事件）；孽镜红雾散现影",
+        "忘川区": "见 §2.10 台账 | 102 | 回头灯 2；照影剪影；引路波（花海）",
+        "关城·黄泉路": "牌坊额光 1＋石兽目 2＋幡联焰点 6＋鬼门关门楼灯笼 6＋铺首目 2＋井亭地灯 1＋牌坊界桩—（无灯） | 18 | 门楼灯笼子时齐明；石兽抬首；守桥挥灯",
+        "丰都鬼城": "牌楼灯串 36＋四门门灯 8＋东生门缝 1＋坊额 1＋鬼灯笼果 28 丛 | 74 | 窗火 90 座动态（30% 点亮率≈同瞬 27 盏、20 秒轮换、血月齐亮）；灯串「回头看」",
+        "十八狱环": "狱门灯 18＋门钹双目 36＋封符带 18 组＋环壁业纹灯带 18 段 | 90 | 狱火绿转红 18（行刑演出 2 秒渐变）",
+        "冥城·渡口": "更楼「枉」字灯 2＋枉死城头磷光藓轮廓带 1＋望魂幡无灯（幡动即语言） | 3 | 梆响字灯 +20% 一息",
+        "演出专用系": "六道光门 6＋戏幌双灯 2＋回头灯（已计忘川） | 8 | 全部 `[待收编 #FF3A4A]` 或跨界豁免件，逐处已标注",
+        "叙事光 #E8F0FF": "返阳门缝＋地藏龛灯＋东生门缝＋井底天光 | 4 | 分镜单画面 ≤1 处；恒定禁闪",
+        "合计口径": "常驻绿系光点 ≥255 处（不含动态窗火与演出态）；发光总量三律占比经 §1.6／§2.10／§4.1 三处核验闭合 | — | —",
+        "卡": "反光度 | 粗糙度 | 地府色域 | 本卷取用注",
+        "M-02 合瓦冥制": "0.12 | 0.85 | #3B4045→#57534E | 鬼屋／棚顶；冥制压灰端替 #4E545E",
+        "M-03 砖": "0.18 | 0.80 | #2E2420→#4A3C33 | 唯返阳门用阳窑色 #5A6472（§5.4 豁免件）",
+        "M-04 夯土冥制": "0.15 | 0.92 | #2E2420→#4A3C33 | 骨粉掺料颗粒 1mm、分布率 4%",
+        "M-05 阴沉木": "0.20 | 0.55 | #1F1A14 单色 | 地府木材唯一色；冥商型「仿 #6B4A2B 失败态」为唯一例外",
+        "M-08 青石冥制": "0.25（磨亮 0.40） | 0.70 | #33393F | 全卷主力；踩亮面反 +0.15 通用",
+        "M-10 铜": "0.65（素 0.40） | 0.30 | #B87333 | 地府锈壳一律 #6E1F1F（禁人间铜绿 #4E7A5E）",
+        "M-12 铁": "0.30 | 0.75 | #26282C→#4A4E54 | 锈层 #6E1F1F 翘边 ≤3mm",
+        "M-13 冥纱": "0.30 | 0.60 | #2B1B3D | 透光率 20%；破口锁链 M-23 缝缀",
+        "M-17 骨": "0.50 | 0.35 | #E8E3D5→#C9B380 | 黄变十年一档、沁色 #2E2420",
+        "M-21 鬼火": "自发光 | — | 芯 #BAFFEF→#3DFF9C→缘 #4D7CFF | 照半径 3m 基准；路火 8m 净雾为灯系加成",
+        "M-22 符纸": "0.30 | 0.80 | 基 #C9B380／文 #B03A2E | 亮态 #3DFF9C（狱）／#FF9E00（引魂）；亮符 30%",
+        "M-23 锁链": "0.25 | 0.80 | #26282C→#4A4E54 | 刻槽 #3DFF9C 磷光常存；链径 80～120mm",
+        "M-24 沙岩": "0.15 | 0.95 | #C9B380→#6B4226→#4A3C33 | 踩迹 20mm／30 秒渐平（灵界时律）",
+        "校验项": "方法 | 实测结果",
+        "独立建筑 ID 覆盖": "脚本正则逐 ID 检索 D-GZ-001～035 | 35／35 全命中，缺失 0",
+        "鬼屋模板 ID 覆盖": "逐 ID 检索 D-HOU-01～12 | 12／12 全命中，缺失 0",
+        "十八狱逐狱行": "检索 §4.2／§4.3 表行前缀 | 18＋18＝36 行（两表各 18 行）",
+        "唯一 hex 计数": "正则提取全文色值去重（大小写归一） | 48 项（构成见 §6.2：引用编码 40＋对照 8）",
+        "禁词扫描": "检索「同上／此处略／待补」 | 0 命中",
+        "禁霓虹复核": "检索 M-25／NH- 实体引用（剔除禁用语境行） | 0 命中",
+        "小写 hex 残留": "检索未归一大写色值 | 仅 §0.2 实测登记 4 项照录（#4a0d12／#58ff9b／#8b1a1a／#c0182c），正文取用值全大写",
+        "已知待裁定项": "本卷留痕 | ①冥焰红 #FF3A4A 待收编 DF-21；②30 卷实测三色待收编（§0.2）；③44 卷归型 5「台高 30m」／归型 9「三档柱制」／「环径 400m」为规划值，实装裁定均从 30 卷（§0.1 规则）"
+      }
+    },
+    {
+      "id": "D-GZ-014",
+      "name": "黄泉路牌坊",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "无顶坊——三间四柱、高 9m；顶际线作云雷收头（P-01 单元 40×40mm 刻槽 #3DFF9C 弱档）",
+        "② 柱体": "柱 4 根 M-08 青黑方柱 700×700×8500mm，柱身风化圆化边角半径 8mm",
+        "③ 台基": "柱脚基石 M-08 1200×1200×400mm；坊下路面 M-04（同 5.1）踩磨发亮带宽 3m",
+        "④ 坊额": "双面额：「黄泉路」／背额「莫回头」阴刻深 10mm 填 #3DFF9C——夜亮昼 20% 常亮禁闪",
+        "⑤ 纹样": "坊柱幡联 2 条：M-22 幡 600×3600mm、墨字 #1F1A14（左「黄泉路上无老幼」右「奈何桥畔莫迟疑」），幡脚 P-18 璎珞微焰点每幡 3 粒 #3DFF9C",
+        "⑥ 鬼火件": "镇坊石兽 1 对：M-08＋P-13 骨纹收边，眼窝嵌 #3DFF9C（眼窝火：生物活动时点亮）；玩家经过兽首微抬一线（关节 5°，复位 3 秒）",
+        "⑦ 幽冥老化": "幡面褪色三层差；柱身骨藓 ≤5%；基石崩茬每基 ≤2 处"
+      }
+    },
+    {
+      "id": "D-GZ-015",
+      "name": "引魂灯柱系",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "--- | --- | --- | ---",
+        "柱体": "M-12 铁 #26282C：锻打水平条带＋斑驳锈 #6E1F1F 覆 ≤30%；柱脚堆前批亡魂旧物（鞋、伞、玩具——道具库借件统一蒙灰 #57534E 薄层）",
+        "灯盏": "柱顶灯盘 M-12＋M-21 绿焰 #3DFF9C 火苗 0.6m 档：长明不灭、风过不摇、自循摇曳 8～12Hz 微幅；8m 净雾半径（雾被推离成清晰光域）",
+        "铭文": "柱脚刻「此灯照君行」阴刻深 8mm 填 #3DFF9C 弱档 30%；亡名随批次更新——最新批次刻字填色亮一档 #C9B380（可读名字细节）",
+        "交互态": "玩家点燃任意一柱＝设置重生锚点：焰高 0.3→0.6m、亮度 +20%，持续至离域；熄柱态：火熄留灯芯 #1F1A14（44 卷 M-21 老化条款）＋烛泪堆 ≤100mm",
+        "路火总表": "全域路火 35 处＝引魂灯柱 21＋桥灯 8＋三生石前 2＋望乡台门 2＋渡口灯桩 2；全部 #3DFF9C、全部长明不灭",
+        "游火": "56 | 冤火漂移 | #BAFFEF 芯＋#3DFF9C 晕 | 0.5m/s、2Hz；8m 避让 3m 分裂",
+        "窗火": "丰都 90 座鬼屋门窗：常态随机 30% 点亮率、每 20 秒轮换；实装 #58ff9b 统一收敛至 #3DFF9C（§0.2）；窗格内摇曳 8～12Hz；血月满相全城齐亮",
+        "光件": "数量 | 形制 | 光色 | 规则",
+        "引魂灯柱（黄泉路）": "21 | 火苗 0.6m 档 | #3DFF9C | 长明、8～12Hz 微幅、8m 净雾；点燃交互态 +20%",
+        "桥灯（含回头灯 2）": "8 | 火苗 0.6m 档 | #3DFF9C | 长明光链；回头灯演出亮度 +50%、焰芯 #BAFFEF",
+        "碑侧地灯（桥头碑）": "2 | 火苗 0.3m 档 | #3DFF9C | 长明稳幅",
+        "孟婆庄灯笼对": "2 | 火苗 0.6m 档 | #3DFF9C | 庄内唯一照明；雨雾光晕半径 2m",
+        "柴垛垛心火": "1 | 火苗 0.3m 档 | #3DFF9C | 恒燃",
+        "灶膛双眼埋光": "2 | 埋光无焰 | #BAFFEF 压暗 60% | 恒定禁闪",
+        "三生石前双灯": "2 | 火苗 0.6m 档 | #3DFF9C | 轮照三面 30 秒/面＋照影剪影 #BAFFEF",
+        "望乡台门双灯": "2 | 火苗 0.6m 档 | #3DFF9C | 登台亮、下台熄（响应 ≤1 秒）",
+        "渡口灯桩": "2 | 火苗 0.6m 档 | #3DFF9C | 长明",
+        "引渡灯桅（渡船）": "1 | 火苗 0.6m 档 | #3DFF9C | 移动光件；大雾唯一可见",
+        "栏板/符槽发光带": "3 组 | 刻槽 30% 槽位 | #3DFF9C | 桥栏＋三生石铭＋望乡垂幡 P-18 点",
+        "忘川区常驻合计": "102 处 | — | 绿系 ≥90% | 三律闭合：#4D7CFF 仅波光与青萍；#BAFFEF 焰芯/剪影"
+      }
+    },
+    {
+      "id": "D-GZ-016",
+      "name": "丰都城墙四门 ＋ D-GZ-017 鬼市牌楼",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "城墙垣（① 屋顶／② 墙体）": "M-03 冥砖 #2E2420 一顺一丁（480×240×120mm，缝 12/10mm，收分 8%）；墙头无雉堞、只插白幡 120 面——M-22 符纸幡变规格 400×600mm，幡脚污渍 #57534E 覆 30%；无瓦面出露",
+        "台基/墙脚（③）": "墙脚泛碱白带高 200mm 改灰白骨霜 #57534E；墙根骨藓条 ≤5%",
+        "门（④）": "南·丰都门主门：门匾「丰都」M-08 石匾阴刻深 8mm 填 #C9B380，门前鬼市延伸；东·生门砖封——封砖 #4A3C33 按满掌印（凹印深 5mm），门缝透一丝天光 #E8F0FF `[分镜单画面规则：与返阳门异画面，允许]`；西市门通鬼市驼道（纸扎货运）；北枉门遥对枉死城、永闭（砖封同生门制）",
+        "纹样（⑤）": "城门 P-19 饕餮门钹双目 #3DFF9C 常亮；封门砖掌印群为「伪纹样层」（无 P 码，凹印密度 8 枚/m²）",
+        "鬼火件（⑥）": "四门门灯各 2 盏：#3DFF9C 火苗 0.6m 档稳幅；东生门门缝天光 #E8F0FF 恒定微光（不计照明）",
+        "幽冥老化（⑦）": "砖缝泛霜 ≤10% 墙面；幡面褪色三层差；城砖缺角每面 ≤2 处",
+        "鬼市牌楼 D-GZ-017": "四柱三楼高 8m：柱 4 根 M-05 阴沉木 Φ0.6m H8m（柱脚糟朽 300mm）；楼额「丰都鬼市」M-08 石额阴刻填 #3DFF9C 夜亮昼 20%；楼角铜铃 4 枚 M-10 哑响（铃舌雾凝 #BAFFEF 微透）；市灯串 36 盏跨街——M-21 #3DFF9C 火苗 0.3m 高低错落（灯距 2m），玩家走过灯焰齐「回头看」玩家（朝向玩家 2 秒演出）；市锣 1 面 M-10 悬锣，开市三响闷如水中敲击、散市自响一声",
+        "坊间街面（③）": "M-24 干沙压实 #4A3C33；足迹 30 秒渐平；巷口鬼灯笼果 D-PLT-004 28 丛——枝条灰白 #57534E、果苞衣橙红半透 `[实测色登记：橙红未收编，临时对位已收编引魂橙 #FF9E00 弱档]`、果核绿光 #3DFF9C 昼熄夜燃",
+        "档": "屋顶 | 墙体 | 门窗 | 符饰 | 光",
+        "完好（旧档）": "瓦损 ≤2%，缺角瓦零星 | 墙直立，缝内骨藓 ≤2% | 门扇齐，窗纸补丁 ≤3 处 | P-12 封符 3～7 层齐 | 窗火常态 30% 点亮",
+        "倾颓": "瓦损 10～30%，檐角塌一隅 | 外倾 2～3°，缺角 ≤5% | 门斜开半扇，窗纸破洞翻边 | 符剩 2～3 层、焦边 #4A3220 对位改 #2E2420 | 窗火 50%＋门缝漏光 #3DFF9C",
+        "半塌": "顶塌 1/3 露椽望 | 缺角率 20%（归型 8 上限），倾角 5°（贫窟上限，全项目最衰败档） | 门倒、窗尽毁 | 符仅 1 层焦黑 | 光从塌口透出；磷光藓 #3DFF9C 爬墙脚 10%",
+        "幌子": "M-22 幡 400×900mm：基底 #C9B380、墨字 #1F1A14；夜泛 #3DFF9C 弱档 30%；幡脚摆 2Hz；残破度档差：完好全字／倾颓字剥一角／半塌仅剩幔杆",
+        "匾额": "M-08 石匾或 M-05 木匾 #1F1A14；字填 #C9B380；剥字上限 20%（冥商型条款）；完好档匾字齐、半塌档匾斜挂一门钉",
+        "窗纸": "M-15 #F4ECD8；破洞率按档 0／30～40%／100%；补丁纸用冥纸黄 #C9B380（对位注：44 卷 M-15 补丁色 #E8DCC0 为人间纸色系，地府纸基统一对位冥纸黄）",
+        "门封符": "P-12 封门 3～7 层、层间错位 15mm；层数按档 7／4／1；亮符 30%；焦边 #2E2420",
+        "院面": "M-24 压实 #4A3C33；足迹 30 秒渐平；院心杂物堆统一蒙灰 #57534E（道具库借件规则同 §2.9 柱脚旧物）",
+        "檐灯": "贫窟型无檐灯（唯窗外磷光渗入）；冥商型门灯 1 盏 #3DFF9C 微光常亮（归型 11「招牌微光」同源）；冥宅型檐灯 2 盏＋窗内怨光 #4D7CFF 偶发 2Hz；狱房型无内部光、唯封符微亮"
+      }
+    },
+    {
+      "id": "D-GZ-017",
+      "name": "D-GZ-016 丰都城墙四门 ＋ 鬼市牌楼",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "城墙垣（① 屋顶／② 墙体）": "M-03 冥砖 #2E2420 一顺一丁（480×240×120mm，缝 12/10mm，收分 8%）；墙头无雉堞、只插白幡 120 面——M-22 符纸幡变规格 400×600mm，幡脚污渍 #57534E 覆 30%；无瓦面出露",
+        "台基/墙脚（③）": "墙脚泛碱白带高 200mm 改灰白骨霜 #57534E；墙根骨藓条 ≤5%",
+        "门（④）": "南·丰都门主门：门匾「丰都」M-08 石匾阴刻深 8mm 填 #C9B380，门前鬼市延伸；东·生门砖封——封砖 #4A3C33 按满掌印（凹印深 5mm），门缝透一丝天光 #E8F0FF `[分镜单画面规则：与返阳门异画面，允许]`；西市门通鬼市驼道（纸扎货运）；北枉门遥对枉死城、永闭（砖封同生门制）",
+        "纹样（⑤）": "城门 P-19 饕餮门钹双目 #3DFF9C 常亮；封门砖掌印群为「伪纹样层」（无 P 码，凹印密度 8 枚/m²）",
+        "鬼火件（⑥）": "四门门灯各 2 盏：#3DFF9C 火苗 0.6m 档稳幅；东生门门缝天光 #E8F0FF 恒定微光（不计照明）",
+        "幽冥老化（⑦）": "砖缝泛霜 ≤10% 墙面；幡面褪色三层差；城砖缺角每面 ≤2 处",
+        "鬼市牌楼 D-GZ-017": "四柱三楼高 8m：柱 4 根 M-05 阴沉木 Φ0.6m H8m（柱脚糟朽 300mm）；楼额「丰都鬼市」M-08 石额阴刻填 #3DFF9C 夜亮昼 20%；楼角铜铃 4 枚 M-10 哑响（铃舌雾凝 #BAFFEF 微透）；市灯串 36 盏跨街——M-21 #3DFF9C 火苗 0.3m 高低错落（灯距 2m），玩家走过灯焰齐「回头看」玩家（朝向玩家 2 秒演出）；市锣 1 面 M-10 悬锣，开市三响闷如水中敲击、散市自响一声",
+        "坊间街面（③）": "M-24 干沙压实 #4A3C33；足迹 30 秒渐平；巷口鬼灯笼果 D-PLT-004 28 丛——枝条灰白 #57534E、果苞衣橙红半透 `[实测色登记：橙红未收编，临时对位已收编引魂橙 #FF9E00 弱档]`、果核绿光 #3DFF9C 昼熄夜燃",
+        "档": "屋顶 | 墙体 | 门窗 | 符饰 | 光",
+        "完好（旧档）": "瓦损 ≤2%，缺角瓦零星 | 墙直立，缝内骨藓 ≤2% | 门扇齐，窗纸补丁 ≤3 处 | P-12 封符 3～7 层齐 | 窗火常态 30% 点亮",
+        "倾颓": "瓦损 10～30%，檐角塌一隅 | 外倾 2～3°，缺角 ≤5% | 门斜开半扇，窗纸破洞翻边 | 符剩 2～3 层、焦边 #4A3220 对位改 #2E2420 | 窗火 50%＋门缝漏光 #3DFF9C",
+        "半塌": "顶塌 1/3 露椽望 | 缺角率 20%（归型 8 上限），倾角 5°（贫窟上限，全项目最衰败档） | 门倒、窗尽毁 | 符仅 1 层焦黑 | 光从塌口透出；磷光藓 #3DFF9C 爬墙脚 10%",
+        "幌子": "M-22 幡 400×900mm：基底 #C9B380、墨字 #1F1A14；夜泛 #3DFF9C 弱档 30%；幡脚摆 2Hz；残破度档差：完好全字／倾颓字剥一角／半塌仅剩幔杆",
+        "匾额": "M-08 石匾或 M-05 木匾 #1F1A14；字填 #C9B380；剥字上限 20%（冥商型条款）；完好档匾字齐、半塌档匾斜挂一门钉",
+        "窗纸": "M-15 #F4ECD8；破洞率按档 0／30～40%／100%；补丁纸用冥纸黄 #C9B380（对位注：44 卷 M-15 补丁色 #E8DCC0 为人间纸色系，地府纸基统一对位冥纸黄）",
+        "门封符": "P-12 封门 3～7 层、层间错位 15mm；层数按档 7／4／1；亮符 30%；焦边 #2E2420",
+        "院面": "M-24 压实 #4A3C33；足迹 30 秒渐平；院心杂物堆统一蒙灰 #57534E（道具库借件规则同 §2.9 柱脚旧物）",
+        "檐灯": "贫窟型无檐灯（唯窗外磷光渗入）；冥商型门灯 1 盏 #3DFF9C 微光常亮（归型 11「招牌微光」同源）；冥宅型檐灯 2 盏＋窗内怨光 #4D7CFF 偶发 2Hz；狱房型无内部光、唯封符微亮"
+      }
+    },
+    {
+      "id": "D-GZ-018",
+      "name": "十八狱环",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "无顶——狱口露天，顶际由 M-20 灰雾 #57534E 厚 0.5m 压顶（穹顶感即「无顶之顶」）",
+        "② 墙体": "狱壁四面 M-08 青黑 #33393F：地上段刻业纹 P-12 灯带（环壁业纹灯），地下 3m 段裸石＋渗水湿带 400mm（临水狱 800mm）；骨藓 ≤8%",
+        "③ 地面": "狱内 M-24 干沙压实 #4A3C33 厚 300mm（垫沙收「迹」——行刑演出后沙面自平）；拖痕保留 30 秒",
+        "④ 门窗": "狱门 M-12 铁门高 3.5m 单扇外开；门额匾底 DF-14 #7E2A20、狱名阴刻填 #C9B380；无窗——唯一透光为门缝与封符",
+        "⑤ 纹样": "门钹 P-19＋环壁 P-12＋封符 P-12，三纹皆冥文系；**禁其他纹样入狱**（狱的材质语言即「无饰」）",
+        "⑥ 鬼火": "狱门灯 1 盏×18＋门钹双目 2 点×18＋封符微亮；行刑演出绿转红渐变 2 秒（#3DFF9C→#FF3A4A `[待收编 DF-21]`）",
+        "⑦ 幽冥老化": "封符焦边、门枢栅条锈胀、半地下段碱线（湿带蒸发缘 #57534E 线高 50mm）；沙面油渍零容忍——油意象仅限油锅狱内（§4.2 台账行 026）",
+        "狱 ID · 狱名（环位）": "场景装置材质 | 刑罚意象呈现 | 主色 hex | 光效",
+        "D-GZ-018 拔舌狱 ◇★（-80°/17,-38）": "巨铁钳悬顶：钳臂 M-12 #26282C 锻痕＋锈 #6E1F1F ≤25%，钳轴 M-10 铜 | 舌状红雾舔地——M-20 染 #6E1F1F 贴地 0.3m 缓爬（0.1m/s）；悬钳缓摆 0.2Hz 伺舌 | #26282C | 狱门灯 #3DFF9C；演出转红；红雾内无光自明",
+        "D-GZ-019 剪刀狱（-60°/48,-27）": "铰剪阵 18 具悬转：剪身 M-12、剪轴 M-10 铜，轴周锈晕环 #6E1F1F | 十八铰剪同轴悬转 0.1Hz，开合剪口新亮段（摩擦面条款）；地面剪影随转扫过 | #26282C | 狱门灯 #3DFF9C；剪轴 3 点微焰 #3DFF9C",
+        "D-GZ-020 铁树狱（-40°/73,-6）": "铁树高丈二（≈3.8m）：M-12 树干枝杈，枝端锻尖新亮；枝挂皮幡 M-13 #2B1B3D 透 20% 无风自动 | 血肉偿债——枝刺下垂朝地面「魂位」标记（沙面烙点恒存） | #26282C | 树冠 3 处微焰 #3DFF9C；皮幡背光透 #4D7CFF 弱档",
+        "D-GZ-021 孽镜狱（-20°/89,22）": "千面镜壁：M-10 铜镜阵满壁反 0.65，镜缘锈 #6E1F1F ≤15% | 业镜照罪——镜中皆他人视角（贴图视角层，玩家只见旁人影）；镜面蒙红雾 #6E1F1F 透 40% 同阎罗殿孽镜制 | #B87333 | 幽蓝扫光 #4D7CFF 0.2Hz 沿镜壁缓移",
+        "D-GZ-022 蒸笼狱 ★（0°/95,55）": "九层灶笼：笼体 M-12＋铁箍九道，屉缝清晰 | 欺瞒蒸心——笼汽成柱：M-20 #57534E 密度 0.6 柱高 6m；灶膛埋光 #BAFFEF 压暗 60% 恒定 | #26282C | 汽柱随全局雾呼吸 40 秒 ±8%；演出时汽柱 +50%",
+        "D-GZ-023 铜柱狱 ★（20°/89,88）": "赤热铜柱六根：M-10 #B87333 柱身氧化斑 | 炮烙——柱身热红 `[待收编 #FF3A4A 自发光弱档，未批前 #6E1F1F 顶替]`；柱上影蠕动（影子层独立摆动） | #B87333 | 柱周热浪折射扰动；演出态柱红脉动 0.5Hz",
+        "D-GZ-024 刀山狱 ★（40°/73,116）": "三面刀刃斜坡：M-12 刃板阵列，刃口新亮、刃背锈 | 贪者攀刀——刃口朝下诱攀；坡面沙痕攀爬迹保留 30 秒（灵界时律唯一「爬痕」位） | #26282C | 刃背刻槽 #3DFF9C 弱档 20%；演出转红",
+        "D-GZ-025 冰山狱（60°/48,137）": "冰雕魂柱 12 根：M-19 琉璃半透＋内透 #BAFFEF，柱身霜层 #E8E3D5 | 冷血者冻骨——呵气成霜（玩家视野边缘霜化演出）；柱底积水薄冰反 0.45 | #BAFFEF | 冰柱冷光恒定禁闪（全环唯一无闪烁狱）；魂柱内光缓动 0.1Hz",
+        "D-GZ-026 油锅狱 ★（80°/16,149）": "沸锅四口：M-10 铜锅 #B87333 失光 0.30；油面 #6B4226 反 0.35 | 劫掠者下锅——油面浮铜钱 M-10 引贪（钱面反光点）；气泡爆点 #6E1F1F 径 50mm 历时 0.3s | #6B4226 | 锅沿长明 4 点 #3DFF9C；演出转红＋油面沸腾加剧",
+        "D-GZ-027 牛坑狱（100°/-16,149）": "陷坑：坑沿 M-08 崩茬；坑体 M-24 干沙塌面 | 欺善怕恶——铁牛暗影只闻声不见形：影体 M-12 轮廓 #2B1B3D 半透 60%；蹄印沙痕保留 30 秒 | #4A3C33 | 坑壁无光；牛近时坑底眼窝两点 #3DFF9C 亮（眼窝火条款）",
+        "D-GZ-028 石压狱（120°/-48,137）": "巨磨盘悬顶：M-08 #33393F Φ4m，磨齿沟槽深 40mm | 强梁压弱——缓降循环：行程 2m／10 分钟、到底复位；盘底压风尘 M-20 薄雾 | #33393F | 磨齿沟槽磷光藓 #3DFF9C ≤3%（「活纹」条款）；压底瞬间尘雾爆开",
+        "D-GZ-029 舂臼狱（140°/-73,116）": "巨臼双杵：臼体 M-08 凿刻，杵 M-12 杵头铁箍 | 忤逆舂杀——自舂节律 1 次/4 秒、声如捶胸（杵落臼内沙尘微扬） | #33393F | 臼沿 2 点 #3DFF9C；杵头摩擦新亮段",
+        "D-GZ-030 血池狱（160°/-89,88）": "狱内小血池三格：DF-07 #4A0E0E 液膜反 0.2（与血池湖同源材质池缩放版） | 血债血偿——三格轮漫（液位此消彼长循环 120 秒）；池沿蚀沟深 20mm | #4A0E0E | 池液辉光极弱、唯气泡爆点 #6E1F1F 提亮；封符 7 层微亮 #3DFF9C",
+        "D-GZ-031 枉死狱 ★（180°/-95,55）": "枉魂长廊：壁面 M-08 阴刻名录，旧刻 #57534E、新刻段填 #C9B380（名录自增每游戏日 +3 行） | 枉死者寄狱候勘——壁上名录自增；尽端门洞封雾 M-20（暗通枉死城甬道意象） | #33393F | 廊顶一线 #3DFF9C 微光带 20%；新刻行亮一档 10 秒后转暗",
+        "D-GZ-032 磔刑狱（200°/-89,22）": "五链五向悬张：M-23 链径 120mm 上限档，磨亮环段；链端空钩 M-12 空悬 | 叛离者车裂——五链绷向五壁、链端空荡（无体可缚）；演出态五链绷直颤动 2Hz | #26282C | 链身刻槽 #3DFF9C 磷光常存（M-23 条款）",
+        "D-GZ-033 火山狱 ★（220°/-73,-6）": "狱心火山口：M-08 烧结渣面 #57534E，渣粒 1～3mm | 焚心之罪——口内青焰 M-21：#BAFFEF 芯→#3DFF9C 外缘、焰高 2m 档（全环最高焰）；热浪扭曲视线 | #3DFF9C | 焰稳幅 ±5%；演出喷发 +50%＋渣面映红 `[待收编 #FF3A4A 顶替 #6E1F1F]`",
+        "D-GZ-034 石磨狱（240°/-48,-27）": "双磨对碾：M-08 磨盘 Φ3m 对转 0.05Hz，磨齿咬合 | 碾碎重来——磨出粉末飘成人形又散：M-20 白尘微粒 #E8E3D5 拟形 3 秒后散 | #33393F | 磨缝磷光 #3DFF9C；拟形粉末自带弱光 10%",
+        "D-GZ-035 刀锯狱 ◇（260°/-17,-38）": "悬锯八柄往复：M-12 锯架，锯齿沾灰不沾红（齿缝积灰 #57534E——「只碎骨不染血」的材质语言） | 两面三刀——八锯错相往复 0.2Hz；临水堤渗水 800mm 同 018 制 | #26282C | 齿隙漏光 #3DFF9C 线状；演出转红",
+        "狱": "封符层数 | 行刑演出触发 | 沙面残留物（消退时限）",
+        "D-GZ-018 拔舌 ★": "7 | 钳落拔舌 | 舌状红雾蚀痕（60 秒）",
+        "D-GZ-019 剪刀": "4 | 铰剪齐转加速 | 剪影扫痕（30 秒）",
+        "D-GZ-020 铁树": "4 | 皮幡齐指魂位 | 刺点烙痕（恒存）",
+        "D-GZ-021 孽镜": "3 | 镜壁照罪 | 无痕——镜狱不留沙痕（石地特例）",
+        "D-GZ-022 蒸笼 ★": "7 | 开笼蒸心 | 汽凝水渍（30 秒）",
+        "D-GZ-023 铜柱 ★": "5 | 抱柱炮烙 | 柱前焦圈（恒存）",
+        "D-GZ-024 刀山 ★": "5 | 诱攀落刃 | 攀爬迹（30 秒）",
+        "D-GZ-025 冰山": "3 | 冻骨呵霜 | 霜圈（60 秒）",
+        "D-GZ-026 油锅 ★": "7 | 下锅浮钱 | 油渍斑（120 秒——全环唯一油渍许可位）",
+        "D-GZ-027 牛坑": "3 | 铁牛踏坑 | 蹄印（30 秒）",
+        "D-GZ-028 石压": "4 | 磨盘缓降到底 | 压痕恒存（盘底径 Φ4m）",
+        "D-GZ-029 舂臼": "4 | 双杵连舂 | 臼周沙溅（30 秒）",
+        "D-GZ-030 血池": "7 | 三格轮漫 | 池沿蚀沟（恒存）",
+        "D-GZ-031 枉死 ★": "7 | 名录自增一刻 | 无痕（长廊石地）",
+        "D-GZ-032 磔刑": "5 | 五链绷张 | 五向拖痕（30 秒）",
+        "D-GZ-033 火山 ★": "7 | 火山喷发 +50% | 渣面烧痕（恒存）",
+        "D-GZ-034 石磨": "4 | 双磨对碾拟形 | 粉末拟形（3 秒自散）",
+        "D-GZ-035 刀锯 ◇": "4 | 八锯往复加速 | 锯末积线（60 秒）",
+        "装具类（狱）": "锻／凿规格 | 磨损位 | 演出驱动",
+        "悬钳（018）": "钳臂板厚 60mm 锻铁 M-12；钳轴 M-10 铜 Φ120mm | 钳口内侧磨亮 | 摆 0.2Hz／钳落触发",
+        "铰剪阵（019）": "剪身板厚 20mm×18 具，剪高 2.2m | 轴周锈晕环 | 同轴悬转 0.1Hz、演出加速",
+        "铁树（020）": "干径 300mm 锻管拼枝；刺长 150mm 锻尖 | 刺尖新亮段 | 幡动／刺指触发",
+        "镜壁（021）": "铜镜 600×600×24mm 满壁阵列 M-10 | 镜缘锈 #6E1F1F | 扫光 0.2Hz／照罪触发",
+        "灶笼（022）": "屉径 2.2m 九层；铁箍 40×8mm 九道 M-12 | 箍底烟色 #2E2420 | 汽柱 +50% 触发",
+        "铜柱（023）": "柱 Φ400mm×6 根、高 4m 铸铜 M-10 | 柱身氧化斑 | 热红脉动 0.5Hz",
+        "刃坡（024）": "刃板 800×200×15mm×三坡阵列 M-12 | 刃口新亮、刃背锈 | 诱攀落刃触发",
+        "冰柱（025）": "M-19 半透柱 Φ300mm×12 根、高 3.5m | 霜层 #E8E3D5 厚 3mm | 呵霜触发",
+        "沸锅（026）": "锅口 Φ1.8m×4 口，铜铸壁厚 25mm | 锅底烟熏 #2E2420 | 沸腾加剧／浮钱触发",
+        "陷坑（027）": "坑口 Φ6m 深 4m，坑体 M-24 沙塌面 | 坑沿崩茬 | 铁牛暗影触发",
+        "磨盘（028）": "盘 Φ4m 厚 500mm，凿齿 24 沟 M-08 | 齿沟磷光藓 ≤3% | 缓降 2m／10 分钟",
+        "巨臼（029）": "臼口 Φ1.6m 凿腔 M-08；杵长 3m 杵头铁箍 | 杵头箍面磨亮 | 自舂 1 次/4 秒",
+        "血池格（030）": "格 4×4m×3，池沿 M-08 凿石 | 蚀沟 20mm | 轮漫循环 120 秒",
+        "名录长廊（031）": "廊宽 3m 高 4m；刻名录壁面 M-08 | 新刻亮段 #C9B380 | 名录自增每日 +3 行",
+        "五链（032）": "M-23 链径 120mm×5 向、链长 6m | 磨亮环段 | 绷直颤动 2Hz",
+        "火山口（033）": "口径 5m 渣面 M-08 烧结 | 渣面烧痕恒存 | 喷发 +50% 触发",
+        "对磨（034）": "双盘 Φ3m 对转 0.05Hz M-08 | 磨缝磷光 | 粉末拟形 3 秒触发",
+        "悬锯（035）": "锯长 1.8m×8 柄，往复行程 2m | 齿缝积灰 #57534E | 往复 0.2Hz、演出加速",
+        "路基（③）": "灰黑土路：M-04 夯土压实冥制 #2E2420→#4A3C33，路宽 12m；主段 (440,24)→(80,24) 长 360m＋折段 (80,24)→(8,-32) 长 68m；路面魂迹踩迹 20mm／30 秒渐平",
+        "路缘雾堤": "M-20 贴地 0.5m 厚、染色 #57534E；沿路折线连续，灯柱位被 8m 净雾光域推开（§2.9）",
+        "花墙夹道": "彼岸花 120 株双列（§2.8 段位表）；路内侧密外侧疏",
+        "② 侧壁／① 屋顶": "路侧无墙无顶——两侧荒地散布白骨苔斑块（斑缘足印状蔓延），踩踏亮起绿色足印纹 #3DFF9C 保留 60 秒、雨雾天 90 秒",
+        "④⑤": "无门窗无纹样；过渡节点为牌坊（5.2）与桥头（2.1）",
+        "⑥⑦": "路火 21 柱（§2.9）；老化只做车辙零、魂迹层与骨藓路缘线 ≤3%",
+        "逐座字段1-1": "巨铁钳悬顶：钳臂 M-12 #26282C 锻痕＋锈 #6E1F1F ≤25%，钳轴 M-10 铜",
+        "逐座字段2-1": "舌状红雾舔地——M-20 染 #6E1F1F 贴地 0.3m 缓爬（0.1m/s）；悬钳缓摆 0.2Hz 伺舌",
+        "逐座字段3-1": "#26282C",
+        "逐座字段4-1": "狱门灯 #3DFF9C；演出转红；红雾内无光自明",
+        "逐座字段1-19": "7",
+        "逐座字段2-19": "钳落拔舌",
+        "逐座字段3-19": "舌状红雾蚀痕（60 秒）"
+      }
+    },
+    {
+      "id": "D-GZ-019",
+      "name": "剪刀狱（-60°/48,-27）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-2": "铰剪阵 18 具悬转：剪身 M-12、剪轴 M-10 铜，轴周锈晕环 #6E1F1F",
+        "逐座字段2-2": "十八铰剪同轴悬转 0.1Hz，开合剪口新亮段（摩擦面条款）；地面剪影随转扫过",
+        "逐座字段3-2": "#26282C",
+        "逐座字段4-2": "狱门灯 #3DFF9C；剪轴 3 点微焰 #3DFF9C",
+        "逐座字段1-20": "4",
+        "逐座字段2-20": "铰剪齐转加速",
+        "逐座字段3-20": "剪影扫痕（30 秒）"
+      }
+    },
+    {
+      "id": "D-GZ-020",
+      "name": "铁树狱（-40°/73,-6）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-3": "铁树高丈二（≈3.8m）：M-12 树干枝杈，枝端锻尖新亮；枝挂皮幡 M-13 #2B1B3D 透 20% 无风自动",
+        "逐座字段2-3": "血肉偿债——枝刺下垂朝地面「魂位」标记（沙面烙点恒存）",
+        "逐座字段3-3": "#26282C",
+        "逐座字段4-3": "树冠 3 处微焰 #3DFF9C；皮幡背光透 #4D7CFF 弱档",
+        "逐座字段1-21": "4",
+        "逐座字段2-21": "皮幡齐指魂位",
+        "逐座字段3-21": "刺点烙痕（恒存）"
+      }
+    },
+    {
+      "id": "D-GZ-021",
+      "name": "孽镜狱（-20°/89,22）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-4": "千面镜壁：M-10 铜镜阵满壁反 0.65，镜缘锈 #6E1F1F ≤15%",
+        "逐座字段2-4": "业镜照罪——镜中皆他人视角（贴图视角层，玩家只见旁人影）；镜面蒙红雾 #6E1F1F 透 40% 同阎罗殿孽镜制",
+        "逐座字段3-4": "#B87333",
+        "逐座字段4-4": "幽蓝扫光 #4D7CFF 0.2Hz 沿镜壁缓移",
+        "逐座字段1-22": "3",
+        "逐座字段2-22": "镜壁照罪",
+        "逐座字段3-22": "无痕——镜狱不留沙痕（石地特例）"
+      }
+    },
+    {
+      "id": "D-GZ-022",
+      "name": "蒸笼狱 ★（0°/95,55）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-5": "九层灶笼：笼体 M-12＋铁箍九道，屉缝清晰",
+        "逐座字段2-5": "欺瞒蒸心——笼汽成柱：M-20 #57534E 密度 0.6 柱高 6m；灶膛埋光 #BAFFEF 压暗 60% 恒定",
+        "逐座字段3-5": "#26282C",
+        "逐座字段4-5": "汽柱随全局雾呼吸 40 秒 ±8%；演出时汽柱 +50%",
+        "逐座字段1-23": "7",
+        "逐座字段2-23": "开笼蒸心",
+        "逐座字段3-23": "汽凝水渍（30 秒）"
+      }
+    },
+    {
+      "id": "D-GZ-023",
+      "name": "铜柱狱 ★（20°/89,88）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-6": "赤热铜柱六根：M-10 #B87333 柱身氧化斑",
+        "逐座字段2-6": "炮烙——柱身热红 `[待收编 #FF3A4A 自发光弱档，未批前 #6E1F1F 顶替]`；柱上影蠕动（影子层独立摆动）",
+        "逐座字段3-6": "#B87333",
+        "逐座字段4-6": "柱周热浪折射扰动；演出态柱红脉动 0.5Hz",
+        "逐座字段1-24": "5",
+        "逐座字段2-24": "抱柱炮烙",
+        "逐座字段3-24": "柱前焦圈（恒存）"
+      }
+    },
+    {
+      "id": "D-GZ-024",
+      "name": "刀山狱 ★（40°/73,116）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-7": "三面刀刃斜坡：M-12 刃板阵列，刃口新亮、刃背锈",
+        "逐座字段2-7": "贪者攀刀——刃口朝下诱攀；坡面沙痕攀爬迹保留 30 秒（灵界时律唯一「爬痕」位）",
+        "逐座字段3-7": "#26282C",
+        "逐座字段4-7": "刃背刻槽 #3DFF9C 弱档 20%；演出转红",
+        "逐座字段1-25": "5",
+        "逐座字段2-25": "诱攀落刃",
+        "逐座字段3-25": "攀爬迹（30 秒）"
+      }
+    },
+    {
+      "id": "D-GZ-025",
+      "name": "冰山狱（60°/48,137）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-8": "冰雕魂柱 12 根：M-19 琉璃半透＋内透 #BAFFEF，柱身霜层 #E8E3D5",
+        "逐座字段2-8": "冷血者冻骨——呵气成霜（玩家视野边缘霜化演出）；柱底积水薄冰反 0.45",
+        "逐座字段3-8": "#BAFFEF",
+        "逐座字段4-8": "冰柱冷光恒定禁闪（全环唯一无闪烁狱）；魂柱内光缓动 0.1Hz",
+        "逐座字段1-26": "3",
+        "逐座字段2-26": "冻骨呵霜",
+        "逐座字段3-26": "霜圈（60 秒）"
+      }
+    },
+    {
+      "id": "D-GZ-026",
+      "name": "油锅狱 ★（80°/16,149）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-9": "沸锅四口：M-10 铜锅 #B87333 失光 0.30；油面 #6B4226 反 0.35",
+        "逐座字段2-9": "劫掠者下锅——油面浮铜钱 M-10 引贪（钱面反光点）；气泡爆点 #6E1F1F 径 50mm 历时 0.3s",
+        "逐座字段3-9": "#6B4226",
+        "逐座字段4-9": "锅沿长明 4 点 #3DFF9C；演出转红＋油面沸腾加剧",
+        "逐座字段1-27": "7",
+        "逐座字段2-27": "下锅浮钱",
+        "逐座字段3-27": "油渍斑（120 秒——全环唯一油渍许可位）"
+      }
+    },
+    {
+      "id": "D-GZ-027",
+      "name": "牛坑狱（100°/-16,149）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-10": "陷坑：坑沿 M-08 崩茬；坑体 M-24 干沙塌面",
+        "逐座字段2-10": "欺善怕恶——铁牛暗影只闻声不见形：影体 M-12 轮廓 #2B1B3D 半透 60%；蹄印沙痕保留 30 秒",
+        "逐座字段3-10": "#4A3C33",
+        "逐座字段4-10": "坑壁无光；牛近时坑底眼窝两点 #3DFF9C 亮（眼窝火条款）",
+        "逐座字段1-28": "3",
+        "逐座字段2-28": "铁牛踏坑",
+        "逐座字段3-28": "蹄印（30 秒）"
+      }
+    },
+    {
+      "id": "D-GZ-028",
+      "name": "石压狱（120°/-48,137）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-11": "巨磨盘悬顶：M-08 #33393F Φ4m，磨齿沟槽深 40mm",
+        "逐座字段2-11": "强梁压弱——缓降循环：行程 2m／10 分钟、到底复位；盘底压风尘 M-20 薄雾",
+        "逐座字段3-11": "#33393F",
+        "逐座字段4-11": "磨齿沟槽磷光藓 #3DFF9C ≤3%（「活纹」条款）；压底瞬间尘雾爆开",
+        "逐座字段1-29": "4",
+        "逐座字段2-29": "磨盘缓降到底",
+        "逐座字段3-29": "压痕恒存（盘底径 Φ4m）"
+      }
+    },
+    {
+      "id": "D-GZ-029",
+      "name": "舂臼狱（140°/-73,116）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-12": "巨臼双杵：臼体 M-08 凿刻，杵 M-12 杵头铁箍",
+        "逐座字段2-12": "忤逆舂杀——自舂节律 1 次/4 秒、声如捶胸（杵落臼内沙尘微扬）",
+        "逐座字段3-12": "#33393F",
+        "逐座字段4-12": "臼沿 2 点 #3DFF9C；杵头摩擦新亮段",
+        "逐座字段1-30": "4",
+        "逐座字段2-30": "双杵连舂",
+        "逐座字段3-30": "臼周沙溅（30 秒）"
+      }
+    },
+    {
+      "id": "D-GZ-030",
+      "name": "血池狱（160°/-89,88）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-13": "狱内小血池三格：DF-07 #4A0E0E 液膜反 0.2（与血池湖同源材质池缩放版）",
+        "逐座字段2-13": "血债血偿——三格轮漫（液位此消彼长循环 120 秒）；池沿蚀沟深 20mm",
+        "逐座字段3-13": "#4A0E0E",
+        "逐座字段4-13": "池液辉光极弱、唯气泡爆点 #6E1F1F 提亮；封符 7 层微亮 #3DFF9C",
+        "逐座字段1-31": "7",
+        "逐座字段2-31": "三格轮漫",
+        "逐座字段3-31": "池沿蚀沟（恒存）"
+      }
+    },
+    {
+      "id": "D-GZ-031",
+      "name": "枉死狱 ★（180°/-95,55）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-14": "枉魂长廊：壁面 M-08 阴刻名录，旧刻 #57534E、新刻段填 #C9B380（名录自增每游戏日 +3 行）",
+        "逐座字段2-14": "枉死者寄狱候勘——壁上名录自增；尽端门洞封雾 M-20（暗通枉死城甬道意象）",
+        "逐座字段3-14": "#33393F",
+        "逐座字段4-14": "廊顶一线 #3DFF9C 微光带 20%；新刻行亮一档 10 秒后转暗",
+        "逐座字段1-32": "7",
+        "逐座字段2-32": "名录自增一刻",
+        "逐座字段3-32": "无痕（长廊石地）"
+      }
+    },
+    {
+      "id": "D-GZ-032",
+      "name": "磔刑狱（200°/-89,22）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-15": "五链五向悬张：M-23 链径 120mm 上限档，磨亮环段；链端空钩 M-12 空悬",
+        "逐座字段2-15": "叛离者车裂——五链绷向五壁、链端空荡（无体可缚）；演出态五链绷直颤动 2Hz",
+        "逐座字段3-15": "#26282C",
+        "逐座字段4-15": "链身刻槽 #3DFF9C 磷光常存（M-23 条款）",
+        "逐座字段1-33": "5",
+        "逐座字段2-33": "五链绷张",
+        "逐座字段3-33": "五向拖痕（30 秒）"
+      }
+    },
+    {
+      "id": "D-GZ-033",
+      "name": "火山狱 ★（220°/-73,-6）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-16": "狱心火山口：M-08 烧结渣面 #57534E，渣粒 1～3mm",
+        "逐座字段2-16": "焚心之罪——口内青焰 M-21：#BAFFEF 芯→#3DFF9C 外缘、焰高 2m 档（全环最高焰）；热浪扭曲视线",
+        "逐座字段3-16": "#3DFF9C",
+        "逐座字段4-16": "焰稳幅 ±5%；演出喷发 +50%＋渣面映红 `[待收编 #FF3A4A 顶替 #6E1F1F]`",
+        "逐座字段1-34": "7",
+        "逐座字段2-34": "火山喷发 +50%",
+        "逐座字段3-34": "渣面烧痕（恒存）"
+      }
+    },
+    {
+      "id": "D-GZ-034",
+      "name": "石磨狱（240°/-48,-27）",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "逐座字段1-17": "双磨对碾：M-08 磨盘 Φ3m 对转 0.05Hz，磨齿咬合",
+        "逐座字段2-17": "碾碎重来——磨出粉末飘成人形又散：M-20 白尘微粒 #E8E3D5 拟形 3 秒后散",
+        "逐座字段3-17": "#33393F",
+        "逐座字段4-17": "磨缝磷光 #3DFF9C；拟形粉末自带弱光 10%",
+        "逐座字段1-35": "4",
+        "逐座字段2-35": "双磨对碾拟形",
+        "逐座字段3-35": "粉末拟形（3 秒自散）"
+      }
+    },
+    {
+      "id": "D-GZ-035",
+      "name": "十八狱环",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {
+        "---": "---",
+        "① 屋顶": "无顶——狱口露天，顶际由 M-20 灰雾 #57534E 厚 0.5m 压顶（穹顶感即「无顶之顶」）",
+        "② 墙体": "狱壁四面 M-08 青黑 #33393F：地上段刻业纹 P-12 灯带（环壁业纹灯），地下 3m 段裸石＋渗水湿带 400mm（临水狱 800mm）；骨藓 ≤8%",
+        "③ 地面": "狱内 M-24 干沙压实 #4A3C33 厚 300mm（垫沙收「迹」——行刑演出后沙面自平）；拖痕保留 30 秒",
+        "④ 门窗": "狱门 M-12 铁门高 3.5m 单扇外开；门额匾底 DF-14 #7E2A20、狱名阴刻填 #C9B380；无窗——唯一透光为门缝与封符",
+        "⑤ 纹样": "门钹 P-19＋环壁 P-12＋封符 P-12，三纹皆冥文系；**禁其他纹样入狱**（狱的材质语言即「无饰」）",
+        "⑥ 鬼火": "狱门灯 1 盏×18＋门钹双目 2 点×18＋封符微亮；行刑演出绿转红渐变 2 秒（#3DFF9C→#FF3A4A `[待收编 DF-21]`）",
+        "⑦ 幽冥老化": "封符焦边、门枢栅条锈胀、半地下段碱线（湿带蒸发缘 #57534E 线高 50mm）；沙面油渍零容忍——油意象仅限油锅狱内（§4.2 台账行 026）",
+        "狱 ID · 狱名（环位）": "场景装置材质 | 刑罚意象呈现 | 主色 hex | 光效",
+        "D-GZ-018 拔舌狱 ◇★（-80°/17,-38）": "巨铁钳悬顶：钳臂 M-12 #26282C 锻痕＋锈 #6E1F1F ≤25%，钳轴 M-10 铜 | 舌状红雾舔地——M-20 染 #6E1F1F 贴地 0.3m 缓爬（0.1m/s）；悬钳缓摆 0.2Hz 伺舌 | #26282C | 狱门灯 #3DFF9C；演出转红；红雾内无光自明",
+        "D-GZ-019 剪刀狱（-60°/48,-27）": "铰剪阵 18 具悬转：剪身 M-12、剪轴 M-10 铜，轴周锈晕环 #6E1F1F | 十八铰剪同轴悬转 0.1Hz，开合剪口新亮段（摩擦面条款）；地面剪影随转扫过 | #26282C | 狱门灯 #3DFF9C；剪轴 3 点微焰 #3DFF9C",
+        "D-GZ-020 铁树狱（-40°/73,-6）": "铁树高丈二（≈3.8m）：M-12 树干枝杈，枝端锻尖新亮；枝挂皮幡 M-13 #2B1B3D 透 20% 无风自动 | 血肉偿债——枝刺下垂朝地面「魂位」标记（沙面烙点恒存） | #26282C | 树冠 3 处微焰 #3DFF9C；皮幡背光透 #4D7CFF 弱档",
+        "D-GZ-021 孽镜狱（-20°/89,22）": "千面镜壁：M-10 铜镜阵满壁反 0.65，镜缘锈 #6E1F1F ≤15% | 业镜照罪——镜中皆他人视角（贴图视角层，玩家只见旁人影）；镜面蒙红雾 #6E1F1F 透 40% 同阎罗殿孽镜制 | #B87333 | 幽蓝扫光 #4D7CFF 0.2Hz 沿镜壁缓移",
+        "D-GZ-022 蒸笼狱 ★（0°/95,55）": "九层灶笼：笼体 M-12＋铁箍九道，屉缝清晰 | 欺瞒蒸心——笼汽成柱：M-20 #57534E 密度 0.6 柱高 6m；灶膛埋光 #BAFFEF 压暗 60% 恒定 | #26282C | 汽柱随全局雾呼吸 40 秒 ±8%；演出时汽柱 +50%",
+        "D-GZ-023 铜柱狱 ★（20°/89,88）": "赤热铜柱六根：M-10 #B87333 柱身氧化斑 | 炮烙——柱身热红 `[待收编 #FF3A4A 自发光弱档，未批前 #6E1F1F 顶替]`；柱上影蠕动（影子层独立摆动） | #B87333 | 柱周热浪折射扰动；演出态柱红脉动 0.5Hz",
+        "D-GZ-024 刀山狱 ★（40°/73,116）": "三面刀刃斜坡：M-12 刃板阵列，刃口新亮、刃背锈 | 贪者攀刀——刃口朝下诱攀；坡面沙痕攀爬迹保留 30 秒（灵界时律唯一「爬痕」位） | #26282C | 刃背刻槽 #3DFF9C 弱档 20%；演出转红",
+        "D-GZ-025 冰山狱（60°/48,137）": "冰雕魂柱 12 根：M-19 琉璃半透＋内透 #BAFFEF，柱身霜层 #E8E3D5 | 冷血者冻骨——呵气成霜（玩家视野边缘霜化演出）；柱底积水薄冰反 0.45 | #BAFFEF | 冰柱冷光恒定禁闪（全环唯一无闪烁狱）；魂柱内光缓动 0.1Hz",
+        "D-GZ-026 油锅狱 ★（80°/16,149）": "沸锅四口：M-10 铜锅 #B87333 失光 0.30；油面 #6B4226 反 0.35 | 劫掠者下锅——油面浮铜钱 M-10 引贪（钱面反光点）；气泡爆点 #6E1F1F 径 50mm 历时 0.3s | #6B4226 | 锅沿长明 4 点 #3DFF9C；演出转红＋油面沸腾加剧",
+        "D-GZ-027 牛坑狱（100°/-16,149）": "陷坑：坑沿 M-08 崩茬；坑体 M-24 干沙塌面 | 欺善怕恶——铁牛暗影只闻声不见形：影体 M-12 轮廓 #2B1B3D 半透 60%；蹄印沙痕保留 30 秒 | #4A3C33 | 坑壁无光；牛近时坑底眼窝两点 #3DFF9C 亮（眼窝火条款）",
+        "D-GZ-028 石压狱（120°/-48,137）": "巨磨盘悬顶：M-08 #33393F Φ4m，磨齿沟槽深 40mm | 强梁压弱——缓降循环：行程 2m／10 分钟、到底复位；盘底压风尘 M-20 薄雾 | #33393F | 磨齿沟槽磷光藓 #3DFF9C ≤3%（「活纹」条款）；压底瞬间尘雾爆开",
+        "D-GZ-029 舂臼狱（140°/-73,116）": "巨臼双杵：臼体 M-08 凿刻，杵 M-12 杵头铁箍 | 忤逆舂杀——自舂节律 1 次/4 秒、声如捶胸（杵落臼内沙尘微扬） | #33393F | 臼沿 2 点 #3DFF9C；杵头摩擦新亮段",
+        "D-GZ-030 血池狱（160°/-89,88）": "狱内小血池三格：DF-07 #4A0E0E 液膜反 0.2（与血池湖同源材质池缩放版） | 血债血偿——三格轮漫（液位此消彼长循环 120 秒）；池沿蚀沟深 20mm | #4A0E0E | 池液辉光极弱、唯气泡爆点 #6E1F1F 提亮；封符 7 层微亮 #3DFF9C",
+        "D-GZ-031 枉死狱 ★（180°/-95,55）": "枉魂长廊：壁面 M-08 阴刻名录，旧刻 #57534E、新刻段填 #C9B380（名录自增每游戏日 +3 行） | 枉死者寄狱候勘——壁上名录自增；尽端门洞封雾 M-20（暗通枉死城甬道意象） | #33393F | 廊顶一线 #3DFF9C 微光带 20%；新刻行亮一档 10 秒后转暗",
+        "D-GZ-032 磔刑狱（200°/-89,22）": "五链五向悬张：M-23 链径 120mm 上限档，磨亮环段；链端空钩 M-12 空悬 | 叛离者车裂——五链绷向五壁、链端空荡（无体可缚）；演出态五链绷直颤动 2Hz | #26282C | 链身刻槽 #3DFF9C 磷光常存（M-23 条款）",
+        "D-GZ-033 火山狱 ★（220°/-73,-6）": "狱心火山口：M-08 烧结渣面 #57534E，渣粒 1～3mm | 焚心之罪——口内青焰 M-21：#BAFFEF 芯→#3DFF9C 外缘、焰高 2m 档（全环最高焰）；热浪扭曲视线 | #3DFF9C | 焰稳幅 ±5%；演出喷发 +50%＋渣面映红 `[待收编 #FF3A4A 顶替 #6E1F1F]`",
+        "D-GZ-034 石磨狱（240°/-48,-27）": "双磨对碾：M-08 磨盘 Φ3m 对转 0.05Hz，磨齿咬合 | 碾碎重来——磨出粉末飘成人形又散：M-20 白尘微粒 #E8E3D5 拟形 3 秒后散 | #33393F | 磨缝磷光 #3DFF9C；拟形粉末自带弱光 10%",
+        "D-GZ-035 刀锯狱 ◇（260°/-17,-38）": "悬锯八柄往复：M-12 锯架，锯齿沾灰不沾红（齿缝积灰 #57534E——「只碎骨不染血」的材质语言） | 两面三刀——八锯错相往复 0.2Hz；临水堤渗水 800mm 同 018 制 | #26282C | 齿隙漏光 #3DFF9C 线状；演出转红",
+        "狱": "封符层数 | 行刑演出触发 | 沙面残留物（消退时限）",
+        "D-GZ-018 拔舌 ★": "7 | 钳落拔舌 | 舌状红雾蚀痕（60 秒）",
+        "D-GZ-019 剪刀": "4 | 铰剪齐转加速 | 剪影扫痕（30 秒）",
+        "D-GZ-020 铁树": "4 | 皮幡齐指魂位 | 刺点烙痕（恒存）",
+        "D-GZ-021 孽镜": "3 | 镜壁照罪 | 无痕——镜狱不留沙痕（石地特例）",
+        "D-GZ-022 蒸笼 ★": "7 | 开笼蒸心 | 汽凝水渍（30 秒）",
+        "D-GZ-023 铜柱 ★": "5 | 抱柱炮烙 | 柱前焦圈（恒存）",
+        "D-GZ-024 刀山 ★": "5 | 诱攀落刃 | 攀爬迹（30 秒）",
+        "D-GZ-025 冰山": "3 | 冻骨呵霜 | 霜圈（60 秒）",
+        "D-GZ-026 油锅 ★": "7 | 下锅浮钱 | 油渍斑（120 秒——全环唯一油渍许可位）",
+        "D-GZ-027 牛坑": "3 | 铁牛踏坑 | 蹄印（30 秒）",
+        "D-GZ-028 石压": "4 | 磨盘缓降到底 | 压痕恒存（盘底径 Φ4m）",
+        "D-GZ-029 舂臼": "4 | 双杵连舂 | 臼周沙溅（30 秒）",
+        "D-GZ-030 血池": "7 | 三格轮漫 | 池沿蚀沟（恒存）",
+        "D-GZ-031 枉死 ★": "7 | 名录自增一刻 | 无痕（长廊石地）",
+        "D-GZ-032 磔刑": "5 | 五链绷张 | 五向拖痕（30 秒）",
+        "D-GZ-033 火山 ★": "7 | 火山喷发 +50% | 渣面烧痕（恒存）",
+        "D-GZ-034 石磨": "4 | 双磨对碾拟形 | 粉末拟形（3 秒自散）",
+        "D-GZ-035 刀锯 ◇": "4 | 八锯往复加速 | 锯末积线（60 秒）",
+        "装具类（狱）": "锻／凿规格 | 磨损位 | 演出驱动",
+        "悬钳（018）": "钳臂板厚 60mm 锻铁 M-12；钳轴 M-10 铜 Φ120mm | 钳口内侧磨亮 | 摆 0.2Hz／钳落触发",
+        "铰剪阵（019）": "剪身板厚 20mm×18 具，剪高 2.2m | 轴周锈晕环 | 同轴悬转 0.1Hz、演出加速",
+        "铁树（020）": "干径 300mm 锻管拼枝；刺长 150mm 锻尖 | 刺尖新亮段 | 幡动／刺指触发",
+        "镜壁（021）": "铜镜 600×600×24mm 满壁阵列 M-10 | 镜缘锈 #6E1F1F | 扫光 0.2Hz／照罪触发",
+        "灶笼（022）": "屉径 2.2m 九层；铁箍 40×8mm 九道 M-12 | 箍底烟色 #2E2420 | 汽柱 +50% 触发",
+        "铜柱（023）": "柱 Φ400mm×6 根、高 4m 铸铜 M-10 | 柱身氧化斑 | 热红脉动 0.5Hz",
+        "刃坡（024）": "刃板 800×200×15mm×三坡阵列 M-12 | 刃口新亮、刃背锈 | 诱攀落刃触发",
+        "冰柱（025）": "M-19 半透柱 Φ300mm×12 根、高 3.5m | 霜层 #E8E3D5 厚 3mm | 呵霜触发",
+        "沸锅（026）": "锅口 Φ1.8m×4 口，铜铸壁厚 25mm | 锅底烟熏 #2E2420 | 沸腾加剧／浮钱触发",
+        "陷坑（027）": "坑口 Φ6m 深 4m，坑体 M-24 沙塌面 | 坑沿崩茬 | 铁牛暗影触发",
+        "磨盘（028）": "盘 Φ4m 厚 500mm，凿齿 24 沟 M-08 | 齿沟磷光藓 ≤3% | 缓降 2m／10 分钟",
+        "巨臼（029）": "臼口 Φ1.6m 凿腔 M-08；杵长 3m 杵头铁箍 | 杵头箍面磨亮 | 自舂 1 次/4 秒",
+        "血池格（030）": "格 4×4m×3，池沿 M-08 凿石 | 蚀沟 20mm | 轮漫循环 120 秒",
+        "名录长廊（031）": "廊宽 3m 高 4m；刻名录壁面 M-08 | 新刻亮段 #C9B380 | 名录自增每日 +3 行",
+        "五链（032）": "M-23 链径 120mm×5 向、链长 6m | 磨亮环段 | 绷直颤动 2Hz",
+        "火山口（033）": "口径 5m 渣面 M-08 烧结 | 渣面烧痕恒存 | 喷发 +50% 触发",
+        "对磨（034）": "双盘 Φ3m 对转 0.05Hz M-08 | 磨缝磷光 | 粉末拟形 3 秒触发",
+        "悬锯（035）": "锯长 1.8m×8 柄，往复行程 2m | 齿缝积灰 #57534E | 往复 0.2Hz、演出加速",
+        "路基（③）": "灰黑土路：M-04 夯土压实冥制 #2E2420→#4A3C33，路宽 12m；主段 (440,24)→(80,24) 长 360m＋折段 (80,24)→(8,-32) 长 68m；路面魂迹踩迹 20mm／30 秒渐平",
+        "路缘雾堤": "M-20 贴地 0.5m 厚、染色 #57534E；沿路折线连续，灯柱位被 8m 净雾光域推开（§2.9）",
+        "花墙夹道": "彼岸花 120 株双列（§2.8 段位表）；路内侧密外侧疏",
+        "② 侧壁／① 屋顶": "路侧无墙无顶——两侧荒地散布白骨苔斑块（斑缘足印状蔓延），踩踏亮起绿色足印纹 #3DFF9C 保留 60 秒、雨雾天 90 秒",
+        "④⑤": "无门窗无纹样；过渡节点为牌坊（5.2）与桥头（2.1）",
+        "⑥⑦": "路火 21 柱（§2.9）；老化只做车辙零、魂迹层与骨藓路缘线 ≤3%",
+        "逐座字段1-18": "悬锯八柄往复：M-12 锯架，锯齿沾灰不沾红（齿缝积灰 #57534E——「只碎骨不染血」的材质语言）",
+        "逐座字段2-18": "两面三刀——八锯错相往复 0.2Hz；临水堤渗水 800mm 同 018 制",
+        "逐座字段3-18": "#26282C",
+        "逐座字段4-18": "齿隙漏光 #3DFF9C 线状；演出转红",
+        "逐座字段1-36": "4",
+        "逐座字段2-36": "八锯往复加速",
+        "逐座字段3-36": "锯末积线（60 秒）"
+      }
+    },
+    {
+      "id": "D-HOU-01",
+      "name": "赌鬼坊",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-02",
+      "name": "饿鬼食肆",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-03",
+      "name": "纸扎铺",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-04",
+      "name": "棺材铺",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-05",
+      "name": "义庄",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-06",
+      "name": "城隍分殿",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-07",
+      "name": "鬼客栈",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-08",
+      "name": "怨妇楼",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-09",
+      "name": "戏鬼楼",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-10",
+      "name": "杂货鬼铺",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-11",
+      "name": "坟墓宅",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    },
+    {
+      "id": "D-HOU-12",
+      "name": "游魂庙",
+      "realm": "underworld",
+      "source": "46-地府建筑材质逐座全表.md",
+      "fields": {}
+    }
+  ],
+  "interiors": [
+    {
+      "id": "T-GZ-001",
+      "name": "凌霄宝殿",
+      "realm": "sky",
+      "roomCount": 8,
+      "rooms": [
+        {
+          "buildingId": "T-GZ-001",
+          "id": "R01",
+          "name": "前廊",
+          "ground": "汉白玉 M-07 #F2EFE9 廊条石 1.2×0.4m 错缝干摆，缝 ≤2mm；踩面中部磨出缓光带（反光 0.55→0.62 仅限中轴一线）",
+          "walls": "廊柱 M-06 彩画木：朱砂丹 #C3272B 柱身，P-04 龙纹贴金绕柱 270°，金 #FFD700 凸起 2mm；柱础 M-07 #F2EFE9 露高 100mm 刻 P-14 莲瓣仰瓣一层",
+          "ceiling": "廊顶露明椽（彻上明造），椽身朱 #C3272B、望板天青 #88ABDA；檐枋金龙和玺彩画 M-06：枋心行龙 #FFD700、地 #1E3A5F，箍头藻头青 #3A6B8C 绿 #4A8B6F 叠晕三色",
+          "doorsWindows": "前檐鎏金隔扇（全殿 42 樘之分）M-11：边框金箔 0.1mm 满贴、叠压痕 2mm，格心双交四椀棂；白日敞开不设帘",
+          "lighting": "无独立光源——玉白 #FFF3D8 宫光自殿内漫出；仪仗 T-ITM-0009／0010／0011 列位反光；朝天镫顶托烛盘焰作玉白",
+          "screens": "廊柱间不设幔，唯御路两侧汉白玉栏杆 M-07 望柱间距 1.5m、柱高 0.8m，栏板浮雕 P-17 海水江崖（立水高 256mm 八层，崖 #FFD700）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-001",
+          "id": "R02",
+          "name": "明间大朝堂",
+          "ground": "金砖 M-09：苏州御窑 640×640mm（二尺四方砖）磨光对缝，缝 ≤1mm、缝线沥青描黑；桐油浸面黑亮 #2B2B2B→#4A3220，映像清晰度 80%；宝座前三级行走线磨雾至 50%",
+          "walls": "无实墙——蟠龙金柱 14 根环列 M-06：柱身朱 #C3272B、P-04 贴金蟠龙 #FFD700 绕柱 270°，龙目点玉白 #FFF3D8 微光（替霓虹条款）；柱间装壶门牙板护壁高 1.2m，朱漆描金 P-06 回纹边",
+          "ceiling": "明间上方为藻井穹顶区（见 R03 与 §1.3 藻井专节）；两侧平棋：格 900×900mm，格心 P-03 宝相花（瓣 #3A6B8C／#4A8B6F、心 #FFD700、地 #F5C542），枝间压 #1E3A5F 阴线",
+          "doorsWindows": "前檐鎏金隔扇 12 樘 M-11（明间面宽），格心满贴金、裙板雕 P-03 宝相花；内檐匾「统御万灵」金地蟠龙边悬明间后金柱之上",
+          "lighting": "玉白 #FFF3D8 无影宫光自藻井顶心明镜垂泻全堂（无烟无影）；蟠龙金烛台 T-ITM-0005 六座分列柱前，焰作玉白纯仪制，不承担照度",
+          "screens": "九龙金漆背屏 T-ITM-0002 高 5m 殿北正位；明间两侧明黄云锦帷 M-14：幅宽 0.8m 每侧 6 幅，底凌霄金 #F5C542、织金蟠龙暗纹线宽 2mm #FFD700，褶距 80～150mm，垂坠贴地 100mm 离缝",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-001",
+          "id": "R03",
+          "name": "藻井穹顶区（明间上方）",
+          "ground": "无地面（架空于 R02 上方 9～14m 高空域）",
+          "walls": "井口方井壁四立板 M-06：地青冥 #1E3A5F，阴线云雷 P-01 单元 40×40mm 走 #FFD700 金线",
+          "ceiling": "斗八藻井三层：下层斗四方井边长 6.4m→中层八角井对径 4.8m→顶层圆井顶心明镜径 2.4m；层级详 §1.3 藻井专节",
+          "doorsWindows": "无门窗；八方井壁开假壸门龛 8 个，内雕天宫楼阁小木作",
+          "lighting": "顶心明镜内透玉白 #FFF3D8，接 T-MIR-002 天光光柱（昼淡金、夜皓白、卯时与临朝点亮）；光柱垂直上贯天河粒子带",
+          "screens": "井沿周圈垂璎珞 P-18：珠串垂弧 60mm、珠径 6mm，珠 #FFD700、穗 #FFB7C5（TG-13），弧弧相切满一圈",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-001",
+          "id": "R04",
+          "name": "东次间·玉音阁",
+          "ground": "金砖 M-09 同堂铺作但规格降半：480×480mm 对缝，缝 ≤1mm 沥青描黑；宣旨行走线微磨",
+          "walls": "隔断依金柱列——槅扇板壁 M-06：地朱 #C3272B，槅心装玉版 M-18 白玉 #F2EFE9 厚 2mm 透光，浅刻 P-05 凤纹（回眸立凤，翎眼 8mm）",
+          "ceiling": "平棋矮井一层：格 600×600mm，格心青绿叠晕（#3A6B8C／#4A8B6F），中心一朵 P-03 宝相花径 250mm，心 #FFD700",
+          "doorsWindows": "槅扇门 4 樘与明间隔断，裙板绦环板雕 P-06 回纹；东向隔扇窗外望东云桥，高窗装冰纹棂不设帘",
+          "lighting": "玉白 #FFF3D8 平铺照度降一档（宣旨时提亮全档）；通天玉玺 T-ITM-0007 加盖诏书触发广播仙音时井心光晕扩散",
+          "screens": "静鞭 T-ITM-0012 黄丝绳嵌玉柄悬侍立案侧；无帷幔——宣旨间取「声达无障」，仅案前小玉屏一扇高 1.6m 挡风",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-001",
+          "id": "R05",
+          "name": "西次间·章奏房",
+          "ground": "金砖 M-09 480×480mm 同 R04 铺法；奏表架前地砖有仙官步履磨雾带",
+          "walls": "板壁 M-06 朱地 #C3272B；山河社稷图（全息长卷）T-ITM-0006 壁前展开段装裱灵绢 #FFFDF5 绫边 #2E4E7E，全息投影层浮绢面 30mm",
+          "ceiling": "平棋矮井一层同 R04 制，唯格心改 P-10 锦地纹（龟背锦：六角单元 45mm、线宽 1.5mm，地 #3A6B8C 深、线 #88ABDA 细）",
+          "doorsWindows": "西向隔扇 4 樘，格心步步锦棂，糊天宫素绢；帘幕 M-13 纱幔流云白 #FFFDF5 单幅宽 0.8m，透光率 35%",
+          "lighting": "玉白 #FFF3D8 稳定低照——览表需静光；全息长卷自带星图微光 #F8F8FF，夜读时以卷光补案面",
+          "screens": "奏表玉简架 T-ITM-0008 十二层格倚西壁；间内设三扇素玉屏 M-18 厚 2mm（P-16 如意云头浅刻）分「览表」「拟诏」两区",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-001",
+          "id": "R06",
+          "name": "东梢间·仙茶侍立处",
+          "ground": "金砖 M-09 480×480mm；侍立换班处两块砖磨雾（映像 50%）",
+          "walls": "依柱板壁 M-06 朱地 #C3272B，腰板高 900mm 处一道 P-02 缠枝莲带饰：枝 #4A8B6F、花 #FFB7C5、蕊 #FFD700，二方连续绕间一周",
+          "ceiling": "露明椽副阶式：椽朱 #C3272B、仰尘板天青 #88ABDA 平闇压边；不设藻井平棋——侍立间取「卑位无仰」",
+          "doorsWindows": "直棂槅扇 2 樘通明间；南向小隔扇窗冰纹棂，糊素绢 M-15 制式（透光色 #FFF3D8）",
+          "lighting": "玉白 #FFF3D8 弱档 40%——侍立静默光；甘露净瓶 T-ITM-0015 瓶身白瓷透光泛 #FFF3D8 边缘光",
+          "screens": "无屏风；仅衣桁一架陈侍立仙官氅衣，织金缘 #FFD700 垂坠 300mm 流苏（M-14 工法）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-001",
+          "id": "R07",
+          "name": "西梢间·仪仗存放",
+          "ground": "金砖 M-09 480×480mm；仪仗座架脚下垫汉白玉 M-07 #F2EFE9 隔潮石板 40mm",
+          "walls": "板壁 M-06 朱地 #C3272B；四面架位以 P-06 回纹阴刻 #FFD700 划分（金瓜／钺斧／镫／鞭各一区）",
+          "ceiling": "露明椽平闇同 R06；惟西壁上部开高气窗直棂三列，通风云",
+          "doorsWindows": "板门 2 樘向明间（存取仪仗启闭），门扇朱漆 #C3272B 铺首 M-10 铜素面 #D4A017；不设窗帘",
+          "lighting": "玉白 #FFF3D8 脉冲弱光——常时 20%，取用仪仗时升 100%；仪仗鎏金件边缘光 #FFE08A（TG-07 只作受光提亮）",
+          "screens": "仪仗全部上架悬挂：金瓜 T-ITM-0009、钺斧 T-ITM-0010、朝天镫 T-ITM-0011、静鞭备用件，架杆缠云锦条 M-14 #F5C542",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-001",
+          "id": "R08",
+          "name": "后夹室·更衣静室",
+          "ground": "金砖 M-09 400×400mm 满铺，缝 ≤1mm；室心蒲团位一块砖磨出坐痕光晕",
+          "walls": "三面实墙 M-06：地朱 #C3272B、墙上段装云雾夹层 M-20（墙内流云缓动 0.1m/s，色 #FFFDF5→#A8C8E8，夹层厚 100mm，44 卷 §8.2 墙制）；无护壁——静室素净",
+          "ceiling": "平棋小方井一层：格 450×450mm，素青绿地 #3A6B8C／#4A8B6F，心一朵小宝相花径 150mm",
+          "doorsWindows": "暗门 1 樘通大朝堂（重槅无声轨），门面贴金蟠龙暗纹与柱列同纹连续——闭时不见门缝",
+          "lighting": "玉白 #FFF3D8 漫射极弱档 15%；衣桁夜明珠 M-18 一粒（≤3 件之列）作唯一点光",
+          "screens": "云锦更衣屏三扇 M-14：底 #F5C542、暗纹蟠龙 #FFD700 线宽 2mm，扇宽 0.5m 通高 2.8m；室北垂小帐一幅 M-13 #FFFDF5 透光 35%",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-GZ-005",
+      "name": "瑶池水榭",
+      "realm": "sky",
+      "roomCount": 7,
+      "rooms": [
+        {
+          "buildingId": "T-GZ-005",
+          "id": "R01",
+          "name": "水榭主亭（宴乐正堂）",
+          "ground": "金砖 M-09 640×640mm 磨光对缝缝 ≤1mm 沥青描黑；临水三面临空处砖缘以铜条 #D4A017 包边防潮",
+          "walls": "无墙——四面全敞，朱柱金枋 M-06：柱身朱 #C3272B，额枋金线彩画 P-02 缠枝莲（枝 #4A8B6F、花 #FFB7C5、蕊 #FFD700），临水柱脚包铜裙 #D4A017 高 400mm 防水汽",
+          "ceiling": "莲井藻井二层（详 §2.3）：下层斗四方井边长 4.2m→上层斗八对径 3.0m，顶心不封镜改悬鎏金倒垂莲蓬",
+          "doorsWindows": "三面装坐凳栏杆（美人靠矮栏）M-07 汉白玉 #F2EFE9 高 500mm 刻 P-16 如意云头；临水一侧全敞上下船",
+          "lighting": "玉白 #FFF3D8 宫光平铺；水下灯 #7FFFD4 上照纱幔与梁底，涟漪周期 3s 光斑漫顶",
+          "screens": "鲛绡帷幕八幅 M-13（入水不濡、透光如雾）：幅宽 0.8m 落地长 4m，层叠两层距 300mm，风过褶皱顺风向 80～150mm，垂坠波动 ±15°",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-005",
+          "id": "R02",
+          "name": "乐亭（编钟瑶琴）",
+          "ground": "金砖 M-09 480×480mm；编钟架脚下两砖磨出架振微裂发丝纹",
+          "walls": "单面依副阶板壁 M-06 朱地 #C3272B；壁挂乐谱玉片六枚（白玉 #F2EFE9 刻工尺谱）",
+          "ceiling": "小方井一层：格 600×600mm，格心水波纹彩画青绿 #3A6B8C／#4A8B6F，金线勾勒波峰 #FFD700 宽 2mm",
+          "doorsWindows": "临池两面向敞，临岸一面直棂槅扇 2 樘；小匾「凤鸣」悬亭心梁下（金地蟠龙边制式缩比）",
+          "lighting": "玉白 #FFF3D8 中照度；演奏时编钟光随乐律明灭（与九曲桥宫灯 18 盏同步）",
+          "screens": "无幔——乐声不隔；琴案后立小玉屏一扇 M-18 厚 2mm 浅刻凤纹 P-05 挡池面横风",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-005",
+          "id": "R03",
+          "name": "茶叙间",
+          "ground": "冰纹白玉砖（广寒工法南传降档）M-18 白玉 #F2EFE9 板 400×400mm 厚 20mm，冰裂纹拼缝 ≤2mm；踏面霜花涟漪特效半径 300mm",
+          "walls": "竹编夹泥墙 M-06 木骨＋灰泥白 #E8E4DA；下碱装汉白玉 M-07 #F2EFE9 裙板高 600mm 刻 P-08 卷草纹（波高 80mm 一波三叶）",
+          "ceiling": "露明椽平闇：椽朱 #C3272B，仰尘天青 #88ABDA；正心一朵悬鱼惹草雕件",
+          "doorsWindows": "槅扇 4 樘步步锦棂糊素绢 M-15 制式（透光色 #FFF3D8）；竹帘 M-16 卷起 1/2 档（帘幅宽 1.0m、吊环间距 400mm）",
+          "lighting": "玉白 #FFF3D8 弱档 40%——茶叙慢光；炉汤汽 M-20 白雾贴梁缓行",
+          "screens": "十二扇绢本屏（44 卷 §8.1 人间屏制升档）：屏心 P-15 团窠纹（联珠 20 珠径 8mm、窠心雁）绢 #F4ECD8，通高 2.8m 扇宽 0.5m，天宫版联珠改 #FFD700 内透",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-005",
+          "id": "R04",
+          "name": "妆阁（侍女更衣）",
+          "ground": "木地板（架空防潮）梁木褐 #6B4A2B 板厚 40mm 顺进深向铺，缝错半板；踏脚处踩面磨亮",
+          "walls": "板壁 M-06 朱地 #C3272B 内衬素绢 #FFFDF5；衣桁两具倚壁，妆台白玉镶镜 T-ITM-0062 制式缩小版临北窗",
+          "ceiling": "露明椽平闇同 R03；北壁高窗上悬小卷棚檐板雕 P-16 如意云头一列",
+          "doorsWindows": "直棂窗 2 列高窗（采光私密），糊素绢透光 #FFF3D8 弱档；门为槅扇 2 樘内开，门后垂小纱帘 M-13 #FFB7C5 幅宽 0.6m",
+          "lighting": "玉白 #FFF3D8 弱档 30%；妆镜镜面泛月华银 #DCDCE8 冷光一线（月华镜缩小版联动）",
+          "screens": "羽扇 T-ITM-0055 八柄插架陈设（白羽鎏金柄，扇面各绣一色云）；更衣屏四扇 M-14 胭脂 #9D2933 地织金线 #FFD700 嵌边，垂坠流苏 300mm",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-005",
+          "id": "R05",
+          "name": "桥心亭",
+          "ground": "九曲桥青石 M-08 磨光面延伸入亭：500×500mm 方石错缝，踩亮带反光 0.40 贯桥心；亭心一块石雕 P-14 莲瓣覆盆",
+          "walls": "四柱朱 #C3272B M-05 桐油柱 Φ300mm，收溜 1%；柱础 M-07 #F2EFE9 覆盆刻仰莲",
+          "ceiling": "攒尖顶内露明：雷公柱垂花雕莲蓬，椽放射状朱 #C3272B，檐口金线 #FFD700 一道",
+          "doorsWindows": "四向全敞；挂落 P-16 如意云头木雕一围（云尾拖长 1.5 倍单元）",
+          "lighting": "九曲桥宫灯 T-ITM-0045 琉璃宫灯 18 盏之中的桥心两盏最亮档，光色玉白 #FFF3D8，宴会时按乐律明灭",
+          "screens": "无幔；亭柱间张流杯渠导引铜链两条 #D4A017（玉盏漂流轨道标识）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-005",
+          "id": "R06",
+          "name": "池心月华镜台",
+          "ground": "镜面灵台直径 3m 平铺水面：台面灵玉 M-18 #DCDCE8 月华银态，SSS 深 5mm，反光 0.60／粗糙度 0.10；台缘白玉 M-07 一圈包边",
+          "walls": "无墙——台为水下石砌基础承镜，基础青黑石 M-08 #33393F 深没池底（水清时可见）",
+          "ceiling": "无天花——满天星穹即顶；月华镜专承月影",
+          "doorsWindows": "无门窗；四向以低栏 M-07 #F2EFE9 高 400mm 环护，栏板透雕 P-14 莲瓣",
+          "lighting": "夜承真月倒影、池光上天；满月夜映出人间景象（T-MIR-009 联动）；无人工光——禁设灯",
+          "screens": "无屏风帐幔；镜台四角立鎏金蟠龙柱四根 M-11 高 1.2m 作界，柱头衔珠 #FFD700 内透 #FFF3D8",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-005",
+          "id": "R07",
+          "name": "南岸醉霞石榴林（散席区）",
+          "ground": "卵石拼花园路 M-08 青石卵石径 60～90mm 立铺，缝填素沙 #C8B48A；散席蒲团位卵石磨平",
+          "walls": "无墙——林带即界；石榴树干缠五色虹藤（蟠桃园工法），树池围汉白玉 M-07 #F2EFE9 牙子高 120mm",
+          "ceiling": "无天花——石榴树冠即顶，果子透光处漏下珊瑚霞 #FF7F50 光斑（禁大面积涂装，仅光色）",
+          "doorsWindows": "无门窗；入口以两石灯笼柱为界（柱高 1.5m，灯室四面镂 P-07 万字纹）",
+          "lighting": "仙鹿辇驾灯二盏（辇制缩比）玉白 #FFF3D8 弱档；树冠漏光斑随午后色饱和度提升",
+          "screens": "散席云锦坐垫 T-ITM-0053 制式变体 16 具：绣石榴纹而非水波，底 #FFB7C5、果 #FF7F50、线 #FFD700；无垂幔——散席露天",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-GZ-004",
+      "name": "兜率宫",
+      "realm": "sky",
+      "roomCount": 9,
+      "rooms": [
+        {
+          "buildingId": "T-GZ-004",
+          "id": "R01",
+          "name": "宫门过厅",
+          "ground": "八卦纹铜地砖（前殿制式延伸）M-10 铜 #B87333 方砖 400×400mm，卦纹阴刻深 2mm 错缝铺；门槛青石 M-08 磨凹 20mm",
+          "walls": "门垛墙 M-06 木骨＋玄青灰泥（离火纹带饰 P-01 云雷改离火折线纹，单元 40×40mm、凸起 2mm，描金 #FFD700）高至门楣",
+          "ceiling": "过厅卷棚露明：椽朱 #C3272B、仰尘玄青 #223A5E 级深青；檩头雕云鹤纹（云鹤纹与离火纹相间之「云」半）",
+          "doorsWindows": "板门双扇朱漆 #C3272B，门钉铜 #D4A017 五路 Φ60mm；檐下悬八卦幡八面之入口两幡（幡底玄青，卦符 #FFD700）",
+          "lighting": "檐廊星辉灯 T-ITM-0040 制式两盏，灯焰星光色 #F8F8FF；过厅内玉白 #FFF3D8 弱档 40%",
+          "screens": "玄青纱帷印丹诀小篆 M-13：底 #223A5E、篆字 #FFD700 线宽 2mm，幅宽 0.8m 落地 3m，透光率 35%",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-004",
+          "id": "R02",
+          "name": "炼丹堂（前殿）",
+          "ground": "八卦纹铜地砖满铺 M-10 #B87333：方砖 400×400mm 卦纹阴刻 2mm，对缝铺砌缝 8mm；炉位一圈砖面火养色 #4E7A5E（全宫唯一火养）",
+          "walls": "殿身玄青柱朱枋 M-06：柱身玄青 #223A5E、枋心朱 #C3272B；离火纹与云鹤纹相间彩画——离火折线凸起 2mm 描金 #FFD700，云鹤平涂 #88ABDA",
+          "ceiling": "八卦藻井（降档二层制）：下层方井边长 3.6m 斗四，上层八角井对径 2.6m 鎏金 M-11；井心悬铜八卦方位盘缩比（径 800mm，与宫顶大盘同轴呼应）",
+          "doorsWindows": "前檐隔扇 14 樘（面阔 7 间），槅心 P-01 云雷＋P-20 星宿纹合纹（星点 #F8F8FF 径 3mm）；玄青纱帷四角垂落 1/2 档",
+          "lighting": "殿心炉光 #FF7F50 外透 0.5Hz 呼吸（珊瑚霞只作光色禁涂装）；辅光玉白 #FFF3D8 弱档——丹烟对光成紫雾剪影",
+          "screens": "玄青纱帷 M-13 满堂：幅宽 0.8m 六幅围合，丹诀小篆 #FFD700，褶距 80～150mm；多宝架 T-ITM-0029 立于北壁代屏风",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-004",
+          "id": "R03",
+          "name": "丹方室",
+          "ground": "青石 M-08 磨光面 400×400mm 错缝，反光 0.40；玉简架前地石磨亮",
+          "walls": "板壁 M-06 玄青 #223A5E；整面墙悬丹方玉简架 T-ITM-0031（36 枚玉简白玉 #F2EFE9 刻丹方，朱砂填字 #C3272B）",
+          "ceiling": "平闇矮井：格 500×500mm，格心离火纹阴刻 #FFD700 描金一色",
+          "doorsWindows": "直棂窗 2 列高窗糊素绢透光 #FFF3D8 弱档；门槅扇 2 樘内开挂竹帘 M-16（卷 1/2 档）",
+          "lighting": "星辉灯 T-ITM-0040 两盏（灯焰星光色 #F8F8FF，与天河粒子同频闪烁）；禁阅页「九转金丹方」近前时简面转暗拒读",
+          "screens": "无屏风；玉简架即壁面陈设，架前设小案供抄方，案面紫檀 #4A3220 鹿角霜推光",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-004",
+          "id": "R04",
+          "name": "百药室",
+          "ground": "青石 M-08 剁斧面 400×400mm（碾药区防滑不磨光，反光 0.25）；药柜前走道踩亮",
+          "walls": "整面墙百草丹药柜 T-ITM-0032（楠木百屉）：柜身楠木本色 #D4B76A 桐油，屉面铜签 #D4A017 錾药名；柜顶檐板雕卷草 P-08 一道",
+          "ceiling": "露明椽平闇：椽朱 #C3272B、仰尘玄青 #223A5E；柜顶以上留通风空层（药气外排）",
+          "doorsWindows": "板门 2 樘外开（药材进出），门槛青石 M-08；高窗直棂 3 列通气不糊纸",
+          "lighting": "药屉开启时屉内自亮 #FFF3D8 弱光（药材保鲜光）；捣药玉杵臼位一盏星辉灯 #F8F8FF 专照",
+          "screens": "无屏风帐幔；中央捣药玉杵臼 T-ITM-0033（青玉臼高 0.6m 杵长 1m）四周以矮木栏围合代屏",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-004",
+          "id": "R05",
+          "name": "静室",
+          "ground": "汉白玉 M-07 #F2EFE9 磨光板 400×400mm 厚 30mm 干摆，缝 ≤2mm；无极蒲团位玉面磨出坐晕（反光 +0.05）",
+          "walls": "三面素壁 M-06 玄青 #223A5E 无彩画（静室取「素」）；壁心嵌太极玉璧一枚白玉 #F2EFE9 径 400mm",
+          "ceiling": "小方井一层：格 450×450mm 素玄青地，心一朵云鹤纹平涂 #88ABDA——全室唯一纹样",
+          "doorsWindows": "暗门 1 樘通炼丹堂（闭关时贴封符纸 M-22 一道：基底 #C9B380、符文 #B03A2E）；高窗一列不糊纸取天光",
+          "lighting": "无极蒲团 T-ITM-0034 上方一束玉白 #FFF3D8 顶光（静室唯一光，禁烛）；玩家擅坐触发「太极推手」小游戏时顶光转旋",
+          "screens": "无屏风——静室不设障；入口垂玄青纱帷一幅 M-13 #223A5E 透光 35%，篆字改太极纹",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-004",
+          "id": "R06",
+          "name": "童子房·金角",
+          "ground": "木地板梁木褐 #6B4A2B 板厚 40mm；榻前踏板磨亮",
+          "walls": "板壁 M-06 玄青 #223A5E；壁挂小幡「金」字幡（幡底藤黄 #D9A40E、字描金 #FFD700）与童子拂尘 T-ITM-0037 悬架",
+          "ceiling": "露明椽平闇：椽朱 #C3272B、仰尘玄青 #223A5E；檐板雕 P-22 蝠纹一组（环径 300mm，蝠描金）",
+          "doorsWindows": "直棂窗 1 列糊素绢透光 #FFF3D8 弱档；板门 1 樘，门后竹帘 M-16 全收档",
+          "lighting": "竹榻榻头小灯一盏焰色 #FF7F50 弱档（看火童子近火作息）；玩家搜查可发现榻下私房丹渣罐（光 #F8F8FF 微透陶壁）",
+          "screens": "竹榻 T-ITM-0041（榻头挂小幡「金」）；更衣小屏两扇 M-14 玄青地织金卦纹，垂坠流苏 300mm",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-004",
+          "id": "R07",
+          "name": "童子房·银角",
+          "ground": "木地板梁木褐 #6B4A2B 同制错缝向反转（与金角房镜像铺装）；榻前踏板磨亮",
+          "walls": "板壁 M-06 玄青 #223A5E；壁挂小幡「银」字幡（幡底月华银 #DCDCE8、字玄墨 #2B2B2B）与拂尘悬架",
+          "ceiling": "露明椽平闇同 R06；檐板雕 P-08 卷草纹一组（波高 80mm 一波三叶，叶尖回勾）",
+          "doorsWindows": "直棂窗 1 列糊素绢透光 #FFF3D8 弱档；板门 1 樘，门后竹帘 M-16 卷 1/4 档",
+          "lighting": "榻头小灯焰色 #F8F8FF 弱档（碾药童子夜读药方）；榻下私房丹渣罐同 R06 彩蛋，罐壁透光 #F8F8FF",
+          "screens": "竹榻 T-ITM-0041 银角位（小幡「银」）；碾药矮案与药碾具陈设临窗，案面楠木 #D4B76A 素桐油",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-004",
+          "id": "R08",
+          "name": "丹院（露天八卦坛）",
+          "ground": "三爻石台（丹院制式）：青石 M-08 剁斧面三层台径 18m→14m→10m，每层高 400mm；台面卦位以铜条 #D4A017 镶线划分八卦方位",
+          "walls": "丹崖壁面（院西倚崖）M-08 粗晶青黑凿面，嵌八枚卦位石雕（青黑 #33393F、卦画描金 #FFD700）；其余三向无墙",
+          "ceiling": "无天花——露天；夜空即顶，紫烟成柱（T-MIR-006）自炉口直上贯云",
+          "doorsWindows": "院门月洞门一座通炼丹堂（门洞青石框 M-08 磨光，框边离火纹阴刻描金）；无窗",
+          "lighting": "八卦紫金丹炉 T-ITM-0028 炉光 #FF7F50 为院心主光（0.5Hz 呼吸，开炉日全院照度全额）；芭蕉宝扇扇火时炉焰上蹿亮度 ×2",
+          "screens": "无幔——露天开炉地不设幔；丹炉三足承雷纹、炉身八卦浮刻（紫金砂铜 #B87333 底、纹凸起处火养 #4E7A5E）即视觉中心",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-004",
+          "id": "R09",
+          "name": "后院（青牛棚）",
+          "ground": "素土夯实 M-04 天宫版（掺云母 #B0B8C4 颗粒 4%）；牛槽前土面踩实凹陷 30mm",
+          "walls": "灰瓦白墙木构（蟠桃园看园房同族）：墙灰泥白 #E8E4DA、下碱青砖 M-03 #5A6472 高 600mm；棚柱 M-05 桐油木 Φ240mm",
+          "ceiling": "单坡灰棚露明椽：椽朱 #C3272B，仰瓦 M-02 一仰一合节距 0.48m（天宫内唯一布瓦顶，青牛棚降档制）",
+          "doorsWindows": "木栅门 1 樘（栅条 60×60mm 间距 150mm）；棚南开敞；无窗",
+          "lighting": "棚柱挂灯笼一盏焰玉白 #FFF3D8 弱档 20%；青牛（T-CRT-011）夜归时蹄光带霓虹灯屑色点（人间带回彩蛋，仅蹄部 2～3 点 NH 色斑限时 1h 褪去）",
+          "screens": "牛槽石木合制（槽体青石 M-08、架木 M-05）；槽沿缠稻草束——无屏风帐幔，草垛即隔断",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-GZ-006",
+      "name": "广寒宫",
+      "realm": "sky",
+      "roomCount": 8,
+      "rooms": [
+        {
+          "buildingId": "T-GZ-006",
+          "id": "R01",
+          "name": "宫门门庭",
+          "ground": "冰纹白玉砖 M-18 白玉 #F2EFE9 板 400×400mm 厚 25mm 冰裂纹拼缝 ≤2mm；踏之霜花涟漪特效（半径 300mm、消散 1.5s）",
+          "walls": "门庭两厢素玉墙 M-07 汉白玉 #DCDCE8 月华银态干摆，缝 ≤2mm 素平无彩画；门簪两枚雕冰裂纹",
+          "ceiling": "过厅小卷棚露明：椽白玉 #F2EFE9，檐口悬玉铎一列（铎身玉 #F2EFE9、舌银 #DCDCE8，风过清音）",
+          "doorsWindows": "宫门板门双扇白玉镶边木芯：玉板厚 8mm、木芯玄墨 #2B2B2B 级深（天宫取 #1E3A5F 青冥）漆；门环银环 #DCDCE8",
+          "lighting": "玉白 #FFF3D8 弱档 40%＋门庭两角夜明珠 M-18 各一粒（全殿 ≤3 件之列在此用去两粒）冷光",
+          "screens": "冰蚕丝帷 M-13 半幅于门内：透月不透风（透光率 35%、透风率 0），底流云白 #FFFDF5，幅宽 0.8m",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-006",
+          "id": "R02",
+          "name": "月华堂（正殿）",
+          "ground": "冰纹白玉砖 M-18 #F2EFE9 400×400mm 满铺，冰裂纹拼缝 ≤2mm；堂心香炉位一圈砖面温润磨亮",
+          "walls": "白玉墙 #DCDCE8 素平（映射表 008 行制），无护壁——取「寒素」；唯北壁正位嵌桂影投壁（主桂投影随月相八档移动）",
+          "ceiling": "平棋藻井降档二层：方井边长 3.2m 斗四→八角井对径 2.4m；井心不悬蓬不封镜，嵌圆光冰镜一枚（径 800mm，与月华镜同源泛 #DCDCE8）",
+          "doorsWindows": "玉版隔扇 M-18 厚 2mm 透光 20 樘（面阔 5 间），槅心素面无纹；匾「广寒宫」银泥底素金字，联「桂魄千秋朗／冰弦万古清」悬内檐",
+          "lighting": "月白 #F8F8FF 冷宫光无影照明（广寒专属光档，区别玉白）；月华香炉 T-ITM-0067 炉烟凝月轮状随月相变色",
+          "screens": "冰蚕丝帷 M-13 六幅围合堂周：底 #FFFDF5 透月不透风，褶距 80～150mm；冰魄屏风 T-ITM-0068 立堂后北壁",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-006",
+          "id": "R03",
+          "name": "嫦娥妆阁",
+          "ground": "冰纹白玉砖 M-18 #F2EFE9 300×300mm（妆阁降档小砖）；镜台前一块砖磨出立姿双足晕",
+          "walls": "白玉墙 #DCDCE8 素平；西壁开月洞窗一圆（洞径 900mm），窗外即桂庭桂影",
+          "ceiling": "露明椽平闇：椽白玉 #F2EFE9，仰尘霜蓝 #A8C8E8；藻头素银线一道",
+          "doorsWindows": "玉版隔扇 4 樘 M-18 厚 2mm；月洞窗不设帘（取月色入妆）；门槅扇 2 樘内开",
+          "lighting": "月白 #F8F8FF 弱档 30%；白玉妆台 T-ITM-0062 镜面（月华镜缩小版）泛 #DCDCE8 冷光，交互照镜出「广寒滤镜」",
+          "screens": "白玉妆台 T-ITM-0062（白玉镶镜）即妆阁主陈设；更衣屏三扇 M-13 冰蚕丝绷框，绣桂子纹（线 #E6B422 桂子黄）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-006",
+          "id": "R04",
+          "name": "玉兔药庐（杵臼房）",
+          "ground": "青石 M-08 剁斧面 300×300mm（碾药防滑），反光 0.25；杵臼位一圈石面磨亮凹陷 5mm",
+          "walls": "灰瓦白墙降档制：灰泥白 #E8E4DA、下碱青砖 M-03 #5A6472 高 500mm；小匾「捣尽玄霜」悬门楣",
+          "ceiling": "单坡小顶露明椽：椽梁木褐 #6B4A2B（全宫唯一暖木色间，药庐劳作区降档）；仰尘无",
+          "doorsWindows": "板门 1 樘外开（药气外排）；高窗直棂 2 列糊素绢透光 #FFF3D8 弱档",
+          "lighting": "药杵交互点：玉兔捣药杵臼 T-ITM-0056 白玉臼面月光反射 #DCDCE8；帮捣药得「玉兔谢礼」时药臼上空亮玉白 #FFF3D8 光点一撮",
+          "screens": "无屏风——劳作间不设障；药案白玉板 #F2EFE9 厚 30mm 一具临窗，案上捣药玉钵 T-ITM-0057",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-006",
+          "id": "R05",
+          "name": "水镜台（露台）",
+          "ground": "冰玉露台通体：白玉 M-07 #F2EFE9 磨光板 500×500mm 干摆缝 ≤2mm，台面如镜（映像清晰度 85%）；凭栏一线踩亮",
+          "walls": "台帮冰玉砌块 #DCDCE8 外露收分 3%；栏板 M-18 白玉厚 20mm 透光，望柱头雕月相八变（朔望轮刻）",
+          "ceiling": "无天花——露天；月华直落台面（满月夜台面照度全额）",
+          "doorsWindows": "无门窗——全开露台；入口两向踏跺各 5 级（阶石踏面磨凹 10mm）",
+          "lighting": "满月夜映人间（T-MIR-009）：台面即幕，人间灯火倒影 #FFC66E 色点成片（三界过渡光唯一合法入台时刻）；平夜仅月光 #DCDCE8",
+          "screens": "无屏风帐幔；台缘四角立小玉灯柱四根（柱高 900mm，灯室冰纹镂，焰 #F8F8FF 弱档）为界",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-006",
+          "id": "R06",
+          "name": "桂庭",
+          "ground": "卵石冰纹园路：青石卵石 M-08 径 50～80mm 立铺环主桂三圈，缝填白沙 #F2EFE9；树下土面掺霜白砂点",
+          "walls": "庭周回廊白玉栏 M-07 #F2EFE9 一围（望柱 12 根、柱头玉铎）；无墙——桂影婆娑即围合",
+          "ceiling": "无天花——主桂树冠如墨绿圆盖覆庭（树冠投影随月相八档移动于廊壁）；吴刚斧声在冠下回荡",
+          "doorsWindows": "回廊四面以白玉栏代门窗；庭南月洞门通月华堂（门洞青玉 #7FFFD4 框一圈）",
+          "lighting": "玉兔宫灯 T-ITM-0066 十二盏布庭成「兔灯阵」：白纱玉骨焰 #F8F8FF 弱档；吴刚斧刃豁口位映月一点 #DCDCE8",
+          "screens": "无帐幔；主桂树身缠祈福红绸两幅（制式同人间红绳语降档），绸色 #9D2933、缘金线 #FFD700",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-006",
+          "id": "R07",
+          "name": "冰台雪莲圃",
+          "ground": "冰台青玉板 M-18 青玉 #7FFFD4 板 300×300mm 厚 15mm 满铺（雪莲圃冷玉台）；圃垄台缘石磨圆化",
+          "walls": "圃周矮冰墙 M-07 #DCDCE8 高 400mm（挡霜不挡景）；墙顶嵌雪莲株位凹龛间距 300mm",
+          "ceiling": "无天花——露天冷圃；夜霜凝墙如鳞",
+          "doorsWindows": "无门窗；入口踏步 3 级青玉板（踏面磨凹 8mm）；圃中步石一枚（点石 500mm 见方）",
+          "lighting": "雪莲自发光极弱 #F8F8FF（SSS 花瓣透光）；无人工灯——圃取「夜寒自明」",
+          "screens": "无屏风帐幔；圃角立小玉牌一面（刻雪莲谱，字填银泥 #DCDCE8）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "T-GZ-006",
+          "id": "R08",
+          "name": "藏衣阁",
+          "ground": "木地板（阁楼防潮）梁木褐 #6B4A2B 板厚 40mm 顺面阔铺；衣桁前地板块磨亮",
+          "walls": "板壁 M-06 玄墨调深青 #1E3A5F（藏衣阁取「隐」）；壁悬衣桁三层，霓裳羽衣 T-ITM-0061 独占中桁",
+          "ceiling": "阁顶露明：椽白玉 #F2EFE9、仰尘霜蓝 #A8C8E8；藻头银线",
+          "doorsWindows": "玉版隔扇 2 樘 M-18 厚 2mm 透光（夜自阁外见衣影朦胧）；无窗",
+          "lighting": "月白 #F8F8FF 弱档 20%（藏衣暗光）；霓裳羽衣随乐微动时衣面光流转 #FFB7C5→#FFFDF5 渐变（「羽衣风波」剧情核心）",
+          "screens": "衣桁三层即主陈设；阁口垂冰蚕丝帷一幅 M-13 #FFFDF5 透光 35%（透衣影不透尘）",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-GZ-020",
+      "name": "孙羊正店",
+      "realm": "human",
+      "roomCount": 16,
+      "rooms": [
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R01",
+          "name": "彩楼欢门下抱厦",
+          "ground": "素土夯实 M-04 #C8B48A 夯层 80～100mm 版筑；欢门柱脚下垫青石 M-08 柱础石 400×400mm（彩帛落地处土面踩实发亮）",
+          "walls": "无墙——抱厦以欢门木架为界：木架 M-05 桐油柱 Φ240mm 缚彩帛五层 M-14（#9D2933 为主、间 #D4B76A），彩帛褶皱顺风",
+          "ceiling": "抱厦卷棚悬山小顶：椽梁木褐 #6B4A2B 露明，仰席苇帘一层（苇色 #D4B76A）；彩帛自檐口垂成幔瀑",
+          "doorsWindows": "抱厦面向街全敞；两侧栅栏门可闭（栅条 60×60mm）；匾额「孫羊正店」C-ITM-0079 木金漆悬欢门正中",
+          "lighting": "红纱灯笼 C-ITM-0092 十二盏串挂檐下欢门：纸纱面透暖黄 #FFC66E，芯烛焰；NH-02 桃红 #FF2E88「孙羊店」字管 Φ12mm 沿欢门主梁走（商霓 2Hz 闪允许，8% 概率）",
+          "screens": "彩帛幔瀑即帐幔（M-14 缚彩工艺）：五层缚彩层距 200mm，夜受灯笼暖黄 #FFC66E 透光、受 NH-02 上染桃红边",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R02",
+          "name": "底层散座堂",
+          "ground": "方砖地（资产卷定式）CJ 本体素方砖 400×400mm 磨面 #5A6472，对缝铺缝 6mm；八仙桌 C-ITM-0084 十桌位砖面磨出桌脚四点晕",
+          "walls": "木构版壁墙体 M-05：板壁 #6B4A2B 竖板拼缝、立筋外露；裙板高 900mm 雕 P-09 海石榴纹（壳 #A63A2B、籽 #FFD700、叶 #4A8B6F）；墙面油手印带高 1.2～1.6m",
+          "ceiling": "露明椽彻上明造：椽梁木褐 #6B4A2B、望板桐油深褐 #4A3220；梁架彩画降档——箍头回纹 P-06 阴刻 #4E545E 一道（酒楼不得官式和玺）",
+          "doorsWindows": "前檐格扇通间可全卸（昼卸夜装）：格扇木 #6B4A2B、格心灯笼锦棂糊纸窗 M-15 透光 #FFC66E（透光率 55%）",
+          "lighting": "室内一律暖黄 #FFC66E（44 卷 §2.3-7）：红纱灯笼 C-ITM-0092 檐下串挂内透＋桌位烛点（单室烛点 ≤3 处之堂内集中制改为每桌一烛弱档）",
+          "screens": "栏杆隔断 C-ITM-0086 一铺：低栏高 700mm 分「散座」「过道」两区，栏寻杖雕 P-07 万字纹棒料 20×20mm",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R03",
+          "name": "酒垆柜台区",
+          "ground": "方砖 400×400mm 同 R02；柜台前站立点酒位砖面两块磨亮（酒保与客双向踩线）",
+          "walls": "柜台后板壁 M-05 #6B4A2B；壁挂名酒单水牌 C-ITM-0096（木牌底 #F4ECD8、字玄墨 #2B2B2B、酒名朱点 #9D2933）",
+          "ceiling": "柜台上方小卷棚披檐露明：椽 #6B4A2B；披檐底糊纸一层承灯影",
+          "doorsWindows": "柜台临堂一面全开，柜台体为榆木整厚板 M-05 #6B4A2B 桐油（台面磨亮反光 0.30）；侧开小门一扇通后院",
+          "lighting": "银酒海 C-ITM-0081 两具立柜台：银面冷光 #DCDCE8（十六族金银族银冷光语）；柜台吊灯一盏暖黄 #FFC66E 专照酒单水牌",
+          "screens": "无屏风——柜台明档示客；柜台立面挂酒旗一角（酒旗白 #F0EAD6 青字）作幌",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R04",
+          "name": "账台角",
+          "ground": "方砖 400×400mm；账台椅位一块砖磨出坐痕",
+          "walls": "账台倚西板壁 M-05 #6B4A2B；账台木 #4A3220 桐油深褐，台面磨亮",
+          "ceiling": "堂顶露明延续；账台上方垂小灯一盏暖黄 #FFC66E",
+          "doorsWindows": "账台半围合三面高 1.1m（防窥账目），开口朝堂；算盘账簿陈台面",
+          "lighting": "账台烛一枚（烛台高 0.6mm 制改 600mm 铜制 M-10 #B87333）；结账交互时算盘珠面反 #FFC66E",
+          "screens": "无屏风；账台后壁挂算盘两具（新旧各一）即壁饰",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R05",
+          "name": "木楼梯间",
+          "ground": "楼梯踏步木 M-05 #8B5E3C 桥虹桥木色（全城唯一暖亮木色用于梯踏面示「升楼」导向）；踏面前沿磨圆化",
+          "walls": "梯井两侧板壁 M-05 #6B4A2B；壁装扶手木条一道高 900mm（握段包浆发亮）",
+          "ceiling": "梯井顶部二层楼板底面露明：梁 #6B4A2B、板底桐油 #4A3220；梯口垂小匾「雅座」木牌",
+          "doorsWindows": "梯下端开口朝柜台区（动线枢纽），上端梯口垂布帘 M-14 胭脂 #9D2933 幅宽 0.6m（半掩雅间区）；无窗",
+          "lighting": "梯井壁灯两盏（铁艺灯架 M-12 #4A4E54、纸罩透 #FFC66E）分段照明；梯面光带随人上楼渐亮",
+          "screens": "梯口布帘即幕（M-14）：垂坠感挺、褶距 60mm（窄褶密排）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R06",
+          "name": "二层雅间一（主雅间·东首）",
+          "ground": "木地板 #6B4A2B 板厚 40mm 顺面阔铺缝错半板；八仙桌四脚位板面压痕晕四处",
+          "walls": "板壁 M-05 #6B4A2B 内衬素绢 #F4ECD8；东面临街格扇窗高 1.5m 灯笼锦棂糊纸 M-15（望虹桥，窗纸透街景霓虹色晕）",
+          "ceiling": "平坐层顶露明椽：椽 #6B4A2B、仰尘糊纸承灯影；藻头卷草 P-08 阴刻一道",
+          "doorsWindows": "格扇门 C-ITM-0088 木雕缠枝花格心（P-02 缠枝莲降饱和 20%：枝 #4A8B6F、花 #FFB7C5 降、蕊描金 #FFD700）；内垂竹帘 M-16 半卷",
+          "lighting": "室内暖黄 #FFC66E：桌心烛台铜制 M-10 高 0.6m 一具＋窗前灯一盏；芙蓉屏风面受烛光泛绢色 #F4ECD8",
+          "screens": "芙蓉屏风 C-ITM-0094 六扇通景（绢木）：绢 #F4ECD8 绘芙蓉通景（花 #9D2933、叶 #4A8B6F），扇宽 0.5m 通高 2.8m，屏前双圈椅",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R07",
+          "name": "二层雅间二（临街听市间）",
+          "ground": "木地板 #6B4A2B 同制；窗前立饮位板面磨亮",
+          "walls": "板壁 M-05 #6B4A2B 素板不衬绢（次间降档）；临街一面格扇窗通高",
+          "ceiling": "露明椽同 R06；藻头素平无雕",
+          "doorsWindows": "格扇门 C-ITM-0088 缠枝花格心同制；临街窗糊纸 M-15 透光 #FFC66E（夜透瓦子灯串 #FF2E88 晕、闻市声）",
+          "lighting": "暖黄 #FFC66E 桌烛一具；窗纸受街面 NH-02／NH-05 透色（室内禁霓虹，只受透染）",
+          "screens": "无屏风；临窗设高脚立饮小栏一道（栏高 1.0m、寻杖 P-07 万字纹）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R08",
+          "name": "二层雅间三（宴聚大间）",
+          "ground": "木地板 #6B4A2B 同制；双桌四点位板面压痕八处（全店地板磨损最重间）",
+          "walls": "板壁 M-05 #6B4A2B；可撤活动槅扇与 R09 相通（宴聚拼间制，槅扇榫卯可卸）",
+          "ceiling": "露明椽同 R06；梁底挂红绸结花两朵（宴结，绸 #9D2933）",
+          "doorsWindows": "格扇门 C-ITM-0088 双樘对开（大间入口加宽制）；窗糊纸 M-15 透 #FFC66E",
+          "lighting": "暖黄 #FFC66E：双桌各烛一具＋壁灯一盏（宴间三光位）；注子温碗 C-ITM-0082 四副列桌面瓷面泛 #F4ECD8 釉光",
+          "screens": "无屏风——宴间求通敞；门帘改棉布帘 M-14 #2E4E7E 靛蓝（宴时垂、平时卷）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R09",
+          "name": "二层雅间四（暗间烛室）",
+          "ground": "木地板 #6B4A2B；不临窗间地板色深一档（少日晒）",
+          "walls": "板壁 M-05 #6B4A2B 四面围合无窗（暗间）；壁挂酒仙画一幅（纸本 #F4ECD8、墨 #2B2B2B）",
+          "ceiling": "露明椽同 R06；仰尘糊深色纸（暗间压光）",
+          "doorsWindows": "格扇门 C-ITM-0088 单樘；无窗——全靠烛照",
+          "lighting": "暖黄 #FFC66E 烛三具（暗间烛点上限）：桌烛、角烛、屏前烛各一，光域分层",
+          "screens": "小屏四扇（绢木）：绢 #F4ECD8 墨竹通景（竹 #4A8B6F 降饱和）；屏后藏烛位光晕外泄一线",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R10",
+          "name": "二层雅间五（琴角间）",
+          "ground": "木地板 #6B4A2B；琴案位板面磨亮一块",
+          "walls": "板壁 M-05 #6B4A2B；西北角设琴案一具（案面桐油 #4A3220），壁挂琴一张（道具琴，非 T-ID 资产）",
+          "ceiling": "露明椽同 R06；琴案上方藻头雕云纹一朵",
+          "doorsWindows": "格扇门 C-ITM-0088 缠枝花格心；窗糊纸 M-15 透 #FFC66E",
+          "lighting": "暖黄 #FFC66E 烛二具；琴弦受烛光反细亮线；歌女巡座过此间时留琵琶声一折（音景）",
+          "screens": "琴案后小屏两扇（绢 #F4ECD8 墨兰）；屏风面受烛光泛暖",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R11",
+          "name": "二层雅间六（书画间）",
+          "ground": "木地板 #6B4A2B；案前地板块磨亮",
+          "walls": "板壁 M-05 #6B4A2B 内衬素绢 #F4ECD8；四壁挂书画四轴（纸本 #F4ECD8、轴头木 #4A3220）",
+          "ceiling": "露明椽同 R06；仰尘糊纸洁白一档",
+          "doorsWindows": "格扇门 C-ITM-0088 格心缠枝花；北向小窗一列糊纸 M-15（书画间取北光匀净）",
+          "lighting": "暖黄 #FFC66E 烛二具＋北窗天光（昼）；观画时烛光斜照绢面出纹理侧影",
+          "screens": "书案一具（案面磨亮）代屏风位；案上笔墨纸砚陈设（纸 #F4ECD8、印泥 #9D2933）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R12",
+          "name": "二层雅间七（临后院闻灶间）",
+          "ground": "木地板 #6B4A2B；门边地板块磨亮（进出后院频繁）",
+          "walls": "板壁 M-05 #6B4A2B；西壁开横窗临后院（窗下槛高 1.1m），灶香烟自窗外漫过",
+          "ceiling": "露明椽同 R06；横窗上檐板熏色 #7A8A99 一线（全店唯一烟熏位）",
+          "doorsWindows": "格扇门 C-ITM-0088；西壁横窗糊纸 M-15（透后院灶火光 #FF7F50 弱档到纸面成暖斑）",
+          "lighting": "暖黄 #FFC66E 烛二具；灶香入间（食香粒子 M-20 极淡）；夜受后院 NH-05 食霓琥珀 #FF9E00 窗角透染",
+          "screens": "无屏风；门内挂半截布帘 M-14 #9D2933（挡灶气）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R13",
+          "name": "二层雅间八（贵客封题间）",
+          "ground": "木地板 #6B4A2B；门楣内一块砖——板面刻「封」字暗记（贵客预订封间制），板面打蜡最亮",
+          "walls": "板壁 M-05 #6B4A2B 内衬素绢 #F4ECD8；门楣悬小匾「雅集」木金漆（缩比制式）",
+          "ceiling": "露明椽同 R06；藻头雕缠枝花一朵（八间中唯一雕花藻头，封题间规格）",
+          "doorsWindows": "格扇门 C-ITM-0088 格心缠枝花＋门楣小匾；窗糊纸 M-15 透 #FFC66E；门外挂「客满」木牌位",
+          "lighting": "暖黄 #FFC66E 烛三具（封题间满配）：桌烛、角烛、灯各一；封间时门外檐灯转亮一档",
+          "screens": "大屏六扇（绢木）：绢 #F4ECD8 山水通景（山 #5A6472、水 #5F8A7A），扇宽 0.5m 通高 2.8m——八间中唯一六扇屏",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R14",
+          "name": "三层天阁凭栏",
+          "ground": "木地板 #6B4A2B 板厚 45mm（顶层加厚）；凭栏立位一线板面磨亮最重（全店之最）",
+          "walls": "三面开敞凭栏 C-ITM-0089 通长美人靠（木 #8B5E3C 桥虹桥木色，靠背弧面磨出人体凹痕带）；背面一列板壁挂匾「天阁」",
+          "ceiling": "顶层歇山十字脊内露明：脊瓜柱、叉手露明椽 #6B4A2B；十字脊交点悬八角藻井降档小井一层（井径 1.8m，井心雕团窠 P-15 一朵，窠心雁）",
+          "doorsWindows": "凭栏三面全开（眺望交互：望虹桥）；背面格扇 4 樘通楼梯口；不设帘——凭栏求视野",
+          "lighting": "暖黄 #FFC66E：栏内悬红纱灯笼四盏（檐柱列）；夜凭栏可闻瓦子锣声（音景设计）、受虹桥拱底 NH-01 电青 #00E5FF 远景透染栏面一线",
+          "screens": "无屏风帐幔——天阁求敞；美人靠上覆棉垫六具（垫面 #2E4E7E 靛蓝、缘 #9D2933）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R15",
+          "name": "后院大灶厨",
+          "ground": "青砖 M-03 #5A6472 墁地 400×400mm 错缝（防火地）；灶前一线砖面油浸色深 #4A3220",
+          "walls": "三面砖墙 M-03 #5A6472 磨砖对缝段（灶壁）＋板壁段；灶壁面挂油亮（反光 +0.1）；烟道砖砌出顶",
+          "ceiling": "露明：单坡顶椽 #6B4A2B；烟道口垂烟熏色 #7A8A99 渐变；无仰尘（散热）",
+          "doorsWindows": "双眼大灶 C-ITM-0090 砖铁合体临北壁（灶口砖拱双眼、铁篦）；板门 2 樘通堂与酒瓮场；高窗直棂 2 列排气不糊纸",
+          "lighting": "灶火 #FF7F50 弱光内透（44 卷御膳房条款人间版）；灶眼上悬挂吊罐两具（铁吊钩 M-12 #4A4E54）；羊肉案 C-ITM-0095 位一盏灯 #FFC66E",
+          "screens": "无屏风——灶间无障；灶壁挂炊具一列（勺、笊篱、肉钩）即壁面语言",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-020",
+          "id": "R16",
+          "name": "后院酒瓮场",
+          "ground": "素土 M-04 #C8B48A 夯实；瓮位列下土面压出环形凹痕（瓮底沉陷痕）",
+          "walls": "围墙青砖 M-03 #5A6472 高 1.8m 一围（防盗酒）；墙头覆合瓦 M-02 一仰一合节距 0.48m",
+          "ceiling": "无天花——露天场；夜见星",
+          "doorsWindows": "栅门 1 樘通大灶厨（栅条 60×60mm）；无窗",
+          "lighting": "酒瓮 C-ITM-0091 二十四具列三行：陶坛封泥红签（泥 #955539、签 #9D2933）；场角挂灯一盏 #FFC66E 弱档（巡夜用）",
+          "screens": "无屏风帐幔；瓮阵即空间的屏——动线在瓮行间穿行",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-GZ-021",
+      "name": "十千脚店",
+      "realm": "human",
+      "roomCount": 8,
+      "rooms": [
+        {
+          "buildingId": "C-GZ-021",
+          "id": "R01",
+          "name": "井字欢门檐廊",
+          "ground": "素方砖 400×400mm 廊地 #5A6472 磨面对缝；灯箱脚下两砖面磨亮（驻足观灯位）",
+          "walls": "檐廊柱 M-05 桐油柱 Φ220mm ×4，柱身缚彩帛两道（井字欢门延伸彩：帛 #9D2933／#D4B76A）；无墙",
+          "ceiling": "檐廊平坐顶露明：椽 #6B4A2B、檐口望板 #4A3220；井字欢门木架横枋缚彩一列",
+          "doorsWindows": "檐廊全开临街；门侧立双灯箱（C-ITM-0099「十千」东／C-ITM-0100「脚店」西）；楹联「十千沽一斗／一醉解千愁」朱漆刻板挂柱",
+          "lighting": "灯箱夜透烛光 #FFC66E（实装名物）；檐下灯笼 C-ITM-0112 六盏纸竹圆灯透 #FFC66E；欢门彩帛受街面 NH-02 环境上染（自身不设字管——脚店低正店一档）",
+          "screens": "竹帘半卷（资产卷定式）：M-16 竹帘沿檐廊通间，卷起 1/2 档、帘幅宽 1.0m、吊环间距 400mm，篾色 #D4B76A 上浅下深一档色差",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-021",
+          "id": "R02",
+          "name": "底层堂·柜区",
+          "ground": "素方砖地（资产卷定式）400×400mm #5A6472 对缝；柜台前双向踩线砖面磨亮",
+          "walls": "板壁 M-05 #6B4A2B；柜台后壁挂酒旗「十千脚店」副本一面（青布白字 #2E4E7E／#F0EAD6）",
+          "ceiling": "悬山顶内露明椽：椽 #6B4A2B、仰尘无（低档彻上明）；梁架素平无彩画（脚店不得彩画）",
+          "doorsWindows": "板门 2 樘昼卸夜装；柜区临散座一面全开；柜台榆木板台面磨亮（反光 0.30）",
+          "lighting": "暖黄 #FFC66E：柜台吊灯一盏＋茶汤炉 C-ITM-0107 炉口炭光 #FF7F50 弱档；注子 C-ITM-0105 瓷面泛 #F4ECD8",
+          "screens": "无屏风；柜台立面挂竹帘一段（M-16，遮柜下酒器，卷 1/4 档）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-021",
+          "id": "R03",
+          "name": "底层堂·散座区",
+          "ground": "素方砖 400×400mm；八组桌凳位砖面磨出凳脚十六点晕",
+          "walls": "板壁 M-05 #6B4A2B；东壁挂算命卦摊借位告示（纸本 #F4ECD8、字玄墨）——与玄门街面呼应的店内小语",
+          "ceiling": "露明椽同 R02；东壁上部开高窗直棂一列",
+          "doorsWindows": "散座临街面以矮栏一围（栏高 600mm 寻杖素圆）；窗糊纸 M-15 透 #FFC66E",
+          "lighting": "暖黄 #FFC66E：散座区顶悬灯笼两盏（纸竹圆灯）；桌桌烛点弱档（八组桌分两组亮烛轮换制，控制烛点总量）",
+          "screens": "无屏风；散座区与柜区以酒瓮两只（空瓮倒扣）＋矮栏分界",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-021",
+          "id": "R04",
+          "name": "二层小阁子·东",
+          "ground": "木地板 #6B4A2B 板厚 35mm；桌点位板面压痕四处",
+          "walls": "板壁 M-05 #6B4A2B 内衬素绢 #F4ECD8 一面（临街面）；其余素板",
+          "ceiling": "阁子顶露明椽矮间：椽 #6B4A2B；仰尘糊纸（阁子压光）",
+          "doorsWindows": "小阁子 C-ITM-0103 木雕格扇围合（格心直棂加一朵雕花——比正店缠枝花降三档）；临街小窗糊纸 M-15",
+          "lighting": "暖黄 #FFC66E 烛一具（阁心烛）；「私聊场景」光域：烛光半径内 #FFC66E、界外沉 #2B2B2B",
+          "screens": "无屏风；格扇门外挂布帘半幅 M-14 #2E4E7E（阁子occupied 垂帘语）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-021",
+          "id": "R05",
+          "name": "二层小阁子·西",
+          "ground": "木地板 #6B4A2B 同制；地板一块板面蜡补（旧伤）",
+          "walls": "板壁 M-05 #6B4A2B；内壁刻「某年某月到此一饮」刻画两组（刀刻填朱 #9D2933，脚店市井语）",
+          "ceiling": "阁子顶露明同 R04；仰尘一角纸面水渍晕（天井方向渗雨痕）",
+          "doorsWindows": "格扇制同 R04；窗糊纸 M-15 透 #FFC66E",
+          "lighting": "暖黄 #FFC66E 烛一具；私聊光域同 R04；刻字处受烛光斜照出阴影刻痕",
+          "screens": "无屏风；窗下沿挂小竹帘半幅 M-16（卷 1/4 档）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-021",
+          "id": "R06",
+          "name": "后院客舍",
+          "ground": "素土 M-04 #C8B48A 夯实＋甬道青石 M-08 一条（石宽 600mm 踩亮）；榻前土面踩实",
+          "walls": "板壁 M-05 #6B4A2B 单坡屋（资产卷「悬山顶主楼＋后院客舍」制）；壁挂宿客木牌 6 枚（牌底 #F4ECD8、字玄墨）",
+          "ceiling": "单坡顶露明椽：椽 #6B4A2B；仰尘无",
+          "doorsWindows": "板门 1 樘通天井；小窗直棂 2 列糊纸 M-15（透 #FFC66E 弱档 30%——客房安眠档）",
+          "lighting": "暖黄 #FFC66E 弱档：客舍油灯一盏（陶灯盏，焰小）；住宿交互 20 文／夜时灯焰挑亮一档",
+          "screens": "客舍木榻 C-ITM-0110 六具沿墙列：榻体木 #6B4A2B、榻面苇席 #D4B76A；榻间以布幔短幅 M-13 #D4B76A 分隔（透光 35%）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-021",
+          "id": "R07",
+          "name": "后院马棚",
+          "ground": "素土 M-04；马槽前土面践踏最深（泥面凹 40mm、蹄印成片）",
+          "walls": "棚柱 M-05 Φ240mm ×4；北面半墙青砖 M-03 #5A6472 高 1.0m 上部敞",
+          "ceiling": "单坡敞棚露明：椽 #6B4A2B；草束悬梁（饲料储）",
+          "doorsWindows": "全敞三向；木栅门 1 樘（栅条 60×60mm）；无窗",
+          "lighting": "暖黄 #FFC66E 弱档 20%：棚柱挂风雨灯一盏（铁架 M-12、纸罩）；马眼夜反光两点（生物语）",
+          "screens": "马槽 C-ITM-0109 石木合制两具（槽体青石 M-08、架木 #6B4A2B）；草垛即屏——棚内三向草垛围合",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-021",
+          "id": "R08",
+          "name": "天井",
+          "ground": "青石板 M-08 墁地 500×500mm 对缝（天井汇水位）；水缸底石一圈磨亮",
+          "walls": "三面楼体板壁墙 M-05 #6B4A2B；一面院墙青砖 M-03；墙面雨渍竖带 30mm 两道",
+          "ceiling": "无天花——露天井口见天（仰视见两层檐口线与一线天光）",
+          "doorsWindows": "无门窗（过厅式）；两向过道门洞各一（洞口木过梁）",
+          "lighting": "天井水缸 C-ITM-0111 陶缸大器一口居中（太平缸）：缸面釉光反天光；夜一盏檐灯 #FFC66E 弱档照井",
+          "screens": "无屏风帐幔；缸中水面即天井之「镜」——夜映檐灯一粒",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-GZ-029",
+      "name": "府衙",
+      "realm": "human",
+      "roomCount": 15,
+      "rooms": [
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R01",
+          "name": "照壁前甬道（旌善申明亭夹道）",
+          "ground": "青石 M-08 墁道：条石 1.2×0.4m 错缝（官署道制）；中轴一线踩亮（讼民行走线）",
+          "walls": "八字墙砖雕照壁 C-ITM-0182 一面迎门（壁心獬豸砖雕深 20mm、砖 #5A6472 磨面）；旌善亭申明亭分列两厢（亭柱 M-05、亭顶合瓦 M-02）",
+          "ceiling": "甬道无顶——露天；两亭檐口线夹出「仪制天空」",
+          "doorsWindows": "无门窗；肃静回避牌夹道两列（牌木底 #F4ECD8、字玄墨 #2B2B2B、边朱 #A63A2B）；乌头门一重（门柱乌漆 #2B2B2B）",
+          "lighting": "官署不发彩灯：甬道常照靠天光；夜两亭下各一盏角灯 #FFC66E 弱档（值夜用）；NH-01 电青 #00E5FF 唯照壁獬豸阴刻描线 1mm 特批（P-17 条款，官属常亮禁闪）",
+          "screens": "无屏风帐幔；两亭内各立木榜一面（旌善榜／申明榜，榜面 #F4ECD8 墨书）即甬道两翼",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R02",
+          "name": "仪门",
+          "ground": "青石 M-08 门内墁地：门槛石磨凹 25mm（出入最频位）",
+          "walls": "仪门悬山制：门柱朱皮 #A63A2B（官署朱皮老化终点 #8C4A3C 已现两柱）；山墙面合瓦 M-02 一仰一合",
+          "ceiling": "悬山两坡露明椽：椽 #6B4A2B；中门楣上悬「仪门」小匾（木底金漆字缩比）",
+          "doorsWindows": "三门制：中门常闭（开门仪式方启）、东西侧门日启；门扇板门木 #4A3220 铺首铁 #4A4E54；NH-01 轮廓灯带沿门框回纹形 Φ12mm（官属专用 P-06 转角制，常亮禁闪）",
+          "lighting": "角灯 #FFC66E 弱档两盏（门值房）；开中门仪式时门内全亮 #FFC66E＋NH-01 门框带同亮（仪制时刻）",
+          "screens": "无帐幔；中门内挂门官帘一面（布帘 #2E4E7E 靛蓝，官署帘制素色）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R03",
+          "name": "大堂",
+          "ground": "金砖 M-09 640×640mm 官署大堂制：磨光对缝缝 ≤1mm、缝线沥青描黑；知府座案前拜跪位两行砖磨雾（映像 50%）",
+          "walls": "大堂面阔 5 间：金柱列 M-05 柱径 Φ450mm 朱皮 #A63A2B；两山墙下碱青砖 M-03 高 1.2m＋上部竹编灰泥 #E8E4DA；北墙正位置座屏",
+          "ceiling": "单檐歇山内彻上明造＋平闇一段：明间顶平闇天花板压 P-10 锦地纹（地 #3A6B8C 深、线 #88ABDA——衙署天花板定式）；其余露明椽 #6B4A2B",
+          "doorsWindows": "前檐格扇 12 樘昼开；匾「明鏡高懸」C-ITM-0185 木金漆悬堂心（底 #2B2B2B 字 #FFD700）；楹联「吏不畏吾严而畏吾廉／民不服吾能而服吾公」朱底 #7E2A20 级深字金",
+          "lighting": "暖黄 #FFC66E：堂内官灯四盏（檐柱列）＋案前烛二具；断案时座案区照度全额、堂前两廊半明（公堂光域分层）",
+          "screens": "知府座案后座屏五扇（绢木）：绢 #F4ECD8 屏心海水朝阳图（水 #3A6B8C、日描金 #FFD700）；堂前两列水火棍架（棍红黑各半 #A63A2B／#2B2B2B）代仪仗",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R04",
+          "name": "二堂",
+          "ground": "金砖 M-09 480×480mm（二堂降档）；议事圆位砖面椅脚晕八点",
+          "walls": "板壁 M-05 #6B4A2B 内衬素绢；东壁挂舆图一轴（绢 #F4ECD8、墨线山川 #2B2B2B）",
+          "ceiling": "露明椽＋平闇小段（议事位上方）：格 500×500mm 素青绿地",
+          "doorsWindows": "格扇 8 樘；窗糊纸 M-15 透 #FFC66E；府印印匣 C-ITM-0195 陈东案（铜木合制：铜匣 #B87333 錾云纹、木匣座）",
+          "lighting": "暖黄 #FFC66E 烛二具＋官灯两盏（议事位亮、四隅暗）；印匣开启交互时铜面反光一闪",
+          "screens": "议事围屏四扇（绢 #F4ECD8 墨竹）；二堂后门垂布帘 M-14 #2E4E7E（通内宅界帘）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R05",
+          "name": "内宅正房",
+          "ground": "木地板 #6B4A2B 板厚 40mm；日常起居位板面磨亮成片（生活痕最重间）",
+          "walls": "板壁 M-05 #6B4A2B；室内陈设取「俭」：架子床一具（床架木素面）、衣桁、书案各一",
+          "ceiling": "露明椽：椽 #6B4A2B、仰尘糊纸（宅内压光）",
+          "doorsWindows": "格扇 6 樘内院向；窗糊纸 M-15 透 #FFC66E 弱档 30%（私域）",
+          "lighting": "暖黄 #FFC66E 弱档：油灯两盏（案灯、床灯）；宅内禁官灯——「堂上官、宅内家」光语分界",
+          "screens": "床前小屏两扇（绢 #F4ECD8 花鸟降饱和）；宅门内垂家帘一幅 M-14 茶褐 #8A5A2B（素帘）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R06",
+          "name": "六房·户房",
+          "ground": "青砖 M-03 #5A6472 墁地 300×300mm（文房间低档砖）；案牍架前走道砖面磨亮",
+          "walls": "板壁 M-05 #6B4A2B；整壁案牍架 C-ITM-0190 两具（木架格 12 层，黄册卷宗列格）；户房独加钱谷柜一具（柜体 #4A3220 铜面叶）",
+          "ceiling": "露明椽：椽 #6B4A2B；仰尘无",
+          "doorsWindows": "板门 1 樘向东连廊；高窗直棂一列糊纸 M-15（文卷防潮取北光）",
+          "lighting": "暖黄 #FFC66E 弱档：案一烛＋架前灯一盏（查卷光位）；查卷交互时卷宗纸面 #F4ECD8 逐格提亮",
+          "screens": "无屏风；钱谷柜即间内界断（柜顶置算盘、戥子）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R07",
+          "name": "六房·刑房",
+          "ground": "青砖 M-03 同 R06；狱案卷架前地砖磨亮最重（六房中卷宗流转最频）",
+          "walls": "板壁 M-05；案牍架两具＋独设狱案朱柜一具（柜面朱漆 #7E2A20 级深，与人间市井朱区分）",
+          "ceiling": "露明椽同 R06",
+          "doorsWindows": "板门 1 樘；高窗糊纸 M-15；刑房独加铁栅小窗一扇（栅条 20×20mm 间距 120mm——与牢城文书对口）",
+          "lighting": "暖黄 #FFC66E 弱档：案一烛＋朱柜灯一盏；翻阅狱案时纸面提亮",
+          "screens": "无屏风；朱柜顶陈惊堂木备件一方（血柏木语降档）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R08",
+          "name": "六房·工房",
+          "ground": "青砖 M-03；地面散置工程物料样块（砖瓦灰石各一，样块下砖面压痕）",
+          "walls": "板壁 M-05；案牍架两具＋图版挂架一面（工程图样纸本 #F4ECD8 挂列）",
+          "ceiling": "露明椽同 R06",
+          "doorsWindows": "板门 1 樘；窗糊纸 M-15；工房门常敞（物料进出）",
+          "lighting": "暖黄 #FFC66E 弱档：案一烛＋图版灯一盏；图样查看时纸面提亮",
+          "screens": "无屏风；物料样块列即间内「屏语」",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R09",
+          "name": "六房·吏房",
+          "ground": "青砖 M-03；名籍架前地砖磨亮",
+          "walls": "板壁 M-05；案牍架两具＋官掾名籍柜一具（柜体 #4A3220、柜门装木锁）",
+          "ceiling": "露明椽同 R06",
+          "doorsWindows": "板门 1 樘；窗糊纸 M-15",
+          "lighting": "暖黄 #FFC66E 弱档：案一烛＋名籍柜灯一盏",
+          "screens": "无屏风；名籍柜即界断",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R10",
+          "name": "六房·礼房",
+          "ground": "青砖 M-03；仪注架前地砖磨亮",
+          "walls": "板壁 M-05；案牍架两具＋祭器陈架一具（架上豆簋笾各二——礼房独有器物架，陶豆 #5A6472、木笾 #D4B76A）",
+          "ceiling": "露明椽同 R06",
+          "doorsWindows": "板门 1 樘；窗糊纸 M-15",
+          "lighting": "暖黄 #FFC66E 弱档：案一烛＋祭器架灯一盏（器物轮廓光）",
+          "screens": "无屏风；祭器架即礼房识别语（六房中唯一陈设性家具）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R11",
+          "name": "六房·兵房",
+          "ground": "青砖 M-03；军籍架前地砖磨亮",
+          "walls": "板壁 M-05；案牍架两具＋军械册柜一具（柜体 #4A3220、铜面叶 #4A4E54）；壁挂兵旗一面（旗 #8B1A1A 朝服绛级深，官署借色）",
+          "ceiling": "露明椽同 R06",
+          "doorsWindows": "板门 1 樘；高窗加铁栅一扇（同刑房制）",
+          "lighting": "暖黄 #FFC66E 弱档：案一烛＋册柜灯一盏",
+          "screens": "无屏风；兵旗一面即间内主色",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R12",
+          "name": "牢城",
+          "ground": "泥地压实（牢内不墁砖——囚居降格语）；牢栅前泥面踱步磨出弧线凹痕带",
+          "walls": "单坡瓦房＋木栅（资产卷制）：栅条 M-12 铁 20×20mm 间距 120mm＋木框 #4A3220；墙面阴湿苔线 #4A8B6F 高 300mm 沿脚",
+          "ceiling": "单坡顶露明：椽 #6B4A2B 粗加工；无仰尘",
+          "doorsWindows": "牢栅独口一门（木铁合制栅门）；无窗——仅栅缝透光",
+          "lighting": "暖黄 #FFC66E 极弱档：牢城门头一盏牢灯（铁笼灯 M-12，光成笼影投地）；牢内仅栅缝光带",
+          "screens": "无屏风帐幔；栅影即牢内唯一「纹样」（铁笼灯光栅语）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R13",
+          "name": "教场点将台",
+          "ground": "夯土包砖点将台 C-ITM-0191：台高 1.5m、台面青砖 M-03 墁面（将位一块砖面踩亮）；台前校地素土 M-04 踩实",
+          "walls": "台身夯土芯 M-04 包青砖 #5A6472 收分 5%；无墙",
+          "ceiling": "无天花——露天教场",
+          "doorsWindows": "无门窗；台前器械架 C-ITM-0196 四具列（枪棒刀剑木架，架体 #4A3220）",
+          "lighting": "教场无灯（操练靠天光）；将台旗杆一杆大旗 #8B1A1A 缘描金 #FFD700（官署借天宫朝服绛制降档）——旗面无风自动条款不用（人间受风）",
+          "screens": "无屏风帐幔；将台大旗即教场视觉中心",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R14",
+          "name": "谯楼更鼓位",
+          "ground": "青砖 M-03 墁地；更鼓位一圈砖面震动细裂发丝纹",
+          "walls": "谯楼位小楼一间：砖墙 #5A6472、楼窗拱券一洞；更鼓 C-ITM-0197 皮木合制悬楼心（鼓面绷紧 M-14 绸工艺、鼓身木 #6B4A2B）",
+          "ceiling": "小楼顶露明：鼓悬梁下的梁底磨亮（挂鼓位恒悬所致）",
+          "doorsWindows": "拱券窗一洞不糊纸（报时传声需通）；门 1 樘内开",
+          "lighting": "更鼓本体即「声照明」：击鼓时鼓面震动、楼内烛焰随之伏一息（与阎罗殿惊堂木同款演出语人间版）；楼内烛一盏 #FFC66E",
+          "screens": "无屏风；鼓裙垂布一圈（鼓身围布 #2E4E7E 防尘）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "C-GZ-029",
+          "id": "R15",
+          "name": "马厩",
+          "ground": "泥地 M-04 压实；槽前泥面蹄印践踏带",
+          "walls": "厩房单坡：板壁 M-05 #6B4A2B、北面半墙砖 #5A6472；槽位八格以木栏分（栏条 60×60mm）",
+          "ceiling": "单坡顶露明：椽 #6B4A2B；草束悬梁三束",
+          "doorsWindows": "全敞南向；栅门 1 樘；无窗",
+          "lighting": "暖黄 #FFC66E 极弱档：风雨灯一盏（铁架 M-12 纸罩）；马厩灯只为值夜官马位",
+          "screens": "马槽 C-ITM-0192 石木合制八位（槽体青石 M-08、架木 #4A3220）；草垛两堆即隔断",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-GZ-001",
+      "name": "阎罗殿",
+      "realm": "underworld",
+      "roomCount": 9,
+      "rooms": [
+        {
+          "buildingId": "D-GZ-001",
+          "id": "R01",
+          "name": "殿前广场",
+          "ground": "黑玉砖铺地（资产卷 D-ZZ-08 定式）42×22m 延展 90×70m 广场：镜面黑玉 #2B2B2B 级深（地府取 #1F1A14 阴沉木黑压面），对缝缝 ≤1mm；「王土洁净」不生磷光藓",
+          "walls": "广场无墙；台基一级立面青黑石 M-08 #33393F 砌收分 5%、四面垂带踏跺；业纹石栏（二级台基栏板刻业纹 P-12 变体符线 #3DFF9C 微光）",
+          "ceiling": "无天花——地府夜空＋红雾层；宝顶黑釉陶绿焰一点为广场天际锚点（顶缀一点绿焰长明）",
+          "doorsWindows": "无门窗；正门双扇板门高 4.5m 遥对忘川：门钉九路 #26282C、中缝常开一线（只进不出之相）",
+          "lighting": "磷绿 #3DFF9C 主光（占发光 70%）：门内双列阵白烛（D-ITM-0009 之门内双列）透门缝出绿光带；匾额「閻羅殿」金底绿字夜自发光（已实装锚点）为广场唯一强光",
+          "screens": "无屏风帐幔；广场两侧判官签位石墩两列（墩 #33393F）即仪制序列",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-001",
+          "id": "R02",
+          "name": "丹阶御路（六道轮转图）",
+          "ground": "御路石一块 4×2m 青黑石 M-08 磨光：浮雕六道轮转图深 15mm；踏跺青黑石阶条 1.2×0.4m 踩亮（亡魂阶线）",
+          "walls": "御路两侧垂带石 M-08 #33393F；垂带面刻 P-12 符带两条（符文 #3DFF9C 微光，亮符占 30%）",
+          "ceiling": "无天花——露天阶",
+          "doorsWindows": "无门窗；阶顶即殿正门",
+          "lighting": "台阶两缘嵌业纹灯槽：M-21 磷绿焰线 #3DFF9C 沿槽走（P-01 地府条款「刻槽即灯槽」禁霓虹）",
+          "screens": "无屏风；御路浮雕即「地面屏」——轮转图随亡魂登阶逐辐点亮",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-001",
+          "id": "R03",
+          "name": "大堂审判正庭",
+          "ground": "黑玉砖 M-09 冥制版 42×22m 整铺：镜面黑玉烛火倒映如墨渊、脚步无声；判官案前跪位砖面磨雾（亡魂长跪位，映像 50%）",
+          "walls": "黑砖实墙 #2E2420（M-04 骨粉夯土冥制版烧砖）墙身微侧脚；檐柱 20 根黑漆 #1F1A14、金柱 12 根缠铜箍刻云雷纹 P-01（箍 #26282C、刻槽磷光 #3DFF9C 常存）；两山壁挂楹联东「阳世三间，积善作恶皆由你」西「古往今来，阴曹地府放过谁」（联底 #7E2A20 判官暗朱、字骨白 #E8E3D5）",
+          "ceiling": "彻上明造＋灰雾压顶 0.5m（44 卷 §8.3 地府无天花条款）——梁架七踩双昂斗拱黑漆描金、昂头作鬼首自雾中半露；详 §8.3 业雾穹顶专节",
+          "doorsWindows": "正门双扇板门高 4.5m 内向（门钉九路）；东西侧门各 1 樘通刑具廊；门枢磨亮",
+          "lighting": "白烛阵三组（D-ITM-0009）：案前七七阵 49 支、孽镜前九宫阵 9 支、门内双列阵 16 支——绿焰 M-21（内芯 #BAFFEF→中层 #3DFF9C→外缘 #4D7CFF）随审案进度依次明灭；案卷 #E8E3D5 提亮（44 卷正殿型条款）；地藏龛长明灯暖白 #E8F0FF 为全殿唯一非绿光源",
+          "screens": "判官案后立骨屏六扇 M-17（拼板厚 8mm 缝 1mm、P-13 骨纹 #E8E3D5＋阴影 #57534E）；殿内不设幔——业镜需通视",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-001",
+          "id": "R04",
+          "name": "东庑刑具廊",
+          "ground": "青黑石 M-08 剁斧面 400×400mm；廊心一线踩亮（押解线）",
+          "walls": "与大堂隔墙黑砖 #2E2420；廊外墙开高窗直棂（窗加铁栅 M-12 条 20×20mm）；墙面阴湿返潮深斑（骨粉墙老化律）",
+          "ceiling": "彻上明造：椽黑漆 #1F1A14；灰雾压顶 0.3m（廊内压顶降档）",
+          "doorsWindows": "板门 2 樘通大堂与后场；铁栅窗 2 列",
+          "lighting": "刑具架·东 D-ITM-0010 四层陈夹棍铁尺铜锤锁魂枷「陈列展示泛冷光」：架层灯 #BAFFEF 青白焰芯色弱档（刑具专属冷光）",
+          "screens": "无屏风；刑具列位即廊的「陈列屏」——每具刑具下设油灯位一具（不燃，仅陈设）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-001",
+          "id": "R05",
+          "name": "西庑刑具廊",
+          "ground": "青黑石 M-08 同 R04 对位；西廊地面见拖痕两道（押解历史痕保留 30s 刷新）",
+          "walls": "隔墙黑砖 #2E2420；西壁高窗铁栅同制；墙面业纹刻带一条（符线 #3DFF9C 微光 30%）",
+          "ceiling": "彻上明造＋灰雾 0.3m 同 R04",
+          "doorsWindows": "板门 2 樘通大堂与孽镜台区；铁栅窗 2 列",
+          "lighting": "刑具架·西 D-ITM-0011 四层陈铁刷钉板业秤勾魂叉泛冷光 #BAFFEF；业秤盘面恒亮 #3DFF9C 一点（善恶魂重感应位）",
+          "screens": "无屏风；西廊尽头立「止刑」界碑一方（碑 #33393F、字骨白）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-001",
+          "id": "R06",
+          "name": "东北壁生死簿库",
+          "ground": "青黑石 M-08 磨光；簿架前地石磨亮（取卷高频）",
+          "walls": "殿东北壁位：黑砖 #2E2420；生死簿架 D-ITM-0004 高 4.2m 十二格倚壁（架体 #1F1A14、卷签按甲子编排签面 #C9B380 字 #B03A2E）",
+          "ceiling": "彻上明造＋灰雾 0.3m；架顶灰雾最浓（簿库阴域）",
+          "doorsWindows": "无窗——簿库避光防「字迹自显自隐」被扰；板门 1 樘双扇（判官专用）",
+          "lighting": "磷光 #3DFF9C 弱档：架格逐格微光（亮 30%）；生死簿总册 D-ITM-0003 靛青封皮 #223A5E 位一格专照",
+          "screens": "生死簿架即库之屏；架前设判官小案一方（案面 #1F1A14、笔架悬朱笔备笔一支）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-001",
+          "id": "R07",
+          "name": "西侧孽镜台区",
+          "ground": "青黑石 M-08 磨光：镜台周围一圈地石磨亮（观照环绕线）",
+          "walls": "殿西壁黑砖 #2E2420；孽镜台 D-ITM-0005 铜镜径 1.6m 座高 3.6m 立西壁位（镜框铜錾云雷 P-01 #26282C、刻槽磷光）",
+          "ceiling": "彻上明造＋灰雾 0.3m；镜台上空灰雾被镜光推开一圈（雾井负空间）",
+          "doorsWindows": "无窗；板门 1 樘通西庑",
+          "lighting": "孽镜前九宫阵白烛 9 支绿焰 #3DFF9C；镜面常蒙红雾（血锈红 #6E1F1F 雾膜）、照恶人时雾散现影（镜面切换发光态 #BAFFEF）",
+          "screens": "无屏风——孽镜需全角通视；镜台前三面以矮链 M-23 围出观照位（链悬垂弧 1/6 跨）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-001",
+          "id": "R08",
+          "name": "北龛地藏位",
+          "ground": "青黑石 M-08 磨光起龛台一级（高 300mm）；龛前跪拜位地石温润磨亮（发愿位）",
+          "walls": "殿北正中砖墙起龛：龛框黑砖磨面线脚两层；地藏像持锡杖明珠（像体 #33393F 石、珠 #E8F0FF）",
+          "ceiling": "龛上小卷棚罩一片（全殿唯一「天花件」）：罩面素黑无纹——敬佛法俭制",
+          "doorsWindows": "龛无门——全开龛制；龛两侧立经幢式石柱一对（柱 #33393F、幢面 P-12 符 #3DFF9C 微光）",
+          "lighting": "龛前长明灯一盏永不灭：暖白 #E8F0FF（全殿唯一非绿光源、全地府高明度色纪律「单画面 ≤1 处」在此落位）",
+          "screens": "无屏风；龛前供案一方（案面 #1F1A14、香炉一具铜 #26282C 燃冥香）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-001",
+          "id": "R09",
+          "name": "后场甬道",
+          "ground": "青黑石 M-08 剁斧面；甬道中线踩亮（判后赴狱线）",
+          "walls": "甬道两壁黑砖 #2E2420 壁面 P-12 符帘一列（判官厅挂符帘条款 §8.3）：符纸基底 #C9B380、符文 #B03A2E、亮符 #3DFF9C 占 30%",
+          "ceiling": "彻上明造＋灰雾压顶 0.5m 渐浓（越近十八狱环雾越厚，过渡预告）",
+          "doorsWindows": "甬道口板门 1 樘（判官签验放）；出口通十八狱环内圈（豁口向北）",
+          "lighting": "符帘亮符 #3DFF9C 间隔照明＋甬道尽头一点幽蓝 #4D7CFF（狱环方向冷光预告）",
+          "screens": "无屏风；符帘即甬道两壁的「帘」",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-GZ-002",
+      "name": "奈何桥含桥畔碑亭",
+      "realm": "underworld",
+      "roomCount": 8,
+      "rooms": [
+        {
+          "buildingId": "D-GZ-002",
+          "id": "R01",
+          "name": "南引道",
+          "ground": "忘川沙 M-24 干沙 #C9B380 压道：道宽 6m 长 30m，踩迹深 20mm、30 秒渐平（灵界时律）；道心一线踩实微亮",
+          "walls": "引道两侧黄泉芦成列＋彼岸花束（收拢成束状指向桥头——资产卷 2.3 铺地律 24 株）；无墙",
+          "ceiling": "无天花——红雾层即顶（雾高 2m 贴地流动）",
+          "doorsWindows": "无门窗；引道口黄泉路牌坊幡联东「黄泉路上无老幼」西「奈何桥畔莫迟疑」（幡 #C9B380、字 #B03A2E）",
+          "lighting": "引魂灯柱 2 座收尾段（D-GZ-015 系）：柱 #1F1A14 阴沉木缠 M-23 锁链螺距 200mm、柱顶鬼火 #3DFF9C；灯距 12m",
+          "screens": "无屏风；雾堤（路缘雾堤 D-ZZ-02 语）自两翼合拢成「软屏」",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-002",
+          "id": "R02",
+          "name": "南桥头碑亭",
+          "ground": "青石 M-08 方亭地 3×3m 磨面 400×400mm；碑前一方石面香灰痕（残香三炷位）",
+          "walls": "亭柱四根青黑石 M-08 #33393F 方柱、亭顶石瓦 #33393F 攒尖（冥制石亭）；无墙",
+          "ceiling": "石亭攒尖内露明：叠涩收顶、雷公柱垂石雕莲苞",
+          "doorsWindows": "亭四面全敞；南桥头碑 D-ITM-0022 高 2.4m 立亭心（碑阳「奈何桥」三字、碑阴「善者过桥稳如砥，恶者临流无归期」——碑 #33393F 字填 #E8E3D5）",
+          "lighting": "守桥岗·南 D-ITM-0020 提灯鬼差常驻：提灯鬼火 #3DFF9C 照半径 3m；验籍放行挥灯三次（灯语演出）",
+          "screens": "无屏风；碑身为亭之「屏」——绕碑读阴阳两面即动线",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-002",
+          "id": "R03",
+          "name": "桥面南段",
+          "ground": "青石 M-08 桥面微拱段：石板 800×600mm 对缝；亿人踩迹——南段磨凹 30mm、中线凹槽发亮（反光 +0.15）",
+          "walls": "望柱栏板：望柱 24 根之中南段 10 根（柱头小鬼面面面朝桥心、鬼面目部磨圆化）、栏板刻渡魂纹夹小额铭「各行其渡」（栏 #33393F、铭填 #E8E3D5）",
+          "ceiling": "无天花——桥面露天；拱腹在脚下",
+          "doorsWindows": "无门窗；两侧栏板即「墙」",
+          "lighting": "引魂灯·桥列 8 盏之中南段 4 盏（栏柱上绿灯 #3DFF9C 间隔 6m）；夜为忘川上唯一光链南半",
+          "screens": "无屏风；导雾槽（D-ITM-0028）雾瀑自两侧栏外下泻成「流动帐」",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-002",
+          "id": "R04",
+          "name": "桥心段（照魂镜下）",
+          "ground": "桥心青石段：磨凹最深处 50mm（全桥凹底）＋照魂镜下光斑一枚（镜光 #BAFFEF 投面）；湿足印指向北岸（雨雾天显）",
+          "walls": "桥心望柱 4 根（柱头鬼面两两相对）；栏板渡魂纹最密段",
+          "ceiling": "无天花；头顶照魂镜 D-ITM-0024 悬镜位（镜径 0.8m 铜框）",
+          "doorsWindows": "无门窗；桥心即「门」——过镜即过界",
+          "lighting": "照魂镜镜面泛 #BAFFEF；恶鬼过桥现原形、玩家倒影延迟半拍（恐怖细节演出）；桥列第 4、5 盏「回头灯」专照回头者脸（惊吓演出）",
+          "screens": "无屏风；镜下光域即「无形之屏」——过镜者不自觉正冠",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-002",
+          "id": "R05",
+          "name": "桥面北段",
+          "ground": "青石桥面北段：磨凹 30mm 同南段对称；北段终点一线「回望位」石面磨亮（亡魂最后回身位——单向语：磨亮却禁停）",
+          "walls": "北段望柱 10 根；栏板近北端刻小额铭「休问来时路」（铭 #E8E3D5）",
+          "ceiling": "无天花同 R03",
+          "doorsWindows": "无门窗",
+          "lighting": "引魂灯北段 4 盏 #3DFF9C；锁魂链 D-ITM-0025 九股铁链水下 0.5m 横江——汛期（血月夜）浮出、链声如拽锚（声演）",
+          "screens": "无屏风；北段栏外雾瀑更浓（忘川深处雾色 #1A2430 上漫）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-002",
+          "id": "R06",
+          "name": "北桥头碑亭",
+          "ground": "青石亭地 3×3m 同 R02 对位；碑前石面无香灰（北亭无人敢拜——叙事留白）",
+          "walls": "亭柱亭顶同 R02 冥制石亭",
+          "ceiling": "攒尖叠涩顶同 R02",
+          "doorsWindows": "亭四面全敞；北桥头碑 D-ITM-0023 高 2.4m（碑阳「回头无岸」四字、碑阴「桥归桥，路归路；过了此桥，休问来时路」）",
+          "lighting": "守桥岗·北 D-ITM-0021 鬼差提灯 #3DFF9C；对停留者喝「过桥莫回头」、二次停留推魂（玩家被推演出）",
+          "screens": "无屏风；北亭不设坐凳（南亭设条石凳一条——「南可歇北莫停」的空间叙事）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-002",
+          "id": "R07",
+          "name": "北引道岔口",
+          "ground": "忘川沙 M-24 干沙岔口：三向岔径成 Y 形（三生石向／望乡台向／枉死城向），岔心一块圆石定向（径 600mm 磨亮）",
+          "walls": "岔口无墙；三向各立矮界桩一枚（桩 #33393F 刻向名 #E8E3D5）",
+          "ceiling": "无天花；岔口红雾稍淡（三向风汇）",
+          "doorsWindows": "无门窗；三向路口即「三门」",
+          "lighting": "三生石前双灯（D-ITM-0054）之一盏可见于岔口远景；岔口导灯一盏 #3DFF9C（D-GZ-015 系支道灯距 24m 档）",
+          "screens": "无屏风；三向雾色微差定向（石向雾白 #BAFFEF／台向雾青灰 #57534E／城向雾土 #4A3C33）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-002",
+          "id": "R08",
+          "name": "拱腹桥洞",
+          "ground": "拱腹下渡船视角：拱券内壁青黑石 M-08 凿面（凿痕顺拱弧放射）；水面倒拱影",
+          "walls": "拱券石楔形砌缝放射（无浆干砌灰缝 #1A2430 水线痕）",
+          "ceiling": "拱腹即「天花」：挂铜铃 12 枚（铃舌被雾凝住、风过哑响——铃 #26282C）",
+          "doorsWindows": "无门窗；拱脚没入红水（水线痕两道）",
+          "lighting": "桥洞内几无光：唯水面波光 #4D7CFF 上映拱腹（忘川水光即桥洞灯）",
+          "screens": "无屏风；锁魂链九股自洞侧水面下横江——血月夜链浮出水贴拱腹而过（演出）",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-GZ-003",
+      "name": "孟婆庄",
+      "realm": "underworld",
+      "roomCount": 5,
+      "rooms": [
+        {
+          "buildingId": "D-GZ-003",
+          "id": "R01",
+          "name": "棚前歇脚场",
+          "ground": "忘川沙 M-24 干沙 #C9B380 压场；长凳脚下沙面踩实六块（凳位印）",
+          "walls": "无墙；场缘夜哭竹两片＋鬼灯笼果篱（篱竹 #4A3C33、果壳 #E8E3D5 微透）围出场地",
+          "ceiling": "无天花——红雾层＋棚檐投影",
+          "doorsWindows": "无门窗；场口无门——「歇脚不问来处」",
+          "lighting": "檐下绿灯笼对 D-ITM-0041 两盏（雨雾中光晕晕开、庄内唯一照明源南半）；长凳位无独立光——灯笼晕 3m 半径覆盖",
+          "screens": "无屏风；歇脚长凳 D-ITM-0034 六条围场半圈（凳面凹陷如经年坐痕、坐定凳面微温）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-003",
+          "id": "R02",
+          "name": "主棚茶堂",
+          "ground": "忘川沙湿沙 #6B4226 压地（棚内近灶段湿沙带）；碗架前沙面踩实",
+          "walls": "棚柱 M-05 阴沉木 #1F1A14 ×6 缠 M-23 锁链一段（冥市棚制 §7.3-3）；棚周挂旧络子满柱（络子绳 #6E1F1F、坠骨珠 #E8E3D5——亡魂遗念结）",
+          "ceiling": "歇山灰顶内露明：梁架阴沉木 #1F1A14、棚面覆冥纱 M-13 透光率 20%（灰顶内衬）——纱破口以锁链缝缀（§M-13 老化律）",
+          "doorsWindows": "前檐全敞坐西朝东（迎亡魂来向）；前檐挑「汤」字幌 D-ITM-0029（幌 P-13 骨纹底、字 #E8E3D5）；后门一樘",
+          "lighting": "檐下绿灯笼对 D-ITM-0041 北半＋灶膛埋光 #6B4226（灶炭埋光条款）——茶堂光域分层：灶亮、堂中昏、檐口晕",
+          "screens": "碗架 D-ITM-0031 三层木架（粗陶碗 108 只多为缺角碗）代屏——「碗墙」分出领汤道",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-003",
+          "id": "R03",
+          "name": "灶间",
+          "ground": "湿沙 #6B4226＋灶前青石 M-08 一方 800×800mm（灶前立位踩亮）",
+          "walls": "砖灶双眼 D-ITM-0039 砌体 #4A3C33：左眼煮汤右眼温回味汤；灶壁挂勺一列（木勺四柄）",
+          "ceiling": "无天花——灶间敞棚披一段（棚檐延伸 1.5m）；灶汽 M-20 褐雾 #6B4226 缓升",
+          "doorsWindows": "无门窗——敞开灶位；灶后板壁一扇隔孟婆位",
+          "lighting": "灶膛双眼埋光：左眼光 #6B4226 沸汤色、右眼光 #6B4226 弱一档（温汤）；汤锅常沸不溢、沸声如人群低泣",
+          "screens": "无屏风；灶汽即「软隔」——汽浓时孟婆位隐约",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-003",
+          "id": "R04",
+          "name": "孟婆位区",
+          "ground": "湿沙 #6B4226；蒲团位沙面压出坐晕一圈（孟婆恒坐位）",
+          "walls": "灶后板壁 M-05 阴沉木 #1F1A14 一扇；壁挂忘川茶账 D-ITM-0033（账本 0.3×0.4m 全簿无签名只有指印）",
+          "ceiling": "披棚露明同 R03",
+          "doorsWindows": "板壁侧过道 600mm 通后门；无门扇",
+          "lighting": "汤勺 D-ITM-0036 舀汤时花瓣避勺（演出）；孟婆位面客而坐与汤锅半步之隔——位区光即灶光侧照",
+          "screens": "无屏风——孟婆位「半步通视」不许隔；位前小几一方（几面 #1F1A14 放茶账笔筹）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-003",
+          "id": "R05",
+          "name": "后门小圃径",
+          "ground": "忘川沙 M-24 干湿交界段：界线即水位线（干 #C9B380／湿 #6B4226）——径面湿段踩迹保留 30s 渐平",
+          "walls": "无墙；小圃忘忧曼陀罗两丛（花 #6E1F1F、蕊 #BAFFEF 微光）＋夜哭竹后片（竹泪洼映「前世」剪影联动三生石）",
+          "ceiling": "无天花——红雾渐散段（近渡口雾薄）",
+          "doorsWindows": "后门门框一樘（框 #1F1A14、门帘半幅 M-13 冥纱 #2B1B3D 透光 20%）",
+          "lighting": "归魂渡石阶方向两级石阶前一级暗阶灯 #4D7CFF（渡口灯桩系远光）；径内无灯——「赴渡不须明」",
+          "screens": "后门冥纱帘即庄之「末幅帐」：幅宽 0.6m、褶距 80mm、破口锁链缝缀两点",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-GZ-004",
+      "name": "三生石含石台",
+      "realm": "underworld",
+      "roomCount": 6,
+      "rooms": [
+        {
+          "buildingId": "D-GZ-004",
+          "id": "R01",
+          "name": "石台基座（残莲台）",
+          "ground": "忘川沙 M-24 干沙 #C9B380 环台；残莲台半埋——莲瓣八枚缺三（瓣 #33393F 石刻）、缺口处生白骨苔 #E8E3D5；上台两级踏面磨亮",
+          "walls": "石台即「墙」：台身青黑石 M-08 #33393F 整凿收分；石基铭「三世轮回，皆在此石；一照前尘，二照今生，三照来世」环台阴刻填 #E8E3D5",
+          "ceiling": "无天花——红雾层；石顶月白微光自上而下漫（石身自发光）",
+          "doorsWindows": "无门窗；上台口对孟婆庄方向（彼岸花 16 株环列的让路缺口）",
+          "lighting": "石前双灯 D-ITM-0054 引魂灯两盏左右常燃（#3DFF9C）；石身夜泛月白 #DCDCE8 级微光——全石区唯一冷白光源",
+          "screens": "无屏风；巨石本身即「天地屏」——三棱面三向各成一面天然屏",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-004",
+          "id": "R02",
+          "name": "前世面照区（南向）",
+          "ground": "环道南段干沙 #C9B380；照位（面石立观位）沙面踩出双足印恒存（30 秒渐平但恒有新印——循环光语）",
+          "walls": "石面南棱面即壁：雾面照影显玩家角色前身剪影（随剧情变化）；铭「一照前尘」刻面顶（字填 #E8E3D5、刻槽磷光 #3DFF9C 微光）",
+          "ceiling": "无天花；石棱顶线出檐 300mm 遮雾（照影面保持雾净）",
+          "doorsWindows": "无门窗；面侧止步界桩一枚（刻「止步」——越桩照影转血色 #6E1F1F 并低鸣）",
+          "lighting": "照影机制 A：观照后获得「前尘」图鉴条目——雾面显影 #BAFFEF 青白；双灯轮照三面制中此面受光时余两面隐入雾",
+          "screens": "磷光藓沿石根环生 3%（活纹条款）——此面石根藓色 #3DFF9C 最匀；雾即「帐」（M-20 灰雾贴面 300mm）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-004",
+          "id": "R03",
+          "name": "今生面照区（东向）",
+          "ground": "环道东段干沙；照位双足印同制",
+          "walls": "石面东棱面：实时镜像照影（映出玩家当前装备与随行状态）；铭「二照今生」刻制同 R02",
+          "ceiling": "无天花；出檐遮雾同制",
+          "doorsWindows": "无门窗；界桩一枚同制",
+          "lighting": "照影机制 B 实时镜像：镜面显影 #BAFFEF＋装备金属件随本尊反色（金属反光实时联动）；双灯轮照制",
+          "screens": "藓色此面最疏（东向风大）；雾帐 200mm（三面中最薄——今生最清晰）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-004",
+          "id": "R04",
+          "name": "来世面照区（西向）",
+          "ground": "环道西段干沙；照位无足印恒存（鲜有人立——来世面最冷清）",
+          "walls": "石面西棱面：雾面常闭、唯持判官签者可启（启后只见一团光不可辨形）；铭「三照来世」刻制同 R02",
+          "ceiling": "无天花；出檐遮雾同制",
+          "doorsWindows": "无门窗；界桩一枚同制",
+          "lighting": "照影机制 C：判官签权限启面——启时面心亮起一团光 #E8F0FF（返阳晨白级唯一借用点、单画面 ≤1 处在此落位且不与地藏龛同帧）",
+          "screens": "藓色此面最密（西向背风）；雾帐 400mm（最厚——来世不可知）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-004",
+          "id": "R05",
+          "name": "石后残碑影壁位",
+          "ground": "干沙 #C9B380；碑前沙面无踩痕（少有人绕后——叙事留白）",
+          "walls": "残碑影壁 D-ITM-0053 高 1.8m 半埋：可辨「……石照三生……忘川为证」数字（碑 #33393F、字残存处填 #E8E3D5）",
+          "ceiling": "无天花；碑顶断口如刀截",
+          "doorsWindows": "无门窗；碑与石身夹缝 600mm 一线（侧身可入——探索点）",
+          "lighting": "碑面无独立光：受石身月白微光侧照；夹缝内一点磷光藓 #3DFF9C（缝中活纹）",
+          "screens": "无屏风；残碑即石之后屏——「前碑照世、后碑忘言」",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-004",
+          "id": "R06",
+          "name": "红绳环带",
+          "ground": "环道三米带干沙：绳影落沙成环（日照时分可见）",
+          "walls": "石周三米高铁环一圈：红绳 365 缕系环（绳 #9D2933 胭脂、绳尾木牌字迹自变凑近可读「勿忘」）",
+          "ceiling": "无天花；红绳受风摆幅 ±150mm（环带唯一动效）",
+          "doorsWindows": "无门窗；环带缺口三处（三照面入口位）",
+          "lighting": "绳尾木牌「勿忘」字自变时牌面亮 #BAFFEF 一息；365 缕新旧分层：旧绳褪 #C9B380、新绳饱和 #9D2933",
+          "screens": "红绳环带即全域「软装主纹」——绳影、绳色、绳动构成石台的屏风替位",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-GZ-005",
+      "name": "望乡台",
+      "realm": "underworld",
+      "roomCount": 5,
+      "rooms": [
+        {
+          "buildingId": "D-GZ-005",
+          "id": "R01",
+          "name": "台脚守台棚",
+          "ground": "忘川沙 M-24 干沙 #C9B380＋棚心青石 M-08 一方 1.2×1.2m（鬼差立位磨亮）",
+          "walls": "小棚木柱 M-05 阴沉木 #1F1A14 ×4、棚面覆冥纱 M-13 透光 20%；棚柱挂计时香架一具（香架木 #4A3C33）",
+          "ceiling": "披棚露明：椽 #1F1A14；纱顶透雾影",
+          "doorsWindows": "棚三向敞、一向通盘道口；界碑「望乡台」D-ITM-0062 高 2m 立棚侧（北面刻「一炷香为限，不得久留」填 #E8E3D5）",
+          "lighting": "台门双灯 D-ITM-0063 引魂灯 2 盏盘道口（登台自动点亮、下台即熄——灯与登临状态联动）；棚内无灯（鬼差自明体）",
+          "screens": "无屏风；香架燃香一线 #FF9E00 暖点（计时香——暖点即「限时」可视化）",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-005",
+          "id": "R02",
+          "name": "盘道（64 级螺旋）",
+          "ground": "盘道石阶 64 级：阶石 M-08 青黑 #33393F 凿面、阶心踩凹成弧（每级凹 10mm 螺旋递进）；第 33 级「回头阶」踏上必闻身后叹息（声演触发器）",
+          "walls": "盘道外缘砌矮墙 #4A3C33 高 600mm（夯土包石台身外露段——M-04 夯土 #4A3C33 收分）；墙头嵌扶索位",
+          "ceiling": "无天花——露天盘道；愈高雾愈薄（登台即出雾的渐变）",
+          "doorsWindows": "无门窗；骨阶扶索 D-ITM-0066 人骨串索沿外缘墙头一道（触之冰凉且轻微颤动——骨节摩挲音效）",
+          "lighting": "台门双灯之光沿盘道外侧每 6m 一盏递升（望乡台盘道两侧 22 株彼岸花间灯位——资产卷铺地律），愈近台顶愈密 #3DFF9C",
+          "screens": "无屏风；雾层自台脚 2m 渐薄至台顶 0.5m——「雾帐渐卷」即盘道的天花替位",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-005",
+          "id": "R03",
+          "name": "台顶面心",
+          "ground": "台顶 M-08 石面墁地 500×500mm 对缝；面心凹石「泪痕石」D-ITM-0061 一方（常年湿润摸之温热、环音效极轻滴泪声）",
+          "walls": "台顶无墙——四向临空；台身收分三层外露断面（夯土包石断面层理清晰 80～100mm 版缝）",
+          "ceiling": "无天花——满天红雾之上即「天」：台顶 16m 高出常雾层，可望黄泉路远带",
+          "doorsWindows": "无门窗；盘道口一洞上台（洞口石过梁）",
+          "lighting": "罗盘刻纹 D-ITM-0058 台心径 6m 青铜嵌地 #26282C：指针恒指阳世家山方位（追「北偏西 7°」）——铜纹刻槽磷光 #3DFF9C 随针走；台面无其他灯",
+          "screens": "泪痕石温热反光一点 #BAFFEF 极弱（全台最「人心」的一点）；无屏风——台顶求全向通视",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-005",
+          "id": "R04",
+          "name": "台缘凭栏雾幕带",
+          "ground": "台缘环带石面：凭栏立位一线石面磨亮成环（凭栏者恒在）",
+          "walls": "白玉栏杆 D-ITM-0057 望柱 20 根：柱头云纹、栏板雾蚀斑驳；凭栏处栏杆温润余处冰凉（触感分区——交互细节）",
+          "ceiling": "无天花",
+          "doorsWindows": "无门窗；栏杆即「界门」——凭栏即开门（望乡雾幕启）",
+          "lighting": "望乡雾幕 D-ITM-0059 台缘高 3m：幻象核心——亡魂见生前宅院炊烟、玩家见阳世实时低清倒影（阳世截图流投雾幕材质）；幕光 #BAFFEF 基调＋幻象内自发光",
+          "screens": "雾幕即「天地大帐」：幕面微流动（M-20 行为参数）、影像伴极轻市声饭香唤儿声（环绕音效）——本卷最重的「屏风替位件」",
+          "source": "47-重点建筑室内装修全表.md"
+        },
+        {
+          "buildingId": "D-GZ-005",
+          "id": "R05",
+          "name": "台南垂幡缘",
+          "ground": "台南缘石面：幡影落面如人影排行（D-ITM-0064 幡影投影）——幡下石面无踩痕（南缘止步）",
+          "walls": "台南缘垂白幡 12 条：幡 #C9B380 冥纸黄底、幡脚无杆自垂",
+          "ceiling": "无天花",
+          "doorsWindows": "无门窗；南缘为台之「背面」——不设登临",
+          "lighting": "垂幡不受灯：受台顶余光背光成剪影列（逆光幡阵）；血月夜幡影自摆幅度 ×2",
+          "screens": "遮目垂幡 D-ITM-0064 12 条风动如招手——台南「招魂幡墙」即望乡台的背面屏语",
+          "source": "47-重点建筑室内装修全表.md"
+        }
+      ],
+      "source": "47-重点建筑室内装修全表.md"
+    }
+  ],
+  "items": 838,
+  "itemIdNames": {
+    "C-ITM-0001": "双阙墩台",
+    "C-ITM-0002": "朱漆宫门扇",
+    "C-ITM-0003": "铺首衔环",
+    "C-ITM-0004": "匾额「宣德門」",
+    "C-ITM-0005": "石狮",
+    "C-ITM-0006": "拒马叉子",
+    "C-ITM-0007": "仪仗戟",
+    "C-ITM-0008": "朱纱宫灯",
+    "C-ITM-0009": "更鼓",
+    "C-ITM-0010": "御道屏石",
+    "C-ITM-0011": "千斤闸",
+    "C-ITM-0012": "麒麟拴桩",
+    "C-ITM-0013": "殿匾「大庆殿」",
+    "C-ITM-0014": "丹陛石",
+    "C-ITM-0015": "蟠龙金柱",
+    "C-ITM-0016": "御座",
+    "C-ITM-0017": "金漆座屏",
+    "C-ITM-0018": "鎏金狻猊香炉",
+    "C-ITM-0019": "铜鹤灯",
+    "C-ITM-0020": "斗八藻井",
+    "C-ITM-0021": "红罗地衣",
+    "C-ITM-0022": "嘉量",
+    "C-ITM-0023": "日晷",
+    "C-ITM-0024": "朝笏架",
+    "C-ITM-0025": "银烛台",
+    "C-ITM-0026": "奏案",
+    "C-ITM-0027": "御案",
+    "C-ITM-0028": "端砚",
+    "C-ITM-0029": "湖笔架",
+    "C-ITM-0030": "舆图屏风",
+    "C-ITM-0031": "玉牒书架",
+    "C-ITM-0032": "坐榻",
+    "C-ITM-0033": "铜熏炉",
+    "C-ITM-0034": "铜壶滴漏",
+    "C-ITM-0035": "建盏茶具",
+    "C-ITM-0036": "奏章匣",
+    "C-ITM-0037": "绣帘",
+    "C-ITM-0038": "地龙火道口",
+    "C-ITM-0039": "绣墩",
+    "C-ITM-0040": "银烛架",
+    "C-ITM-0041": "斗拱彩画组",
+    "C-ITM-0042": "御座",
+    "C-ITM-0043": "金狻猊炉",
+    "C-ITM-0044": "幡幢",
+    "C-ITM-0045": "铜钟",
+    "C-ITM-0046": "玉磬",
+    "C-ITM-0047": "曲足案",
+    "C-ITM-0048": "琉璃灯",
+    "C-ITM-0049": "瑞鹤旗",
+    "C-ITM-0050": "银执壶",
+    "C-ITM-0051": "瑞鹤图屏",
+    "C-ITM-0052": "簋尊礼器",
+    "C-ITM-0053": "红罗地衣",
+    "C-ITM-0054": "宫娥绣墩",
+    "C-ITM-0055": "贯木拱纵梁",
+    "C-ITM-0056": "拱骨交叠组",
+    "C-ITM-0057": "桥面板",
+    "C-ITM-0058": "朱漆栏杆",
+    "C-ITM-0059": "望柱",
+    "C-ITM-0060": "桥头华表",
+    "C-ITM-0061": "华表仙鹤顶",
+    "C-ITM-0062": "匾额「虹橋」",
+    "C-ITM-0063": "桥灯",
+    "C-ITM-0064": "缆桩",
+    "C-ITM-0065": "泊船石鼻",
+    "C-ITM-0066": "摊贩担",
+    "C-ITM-0067": "水尺刻度",
+    "C-ITM-0068": "桥心垫石",
+    "C-ITM-0069": "排叉柱",
+    "C-ITM-0070": "木楔铁箍",
+    "C-ITM-0071": "石拱券",
+    "C-ITM-0072": "海马瑞兽石栏",
+    "C-ITM-0073": "望柱",
+    "C-ITM-0074": "桥心青石",
+    "C-ITM-0075": "灯柱",
+    "C-ITM-0076": "泊船石鼻",
+    "C-ITM-0077": "彩楼欢门",
+    "C-ITM-0078": "酒旗",
+    "C-ITM-0079": "匾额「孫羊正店」",
+    "C-ITM-0080": "酒垆柜台",
+    "C-ITM-0081": "银酒海",
+    "C-ITM-0082": "注子温碗",
+    "C-ITM-0083": "果菜碟",
+    "C-ITM-0084": "八仙桌",
+    "C-ITM-0085": "圈椅",
+    "C-ITM-0086": "栏杆隔断",
+    "C-ITM-0087": "木楼梯",
+    "C-ITM-0088": "二楼格扇",
+    "C-ITM-0089": "三楼天阁凭栏",
+    "C-ITM-0090": "双眼大灶",
+    "C-ITM-0091": "酒瓮",
+    "C-ITM-0092": "红纱灯笼",
+    "C-ITM-0093": "账台",
+    "C-ITM-0094": "芙蓉屏风",
+    "C-ITM-0095": "羊肉案",
+    "C-ITM-0096": "名酒单水牌",
+    "C-ITM-0097": "井字欢门",
+    "C-ITM-0098": "酒旗「十千脚店」",
+    "C-ITM-0099": "灯箱「十千」",
+    "C-ITM-0100": "灯箱「脚店」",
+    "C-ITM-0101": "柜台",
+    "C-ITM-0102": "散座桌凳",
+    "C-ITM-0103": "小阁子",
+    "C-ITM-0104": "酒瓮",
+    "C-ITM-0105": "注子",
+    "C-ITM-0106": "食盒",
+    "C-ITM-0107": "茶汤炉",
+    "C-ITM-0108": "账台",
+    "C-ITM-0109": "马槽",
+    "C-ITM-0110": "客舍木榻",
+    "C-ITM-0111": "天井水缸",
+    "C-ITM-0112": "檐下灯笼",
+    "C-ITM-0113": "匾额「趙太丞家」",
+    "C-ITM-0114": "诊案",
+    "C-ITM-0115": "脉枕",
+    "C-ITM-0116": "百眼药橱",
+    "C-ITM-0117": "药戥",
+    "C-ITM-0118": "铜药碾",
+    "C-ITM-0119": "药葫芦串",
+    "C-ITM-0120": "医书《圣惠方》",
+    "C-ITM-0121": "「解」字大字牌",
+    "C-ITM-0122": "高柜台",
+    "C-ITM-0123": "铁栅",
+    "C-ITM-0124": "天平",
+    "C-ITM-0125": "当票簿",
+    "C-ITM-0126": "库房木箱",
+    "C-ITM-0127": "铜锁",
+    "C-ITM-0128": "货架",
+    "C-ITM-0129": "匾额「王家紙馬」",
+    "C-ITM-0130": "纸马架",
+    "C-ITM-0131": "纸扎楼库",
+    "C-ITM-0132": "冥钱串",
+    "C-ITM-0133": "雕版印版",
+    "C-ITM-0134": "浆糊桶",
+    "C-ITM-0135": "白事幡",
+    "C-ITM-0136": "主牌「香藥鋪」",
+    "C-ITM-0137": "侧招「劉家上色沉檀揀香」",
+    "C-ITM-0138": "香匣组",
+    "C-ITM-0139": "博山炉",
+    "C-ITM-0140": "香戥",
+    "C-ITM-0141": "香篆模",
+    "C-ITM-0142": "锦盒",
+    "C-ITM-0143": "货架",
+    "C-ITM-0144": "茶旗",
+    "C-ITM-0145": "长流汤瓶",
+    "C-ITM-0146": "建盏架",
+    "C-ITM-0147": "茶碾",
+    "C-ITM-0148": "茶罗",
+    "C-ITM-0149": "散座桌凳",
+    "C-ITM-0150": "雅间阁子",
+    "C-ITM-0151": "茶单水牌",
+    "C-ITM-0152": "入口木牌坊",
+    "C-ITM-0153": "勾栏大棚",
+    "C-ITM-0154": "戏台",
+    "C-ITM-0155": "台幔",
+    "C-ITM-0156": "乐床",
+    "C-ITM-0157": "观众条凳",
+    "C-ITM-0158": "马廊栏杆",
+    "C-ITM-0159": "说书棚台",
+    "C-ITM-0160": "傀儡棚",
+    "C-ITM-0161": "影戏亮子",
+    "C-ITM-0162": "相扑沙圈",
+    "C-ITM-0163": "旗幡",
+    "C-ITM-0164": "茶酒担",
+    "C-ITM-0165": "戏码水牌",
+    "C-ITM-0166": "铜锣",
+    "C-ITM-0167": "门钱栅箱",
+    "C-ITM-0168": "观匾「上清觀」",
+    "C-ITM-0169": "三清像",
+    "C-ITM-0170": "大铜鼎",
+    "C-ITM-0171": "签筒",
+    "C-ITM-0172": "解签案",
+    "C-ITM-0173": "供桌",
+    "C-ITM-0174": "蒲团",
+    "C-ITM-0175": "大钟",
+    "C-ITM-0176": "大鼓",
+    "C-ITM-0177": "道藏经架",
+    "C-ITM-0178": "丹炉",
+    "C-ITM-0179": "鹤舍仙鹤",
+    "C-ITM-0180": "功德箱",
+    "C-ITM-0181": "醮坛露台",
+    "C-ITM-0182": "獬豸照壁",
+    "C-ITM-0183": "仪门",
+    "C-ITM-0184": "戒石亭",
+    "C-ITM-0185": "匾「明鏡高懸」",
+    "C-ITM-0186": "知府座案",
+    "C-ITM-0187": "水火棍",
+    "C-ITM-0188": "登闻鼓",
+    "C-ITM-0189": "牢栅",
+    "C-ITM-0190": "六房案牍架",
+    "C-ITM-0191": "点将台",
+    "C-ITM-0192": "马厩",
+    "C-ITM-0193": "开道锣",
+    "C-ITM-0194": "枷号架",
+    "C-ITM-0195": "府印印匣",
+    "C-ITM-0196": "教场器械架",
+    "C-ITM-0197": "更鼓",
+    "C-ITM-0198": "须弥座塔基",
+    "C-ITM-0199": "琉璃砖面",
+    "C-ITM-0200": "塔身十三层",
+    "C-ITM-0201": "塔刹宝顶",
+    "C-ITM-0202": "塔心柱",
+    "C-ITM-0203": "旋梯",
+    "C-ITM-0204": "塔窗",
+    "C-ITM-0205": "风铎",
+    "C-ITM-0206": "千佛砖龛",
+    "C-ITM-0207": "舍利函",
+    "C-ITM-0208": "塔院围墙",
+    "C-ITM-0209": "香客棚",
+    "C-ITM-0210": "碑亭",
+    "C-ITM-0211": "灯龛",
+    "C-ITM-0212": "石砌平台",
+    "C-ITM-0213": "系船桩",
+    "C-ITM-0214": "塔吊",
+    "C-ITM-0215": "跳板",
+    "C-ITM-0216": "货栈雨棚",
+    "C-ITM-0217": "麻袋垛",
+    "C-ITM-0218": "官秤",
+    "C-ITM-0219": "漕船泊位",
+    "C-ITM-0220": "旗亭楼体",
+    "C-ITM-0221": "市鼓",
+    "C-ITM-0222": "市旗「東市」",
+    "C-ITM-0223": "牙人柜",
+    "C-ITM-0224": "绢帛样架",
+    "C-ITM-0225": "钱柜",
+    "C-ITM-0226": "官斛官尺",
+    "C-ITM-0227": "天平",
+    "C-ITM-0228": "摊位列棚",
+    "C-ITM-0229": "夜市灯笼",
+    "C-ITM-0230": "值事房",
+    "C-ITM-0231": "茶水铺",
+    "C-ITM-0232": "拴马桩",
+    "C-ITM-0233": "果品行栈",
+    "C-ITM-0234": "香药行栈",
+    "C-ITM-0235": "巾帽行栈",
+    "C-ITM-0236": "旗亭楼体",
+    "C-ITM-0237": "更铺",
+    "C-ITM-0238": "市旗「西市」",
+    "C-ITM-0239": "金银铺柜",
+    "C-ITM-0240": "漆器架",
+    "C-ITM-0241": "书坊书架",
+    "C-ITM-0242": "药行晾架",
+    "C-ITM-0243": "驼队货栈",
+    "C-ITM-0244": "波斯毯",
+    "C-ITM-0245": "牙帖公示榜",
+    "C-ITM-0246": "水井辘轳",
+    "C-ITM-0247": "茶水铺",
+    "C-ITM-0248": "拴马桩",
+    "C-ITM-0249": "灯笼",
+    "C-ITM-0250": "值事房",
+    "C-ITM-0251": "瓷器行栈",
+    "C-ITM-0252": "匾额「綢緞莊」",
+    "C-ITM-0253": "绸架",
+    "C-ITM-0254": "裁尺",
+    "C-ITM-0255": "裁剪",
+    "C-ITM-0256": "锦盒",
+    "C-ITM-0257": "账台",
+    "C-ITM-0258": "绣屏",
+    "C-ITM-0259": "匾额「果子鋪」",
+    "C-ITM-0260": "干货柜",
+    "C-ITM-0261": "鲜果盘",
+    "C-ITM-0262": "纸包",
+    "C-ITM-0263": "果桶",
+    "C-ITM-0264": "果秤",
+    "C-ITM-0265": "檐前果篮",
+    "C-ITM-0266": "匾额「飯鋪」",
+    "C-ITM-0267": "大灶",
+    "C-ITM-0268": "蒸笼塔",
+    "C-ITM-0269": "条桌条凳",
+    "C-ITM-0270": "菜牌水牌",
+    "C-ITM-0271": "碗架",
+    "C-ITM-0272": "泔水桶",
+    "C-ITM-0273": "匾额「唐家酒店」",
+    "C-ITM-0274": "酒垆",
+    "C-ITM-0275": "酒旗",
+    "C-ITM-0276": "散座",
+    "C-ITM-0277": "温酒器",
+    "C-ITM-0278": "下酒碟",
+    "C-ITM-0279": "酒瓮",
+    "C-ITM-0280": "匾额「久住王員外家」",
+    "C-ITM-0281": "登记簿",
+    "C-ITM-0282": "客房木榻",
+    "C-ITM-0283": "行囊架",
+    "C-ITM-0284": "汤房浴桶",
+    "C-ITM-0285": "门房灯",
+    "C-ITM-0286": "草料槽",
+    "C-ITM-0287": "匾额「明家靴店」",
+    "C-ITM-0288": "靴架",
+    "C-ITM-0289": "楦头",
+    "C-ITM-0290": "皮料架",
+    "C-ITM-0291": "锥线筐",
+    "C-ITM-0292": "试靴凳",
+    "C-ITM-0293": "账台",
+    "C-ITM-0294": "城楼",
+    "C-ITM-0295": "瓮城弧墙",
+    "C-ITM-0296": "门匾「上東門」",
+    "C-ITM-0297": "千斤闸",
+    "C-ITM-0298": "门扇",
+    "C-ITM-0299": "马道",
+    "C-ITM-0300": "戍铺",
+    "C-ITM-0301": "火盆灯",
+    "C-ITM-0302": "夯土残墙",
+    "C-ITM-0303": "塌垛口",
+    "C-ITM-0304": "穿墙老槐",
+    "C-ITM-0305": "界碑",
+    "C-ITM-0306": "木牌楼",
+    "C-ITM-0307": "摊棚",
+    "C-ITM-0308": "石秀肉案",
+    "C-ITM-0309": "白胜酒担",
+    "C-ITM-0310": "饼炉",
+    "C-ITM-0311": "鱼摊",
+    "C-ITM-0312": "杂货担",
+    "C-ITM-0313": "草亭",
+    "C-ITM-0314": "茶担",
+    "C-ITM-0315": "射柳靶场",
+    "C-ITM-0316": "老柳断干",
+    "C-ITM-0317": "石凳",
+    "C-ITM-0318": "弓矢摊",
+    "C-ITM-0319": "祠匾「碧霞祠」",
+    "C-ITM-0320": "碧霞元君像",
+    "C-ITM-0321": "香亭",
+    "C-ITM-0322": "功德碑林",
+    "C-ITM-0323": "云房",
+    "C-ITM-0324": "长明灯",
+    "C-ITM-0325": "大铁鼎",
+    "C-ITM-0326": "庙匾「镇江王庙」",
+    "C-ITM-0327": "镇江王像",
+    "C-ITM-0328": "船模供架",
+    "C-ITM-0329": "香案",
+    "C-ITM-0330": "签筒",
+    "C-ITM-0331": "旗杆",
+    "C-ITM-0332": "殿匾「祝融殿」",
+    "C-ITM-0333": "祝融像",
+    "C-ITM-0334": "铁瓦殿面",
+    "C-ITM-0335": "大香炉",
+    "C-ITM-0336": "云海观台",
+    "C-ITM-0337": "道士舍",
+    "C-ITM-0338": "殿匾「北岳庙」",
+    "C-ITM-0339": "北岳大帝像",
+    "C-ITM-0340": "悬空栈道门",
+    "C-ITM-0341": "石阶",
+    "C-ITM-0342": "碑碣",
+    "C-ITM-0343": "守庙人舍",
+    "C-ITM-0344": "殿匾「中岳庙」",
+    "C-ITM-0345": "中岳大帝像",
+    "C-ITM-0346": "神道石翁仲",
+    "C-ITM-0347": "古柏群",
+    "C-ITM-0348": "遥参亭",
+    "C-ITM-0349": "醮坛",
+    "C-ITM-0350": "庙市棚",
+    "C-ITM-0351": "山门匾「雪簾禪院」",
+    "C-ITM-0352": "大雄殿佛坐像",
+    "C-ITM-0353": "冰纹窗",
+    "C-ITM-0354": "雪廊",
+    "C-ITM-0355": "禅房坐席",
+    "C-ITM-0356": "雪地火塘",
+    "C-ITM-0357": "白玉阶",
+    "C-ITM-0358": "云桥",
+    "C-ITM-0359": "瑶池",
+    "C-ITM-0360": "西王母像",
+    "C-ITM-0361": "蟠桃供",
+    "C-ITM-0362": "蟠桃园",
+    "C-ITM-0363": "结界玉柱",
+    "C-ITM-0364": "青鸾栖架",
+    "C-ITM-0365": "驿楼",
+    "C-ITM-0366": "驼棚",
+    "C-ITM-0367": "坎儿井口",
+    "C-ITM-0368": "草料垛",
+    "C-ITM-0369": "望楼",
+    "C-ITM-0370": "驿卒舍",
+    "C-ITM-0371": "胡姬酒旗",
+    "C-ITM-0372": "石堆敖包",
+    "C-ITM-0373": "祭台",
+    "C-ITM-0374": "酥油长明灯",
+    "C-ITM-0375": "弓箭架",
+    "C-ITM-0376": "赛马旗门",
+    "C-ITM-0377": "渔舍",
+    "C-ITM-0378": "晒网架",
+    "C-ITM-0379": "渔船",
+    "C-ITM-0380": "石碣",
+    "C-ITM-0381": "鸬鹚栖架",
+    "C-ITM-0382": "小埠头",
+    "C-ITM-0383": "埠头马道",
+    "C-ITM-0384": "渡船",
+    "C-ITM-0385": "缆桩",
+    "C-ITM-0386": "跳板",
+    "C-ITM-0387": "渡口草棚",
+    "C-ITM-0388": "渡资牌",
+    "C-ITM-0389": "仓廒",
+    "C-ITM-0390": "水门船闸",
+    "C-ITM-0391": "官斛",
+    "C-ITM-0392": "封条架",
+    "C-ITM-0393": "守仓兵铺",
+    "C-ITM-0394": "转运漕船泊位",
+    "C-ITM-0395": "仓廒",
+    "C-ITM-0396": "晒粮场",
+    "C-ITM-0397": "斗斛",
+    "C-ITM-0398": "护仓栅栏",
+    "C-ITM-0399": "粮车",
+    "C-ITM-0400": "押粮官房",
+    "C-ITM-0401": "宅匾「積善堂」",
+    "C-ITM-0402": "影壁",
+    "C-ITM-0403": "石狮",
+    "C-ITM-0404": "正堂条案",
+    "C-ITM-0405": "太师椅组",
+    "C-ITM-0406": "山水屏风",
+    "C-ITM-0407": "书房博古架",
+    "C-ITM-0408": "架子床",
+    "C-ITM-0409": "库房钱箱",
+    "C-ITM-0410": "花园石亭",
+    "C-ITM-0411": "太平缸",
+    "C-ITM-0412": "回廊灯笼",
+    "C-ITM-0413": "上马石",
+    "C-ITM-0414": "旗杆石",
+    "C-ITM-0415": "官服架",
+    "C-ITM-0416": "笏板匣",
+    "C-ITM-0417": "堂屋条案",
+    "C-ITM-0418": "书房文牍案",
+    "C-ITM-0419": "架子床",
+    "C-ITM-0420": "厨房土灶",
+    "C-ITM-0421": "院井",
+    "C-ITM-0422": "太平缸",
+    "C-ITM-0423": "斋匾「守拙斋」",
+    "C-ITM-0424": "书案",
+    "C-ITM-0425": "笔架",
+    "C-ITM-0426": "古籍函套",
+    "C-ITM-0427": "古琴",
+    "C-ITM-0428": "板床",
+    "C-ITM-0429": "小土灶",
+    "C-ITM-0430": "竹石花台",
+    "C-ITM-0431": "书箱",
+    "C-ITM-0432": "油灯",
+    "C-ITM-0433": "堂屋八仙桌",
+    "C-ITM-0434": "圈椅",
+    "C-ITM-0435": "账房算盘",
+    "C-ITM-0436": "钱柜",
+    "C-ITM-0437": "账簿",
+    "C-ITM-0438": "货箱",
+    "C-ITM-0439": "架子床",
+    "C-ITM-0440": "护院哨棒",
+    "C-ITM-0441": "太平缸",
+    "C-ITM-0442": "灯笼",
+    "C-ITM-0443": "八仙桌",
+    "C-ITM-0444": "条凳",
+    "C-ITM-0445": "土灶",
+    "C-ITM-0446": "水缸",
+    "C-ITM-0447": "板床",
+    "C-ITM-0448": "木箱",
+    "C-ITM-0449": "杂棚农具",
+    "C-ITM-0450": "油灯",
+    "C-ITM-0451": "排门板",
+    "C-ITM-0452": "柜台",
+    "C-ITM-0453": "货架",
+    "C-ITM-0454": "招幌",
+    "C-ITM-0455": "后灶",
+    "C-ITM-0456": "木梯",
+    "C-ITM-0457": "阁楼木榻",
+    "C-ITM-0458": "账簿钱匣",
+    "C-ITM-0459": "板床",
+    "C-ITM-0460": "破木箱",
+    "C-ITM-0461": "陶灶",
+    "C-ITM-0462": "水桶",
+    "C-ITM-0463": "草席",
+    "C-ITM-0464": "豆油灯",
+    "C-ITM-0465": "院门楼",
+    "C-ITM-0466": "共井",
+    "C-ITM-0467": "共灶棚",
+    "C-ITM-0468": "晾衣杆",
+    "C-ITM-0469": "柴垛",
+    "C-ITM-0470": "鸡笼",
+    "C-ITM-0471": "坐墩",
+    "C-ITM-0472": "披屋板床",
+    "D-ITM-0001": "黑玉砖地面",
+    "D-ITM-0002": "判官案",
+    "D-ITM-0003": "生死簿·总册",
+    "D-ITM-0004": "生死簿架",
+    "D-ITM-0005": "孽镜台",
+    "D-ITM-0006": "惊堂木",
+    "D-ITM-0007": "判官朱笔",
+    "D-ITM-0008": "善恶签筒",
+    "D-ITM-0009": "白烛阵",
+    "D-ITM-0010": "刑具架·东",
+    "D-ITM-0011": "刑具架·西",
+    "D-ITM-0012": "地藏龛",
+    "D-ITM-0013": "匾额「閻羅殿」",
+    "D-ITM-0014": "楹联·东",
+    "D-ITM-0015": "楹联·西",
+    "D-ITM-0016": "兽足香炉",
+    "D-ITM-0017": "桥身拱券",
+    "D-ITM-0018": "望柱栏板",
+    "D-ITM-0019": "引魂灯·桥列",
+    "D-ITM-0020": "守桥岗·南",
+    "D-ITM-0021": "守桥岗·北",
+    "D-ITM-0022": "南桥头碑",
+    "D-ITM-0023": "北桥头碑",
+    "D-ITM-0024": "照魂镜",
+    "D-ITM-0025": "锁魂链",
+    "D-ITM-0026": "魂痕桥面",
+    "D-ITM-0027": "桥神香案",
+    "D-ITM-0028": "导雾槽",
+    "D-ITM-0029": "主棚茶棚",
+    "D-ITM-0030": "孟婆汤锅",
+    "D-ITM-0031": "碗架",
+    "D-ITM-0032": "孟婆位",
+    "D-ITM-0033": "忘川茶账",
+    "D-ITM-0034": "歇脚长凳",
+    "D-ITM-0035": "「孟婆汤」招幡",
+    "D-ITM-0036": "汤勺",
+    "D-ITM-0037": "柴垛",
+    "D-ITM-0038": "引水竹枧",
+    "D-ITM-0039": "灶膛双眼",
+    "D-ITM-0040": "碗柜收碗台",
+    "D-ITM-0041": "绿灯笼对",
+    "D-ITM-0042": "取汤竹筹",
+    "D-ITM-0043": "石身",
+    "D-ITM-0044": "石顶刻字",
+    "D-ITM-0045": "前世面",
+    "D-ITM-0046": "今生面",
+    "D-ITM-0047": "来世面",
+    "D-ITM-0048": "石基座",
+    "D-ITM-0049": "香插石钵",
+    "D-ITM-0050": "祈愿红绳",
+    "D-ITM-0051": "隐显苔字",
+    "D-ITM-0052": "止步界桩",
+    "D-ITM-0053": "残碑影壁",
+    "D-ITM-0054": "石前双灯",
+    "D-ITM-0055": "台基",
+    "D-ITM-0056": "盘道石阶",
+    "D-ITM-0057": "白玉栏杆",
+    "D-ITM-0058": "罗盘刻纹",
+    "D-ITM-0059": "望乡雾幕",
+    "D-ITM-0060": "焚香鼎",
+    "D-ITM-0061": "泪痕石",
+    "D-ITM-0062": "界碑「望乡台」",
+    "D-ITM-0063": "台门双灯",
+    "D-ITM-0064": "遮目垂幡",
+    "D-ITM-0065": "守台棚位",
+    "D-ITM-0066": "骨阶扶索",
+    "D-ITM-0067": "关城城台",
+    "D-ITM-0068": "门楼灯笼",
+    "D-ITM-0069": "过关籍册",
+    "D-ITM-0070": "千斤闸",
+    "D-ITM-0071": "门钉铜乳",
+    "D-ITM-0072": "照壁",
+    "D-ITM-0073": "守关兵器架",
+    "D-ITM-0074": "守关籍案",
+    "D-ITM-0075": "青砖门楼",
+    "D-ITM-0076": "门匾「返阳门」",
+    "D-ITM-0077": "阳气温光",
+    "D-ITM-0078": "守门判官位",
+    "D-ITM-0079": "回生鼓",
+    "D-ITM-0080": "阳籍香案",
+    "D-ITM-0081": "归魂渡（北岸）",
+    "D-ITM-0082": "迎魂渡（南岸）",
+    "D-ITM-0083": "孟婆渡船",
+    "D-ITM-0084": "引渡灯桅",
+    "D-ITM-0085": "渡资灰钱匣",
+    "D-ITM-0086": "系舟缆桩",
+    "D-ITM-0087": "黑石祭台",
+    "D-ITM-0088": "锁链桩",
+    "D-ITM-0089": "铜柱",
+    "D-ITM-0090": "血雾喷口",
+    "D-ITM-0091": "祭台骨缘",
+    "D-ITM-0092": "城墙垣",
+    "D-ITM-0093": "北门楼",
+    "D-ITM-0094": "死门三",
+    "D-ITM-0095": "更楼",
+    "D-ITM-0096": "枉死衙署",
+    "D-ITM-0097": "望魂幡",
+    "D-ITM-0098": "归墟圆坛",
+    "D-ITM-0099": "六道轮盘",
+    "D-ITM-0100": "轮心墨洞",
+    "D-ITM-0101": "转轴魂柱",
+    "D-ITM-0102": "六道光门",
+    "D-ITM-0103": "坠井井口",
+    "D-ITM-0104": "六角井亭",
+    "D-ITM-0105": "界碑「阴阳界」",
+    "D-ITM-0106": "验籍案",
+    "D-ITM-0107": "三间四柱牌坊",
+    "D-ITM-0108": "坊柱幡联",
+    "D-ITM-0109": "镇坊石兽",
+    "D-ITM-0110": "灯柱体",
+    "D-ITM-0111": "灯焰",
+    "D-ITM-0112": "柱身铭文",
+    "D-ITM-0113": "城墙垣",
+    "D-ITM-0114": "南·丰都门",
+    "D-ITM-0115": "东·生门",
+    "D-ITM-0116": "西市门 / 北枉门",
+    "D-ITM-0117": "四柱三楼牌楼",
+    "D-ITM-0118": "市灯串",
+    "D-ITM-0119": "市锣",
+    "D-ITM-0120": "骨骰",
+    "D-ITM-0121": "押魂签筹",
+    "D-ITM-0122": "血木赌桌",
+    "D-ITM-0123": "灯下骰影",
+    "D-ITM-0124": "输光幡",
+    "D-ITM-0125": "围观鬼凳",
+    "D-ITM-0126": "招魂食幌",
+    "D-ITM-0127": "气味灶",
+    "D-ITM-0128": "幻宴桌",
+    "D-ITM-0129": "垂涎幌",
+    "D-ITM-0130": "饿鬼食槽",
+    "D-ITM-0131": "碗山",
+    "D-ITM-0132": "纸人阵列",
+    "D-ITM-0133": "纸马纸轿",
+    "D-ITM-0134": "纸宅模型",
+    "D-ITM-0135": "浆糊陶盆",
+    "D-ITM-0136": "烧件炉",
+    "D-ITM-0137": "价目阴签",
+    "D-ITM-0138": "竖棺陈列",
+    "D-ITM-0139": "棺木阴纹",
+    "D-ITM-0140": "敲棺声",
+    "D-ITM-0141": "长明刨花灯",
+    "D-ITM-0142": "反寿白幡",
+    "D-ITM-0143": "停灵排床",
+    "D-ITM-0144": "长明灯阵",
+    "D-ITM-0145": "挂符梁",
+    "D-ITM-0146": "守庄梆子",
+    "D-ITM-0147": "尸牌墙",
+    "D-ITM-0148": "分殿正堂",
+    "D-ITM-0149": "算盘架",
+    "D-ITM-0150": "功过格",
+    "D-ITM-0151": "福签筒",
+    "D-ITM-0152": "皂隶立像",
+    "D-ITM-0153": "绕梁香烟",
+    "D-ITM-0154": "「未时开张」幌",
+    "D-ITM-0155": "通铺大房",
+    "D-ITM-0156": "客籍簿",
+    "D-ITM-0157": "走马灯廊",
+    "D-ITM-0158": "唤客铜铃",
+    "D-ITM-0159": "望夫窗",
+    "D-ITM-0160": "泪烛",
+    "D-ITM-0161": "绣鞋一双",
+    "D-ITM-0162": "织机半幅",
+    "D-ITM-0163": "逆行梯影",
+    "D-ITM-0164": "戏台",
+    "D-ITM-0165": "鬼乐架",
+    "D-ITM-0166": "空椅观席",
+    "D-ITM-0167": "「夜夜笙歌」戏幌",
+    "D-ITM-0168": "血戏单",
+    "D-ITM-0169": "百货货架",
+    "D-ITM-0170": "阴阳秤",
+    "D-ITM-0171": "貔貅钱匣",
+    "D-ITM-0172": "「万货全」匾",
+    "D-ITM-0173": "洋火纸煤",
+    "D-ITM-0174": "门前碑",
+    "D-ITM-0175": "供桌遗影",
+    "D-ITM-0176": "长明坟灯",
+    "D-ITM-0177": "供品雾盘",
+    "D-ITM-0178": "家书箱",
+    "D-ITM-0179": "无名神龛",
+    "D-ITM-0180": "万魂签墙",
+    "D-ITM-0181": "满灰香炉",
+    "D-ITM-0182": "许愿幡带",
+    "D-ITM-0183": "庙祝空位",
+    "T-ITM-0001": "九龙金漆宝座",
+    "T-ITM-0002": "九龙金漆背屏",
+    "T-ITM-0003": "紫檀嵌玉大香案",
+    "T-ITM-0004": "鎏金鹤形香炉",
+    "T-ITM-0005": "蟠龙金烛台",
+    "T-ITM-0006": "山河社稷图（全息长卷）",
+    "T-ITM-0007": "通天玉玺",
+    "T-ITM-0008": "奏表玉简架",
+    "T-ITM-0009": "金瓜仪仗",
+    "T-ITM-0010": "钺斧仪仗",
+    "T-ITM-0011": "朝天镫",
+    "T-ITM-0012": "静鞭",
+    "T-ITM-0013": "璇玑玉衡天象仪",
+    "T-ITM-0014": "云锦仙班蒲团",
+    "T-ITM-0015": "甘露净瓶",
+    "T-ITM-0016": "月牙戟架",
+    "T-ITM-0017": "四方云旗",
+    "T-ITM-0018": "照妖明镜",
+    "T-ITM-0019": "仙箓查验玉案",
+    "T-ITM-0020": "下界云槎",
+    "T-ITM-0021": "貔貅门墩",
+    "T-ITM-0022": "采桃玉篮",
+    "T-ITM-0023": "桃木仙锄",
+    "T-ITM-0024": "九千年桃王挂牌",
+    "T-ITM-0025": "看园房蒲团",
+    "T-ITM-0026": "桃枝夜明灯",
+    "T-ITM-0027": "园志玉简",
+    "T-ITM-0028": "八卦紫金丹炉",
+    "T-ITM-0029": "紫金药葫芦",
+    "T-ITM-0030": "金刚琢",
+    "T-ITM-0031": "丹方玉简架",
+    "T-ITM-0032": "百草丹药柜",
+    "T-ITM-0033": "捣药玉杵臼",
+    "T-ITM-0034": "无极蒲团",
+    "T-ITM-0035": "芭蕉宝扇",
+    "T-ITM-0036": "长柄火钳",
+    "T-ITM-0037": "童子拂尘",
+    "T-ITM-0038": "九转金丹",
+    "T-ITM-0039": "丹渣玉罐",
+    "T-ITM-0040": "星辉灯",
+    "T-ITM-0041": "童子卧榻",
+    "T-ITM-0042": "金镶玉主宴长案",
+    "T-ITM-0043": "琼浆醒神酿坛",
+    "T-ITM-0044": "流杯玉盏",
+    "T-ITM-0045": "九曲桥宫灯",
+    "T-ITM-0046": "瑶池古琴",
+    "T-ITM-0047": "仙乐编钟",
+    "T-ITM-0048": "鲛绡帷幕",
+    "T-ITM-0049": "王母凤辇",
+    "T-ITM-0050": "九千年蟠桃供盘",
+    "T-ITM-0051": "博山炉",
+    "T-ITM-0052": "青莲供瓶花觚",
+    "T-ITM-0053": "云锦宴席坐垫",
+    "T-ITM-0054": "月华镜",
+    "T-ITM-0055": "侍女羽扇",
+    "T-ITM-0056": "玉兔捣药杵臼",
+    "T-ITM-0057": "捣药玉钵",
+    "T-ITM-0058": "水镜台",
+    "T-ITM-0059": "冰蚕丝帷",
+    "T-ITM-0060": "桂子月光宝匣",
+    "T-ITM-0061": "霓裳羽衣",
+    "T-ITM-0062": "白玉妆台",
+    "T-ITM-0063": "桂花酿坛",
+    "T-ITM-0064": "冰弦焦尾琴（连玉琴案）",
+    "T-ITM-0065": "吴刚倚柱斧",
+    "T-ITM-0066": "玉兔宫灯",
+    "T-ITM-0067": "月华香炉",
+    "T-ITM-0068": "冰魄屏风",
+    "T-ITM-0069": "千瓣白玉莲台",
+    "T-ITM-0070": "杨柳玉瓶",
+    "T-ITM-0071": "净世莲灯",
+    "T-ITM-0072": "听经云锦蒲团",
+    "T-ITM-0073": "檀香云炉",
+    "T-ITM-0074": "鎏金梵磬",
+    "T-ITM-0075": "仙箓案牍架",
+    "T-ITM-0076": "云纹官帽架",
+    "T-ITM-0077": "待漏更香",
+    "T-ITM-0078": "灵墨玉简笔砚",
+    "T-ITM-0079": "迎宾茶灶",
+    "T-ITM-0080": "武将甲胄架",
+    "T-ITM-0081": "兵符玉匣",
+    "T-ITM-0082": "军报烽书匣",
+    "T-ITM-0083": "点卯玉牌",
+    "T-ITM-0084": "金疮药柜",
+    "T-ITM-0085": "九眼聚灵灶",
+    "T-ITM-0086": "天材冰鉴",
+    "T-ITM-0087": "玉馔云台",
+    "T-ITM-0088": "百味调味架",
+    "T-ITM-0089": "天青醒神茶盏",
+    "T-ITM-0090": "御宴多层食盒",
+    "T-ITM-0091": "仙厨菜谱玉简",
+    "T-ITM-0092": "灵晶通货匣",
+    "T-ITM-0093": "库藏夜明珠",
+    "T-ITM-0094": "天庭库簿玉简",
+    "T-ITM-0095": "封库符印",
+    "T-ITM-0096": "仙衡天平",
+    "T-ITM-0097": "天兵甲胄架",
+    "T-ITM-0098": "月牙戟长架",
+    "T-ITM-0099": "穿云弓云架",
+    "T-ITM-0100": "天罗地网阵盘",
+    "T-ITM-0101": "战鼓",
+    "T-ITM-0102": "火字令旗",
+    "T-ITM-0103": "万年玄铜晨钟",
+    "T-ITM-0104": "悬杵撞木",
+    "T-ITM-0105": "钟谱玉简",
+    "T-ITM-0106": "长明灯",
+    "T-ITM-0107": "更签筒",
+    "T-ITM-0108": "日月催更鼓",
+    "T-ITM-0109": "雷纹鼓槌",
+    "T-ITM-0110": "鼓谱玉简",
+    "T-ITM-0111": "云雷纹鼓架",
+    "T-ITM-0112": "值楼茶炉",
+    "T-ITM-0113": "蛟角冠",
+    "T-ITM-0114": "星图水案",
+    "T-ITM-0115": "青蛟剑",
+    "T-ITM-0116": "角宿令牌",
+    "T-ITM-0117": "星官蒲团",
+    "T-ITM-0118": "金鳞宝甲",
+    "T-ITM-0119": "亢金长枪",
+    "T-ITM-0120": "龙珠双灯",
+    "T-ITM-0121": "星位罗盘",
+    "T-ITM-0122": "金箔拜帖匣",
+    "T-ITM-0123": "狼牙令旗",
+    "T-ITM-0124": "下界私藏黄袍",
+    "T-ITM-0125": "玲珑内丹空瓶",
+    "T-ITM-0126": "陨铁磨爪石",
+    "T-ITM-0127": "狼府星图壁挂",
+    "T-ITM-0128": "獬豸冠",
+    "T-ITM-0129": "牛金牛铜铃",
+    "T-ITM-0130": "双星连案",
+    "T-ITM-0131": "星槎模型",
+    "T-ITM-0132": "劝酒葫芦",
+    "T-ITM-0133": "报晓天鸡冠",
+    "T-ITM-0134": "双眼神光镜",
+    "T-ITM-0135": "晨啼音叉",
+    "T-ITM-0136": "朝露供盘",
+    "T-ITM-0137": "梧木栖架",
+    "T-ITM-0138": "幻月纱屏",
+    "T-ITM-0139": "心宿迷香",
+    "T-ITM-0140": "月相转盘",
+    "T-ITM-0141": "狐裘软榻",
+    "T-ITM-0142": "胭脂玉盒",
+    "T-ITM-0143": "乌羽翎笔",
+    "T-ITM-0144": "月露香墨",
+    "T-ITM-0145": "星轨沙盘",
+    "T-ITM-0146": "三足乌灯",
+    "T-ITM-0147": "夜行斗篷",
+    "T-ITM-0148": "穿山宝铲",
+    "T-ITM-0149": "机括地窖门",
+    "T-ITM-0150": "日晷残片",
+    "T-ITM-0151": "五谷灵仓",
+    "T-ITM-0152": "夜目千里镜",
+    "T-ITM-0153": "行辕备用宝座",
+    "T-ITM-0154": "万国朝贡架",
+    "T-ITM-0155": "天条玉册",
+    "T-ITM-0156": "云母大屏",
+    "T-ITM-0157": "迎仙幡",
+    "T-ITM-0158": "传旨玉音铃",
+    "T-ITM-0159": "仙鹤文书邮筒",
+    "T-ITM-0160": "值殿名录",
+    "T-ITM-0161": "通明长烛",
+    "T-ITM-0162": "传令金牌",
+    "T-ITM-0163": "大罗天谶碑拓片",
+    "T-ITM-0164": "三清讲经席",
+    "T-ITM-0165": "道藏万卷橱",
+    "T-ITM-0166": "龟蛇缠旗",
+    "T-ITM-0167": "无字天书",
+    "T-ITM-0168": "都省印匣",
+    "T-ITM-0169": "星官考功簿",
+    "T-ITM-0170": "天曹仪仗架",
+    "T-ITM-0171": "青纸朱笔",
+    "T-ITM-0172": "玄门蒲团",
+    "T-ITM-0173": "九色光轮",
+    "T-ITM-0174": "迎宾彩灯",
+    "T-ITM-0175": "朝会导引幡",
+    "T-ITM-0176": "备用琉璃阶砖",
+    "T-ITM-0177": "礼乐云磬",
+    "T-ITM-0178": "五方令旗",
+    "T-ITM-0179": "天罡点将玉册",
+    "T-ITM-0180": "将台战鼓",
+    "T-ITM-0181": "望云千里镜",
+    "T-ITM-0182": "演武布阵沙盘",
+    "T-ITM-0183": "镇台活化石狮"
+  },
+  "itemIds": [
+    "C-ITM-0001",
+    "C-ITM-0002",
+    "C-ITM-0003",
+    "C-ITM-0004",
+    "C-ITM-0005",
+    "C-ITM-0006",
+    "C-ITM-0007",
+    "C-ITM-0008",
+    "C-ITM-0009",
+    "C-ITM-0010",
+    "C-ITM-0011",
+    "C-ITM-0012",
+    "C-ITM-0013",
+    "C-ITM-0014",
+    "C-ITM-0015",
+    "C-ITM-0016",
+    "C-ITM-0017",
+    "C-ITM-0018",
+    "C-ITM-0019",
+    "C-ITM-0020",
+    "C-ITM-0021",
+    "C-ITM-0022",
+    "C-ITM-0023",
+    "C-ITM-0024",
+    "C-ITM-0025",
+    "C-ITM-0026",
+    "C-ITM-0027",
+    "C-ITM-0028",
+    "C-ITM-0029",
+    "C-ITM-0030",
+    "C-ITM-0031",
+    "C-ITM-0032",
+    "C-ITM-0033",
+    "C-ITM-0034",
+    "C-ITM-0035",
+    "C-ITM-0036",
+    "C-ITM-0037",
+    "C-ITM-0038",
+    "C-ITM-0039",
+    "C-ITM-0040",
+    "C-ITM-0041",
+    "C-ITM-0042",
+    "C-ITM-0043",
+    "C-ITM-0044",
+    "C-ITM-0045",
+    "C-ITM-0046",
+    "C-ITM-0047",
+    "C-ITM-0048",
+    "C-ITM-0049",
+    "C-ITM-0050",
+    "C-ITM-0051",
+    "C-ITM-0052",
+    "C-ITM-0053",
+    "C-ITM-0054",
+    "C-ITM-0055",
+    "C-ITM-0056",
+    "C-ITM-0057",
+    "C-ITM-0058",
+    "C-ITM-0059",
+    "C-ITM-0060",
+    "C-ITM-0061",
+    "C-ITM-0062",
+    "C-ITM-0063",
+    "C-ITM-0064",
+    "C-ITM-0065",
+    "C-ITM-0066",
+    "C-ITM-0067",
+    "C-ITM-0068",
+    "C-ITM-0069",
+    "C-ITM-0070",
+    "C-ITM-0071",
+    "C-ITM-0072",
+    "C-ITM-0073",
+    "C-ITM-0074",
+    "C-ITM-0075",
+    "C-ITM-0076",
+    "C-ITM-0077",
+    "C-ITM-0078",
+    "C-ITM-0079",
+    "C-ITM-0080",
+    "C-ITM-0081",
+    "C-ITM-0082",
+    "C-ITM-0083",
+    "C-ITM-0084",
+    "C-ITM-0085",
+    "C-ITM-0086",
+    "C-ITM-0087",
+    "C-ITM-0088",
+    "C-ITM-0089",
+    "C-ITM-0090",
+    "C-ITM-0091",
+    "C-ITM-0092",
+    "C-ITM-0093",
+    "C-ITM-0094",
+    "C-ITM-0095",
+    "C-ITM-0096",
+    "C-ITM-0097",
+    "C-ITM-0098",
+    "C-ITM-0099",
+    "C-ITM-0100",
+    "C-ITM-0101",
+    "C-ITM-0102",
+    "C-ITM-0103",
+    "C-ITM-0104",
+    "C-ITM-0105",
+    "C-ITM-0106",
+    "C-ITM-0107",
+    "C-ITM-0108",
+    "C-ITM-0109",
+    "C-ITM-0110",
+    "C-ITM-0111",
+    "C-ITM-0112",
+    "C-ITM-0113",
+    "C-ITM-0114",
+    "C-ITM-0115",
+    "C-ITM-0116",
+    "C-ITM-0117",
+    "C-ITM-0118",
+    "C-ITM-0119",
+    "C-ITM-0120",
+    "C-ITM-0121",
+    "C-ITM-0122",
+    "C-ITM-0123",
+    "C-ITM-0124",
+    "C-ITM-0125",
+    "C-ITM-0126",
+    "C-ITM-0127",
+    "C-ITM-0128",
+    "C-ITM-0129",
+    "C-ITM-0130",
+    "C-ITM-0131",
+    "C-ITM-0132",
+    "C-ITM-0133",
+    "C-ITM-0134",
+    "C-ITM-0135",
+    "C-ITM-0136",
+    "C-ITM-0137",
+    "C-ITM-0138",
+    "C-ITM-0139",
+    "C-ITM-0140",
+    "C-ITM-0141",
+    "C-ITM-0142",
+    "C-ITM-0143",
+    "C-ITM-0144",
+    "C-ITM-0145",
+    "C-ITM-0146",
+    "C-ITM-0147",
+    "C-ITM-0148",
+    "C-ITM-0149",
+    "C-ITM-0150",
+    "C-ITM-0151",
+    "C-ITM-0152",
+    "C-ITM-0153",
+    "C-ITM-0154",
+    "C-ITM-0155",
+    "C-ITM-0156",
+    "C-ITM-0157",
+    "C-ITM-0158",
+    "C-ITM-0159",
+    "C-ITM-0160",
+    "C-ITM-0161",
+    "C-ITM-0162",
+    "C-ITM-0163",
+    "C-ITM-0164",
+    "C-ITM-0165",
+    "C-ITM-0166",
+    "C-ITM-0167",
+    "C-ITM-0168",
+    "C-ITM-0169",
+    "C-ITM-0170",
+    "C-ITM-0171",
+    "C-ITM-0172",
+    "C-ITM-0173",
+    "C-ITM-0174",
+    "C-ITM-0175",
+    "C-ITM-0176",
+    "C-ITM-0177",
+    "C-ITM-0178",
+    "C-ITM-0179",
+    "C-ITM-0180",
+    "C-ITM-0181",
+    "C-ITM-0182",
+    "C-ITM-0183",
+    "C-ITM-0184",
+    "C-ITM-0185",
+    "C-ITM-0186",
+    "C-ITM-0187",
+    "C-ITM-0188",
+    "C-ITM-0189",
+    "C-ITM-0190",
+    "C-ITM-0191",
+    "C-ITM-0192",
+    "C-ITM-0193",
+    "C-ITM-0194",
+    "C-ITM-0195",
+    "C-ITM-0196",
+    "C-ITM-0197",
+    "C-ITM-0198",
+    "C-ITM-0199",
+    "C-ITM-0200",
+    "C-ITM-0201",
+    "C-ITM-0202",
+    "C-ITM-0203",
+    "C-ITM-0204",
+    "C-ITM-0205",
+    "C-ITM-0206",
+    "C-ITM-0207",
+    "C-ITM-0208",
+    "C-ITM-0209",
+    "C-ITM-0210",
+    "C-ITM-0211",
+    "C-ITM-0212",
+    "C-ITM-0213",
+    "C-ITM-0214",
+    "C-ITM-0215",
+    "C-ITM-0216",
+    "C-ITM-0217",
+    "C-ITM-0218",
+    "C-ITM-0219",
+    "C-ITM-0220",
+    "C-ITM-0221",
+    "C-ITM-0222",
+    "C-ITM-0223",
+    "C-ITM-0224",
+    "C-ITM-0225",
+    "C-ITM-0226",
+    "C-ITM-0227",
+    "C-ITM-0228",
+    "C-ITM-0229",
+    "C-ITM-0230",
+    "C-ITM-0231",
+    "C-ITM-0232",
+    "C-ITM-0233",
+    "C-ITM-0234",
+    "C-ITM-0235",
+    "C-ITM-0236",
+    "C-ITM-0237",
+    "C-ITM-0238",
+    "C-ITM-0239",
+    "C-ITM-0240",
+    "C-ITM-0241",
+    "C-ITM-0242",
+    "C-ITM-0243",
+    "C-ITM-0244",
+    "C-ITM-0245",
+    "C-ITM-0246",
+    "C-ITM-0247",
+    "C-ITM-0248",
+    "C-ITM-0249",
+    "C-ITM-0250",
+    "C-ITM-0251",
+    "C-ITM-0252",
+    "C-ITM-0253",
+    "C-ITM-0254",
+    "C-ITM-0255",
+    "C-ITM-0256",
+    "C-ITM-0257",
+    "C-ITM-0258",
+    "C-ITM-0259",
+    "C-ITM-0260",
+    "C-ITM-0261",
+    "C-ITM-0262",
+    "C-ITM-0263",
+    "C-ITM-0264",
+    "C-ITM-0265",
+    "C-ITM-0266",
+    "C-ITM-0267",
+    "C-ITM-0268",
+    "C-ITM-0269",
+    "C-ITM-0270",
+    "C-ITM-0271",
+    "C-ITM-0272",
+    "C-ITM-0273",
+    "C-ITM-0274",
+    "C-ITM-0275",
+    "C-ITM-0276",
+    "C-ITM-0277",
+    "C-ITM-0278",
+    "C-ITM-0279",
+    "C-ITM-0280",
+    "C-ITM-0281",
+    "C-ITM-0282",
+    "C-ITM-0283",
+    "C-ITM-0284",
+    "C-ITM-0285",
+    "C-ITM-0286",
+    "C-ITM-0287",
+    "C-ITM-0288",
+    "C-ITM-0289",
+    "C-ITM-0290",
+    "C-ITM-0291",
+    "C-ITM-0292",
+    "C-ITM-0293",
+    "C-ITM-0294",
+    "C-ITM-0295",
+    "C-ITM-0296",
+    "C-ITM-0297",
+    "C-ITM-0298",
+    "C-ITM-0299",
+    "C-ITM-0300",
+    "C-ITM-0301",
+    "C-ITM-0302",
+    "C-ITM-0303",
+    "C-ITM-0304",
+    "C-ITM-0305",
+    "C-ITM-0306",
+    "C-ITM-0307",
+    "C-ITM-0308",
+    "C-ITM-0309",
+    "C-ITM-0310",
+    "C-ITM-0311",
+    "C-ITM-0312",
+    "C-ITM-0313",
+    "C-ITM-0314",
+    "C-ITM-0315",
+    "C-ITM-0316",
+    "C-ITM-0317",
+    "C-ITM-0318",
+    "C-ITM-0319",
+    "C-ITM-0320",
+    "C-ITM-0321",
+    "C-ITM-0322",
+    "C-ITM-0323",
+    "C-ITM-0324",
+    "C-ITM-0325",
+    "C-ITM-0326",
+    "C-ITM-0327",
+    "C-ITM-0328",
+    "C-ITM-0329",
+    "C-ITM-0330",
+    "C-ITM-0331",
+    "C-ITM-0332",
+    "C-ITM-0333",
+    "C-ITM-0334",
+    "C-ITM-0335",
+    "C-ITM-0336",
+    "C-ITM-0337",
+    "C-ITM-0338",
+    "C-ITM-0339",
+    "C-ITM-0340",
+    "C-ITM-0341",
+    "C-ITM-0342",
+    "C-ITM-0343",
+    "C-ITM-0344",
+    "C-ITM-0345",
+    "C-ITM-0346",
+    "C-ITM-0347",
+    "C-ITM-0348",
+    "C-ITM-0349",
+    "C-ITM-0350",
+    "C-ITM-0351",
+    "C-ITM-0352",
+    "C-ITM-0353",
+    "C-ITM-0354",
+    "C-ITM-0355",
+    "C-ITM-0356",
+    "C-ITM-0357",
+    "C-ITM-0358",
+    "C-ITM-0359",
+    "C-ITM-0360",
+    "C-ITM-0361",
+    "C-ITM-0362",
+    "C-ITM-0363",
+    "C-ITM-0364",
+    "C-ITM-0365",
+    "C-ITM-0366",
+    "C-ITM-0367",
+    "C-ITM-0368",
+    "C-ITM-0369",
+    "C-ITM-0370",
+    "C-ITM-0371",
+    "C-ITM-0372",
+    "C-ITM-0373",
+    "C-ITM-0374",
+    "C-ITM-0375",
+    "C-ITM-0376",
+    "C-ITM-0377",
+    "C-ITM-0378",
+    "C-ITM-0379",
+    "C-ITM-0380",
+    "C-ITM-0381",
+    "C-ITM-0382",
+    "C-ITM-0383",
+    "C-ITM-0384",
+    "C-ITM-0385",
+    "C-ITM-0386",
+    "C-ITM-0387",
+    "C-ITM-0388",
+    "C-ITM-0389",
+    "C-ITM-0390",
+    "C-ITM-0391",
+    "C-ITM-0392",
+    "C-ITM-0393",
+    "C-ITM-0394",
+    "C-ITM-0395",
+    "C-ITM-0396",
+    "C-ITM-0397",
+    "C-ITM-0398",
+    "C-ITM-0399",
+    "C-ITM-0400",
+    "C-ITM-0401",
+    "C-ITM-0402",
+    "C-ITM-0403",
+    "C-ITM-0404",
+    "C-ITM-0405",
+    "C-ITM-0406",
+    "C-ITM-0407",
+    "C-ITM-0408",
+    "C-ITM-0409",
+    "C-ITM-0410",
+    "C-ITM-0411",
+    "C-ITM-0412",
+    "C-ITM-0413",
+    "C-ITM-0414",
+    "C-ITM-0415",
+    "C-ITM-0416",
+    "C-ITM-0417",
+    "C-ITM-0418",
+    "C-ITM-0419",
+    "C-ITM-0420",
+    "C-ITM-0421",
+    "C-ITM-0422",
+    "C-ITM-0423",
+    "C-ITM-0424",
+    "C-ITM-0425",
+    "C-ITM-0426",
+    "C-ITM-0427",
+    "C-ITM-0428",
+    "C-ITM-0429",
+    "C-ITM-0430",
+    "C-ITM-0431",
+    "C-ITM-0432",
+    "C-ITM-0433",
+    "C-ITM-0434",
+    "C-ITM-0435",
+    "C-ITM-0436",
+    "C-ITM-0437",
+    "C-ITM-0438",
+    "C-ITM-0439",
+    "C-ITM-0440",
+    "C-ITM-0441",
+    "C-ITM-0442",
+    "C-ITM-0443",
+    "C-ITM-0444",
+    "C-ITM-0445",
+    "C-ITM-0446",
+    "C-ITM-0447",
+    "C-ITM-0448",
+    "C-ITM-0449",
+    "C-ITM-0450",
+    "C-ITM-0451",
+    "C-ITM-0452",
+    "C-ITM-0453",
+    "C-ITM-0454",
+    "C-ITM-0455",
+    "C-ITM-0456",
+    "C-ITM-0457",
+    "C-ITM-0458",
+    "C-ITM-0459",
+    "C-ITM-0460",
+    "C-ITM-0461",
+    "C-ITM-0462",
+    "C-ITM-0463",
+    "C-ITM-0464",
+    "C-ITM-0465",
+    "C-ITM-0466",
+    "C-ITM-0467",
+    "C-ITM-0468",
+    "C-ITM-0469",
+    "C-ITM-0470",
+    "C-ITM-0471",
+    "C-ITM-0472",
+    "D-ITM-0001",
+    "D-ITM-0002",
+    "D-ITM-0003",
+    "D-ITM-0004",
+    "D-ITM-0005",
+    "D-ITM-0006",
+    "D-ITM-0007",
+    "D-ITM-0008",
+    "D-ITM-0009",
+    "D-ITM-0010",
+    "D-ITM-0011",
+    "D-ITM-0012",
+    "D-ITM-0013",
+    "D-ITM-0014",
+    "D-ITM-0015",
+    "D-ITM-0016",
+    "D-ITM-0017",
+    "D-ITM-0018",
+    "D-ITM-0019",
+    "D-ITM-0020",
+    "D-ITM-0021",
+    "D-ITM-0022",
+    "D-ITM-0023",
+    "D-ITM-0024",
+    "D-ITM-0025",
+    "D-ITM-0026",
+    "D-ITM-0027",
+    "D-ITM-0028",
+    "D-ITM-0029",
+    "D-ITM-0030",
+    "D-ITM-0031",
+    "D-ITM-0032",
+    "D-ITM-0033",
+    "D-ITM-0034",
+    "D-ITM-0035",
+    "D-ITM-0036",
+    "D-ITM-0037",
+    "D-ITM-0038",
+    "D-ITM-0039",
+    "D-ITM-0040",
+    "D-ITM-0041",
+    "D-ITM-0042",
+    "D-ITM-0043",
+    "D-ITM-0044",
+    "D-ITM-0045",
+    "D-ITM-0046",
+    "D-ITM-0047",
+    "D-ITM-0048",
+    "D-ITM-0049",
+    "D-ITM-0050",
+    "D-ITM-0051",
+    "D-ITM-0052",
+    "D-ITM-0053",
+    "D-ITM-0054",
+    "D-ITM-0055",
+    "D-ITM-0056",
+    "D-ITM-0057",
+    "D-ITM-0058",
+    "D-ITM-0059",
+    "D-ITM-0060",
+    "D-ITM-0061",
+    "D-ITM-0062",
+    "D-ITM-0063",
+    "D-ITM-0064",
+    "D-ITM-0065",
+    "D-ITM-0066",
+    "D-ITM-0067",
+    "D-ITM-0068",
+    "D-ITM-0069",
+    "D-ITM-0070",
+    "D-ITM-0071",
+    "D-ITM-0072",
+    "D-ITM-0073",
+    "D-ITM-0074",
+    "D-ITM-0075",
+    "D-ITM-0076",
+    "D-ITM-0077",
+    "D-ITM-0078",
+    "D-ITM-0079",
+    "D-ITM-0080",
+    "D-ITM-0081",
+    "D-ITM-0082",
+    "D-ITM-0083",
+    "D-ITM-0084",
+    "D-ITM-0085",
+    "D-ITM-0086",
+    "D-ITM-0087",
+    "D-ITM-0088",
+    "D-ITM-0089",
+    "D-ITM-0090",
+    "D-ITM-0091",
+    "D-ITM-0092",
+    "D-ITM-0093",
+    "D-ITM-0094",
+    "D-ITM-0095",
+    "D-ITM-0096",
+    "D-ITM-0097",
+    "D-ITM-0098",
+    "D-ITM-0099",
+    "D-ITM-0100",
+    "D-ITM-0101",
+    "D-ITM-0102",
+    "D-ITM-0103",
+    "D-ITM-0104",
+    "D-ITM-0105",
+    "D-ITM-0106",
+    "D-ITM-0107",
+    "D-ITM-0108",
+    "D-ITM-0109",
+    "D-ITM-0110",
+    "D-ITM-0111",
+    "D-ITM-0112",
+    "D-ITM-0113",
+    "D-ITM-0114",
+    "D-ITM-0115",
+    "D-ITM-0116",
+    "D-ITM-0117",
+    "D-ITM-0118",
+    "D-ITM-0119",
+    "D-ITM-0120",
+    "D-ITM-0121",
+    "D-ITM-0122",
+    "D-ITM-0123",
+    "D-ITM-0124",
+    "D-ITM-0125",
+    "D-ITM-0126",
+    "D-ITM-0127",
+    "D-ITM-0128",
+    "D-ITM-0129",
+    "D-ITM-0130",
+    "D-ITM-0131",
+    "D-ITM-0132",
+    "D-ITM-0133",
+    "D-ITM-0134",
+    "D-ITM-0135",
+    "D-ITM-0136",
+    "D-ITM-0137",
+    "D-ITM-0138",
+    "D-ITM-0139",
+    "D-ITM-0140",
+    "D-ITM-0141",
+    "D-ITM-0142",
+    "D-ITM-0143",
+    "D-ITM-0144",
+    "D-ITM-0145",
+    "D-ITM-0146",
+    "D-ITM-0147",
+    "D-ITM-0148",
+    "D-ITM-0149",
+    "D-ITM-0150",
+    "D-ITM-0151",
+    "D-ITM-0152",
+    "D-ITM-0153",
+    "D-ITM-0154",
+    "D-ITM-0155",
+    "D-ITM-0156",
+    "D-ITM-0157",
+    "D-ITM-0158",
+    "D-ITM-0159",
+    "D-ITM-0160",
+    "D-ITM-0161",
+    "D-ITM-0162",
+    "D-ITM-0163",
+    "D-ITM-0164",
+    "D-ITM-0165",
+    "D-ITM-0166",
+    "D-ITM-0167",
+    "D-ITM-0168",
+    "D-ITM-0169",
+    "D-ITM-0170",
+    "D-ITM-0171",
+    "D-ITM-0172",
+    "D-ITM-0173",
+    "D-ITM-0174",
+    "D-ITM-0175",
+    "D-ITM-0176",
+    "D-ITM-0177",
+    "D-ITM-0178",
+    "D-ITM-0179",
+    "D-ITM-0180",
+    "D-ITM-0181",
+    "D-ITM-0182",
+    "D-ITM-0183",
+    "T-ITM-0001",
+    "T-ITM-0002",
+    "T-ITM-0003",
+    "T-ITM-0004",
+    "T-ITM-0005",
+    "T-ITM-0006",
+    "T-ITM-0007",
+    "T-ITM-0008",
+    "T-ITM-0009",
+    "T-ITM-0010",
+    "T-ITM-0011",
+    "T-ITM-0012",
+    "T-ITM-0013",
+    "T-ITM-0014",
+    "T-ITM-0015",
+    "T-ITM-0016",
+    "T-ITM-0017",
+    "T-ITM-0018",
+    "T-ITM-0019",
+    "T-ITM-0020",
+    "T-ITM-0021",
+    "T-ITM-0022",
+    "T-ITM-0023",
+    "T-ITM-0024",
+    "T-ITM-0025",
+    "T-ITM-0026",
+    "T-ITM-0027",
+    "T-ITM-0028",
+    "T-ITM-0029",
+    "T-ITM-0030",
+    "T-ITM-0031",
+    "T-ITM-0032",
+    "T-ITM-0033",
+    "T-ITM-0034",
+    "T-ITM-0035",
+    "T-ITM-0036",
+    "T-ITM-0037",
+    "T-ITM-0038",
+    "T-ITM-0039",
+    "T-ITM-0040",
+    "T-ITM-0041",
+    "T-ITM-0042",
+    "T-ITM-0043",
+    "T-ITM-0044",
+    "T-ITM-0045",
+    "T-ITM-0046",
+    "T-ITM-0047",
+    "T-ITM-0048",
+    "T-ITM-0049",
+    "T-ITM-0050",
+    "T-ITM-0051",
+    "T-ITM-0052",
+    "T-ITM-0053",
+    "T-ITM-0054",
+    "T-ITM-0055",
+    "T-ITM-0056",
+    "T-ITM-0057",
+    "T-ITM-0058",
+    "T-ITM-0059",
+    "T-ITM-0060",
+    "T-ITM-0061",
+    "T-ITM-0062",
+    "T-ITM-0063",
+    "T-ITM-0064",
+    "T-ITM-0065",
+    "T-ITM-0066",
+    "T-ITM-0067",
+    "T-ITM-0068",
+    "T-ITM-0069",
+    "T-ITM-0070",
+    "T-ITM-0071",
+    "T-ITM-0072",
+    "T-ITM-0073",
+    "T-ITM-0074",
+    "T-ITM-0075",
+    "T-ITM-0076",
+    "T-ITM-0077",
+    "T-ITM-0078",
+    "T-ITM-0079",
+    "T-ITM-0080",
+    "T-ITM-0081",
+    "T-ITM-0082",
+    "T-ITM-0083",
+    "T-ITM-0084",
+    "T-ITM-0085",
+    "T-ITM-0086",
+    "T-ITM-0087",
+    "T-ITM-0088",
+    "T-ITM-0089",
+    "T-ITM-0090",
+    "T-ITM-0091",
+    "T-ITM-0092",
+    "T-ITM-0093",
+    "T-ITM-0094",
+    "T-ITM-0095",
+    "T-ITM-0096",
+    "T-ITM-0097",
+    "T-ITM-0098",
+    "T-ITM-0099",
+    "T-ITM-0100",
+    "T-ITM-0101",
+    "T-ITM-0102",
+    "T-ITM-0103",
+    "T-ITM-0104",
+    "T-ITM-0105",
+    "T-ITM-0106",
+    "T-ITM-0107",
+    "T-ITM-0108",
+    "T-ITM-0109",
+    "T-ITM-0110",
+    "T-ITM-0111",
+    "T-ITM-0112",
+    "T-ITM-0113",
+    "T-ITM-0114",
+    "T-ITM-0115",
+    "T-ITM-0116",
+    "T-ITM-0117",
+    "T-ITM-0118",
+    "T-ITM-0119",
+    "T-ITM-0120",
+    "T-ITM-0121",
+    "T-ITM-0122",
+    "T-ITM-0123",
+    "T-ITM-0124",
+    "T-ITM-0125",
+    "T-ITM-0126",
+    "T-ITM-0127",
+    "T-ITM-0128",
+    "T-ITM-0129",
+    "T-ITM-0130",
+    "T-ITM-0131",
+    "T-ITM-0132",
+    "T-ITM-0133",
+    "T-ITM-0134",
+    "T-ITM-0135",
+    "T-ITM-0136",
+    "T-ITM-0137",
+    "T-ITM-0138",
+    "T-ITM-0139",
+    "T-ITM-0140",
+    "T-ITM-0141",
+    "T-ITM-0142",
+    "T-ITM-0143",
+    "T-ITM-0144",
+    "T-ITM-0145",
+    "T-ITM-0146",
+    "T-ITM-0147",
+    "T-ITM-0148",
+    "T-ITM-0149",
+    "T-ITM-0150",
+    "T-ITM-0151",
+    "T-ITM-0152",
+    "T-ITM-0153",
+    "T-ITM-0154",
+    "T-ITM-0155",
+    "T-ITM-0156",
+    "T-ITM-0157",
+    "T-ITM-0158",
+    "T-ITM-0159",
+    "T-ITM-0160",
+    "T-ITM-0161",
+    "T-ITM-0162",
+    "T-ITM-0163",
+    "T-ITM-0164",
+    "T-ITM-0165",
+    "T-ITM-0166",
+    "T-ITM-0167",
+    "T-ITM-0168",
+    "T-ITM-0169",
+    "T-ITM-0170",
+    "T-ITM-0171",
+    "T-ITM-0172",
+    "T-ITM-0173",
+    "T-ITM-0174",
+    "T-ITM-0175",
+    "T-ITM-0176",
+    "T-ITM-0177",
+    "T-ITM-0178",
+    "T-ITM-0179",
+    "T-ITM-0180",
+    "T-ITM-0181",
+    "T-ITM-0182",
+    "T-ITM-0183"
+  ],
+  "detailedItems": [
+    {
+      "id": "T-ITM-0001",
+      "name": "九龙金漆宝座",
+      "material": "金漆木雕嵌玉：楠木胎髹大漆 12 道，漆色 #C3272B，面贴金箔 0.1mm（M-11 工法），九龙高浮雕深 8mm 嵌白玉 #F2EFE9 眼珠",
+      "textureDirection": "龙身顺座背弧向盘绕，九龙头皆朝座心；木胎竖纹顺靠背",
+      "metalwork": "座足包铜脚套 M-10 #D4A017，玉嵌件铜座箍 #FFD700",
+      "wear": "扶手龙首前臂（觐见者扶拜位）金层磨薄露铜 #B87333，残金率 85%",
+      "light": "玉白宫光下龙目玉白 #FFF3D8 双点微光；仙界不老，磨损为「礼敬痕」非老化",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0002",
+      "name": "九龙金漆背屏",
+      "material": "金漆木雕：座屏式五联扇通高 5m，屏心九龙浮雕深 8mm，贴金 #FFD700，漆底 #C3272B",
+      "textureDirection": "龙纹横向通景，扇间以走龙过渡；边框竖纹",
+      "metalwork": "扇间铜合页莲瓣铸件 M-10 #D4A017，轴头鎏金 #FFE08A",
+      "wear": "底扇下缘（殿堂清扫帚痕方向）金面细划成组",
+      "light": "大战第九幕玉帝避入屏后——屏后阴影域 #1E3A5F 渐变，龙目双点 #FFF3D8 恒亮不灭",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0003",
+      "name": "紫檀嵌玉大香案",
+      "material": "紫檀整板独面（案长 6m）瘿木镶边，漆色 #4A3220 深褐，鹿角霜推光；案面嵌云纹白玉片 #F2EFE9 厚 3mm",
+      "textureDirection": "案面木纹顺长向通走，玉片云纹随木纹断续；腿足起瓜棱线",
+      "metalwork": "嵌玉片压铜錾花口线 #FFD700 宽 2mm；案足铜套头 #D4A017",
+      "wear": "案面中段（供香置炉位）玉片边缘铜线磨亮；蟠桃宴移作供案后留果蒂压痕九处",
+      "light": "香案上鹤炉青烟 M-20 染玉白 #FFF3D8 上绕案头；夜烛台光沿玉片镜面反出长条光斑",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0004",
+      "name": "鎏金鹤形香炉",
+      "material": "鎏金铜失蜡铸造：仙鹤衔炉造型高 1.6m，金层 0.1mm 包铜基体，鹤羽錾刻阴线深 1mm",
+      "textureDirection": "羽纹顺翅向下层叠；炉盖镂孔绕鹤颈螺旋排布",
+      "metalwork": "炉足铜爪铸件本色 #D4A017，衔珠鎏金 #FFE08A",
+      "wear": "鹤喙衔珠处（开合盖触点）金层磨亮露铜",
+      "light": "冒青烟粒子 M-20 色偏 #A8C8E8 自盖孔升腾；近嗅触发「提神」buff 提示时烟色转 #FFFDF5",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0005",
+      "name": "蟠龙金烛台",
+      "material": "鎏金铜范铸：三叉烛托，柱身蟠龙浮雕深 3mm，通高 1.4m",
+      "textureDirection": "锻打痕水平条带隐见；龙鳞顺柱身螺旋上卷",
+      "metalwork": "烛托三叉铜铸鎏金 #FFD700，底座覆钵素铜 #D4A017",
+      "wear": "烛托插孔周缘蜡泪积环（玉白蜡不染黄）",
+      "light": "夜间焰作玉白 #FFF3D8 与早朝天光光柱联动同亮；龙目两点 #FFF3D8 微光",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0006",
+      "name": "山河社稷图（全息长卷）",
+      "material": "灵绢底 #FFFDF5 织造（经密 40 根/cm 同 M-13 基准）＋全息投影层；天杆地轴檀木 #4A3220 桐油",
+      "textureDirection": "绢纹经直纬平；图中山河随人间卷场景实时变化",
+      "metalwork": "轴头铜鎏金 #FFD700；绫边包锦 #2E4E7E",
+      "wear": "展开最频段（人间主城区对应位置）绢面起毛",
+      "light": "全息层浮绢面 30mm，山川可点选发光 #F8F8FF；夜读以卷光补案面，与章奏房低照互洽",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0007",
+      "name": "通天玉玺",
+      "material": "和阗玉琢磨：玺身白玉 #F2EFE9 SSS 深 5mm，鎏金钮蟠龙 M-11；玺文「统御三界」阴刻深 2mm 填金",
+      "textureDirection": "玉身抛光镜面无纹；钮龙身顺钮顶盘曲",
+      "metalwork": "玺钮鎏金 #FFD700，匣扣铜鎏金活页 #FFE08A",
+      "wear": "玺底四角（按印触点）玉面极微磨亮；匣内衬锦压痕",
+      "light": "加盖诏书触发广播仙音时玺身透光转亮 #FFF3D8 一息；匣闭则光敛",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0008",
+      "name": "奏表玉简架",
+      "material": "玉架琢磨：十二层横格，格板白玉 #F2EFE9 厚 6mm，立柱雕竹节",
+      "textureDirection": "格板水平；玉柱节间 80mm 顺竖向",
+      "metalwork": "格板托铜榫 #D4A017；架足铜套 #FFE08A",
+      "wear": "第三至六层格板前缘（取阅最频区）玉面磨出指痕光泽",
+      "light": "简面仙箓字迹自显 #F8F8FF 微光；阅读随机奏表彩蛋文本时字光流转",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0009",
+      "name": "金瓜仪仗",
+      "material": "鎏金铜锤揲：金瓜锤形高 2m，瓜瓣八片锤揲拼合，瓣缝错磨",
+      "textureDirection": "锤揲瓣缝放射向瓜顶；柄杆直纹",
+      "metalwork": "柄底铜套箍 #D4A017；瓜顶鎏金提环 #FFE08A",
+      "wear": "瓜瓣凸棱（仪卫持握线）残金露铜 #B87333；大战第九幕被打倒后新增三处瘪凹",
+      "light": "静物陈设受玉白宫光反出边缘光 #FFE08A；复位后瘪凹自动消退",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0010",
+      "name": "钺斧仪仗",
+      "material": "鎏金铜铸锻：月牙钺斧高 2.4m，斧刃双面开锋线錾花",
+      "textureDirection": "锻痕顺斧面水平；月牙弧线錾云纹",
+      "metalwork": "斧銎铜箍 #D4A017，柄尾鎏金蹲兽 #FFE08A",
+      "wear": "刃线（仪式演练挥动轨迹）磨亮最亮档",
+      "light": "刃口一线玉白 #FFF3D8 冷光；打倒复位同 T-ITM-0009 条款",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0011",
+      "name": "朝天镫",
+      "material": "鎏金铜铸：镫柄出戟，顶托烛盘，高 1.8m",
+      "textureDirection": "出戟棱线竖向四道；盘面旋纹",
+      "metalwork": "烛盘铜沿 #FFD700，戟座覆钵素铜 #D4A017",
+      "wear": "柄腰（队列执握位）金层磨亮",
+      "light": "夜间烛盘燃玉白 #FFF3D8；仪式队列终点标识光斑投金砖地面椭圆一枚",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0012",
+      "name": "静鞭",
+      "material": "黄丝绳编织嵌玉柄：鞭长 9m 九股黄丝 #D9A40E，玉柄白玉 #F2EFE9 琢莲纹",
+      "textureDirection": "丝股螺旋绞向，节距 20mm；玉柄顺长轴",
+      "metalwork": "柄首铜鎏金罩 #FFD700；鞭梢铜环 #D4A017",
+      "wear": "鞭梢末段 300mm 丝股起毛（鸣鞭最频段）",
+      "light": "早朝开场鸣鞭音效一响，鞭影过处玉白残光 0.5s 消散",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0013",
+      "name": "璇玑玉衡天象仪",
+      "material": "玉环铜枢琢磨镶嵌：三层玉环（外环青玉 #7FFFD4、中环白玉 #F2EFE9、内环紫玉 #4B0082）径 600／450／300mm，铜枢轴",
+      "textureDirection": "环面刻周天刻度同心圆；枢轴直纹",
+      "metalwork": "枢轴铜鎏金 #FFD700；环间铜隔垫 #D4A017",
+      "wear": "外环拨位（交互拨环区）玉缘圆化 2mm",
+      "light": "拨环查询星宿值日表时三环各自亮起 #F8F8FF 星点连线；静置时微光呼吸 0.1Hz",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0014",
+      "name": "云锦仙班蒲团",
+      "material": "云锦面木胎：团面织锦（经密同 M-13 基准）明黄 #D9A40E 底绣仙箓纹金线 #FFD700 宽 1mm；胎为束藤木环",
+      "textureDirection": "织纹纬起花顺团面环向；胎木纹不可见（全包裹）",
+      "metalwork": "无金属件——底面麻布 #C8B48A 缠边、藤箍收口",
+      "wear": "上座蒲团面中部压痕下陷 15mm（早朝久坐）；第十幕后复位即消",
+      "light": "玩家可暂坐触发「低位仙官待遇」——坐定瞬间团面金线亮起一环 #FFF3D8",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0015",
+      "name": "甘露净瓶",
+      "material": "白瓷鎏金口：瓶身白瓷釉面（反光 0.45）鎏金口沿，瓶中甘露终年不满不溢",
+      "textureDirection": "釉面开细纹片隐约；瓶身素面",
+      "metalwork": "口沿鎏金 #FFD700；瓶足铜托 #D4A017",
+      "wear": "瓶腹执握弧面（取露手法位）釉面磨亮",
+      "light": "交互取露时瓶内甘露面泛玉白 #FFF3D8 涟漪一环；回复灵力提示伴随光点上升粒子",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0042",
+      "name": "金镶玉主宴长案",
+      "material": "金框玉面锤揲琢磨合制：案长 7m，框金铜锤揲包角 M-11，面嵌青白玉 #F2EFE9 独板厚 30mm SSS 深 3mm；案足雕雁，雁首鎏金",
+      "textureDirection": "玉面顺长向隐见水线纹；金框錾水波顺框走",
+      "metalwork": "框角铜鎏金包角 #FFD700，雁足铜墩 #D4A017",
+      "wear": "案心（主位取食线）玉面磨亮反光 +0.1；雁首觸摸位金层亮",
+      "light": "蟠桃宴主桌（T-MIR-005 核心陈设）：案下三供盘光映玉面成三团 #FFF3D8 光晕；九千年蟠桃供盘果光流转染案心绯色一抹",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0043",
+      "name": "琼浆醒神酿坛",
+      "material": "陶坛轮制＋封泥红绸：坛高 0.9m 灰陶胎釉面（反光 0.45）轮制弦纹间距 8mm，封泥外缠胭脂 #9D2933 绸带结",
+      "textureDirection": "弦纹水平环列；绸纹斜向交叉",
+      "metalwork": "坛口铜箍錾云纹 #D4A017；绸带无金属，铜铃坠一颗",
+      "wear": "坛肩（搬抬抱持位）釉面磨亮两块对称",
+      "light": "闻香触发微醺滤镜——坛口泥缝渗出酒气粒子 M-20 色偏 #FFB7C5 极淡",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0044",
+      "name": "流杯玉盏",
+      "material": "羊脂玉琢制：盏径 90mm 壁厚 3mm，盏底莲纹阴刻深 0.5mm 填金 #FFD700；浮水不沉",
+      "textureDirection": "玉质顺盏壁旋修纹隐约；莲纹顺底心放射",
+      "metalwork": "无金属件——盏底莲心嵌金点一粒",
+      "wear": "盏沿（口唇触线）磨圆化；三成盏有磕口未锔（仙界弃旧即换）",
+      "light": "曲水流觞小游戏：接盏瞬间盏内酒面亮玉白 #FFF3D8 一环；漂浮时盏底金点在流杯渠水面拖光点",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0045",
+      "name": "九曲桥宫灯",
+      "material": "琉璃宫灯（M-19 器物态）：灯骨铜 #D4A017 六面，灯面琉璃 #7FFFD4 釉面，气泡内含 0.2mm×8/cm²",
+      "textureDirection": "琉璃流积纹顺灯面向下；铜骨直纹",
+      "metalwork": "灯顶提环铜鎏金 #FFE08A；灯足插座铜 #D4A017",
+      "wear": "迎风面琉璃开片网纹两盏；灯足插座磨亮",
+      "light": "夜间点亮玉白 #FFF3D8；宴会按乐律明灭，灯光在水面上拖出九折光链",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0046",
+      "name": "瑶池古琴",
+      "material": "桐木斫制冰弦：琴名「水云」刻于琴背填金 #FFD700；面桐底梓，鹿角霜灰胎黑漆 12 道，漆色 #2B2B2B",
+      "textureDirection": "琴面木纹顺长向通走，隐见断纹蛇腹两道（古琴年轮语）",
+      "metalwork": "岳山与龙龈紫檀嵌件 #4A3220；轸足玉制无金属",
+      "wear": "七弦位徽区漆面磨出按弦浅凹；冰弦一根微毛（走音彩蛋源头）",
+      "light": "许飞琼弹奏《水云引》时弦上泛玉白 #FFF3D8 音波涟漪；玩家试音走音则涟漪断裂消散",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0047",
+      "name": "仙乐编钟",
+      "material": "玉磬铜钟合组 16 枚：钟体青铜范铸 #B87333（禁锈——天宫只许火养色），磬玉 #7FFFD4 琢磨；大小递减悬于钟架",
+      "textureDirection": "钟体枚乳铸纹纵横成列；磬面顺长轴微弧",
+      "metalwork": "钟钮铜铸 #D4A017；架横梁铜箍 #FFD700",
+      "wear": "最常用四枚（中音区）敲击面磨亮点四处",
+      "light": "自动演奏时钟口光晕扩散 #FFF3D8 一环一音；交互敲单音则单环",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0048",
+      "name": "鲛绡帷幕",
+      "material": "鲛绡织造（M-13 上品）：入水不濡、透光如雾，八幅各宽 0.8m 落地 4m，边缕织金线 #FFD700 宽 1mm",
+      "textureDirection": "经直纬平，褶皱顺风向褶距 80～150mm",
+      "metalwork": "无金属件——幅顶穿藤环悬于铜钩 #D4A017",
+      "wear": "帷脚 200mm 内须边翻卷（近水面潮气）",
+      "light": "开合交互；宴会垂落分席时透出内席玉白 #FFF3D8 剪影，风过如水波",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0049",
+      "name": "王母凤辇",
+      "material": "金凤驾云辇（陈设态）：辇高 3m，木胎大漆朱 #C3272B 贴金凤饰 M-11；凤尾曳霞以织锦三层叠出",
+      "textureDirection": "凤羽錾线顺尾向下层叠；辇身织纹经直",
+      "metalwork": "辇轮铜毂 #D4A017；凤冠鎏金 #FFD700",
+      "wear": "辇阶踏面（登辇线）金层磨亮；缨穗有仙鹿啃咬缺口（彩蛋）",
+      "light": "凤尾霞光粒子上浮 #FFB7C5→#FFFDF5 渐变；静置辇亭时辇身金面映池光微漾",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0050",
+      "name": "九千年蟠桃供盘",
+      "material": "金盘锤揲：盘径 600mm 金铜胎，盘心錾莲瓣一圈承桃；盘承九千年桃 9 枚，果光流转（果色 #E8556D）",
+      "textureDirection": "锤揲瓣缝放射向盘心；盘缘旋纹",
+      "metalwork": "盘足铜鎏金覆莲座 #FFD700",
+      "wear": "盘沿（侍者端持位）指痕光泽两处",
+      "light": "果光流转：桃面 #E8556D→#FFB7C5 缓变，映金盘面成绯金互染；玩家不可取（王母注视中）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0051",
+      "name": "博山炉",
+      "material": "鎏金铜失蜡铸：炉盖山峦镂空层叠，炉身高脚承盘，通高 800mm",
+      "textureDirection": "山峦镂孔顺盖螺旋排布；足身素抛光",
+      "metalwork": "盖钮卧兽铜鎏金 #FFE08A；承盘素铜 #D4A017",
+      "wear": "炉盖铰链开合位磨亮；盖孔缘烟熏极淡（天宫烟不染）",
+      "light": "出香烟成山形云雾 M-20 #FFFDF5 自镂孔分层升腾，主亭两角对称",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0052",
+      "name": "青莲供瓶花觚",
+      "material": "青玉琢制：觚高 400mm 喇叭口，瓶插青莲一枝（莲色 #7FFFD4）；玉身 SSS 深 2mm",
+      "textureDirection": "玉身旋修纹隐约；觚腰弦纹两道",
+      "metalwork": "无金属件——底足嵌木胎座防滑",
+      "wear": "觚口缘（插花触点）磨圆；玉面棉絮内含 ≤5%",
+      "light": "与池面青莲同源同频发光：莲心 #FFF3D8 微光呼吸 0.2Hz，四觚同步",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0053",
+      "name": "云锦宴席坐垫",
+      "material": "云锦蒲团：团面织水波纹（纬起花）底 #2E4E7E、波线 #FFD700 宽 1mm；束藤木环胎",
+      "textureDirection": "织纹环向；藤箍收口螺旋",
+      "metalwork": "无金属件——藤箍两道缠边",
+      "wear": "宾客席高频位团面压痕 10mm；蟠桃宴按品级自动排位后排位纹光重排",
+      "light": "品级排位点亮：主位团波线转亮 #FFF3D8，末位团波线暗一档",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0054",
+      "name": "月华镜",
+      "material": "池心镜面灵台：直径 3m 灵玉镜面 M-18 月华银态 #DCDCE8，反光 0.60／粗糙度 0.10，SSS 深 5mm",
+      "textureDirection": "镜面无纹（工法：抛光镜面无痕），四周水线环痕一圈",
+      "metalwork": "台缘白玉包边下垫铜环骨架 #D4A017（水下不可见）",
+      "wear": "满月夜镜心（月影落点）玉面温润提亮；平月相时镜面浮极薄水膜",
+      "light": "夜承月影、满月夜映人间景象（T-MIR-009）；镜光上天——池雾 M-20 被镜光染 #DCDCE8",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0055",
+      "name": "侍女羽扇",
+      "material": "白羽鎏金柄：扇面白羽排翎成扇（羽尖齐整），柄铜鎏金錾云纹长 400mm",
+      "textureDirection": "羽枝顺扇面放射；柄錾纹顺柄身",
+      "metalwork": "柄首鎏金罩 #FFD700；扇根铜销 #D4A017",
+      "wear": "执扇位柄身磨亮；扇面外缘羽枝微散",
+      "light": "八柄各绣一色云（绣线随侍女班次 #FFB7C5／#FFFDF5／#A8C8E8 轮值）；为王母执扇时扇面云纹亮起",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0028",
+      "name": "八卦紫金丹炉",
+      "material": "紫金砂铜失蜡铸造：高 2.6m，炉身八卦浮刻凸起 5mm、三足承雷纹 P-01 变体；铜胎紫金砂 #B87333 底",
+      "textureDirection": "铸纹顺炉腹环向；八卦刻线放射向炉心",
+      "metalwork": "炉耳铜环双挂 #D4A017；炉盖钮鎏金 #FFD700",
+      "wear": "炉口一圈火养色 #4E7A5E（全宫唯一火养件）；添柴口缘磨亮",
+      "light": "开炉/封炉交互核心、大战第八幕场景件：炉光 #FF7F50 0.5Hz 呼吸，紫烟成柱 M-20 直上 T-MIR-006",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0029",
+      "name": "紫金药葫芦",
+      "material": "紫金铸制大小五枚（大者高 0.8m）：葫芦两球失蜡铸合范，范缝打磨平；腰束錾云纹箍",
+      "textureDirection": "范缝环向隐约；箍纹顺腰一圈",
+      "metalwork": "葫芦口铜塞螺纹 #D4A017；系带铜扣 #FFD700",
+      "wear": "大葫芦腹（常用取丹位）磨亮斑一枚；摇之丹丸碰撞声彩蛋",
+      "light": "盛丹时葫芦壁透出丹光 #E8556D 微透（SSS 模拟铜不透、以壁面透光贴图实现）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0030",
+      "name": "金刚琢",
+      "material": "金刚宝钺之精琢制：环径约 0.3m 断面圆浑，寒光内敛（反光 0.80／粗糙度 0.15 鎏金态色域上限）",
+      "textureDirection": "环身无纹（至坚无饰）；仅内缘一圈细磨线",
+      "metalwork": "无附件——通体一体；锦匣铜扣 #D4A017",
+      "wear": "内缘（老君持掷捏握位）磨出指痕两点",
+      "light": "剧情道具、大战第六幕老君暗掷之物：出手瞬间环身寒光扫掠 #FFE08A 一线",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0031",
+      "name": "丹方玉简架",
+      "material": "玉架琢磨：格板白玉 #F2EFE9 厚 5mm，立柱雕竹节同凌霄简架工法；插丹方玉简 36 枚",
+      "textureDirection": "格板水平；简身顺插位竖列",
+      "metalwork": "格板托铜榫 #D4A017",
+      "wear": "第四层（最常取阅层）简面指痕密",
+      "light": "简面丹方字迹朱砂 #C3272B 微光；「九转金丹方」禁阅页近前时字光熄灭拒读",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0032",
+      "name": "百草丹药柜",
+      "material": "楠木百屉榫卯无钉：九十九屉纵横 11×9 排布，屉面铜签錾药名深 1mm；柜身桐油本色 #D4B76A",
+      "textureDirection": "楠木纹顺柜身横向通走；屉缝水平平直",
+      "metalwork": "屉面铜签 #D4A017、屉扣铜叶 #FFD700 高 20mm",
+      "wear": "药名签中「甘草」「黄精」高频屉拉手磨亮；两屉签倒置（童子归位错，彩蛋）",
+      "light": "开屉交互时屉内亮 #FFF3D8 弱光、随机药材文案浮签光 #F8F8FF",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0033",
+      "name": "捣药玉杵臼",
+      "material": "青玉琢磨：臼高 0.6m 内膛旋掏，杵长 1m 杵头磨圆；玉身 SSS 深 3mm",
+      "textureDirection": "臼膛旋纹环列；杵身顺长轴",
+      "metalwork": "无金属件——臼底垫藤编圈防磕",
+      "wear": "臼膛内壁（碾药弧线）磨亮成镜带；杵头着臼点玉面圆化 5mm",
+      "light": "银角碾药、玩家帮捣获小奖励：捣击一下臼口药气粒子 M-20 #E8E4DA 一缕升",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0034",
+      "name": "无极蒲团",
+      "material": "青蒲编织：团面织无极纹（阴阳鱼弧线）底青 #4A8B6F、线 #FFD700 描金宽 1mm；胎束藤木环",
+      "textureDirection": "蒲纹纬编环向；鱼纹对称双弧",
+      "metalwork": "无金属件——缘口藤箍缠边",
+      "wear": "团心（老君久坐位）压痕 20mm 恒存；玩家擅坐触发「太极推手」小游戏",
+      "light": "老君打坐位顶光 #FFF3D8 一束恒照；擅坐瞬间团面鱼纹双目亮起",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0035",
+      "name": "芭蕉宝扇",
+      "material": "芭蕉叶压制鎏金柄：叶展幅 1.2m 叶脉压制定型，柄鎏金錾雷纹长 600mm",
+      "textureDirection": "叶脉顺扇面放射成主骨架；叶面细脉网状",
+      "metalwork": "柄根铜箍鎏金 #FFD700；叶柄销铜 #D4A017",
+      "wear": "扇面外缘（扇炉最频弧段）叶缘起毛两处",
+      "light": "交互扇火提升炉温：扇风过处炉焰 #FF7F50 上蹿、扇面叶脉亮一线 #FFE08A",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0036",
+      "name": "长柄火钳",
+      "material": "玄铁锻制：柄长 2m 锻打痕水平条带；钳头缠云纹 P-01 变体錾刻深 1mm",
+      "textureDirection": "锻痕水平；钳头纹顺钳弧",
+      "metalwork": "通体玄铁 #26282C；柄尾铜箍 #D4A017",
+      "wear": "钳头内侧（夹炭摩擦面）新亮一档；柄身握段磨亮",
+      "light": "夹炭入炉时钳头映炉光 #FF7F50；开炉取丹工具，热态钳头泛暗红余温色",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0037",
+      "name": "童子拂尘",
+      "material": "白马尾拂尘：柄木檀色 #4A3220 缠金丝 #FFD700 螺距 5mm；丝缕洁白束根",
+      "textureDirection": "丝缕垂顺；柄缠丝螺旋",
+      "metalwork": "柄尾铜帽 #D4A017；缠丝即金属语",
+      "wear": "尘梢末段 200mm 微乱（打闹彩蛋残留）",
+      "light": "金银角随身物、大战幕间打闹道具：挥动时尘丝扫出玉白 #FFF3D8 残影 0.3s",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0038",
+      "name": "九转金丹",
+      "material": "金丹炼制（丹药族）：丹径 30mm 表面析霜态 #FFD700 底泛 #FFE08A 光晕；丹光内蕴 SSS 强",
+      "textureDirection": "丹面无纹；霜晶随机细粒",
+      "metalwork": "无金属件——玉盒承装（盒扣铜 #D4A017）",
+      "wear": "无磨损——镇宫之宝；玉盒内衬锦压痕一环",
+      "light": "剧情道具、第八幕后曾失踪（青牛所藏）：盒开瞬间丹光柱 #FFD700 冲起 300mm 后收敛",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0039",
+      "name": "丹渣玉罐",
+      "material": "粗陶轮制玉盖：罐高 300mm 灰陶胎素面 #5A6472，玉盖白玉 #F2EFE9 径 110mm；罐口封符一道（M-22 符纸基底 #C9B380、符文 #B03A2E）",
+      "textureDirection": "陶轮弦纹环列；符纸纤维顺纹",
+      "metalwork": "无金属件——符纸以麻绳系颈",
+      "wear": "罐底沿磕釉两处；符纸卷边翘角 ≤20% 剥落",
+      "light": "阅读彩蛋、丹渣可作花肥（蟠桃园联动）：启符时符文亮 #3DFF9C？——天宫禁鬼火，改亮 #FFE08A 金点",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0040",
+      "name": "星辉灯",
+      "material": "铜灯星砂合制：灯体铜范铸 #B87333 六面镂星孔，内燃星砂焰；灯焰呈星光色 #F8F8FF",
+      "textureDirection": "镂孔星点成列顺灯身竖排",
+      "metalwork": "灯顶提梁铜 #D4A017",
+      "wear": "灯足（移灯执握位）磨亮",
+      "light": "夜间照明与天河粒子同频闪烁（0.8～1.2Hz 随机）；丹方室与廊下各 2 盏",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0041",
+      "name": "童子卧榻",
+      "material": "竹榻榫卯：榻床竹篾宽 2mm 编面，榻框木 #6B4A2B；榻头挂小幡「金」「银」各一",
+      "textureDirection": "篾纹经纬平织；幡纹顺垂",
+      "metalwork": "无金属件——榻角藤篾缠固",
+      "wear": "榻面中央篾面下陷 10mm（久睡）；榻下各藏私房丹渣一罐（彩蛋）",
+      "light": "小幡字夜泛对应微光：金幡 #FFD700／银幡 #DCDCE8 极弱档",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0056",
+      "name": "玉兔捣药杵臼",
+      "material": "白玉琢磨：臼高 350mm 内膛旋掏壁厚 15mm，杵长 500mm 杵头磨圆；臼中玄霜药常年不竭",
+      "textureDirection": "臼膛旋纹环列；杵身顺长轴",
+      "metalwork": "无金属件——臼底垫毛毡圈防磕",
+      "wear": "臼膛内壁磨亮成镜带（玉兔高频捣点）；杵头圆化 3mm",
+      "light": "玉兔交互点：捣击时臼口药气 M-20 #E8E4DA 一缕、月光下臼面反 #DCDCE8",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0057",
+      "name": "捣药玉钵",
+      "material": "青玉琢磨：钵径 220mm 壁厚 8mm，钵壁刻药性歌诀阴刻深 0.8mm 填银泥 #DCDCE8",
+      "textureDirection": "钵壁旋修纹隐约；歌诀文字环壁竖列两圈",
+      "metalwork": "无金属件——钵底木托座 #4A3220",
+      "wear": "钵口缘（执捧位）磨圆；刻字最常读两行银泥微亮",
+      "light": "阅读药性彩蛋文本：指尖所指一句字银泥亮起一线 #F8F8FF",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0058",
+      "name": "水镜台",
+      "material": "冰玉露台（建筑本体即陈设）：台面白玉磨光反光 0.55、映像清晰度 85%；台缘玉栏透光",
+      "textureDirection": "台面冰裂纹拼缝放射向台心；栏板素面",
+      "metalwork": "无金属件——台基青黑石 M-08 #33393F 垫底（水下不见）",
+      "wear": "凭栏一线台缘磨亮（倚栏眺望最频位）",
+      "light": "满月夜映人间（T-MIR-009）：台面浮现人间灯火 #FFC66E 色点倒影；白天可远眺星海",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0059",
+      "name": "冰蚕丝帷",
+      "material": "冰蚕丝织造（M-13 上品）：拂之生凉，六幅各宽 0.8m 落地 4m，透月不透风（透光 35%／透风 0）",
+      "textureDirection": "经直纬平；褶皱顺风向褶距 100～150mm（广寒风恒定北向）",
+      "metalwork": "无金属件——幅顶玉环穿杆 #F2EFE9",
+      "wear": "帷脚 150mm 须边微卷（近地霜气）",
+      "light": "开合交互；夜间透出殿内月白 #F8F8FF 清辉，风过帷面月光涟动",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0060",
+      "name": "桂子月光宝匣",
+      "material": "桂木嵌贝制：匣长 350mm 桂木胎 #6B4A2B 桐油，盖面嵌螺钿月轮图（钿片 0.5mm）；匣中桂子夜明",
+      "textureDirection": "桂木纹顺匣身横走；钿片拼月轮放射",
+      "metalwork": "匣扣铜鎏金 #FFE08A（全宫唯一鎏金件）",
+      "wear": "匣面推拉位（开合最频）木色磨亮",
+      "light": "启盖时匣中桂子光 #E6B422 粒粒亮起（收集桂子任务道具），盖合光敛",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0061",
+      "name": "霓裳羽衣",
+      "material": "霓羽织成（丝绢族顶格）：通肩羽衣，羽纹纬起花，色自 #FFB7C5 向 #FFFDF5 渐变，缘金线 #FFD700 宽 1mm",
+      "textureDirection": "羽纹顺衣身垂向层叠；褶皱随衣架弧",
+      "metalwork": "无金属件——衣架木桁 #4A3220、藤箍",
+      "wear": "架陈态下摆离地 50mm 处微起毛（久陈）；随乐微动为常态",
+      "light": "剧情「羽衣风波」核心物：乐起衣面光流转 #FFB7C5→#FFFDF5，羽尖逐点亮起",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0062",
+      "name": "白玉妆台",
+      "material": "白玉镶镜琢磨合制：台高 900mm 台面白玉 #F2EFE9，立镜一枚镶玉框（镜面为「月华镜」缩小版径 400mm）",
+      "textureDirection": "台面冰裂纹拼缝；镜背玉框素面",
+      "metalwork": "镜托铜鎏金 #FFE08A；台足玉墩无金属",
+      "wear": "台面（梳妆执梳弧线）磨亮两块；镜缘（拭镜线）圆化",
+      "light": "交互照镜出「广寒滤镜」：镜中影像叠加月白 #F8F8FF 冷调与极淡霜纹",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0063",
+      "name": "桂花酿坛",
+      "material": "陶坛蜡封：坛高 500mm 灰陶胎釉面反光 0.45，蜡封顶面压桂印一枚；坛身贴黄签「甲辰封」（签底 #D9A40E、字玄墨 #2B2B2B）",
+      "textureDirection": "轮制弦纹环列间距 8mm",
+      "metalwork": "坛口无金属——蜡封代之；坛肩系绳双耳",
+      "wear": "坛底釉面磨圆（挪动拖痕向）；黄签边角卷翘",
+      "light": "交互闻香：坛口蜡缝渗酒气粒子 M-20 #E6B422 极淡；吴刚惦记多年没喝上一口（彩蛋）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0064",
+      "name": "冰弦焦尾琴（连玉琴案）",
+      "material": "焦尾桐斫制冰蚕弦：琴尾焦痕保留原木焦色 #2E2420，琴身黑漆 12 道 #2B2B2B；玉琴案白玉 #F2EFE9 独板厚 40mm",
+      "textureDirection": "琴面木纹顺长向；焦尾断口自然纹",
+      "metalwork": "岳山紫檀嵌件 #4A3220；轸足白玉 #F2EFE9",
+      "wear": "七徽位漆面按弦浅凹；冰弦一根透微光（嫦娥弦）",
+      "light": "嫦娥抚琴触发仙音缥缈变奏：弦上音波 #DCDCE8 涟漪，琴声清越带回声",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0065",
+      "name": "吴刚倚柱斧",
+      "material": "桂木柄玄铁斧合制：柄桂木 #6B4A2B 顺纹，斧体锻打玄铁 #26282C；斧刃豁口（砍桂崩的）一口深 8mm",
+      "textureDirection": "柄木纹竖向；斧体锻痕水平条带",
+      "metalwork": "无金属附件——斧銎木楔销固",
+      "wear": "斧刃豁口恒存不消（树创即愈、斧口不愈，剧情对称点）；柄握段磨亮",
+      "light": "玩家帮忙砍一刀树创立刻复原：斧落瞬间刃口反月色 #DCDCE8 一闪",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0066",
+      "name": "玉兔宫灯",
+      "material": "白纱玉骨制：灯作玉兔形（兔首兔耳骨玉 #F2EFE9 骨架，纱面 #FFFDF5）；灯座玉雕兔足",
+      "textureDirection": "纱面经纬细密；玉骨磨光无纹",
+      "metalwork": "灯足玉墩；提环银丝 #DCDCE8",
+      "wear": "提环（换位执灯）银丝磨亮；纱面两盏起毛",
+      "light": "夜间点亮成「兔灯阵」：焰 #F8F8FF 弱档，桂庭十二盏呼吸错频 0.2Hz 递相",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0067",
+      "name": "月华香炉",
+      "material": "玉炉琢磨：炉高 400mm 白玉 #F2EFE9 素身，三足雕月相各一（朔望弦）；炉烟凝而不散作月轮状",
+      "textureDirection": "炉身素面；足面月相浅刻",
+      "metalwork": "无金属件——炉垫冰纹玉盘",
+      "wear": "炉口缘（添香位）磨圆；月轮烟痕常年熏出极淡玉色晕",
+      "light": "恒常燃香：烟轮色随月相八档变化（满月轮全 #FFFDF5、新月轮细弧 #DCDCE8）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "T-ITM-0068",
+      "name": "冰魄屏风",
+      "material": "冰魄石框：五扇立屏通高 2.6m，框冰魄石 #A8C8E8 半透，屏面夜显星图（与天河粒子带同源实时星图，星点 #F8F8FF）",
+      "textureDirection": "屏面无雕纹——星图即纹（实时变化）；框面冰裂纹自然纹",
+      "metalwork": "无金属件——扇间玉铰链 #F2EFE9",
+      "wear": "框缘（启闭推位）磨圆；屏面不磨（星图自洁）",
+      "light": "夜显实时星图与月华堂月相联动：满月夜星图亮度 100%、新月夜星图内敛成一线",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0077",
+      "name": "彩楼欢门",
+      "material": "木架彩帛缚扎：木架 M-05 桐油 #4A3220 榫绑结合，彩帛五层缚彩（M-14 #9D2933／#D4B76A 间色）扎缚成云",
+      "textureDirection": "彩帛褶皱顺风向褶距 80～150mm；架木纹竖向",
+      "metalwork": "无金属件——麻绳绑扎；彩帛端头竹签销",
+      "wear": "欢门年扎新旧差（左柱旧帛褪 #D4B76A、右柱新帛）；竹架弯曲两处（常年缚力）",
+      "light": "NH-02 桃红 #FF2E88「孙羊店」字管 Φ12mm 沿主梁；夜受灯笼 #FFC66E 透光成暖云团",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0078",
+      "name": "酒旗",
+      "material": "青布白字：旗面青布 #2E4E7E 靛蓝、字白 #F0EAD6 酒旗白专色；旗幅 1.2×1.8m",
+      "textureDirection": "布纹经直纬平；字顺旗面竖列",
+      "metalwork": "无金属件——旗杆顶滑环木制",
+      "wear": "旗面右下角褪色发白（日晒面）；旗角撕裂补丁一处（补丁深一档）",
+      "light": "日间垂卷、风起展开；夜受楼顶灯照 #FFC66E 泛暖，「孫羊正店」四字受 NH-02 上染边一线",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0079",
+      "name": "匾额「孫羊正店」",
+      "material": "木金漆：匾底黑漆 8 道 #2B2B2B、字贴金 #FFD700；匾缘起阳线一道",
+      "textureDirection": "匾底漆面蛇腹断纹两道（老匾语）；金字顺笔画走向",
+      "metalwork": "挂环铜钩两具 #4A4E54",
+      "wear": "金字「羊」字右点磨金露底（最高频视认字）；匾角漆剥一处露木胎",
+      "light": "日间金字受光提亮；夜间受 NH-02 沿匾缘灯管 Φ12mm 上染（匾额管规格），字面反桃红边",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0080",
+      "name": "酒垆柜台",
+      "material": "榆木整厚板台面＋木构台体：台面桐油 6 道磨亮（反光 0.30），台身板立筋",
+      "textureDirection": "台面木纹横向通长走；台身板缝竖直",
+      "metalwork": "台角铜包角四具 #4A4E54 铁灰",
+      "wear": "台面前沿（递酒磨线）磨亮凹弧；台面酒渍圈痕三处（银酒海底环）",
+      "light": "台面反吊灯 #FFC66E 成长条光带；银酒海冷光 #DCDCE8 与暖光对冲为柜台焦点",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0081",
+      "name": "银酒海",
+      "material": "银锤揲大器两具：海（大碗）径 280mm 锤揲瓣纹、錾店记「孫羊」暗款于底",
+      "textureDirection": "锤揲瓣纹放射向碗心；暗款阴刻",
+      "metalwork": "通体银 #DCDCE8（金银族银冷光）",
+      "wear": "口沿（倾酒触点）磨亮；碗身瘪凹一处（失手磕）",
+      "light": "倒酒交互：酒线入碗时银壁内映 #FFC66E 暖光一圈；置于柜台受吊灯直照成最亮点",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0082",
+      "name": "注子温碗",
+      "material": "瓷制四副：注壶（执壶）＋温碗成套，白瓷釉面反光 0.45；壶身素面弦纹两道",
+      "textureDirection": "轮制弦纹环列；釉面开细片",
+      "metalwork": "无金属件——壶盖系瓷绳结",
+      "wear": "注壶流口（斟酒线）釉面磨亮；一件温碗磕口锔钉三枚（铜锔 #B87333）",
+      "light": "温酒交互：温碗内热水汽 M-20 一缕；烛光下瓷面泛 #F4ECD8 暖釉光",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0083",
+      "name": "果菜碟",
+      "material": "瓷制四十只：看盘小碟径 120mm 白瓷，碟心刻花一枝（刻花填影青釉）",
+      "textureDirection": "碟心刻纹放射；釉面细开片",
+      "metalwork": "无金属件",
+      "wear": "碟沿磕口六只（后厨流转高频）；碟底足圈磨圆",
+      "light": "桌面阵列受烛光：碟面逐只反 #FFC66E 光点成串（散座堂桌面星点语）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0084",
+      "name": "八仙桌",
+      "material": "木榫卯方桌十张：桌面独板 900×900mm 厚 40mm 桐油 #6B4A2B，牙板罗锅枋、腿足内翻马蹄",
+      "textureDirection": "桌面木纹顺进深向；腿足直纹",
+      "metalwork": "无金属件——全榫卯",
+      "wear": "桌面中心酒渍环＋四脚位砖面压痕（桌脚点晕）；桌面边沿磕损两处",
+      "light": "桌心烛台 M-10 铜制高 0.6m 烛焰 #FFC66E；桌面油亮反烛光成暖盘",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0085",
+      "name": "圈椅",
+      "material": "木圈椅四十具：椅圈五接榫、背板独板素面；桐油 #6B4A2B",
+      "textureDirection": "椅圈弧向拼缝五道；背板木纹竖向",
+      "metalwork": "无金属件",
+      "wear": "扶手端头（起坐扶位）包浆发亮；座面藤屉两具下陷（重客座）",
+      "light": "座椅列于烛光域边缘：椅圈弧线受 #FFC66E 反出月牙光一弧",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0086",
+      "name": "栏杆隔断",
+      "material": "木低栏一铺：栏高 700mm、寻杖下方字纹棒料 20×20mm（P-07）；栏脚抱柱榫入地面",
+      "textureDirection": "万字纹棒料横平竖直正交",
+      "metalwork": "无金属件",
+      "wear": "寻杖（手扶位）磨亮；两根抱柱脚糟朽色 #57534E 高 100mm（近门潮位）",
+      "light": "栏条受檐灯斜照：万字格在地面投万字影（光栅效应）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0087",
+      "name": "木楼梯",
+      "material": "木直跑楼梯带望柱：踏步板厚 50mm 踏面 #8B5E3C、踢面 #4A3220；望柱 6 根柱头雕莲花苞",
+      "textureDirection": "踏面木纹横向（行走向）；望柱纹竖向",
+      "metalwork": "无金属件——梯榫入楼板梁",
+      "wear": "踏面前沿全线磨圆化；第 4、11 级踏面中部凹陷 8mm（高频步点）",
+      "light": "梯井壁灯 #FFC66E 两盏分段照；上楼者踏面反光带随人移动",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0088",
+      "name": "二楼格扇",
+      "material": "木雕格扇八间制：格心缠枝花（P-02 降饱和 20%：枝 #4A8B6F、花 #FFB7C5 降、蕊描金 #FFD700）深雕 5mm；裙板素平",
+      "textureDirection": "缠枝 S 形主枝波宽 120mm 绕格心；裙板竖纹",
+      "metalwork": "无金属件——鹅颈销木销",
+      "wear": "格心花蕊描金处（推扇触点旁）磨金露底三扇；门下槛磨凹 15mm",
+      "light": "格扇受内廊灯光 #FFC66E 侧照：雕花投影上格心（浮雕光影语言）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0089",
+      "name": "三楼天阁凭栏",
+      "material": "通长美人靠：靠背曲木弧面热弯成型 #8B5E3C，栏板素面桐油",
+      "textureDirection": "曲木顺靠背弧通长；木纹顺弧",
+      "metalwork": "无金属件——靠脚榫入楼板",
+      "wear": "靠背弧面磨出人体凹痕带连续（凭栏久倚）；栏板顶沿磨亮",
+      "light": "凭栏位受檐灯 #FFC66E 内照＋远景虹桥拱底 NH-01 #00E5FF 透染栏面下缘一线（望虹桥交互点）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0090",
+      "name": "双眼大灶",
+      "material": "砖铁合体：灶体青砖 M-03 #5A6472 砌、灶口砖拱双眼、铁篦铁圈 M-12 #4A4E54；灶面青石 M-08 盖板",
+      "textureDirection": "砖缝水平 12mm；铁件锻痕水平条带",
+      "metalwork": "灶门铁盖、风箱铁嘴 #4A4E54",
+      "wear": "灶口拱圈烟熏 #7A8A99 最重；铁篦中心烧蚀下凹",
+      "light": "烹饪动效：灶眼火光 #FF7F50 内透＋锅汽 M-20 白雾升；双眼分「猛火」「文火」两档光",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0091",
+      "name": "酒瓮",
+      "material": "陶瓮二十四具：瓮高 900mm 灰陶轮制、封泥顶面压店印、红签 #9D2933 贴肩",
+      "textureDirection": "轮制弦纹环列间距 10mm",
+      "metalwork": "无金属件——封泥红签即封缄",
+      "wear": "肩部（搬抬抱位）磨亮两块对称；一瓮封泥开裂（剧情酒具彩蛋）",
+      "light": "场角灯 #FFC66E 弱档下瓮阵投影成行；开封泥时酒气 M-20 #FF9E00 级暖色极淡（食霓同族色只作粒子）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0092",
+      "name": "红纱灯笼",
+      "material": "纱铜合制十二盏：灯骨铜丝 M-10 #B87333、外罩红纱 #9D2933 透光；灯分檐下串挂与欢门挂两式",
+      "textureDirection": "纱纹经纬细密；骨丝弧向",
+      "metalwork": "灯顶提钩铜 #B87333",
+      "wear": "两盏纱面褪成 #D4B76A（檐口日晒位）；一盏骨架歪斜（风患）",
+      "light": "夜间光源主体：透暖黄 #FFC66E，串挂成列；受欢门 NH-02 上染时纱面泛桃红边一线",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0093",
+      "name": "账台",
+      "material": "木账台：台体板壁式高 1.1m 三面围合，台面 #4A3220 桐油磨亮；算盘木框算珠、账簿纸本",
+      "textureDirection": "台面木纹横向；算珠旋纹",
+      "metalwork": "算盘框铜包角 #4A4E54",
+      "wear": "台面墨渍两点（拨珠蘸墨）；算盘中梁磨亮（拨珠高频）",
+      "light": "结账交互：算珠翻动受烛光逐颗反 #FFC66E；账簿纸面 #F4ECD8 受光泛暖",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0094",
+      "name": "芙蓉屏风",
+      "material": "绢木六扇通景：木框 #6B4A2B 榫卯、屏面绢本 #F4ECD8 绘芙蓉通景（花 #9D2933、叶 #4A8B6F 降饱和）；扇宽 0.5m 通高 2.8m",
+      "textureDirection": "绢纹经直纬平；芙蓉构图自右下向左上通景走",
+      "metalwork": "无金属件——扇间绢软连接",
+      "wear": "屏脚绢面水渍晕两处（拖地受潮）；一扇画心折痕一道",
+      "light": "主雅间烛光照屏：绢面泛暖 #F4ECD8；屏后烛位光晕自绢背透出人影（雅间叙事光）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0095",
+      "name": "羊肉案",
+      "material": "木铁合制案台：案面厚板 60mm #6B4A2B 桐油、案腿铁包脚 M-12 #4A4E54；案下置肉钩两枚",
+      "textureDirection": "案面木纹顺长向；刀痕横向细密成组",
+      "metalwork": "铁包脚、肉钩 #4A4E54",
+      "wear": "案面刀痕区中央下凹 5mm（剁肉位）；案沿油浸色深 #4A3220",
+      "light": "案位灯 #FFC66E 一盏专照；剁切时案面震颤灯影随之（动效联动）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0096",
+      "name": "名酒单水牌",
+      "material": "木水牌：牌面 400×600mm 底漆 #F4ECD8、酒名竖列玄墨 #2B2B2B、价目朱点 #9D2933；羊羔酒／银瓶酒价目在列",
+      "textureDirection": "木牌纹竖向；字竖列",
+      "metalwork": "悬钩铁 #4A4E54",
+      "wear": "「羊羔酒」行朱点因改价重写三层（覆盖字迹可辨）；牌角磕漆",
+      "light": "柜台吊灯 #FFC66E 专照水牌：字面受光最亮；夜为点单视觉锚点",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0097",
+      "name": "井字欢门",
+      "material": "木彩帛缚扎：井字形木架 M-05 横竖枋交叉、彩帛两层缚彩（比正店五层降三档）；架高 4.5m",
+      "textureDirection": "彩帛褶皱顺风；架枋直纹",
+      "metalwork": "无金属件——麻绳绑扎",
+      "wear": "欢门年扎新旧差；左前柱缚帛褪色 #D4B76A",
+      "light": "夜受檐廊灯箱 #FFC66E 与街面 NH-02 环境上染（自身不设灯管）；井字格投影地面",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0098",
+      "name": "酒旗「十千脚店」",
+      "material": "青布白字旗：旗面青布 #2E4E7E、白字 #F0EAD6；旗幅 1.0×1.5m（比正店降一档）",
+      "textureDirection": "布纹经直纬平",
+      "metalwork": "无金属件——杆顶滑环木制",
+      "wear": "旗面褪色成片（实装招牌常年垂挂）；下角破洞翻边一处",
+      "light": "白字「十千脚店」受日晒褪度分层；夜受檐下灯笼 #FFC66E 泛暖",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0099",
+      "name": "灯箱「十千」",
+      "material": "木绢方箱透光：箱体 500×500×900mm 木框 #6B4A2B、四面粉绢 #F4ECD8、字「十千」玄墨 #2B2B2B 透剪影",
+      "textureDirection": "绢面经纬细密；字顺箱面竖列大字",
+      "metalwork": "箱顶提梁铁钩 #4A4E54",
+      "wear": "朝阳面绢色黄变一档；箱脚木框磨亮（挪动位）",
+      "light": "实装名物·夜光：箱内烛焰透暖黄 #FFC66E，字面透剪影——夜为东灯箱位锚点",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0100",
+      "name": "灯箱「脚店」",
+      "material": "木绢方箱同制：制式与「十千」箱成对，字「脚店」玄墨",
+      "textureDirection": "同 C-ITM-0099",
+      "metalwork": "箱顶提梁铁钩 #4A4E54",
+      "wear": "西灯箱受西晒更重：绢面黄变两档（比东箱深）",
+      "light": "夜光同制 #FFC66E；双箱对位成「十千｜脚店」读序（名物还原亮点）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0101",
+      "name": "柜台",
+      "material": "榆木板柜台：台面独板 1.8m 长 #6B4A2B 桐油磨亮；台身板立筋素面",
+      "textureDirection": "台面木纹顺长向",
+      "metalwork": "台角铁包角 #4A4E54",
+      "wear": "台面前沿磨亮凹弧；台面酒渍环两处",
+      "light": "柜台吊灯 #FFC66E 台面反光带；茶汤炉炭光 #FF7F50 斜照柜台立面",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0102",
+      "name": "散座桌凳",
+      "material": "木方桌条凳八组：桌面 700×700mm、条凳 900mm 长，通体桐油 #6B4A2B",
+      "textureDirection": "桌面木纹横向；凳面木纹纵向",
+      "metalwork": "无金属件",
+      "wear": "凳面两端（起坐扶位）磨亮；两组桌面烫痕（烟锅烫）环一圈",
+      "light": "桌位烛点弱档：桌面 #FFC66E 暖盘光，凳面半明半暗",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0103",
+      "name": "小阁子",
+      "material": "木雕格扇制：格心直棂＋一朵牡丹雕花（比正店降三档）深雕 3mm；裙板素平",
+      "textureDirection": "直棂竖直正交；雕花一居格心上",
+      "metalwork": "无金属件",
+      "wear": "格扇下槛磨凹 10mm；一扇格心直棂断篾补接",
+      "light": "阁内烛光 #FFC66E 透格扇成竖条光影（私聊光域的围合语言）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0104",
+      "name": "酒瓮",
+      "material": "陶瓮十二具（自正店批发酒来沽）：瓮高 800mm 灰陶、封泥、红签 #9D2933",
+      "textureDirection": "轮制弦纹环列",
+      "metalwork": "无金属件",
+      "wear": "肩部磨亮；瓮底一圈酒渍渗色（老瓮语）",
+      "light": "后院弱光 #FFC66E 下瓮列投影；开瓮沽酒时酒气粒子一缕",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0105",
+      "name": "注子",
+      "material": "瓷注壶六具：壶高 180mm 白瓷釉面，执柄素曲、流口外撇",
+      "textureDirection": "轮制弦纹两道；釉面细开片",
+      "metalwork": "无金属件",
+      "wear": "流口磨亮（斟酒线）；一件执柄断后锔接（铜锔两枚 #B87333）",
+      "light": "温酒交互：壶身受烛光泛 #F4ECD8；温热时壶口汽 M-20 一缕",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0106",
+      "name": "食盒",
+      "material": "竹提盒四具：盒体竹篾编（篾宽 2mm）三层提梁式，提梁藤缠",
+      "textureDirection": "篾纹经纬平织；提梁缠藤螺旋",
+      "metalwork": "提梁轴竹销（无金属）",
+      "wear": "盒底篾面磨散两处；提梁握段包浆深两档",
+      "light": "柜台侧陈设受吊灯 #FFC66E；外带交互时提梁反光一线",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0107",
+      "name": "茶汤炉",
+      "material": "铜炭炉：炉体铜皮锤揲 #B87333、炉口炭膛、座圈三足；炉身素面",
+      "textureDirection": "锤揲瓣纹放射向炉口",
+      "metalwork": "通体铜 #B87333；炉盖钮铜 #D4A017",
+      "wear": "炉口一圈火养暗色；座圈三足磨亮",
+      "light": "汤茶滚沸动效：炉口汽 M-20 持续一缕＋炭光 #FF7F50 弱档；炉体映柜台灯 #FFC66E",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0108",
+      "name": "账台",
+      "material": "木账台：台面 800×500mm #4A3220 桐油；账簿、笔架、算盘小三件陈台",
+      "textureDirection": "台面木纹横向",
+      "metalwork": "台角铁包角 #4A4E54",
+      "wear": "台面墨渍一处；算盘梁磨亮",
+      "light": "暖黄 #FFC66E 弱档照台；结账交互算珠反光",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0109",
+      "name": "马槽",
+      "material": "石木合制两具：槽体青石 M-08 整凿（槽长 1.5m 内膛凿光）、草料架木 #6B4A2B",
+      "textureDirection": "槽体凿痕顺长向；架木直纹",
+      "metalwork": "无金属件——架榫入槽耳",
+      "wear": "槽沿（马唇磨线）磨圆化发亮；槽身一道裂纹填苔 #4A8B6F",
+      "light": "喂养交互：草料入槽时槽内亮 #FFC66E 弱一息；夜马首探槽时风雨灯影在槽面晃",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0110",
+      "name": "客舍木榻",
+      "material": "木榻六具：榻框榫卯 #6B4A2B、榻面苇席 #D4B76A 绷面、榻足短柱",
+      "textureDirection": "苇席纹经纬人字拼；榻框直纹",
+      "metalwork": "无金属件",
+      "wear": "榻面中央席面下陷（久卧）；一榻席角翘起（破损待补）",
+      "light": "客舍油灯 #FFC66E 弱档：六榻面逐榻递暗（近灯亮远灯暗的光衰减语）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0111",
+      "name": "天井水缸",
+      "material": "陶缸大器：缸高 1.1m 灰陶轮制厚壁、口沿外翻；太平缸制（兼防火储水）",
+      "textureDirection": "轮制弦纹环列间距 12mm",
+      "metalwork": "无金属件",
+      "wear": "口沿磕三处；缸身水线痕两道（水位涨落语）",
+      "light": "缸面釉光反天光（昼）／反檐灯 #FFC66E 一粒（夜）；缸中水面倒影微晃",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0112",
+      "name": "檐下灯笼",
+      "material": "纸竹圆灯六盏：灯骨竹篾圈、外糊皮纸 #F4ECD8、灯笼暖黄 #FFC66E 透光；灯径 300mm",
+      "textureDirection": "纸面纤维随机；竹骨弧圈",
+      "metalwork": "无金属件——提绳麻编",
+      "wear": "两盏纸面雨渍晕（檐口迎雨位）；一盏骨圈歪斜",
+      "light": "夜间光源：透 #FFC66E 圆晕六点沿檐列；微风中灯光同步缓摆（群体动画）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0182",
+      "name": "獬豸照壁",
+      "material": "砖雕磨砖对缝：壁体青砖 M-03 #5A6472 磨面、壁心獬豸砖雕深 20mm（独角兽形识别忠奸）；壁顶覆筒瓦 M-01 一排",
+      "textureDirection": "砖缝水平 12mm；雕纹顺壁心放射（獬豸鬃毛向）",
+      "metalwork": "无金属件——全砖作",
+      "wear": "壁心獬豸目部（观者视认焦点）摸亮；壁脚泛碱白带高 200mm",
+      "light": "夜 NH-01 电青 #00E5FF 阴刻描线 1mm 特批（P-17 条款全城府衙独此一处），常亮禁闪；昼线隐入砖面",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0183",
+      "name": "仪门",
+      "material": "木板门三门制：门扇 #4A3220 桐油、门框朱皮 #A63A2B；中门铜钉五路",
+      "textureDirection": "门板竖板拼缝；框朱皮顺纹",
+      "metalwork": "铺首铁制 #4A4E54 两对；门钉铜 #B87333",
+      "wear": "中门（常闭）门枢涩滞锈晕环；侧门枢磨亮",
+      "light": "NH-01 门框轮廓灯带 Φ12mm 沿 P-06 回纹形转角（官属专用），常亮禁闪；开中门仪式时门内 #FFC66E 全亮联动",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0184",
+      "name": "戒石亭",
+      "material": "石木合亭：亭柱木 #6B4A2B、亭顶小歇山合瓦；亭心戒石一方刻「尔俸尔禄，民膏民脂」石 #4E545E 阴刻填白",
+      "textureDirection": "石面剁斧细纹；刻字竖列两行",
+      "metalwork": "无金属件",
+      "wear": "亭柱（抚石立读位）包浆发亮；戒石字口积尘一线（「凝视注解」交互处）",
+      "light": "亭内常暗、石面受天光：凝视交互时字口 #FFC66E 微亮一息（注解浮现）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0185",
+      "name": "匾「明鏡高懸」",
+      "material": "木金漆匾：底黑漆 8 道 #2B2B2B、字贴金 #FFD700；匾缘回纹阳线一道",
+      "textureDirection": "匾底蛇腹断纹一道；金顺笔画",
+      "metalwork": "挂环铜钩 #4A4E54",
+      "wear": "「懸」字心钩磨金露底（公堂高频仰视位）；匾角漆剥一小片",
+      "light": "堂内官灯 #FFC66E 上照匾底反金光；断案高光时刻（惊堂木拍落）匾金字闪一息",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0186",
+      "name": "知府座案",
+      "material": "木漆官案：案面独板 1.6m #4A3220 推光、案围挡板雕 P-21 波曲纹（山形起伏宽 150mm 阴阳双线）；案上惊堂木（血柏木 #7E2A20）、签筒（竹筒 #8A5A2B 朱签 36 支）、朱笔（杆缠红绳）",
+      "textureDirection": "案面木纹横向；波曲纹沿围板通长走",
+      "metalwork": "案角铜包角 #B87333；签筒口铜箍 #4A4E54",
+      "wear": "案面前沿（呈案递状线）磨亮；惊堂木拍面中心凹陷 3mm",
+      "light": "断案交互核心：惊堂木拍落全堂烛焰齐伏一息（演出触发器）——与地府惊堂木同语人间版；朱笔签筒受案烛 #FFC66E 专照",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0187",
+      "name": "水火棍",
+      "material": "木棍红黑八根：棍身半红 #A63A2B 半黑 #2B2B2B 漆皮，棍头束麻",
+      "textureDirection": "漆皮顺棍纹；束麻螺旋",
+      "metalwork": "无金属件",
+      "wear": "棍头麻束散开三根（衙役倚棍磨损）；棍身漆皮剥两处露木",
+      "light": "公堂两列受官灯 #FFC66E 侧照：红半段反暖、黑半段沉暗（水火双色语）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0188",
+      "name": "登闻鼓",
+      "material": "皮木合鼓：鼓身木桶板拼箍 #6B4A2B、鼓面牛皮绷紧（M-14 绷面工艺）；鼓架木叉架",
+      "textureDirection": "鼓桶板竖拼；皮面毛孔均匀",
+      "metalwork": "鼓沿铁钉一圈 #4A4E54",
+      "wear": "鼓面中心击痕区毛面发白（击鼓鸣冤高频位）；鼓身一道箍松（常年震动）",
+      "light": "击鼓交互：鼓面震动波纹可视化一圈 #FFC66E＋全衙声音事件（告状主线入口）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0189",
+      "name": "牢栅",
+      "material": "木铁合制栅区：铁栅条 20×20mm 间距 120mm（M-12 锻打）＋木框 #4A3220；栅门独口",
+      "textureDirection": "铁条锻痕水平；木框直纹",
+      "metalwork": "铁锁一枚 #26282C 锁链铁黑级深",
+      "wear": "栅条锈层翘皮 #6E1F1F（翘边 ≤3mm）；栅门枢磨亮",
+      "light": "牢灯 #FFC66E 极弱档穿栅：栅影投泥地成条码光栅（牢城光影母题）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0190",
+      "name": "六房案牍架",
+      "material": "木案牍架十二具（六房各两具）：架体 #4A3220 榫卯、格 12 层、格板厚 25mm；卷宗纸卷列格",
+      "textureDirection": "架格横平；卷宗卷轴竖列",
+      "metalwork": "无金属件",
+      "wear": "格板前缘（取卷线）磨亮；两格卷宗歪斜（吏员忙时语）",
+      "light": "查卷交互：所查格卷宗纸面 #F4ECD8 提亮、其余格沉暗（检索光语）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0191",
+      "name": "点将台",
+      "material": "夯土包砖台：台芯夯土 M-04 分层版筑、包砖青砖 M-03 收分 5%；台面青砖墁",
+      "textureDirection": "台身版筑层理 80～100mm；包砖缝横平",
+      "metalwork": "无金属件",
+      "wear": "将位（点将立位）砖面踩亮；台角砖崩茬两处",
+      "light": "台面受天光：点将事件时将位砖面反光提亮一档＋大旗投影移位",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0192",
+      "name": "马厩",
+      "material": "石木槽位八格：槽体青石 M-08 整凿、架木 #4A3220；木栏分格",
+      "textureDirection": "凿痕顺槽长；栏条直纹",
+      "metalwork": "无金属件",
+      "wear": "槽沿磨圆化；一格槽体裂纹填苔 #4A8B6F",
+      "light": "风雨灯 #FFC66E 极弱档：八槽位光斑递减；寄养交互时槽内草料反光一息",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0193",
+      "name": "开道锣",
+      "material": "铜锣一面：锣体铜锤揲 #B87333、锣心平底、锣边翻卷；锣槌木柄缠布",
+      "textureDirection": "锤揲旋纹向锣心；锣边卷弧",
+      "metalwork": "通体铜 #B87333；槌头缠布代绒",
+      "wear": "锣心击点磨亮区（出巡鸣锣高频）；锣边一处磕凹",
+      "light": "出巡事件：锣声波纹可视化三圈 #FFC66E＋仪门 NH-01 门框带同步闪一息（仪制联动）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0194",
+      "name": "枷号架",
+      "material": "木枷两具陈架：枷板厚 40mm 双孔式 #4A3220、架体立柱横梁素木",
+      "textureDirection": "枷板木纹横向；架柱直纹",
+      "metalwork": "枷锁铁锁具 #26282C",
+      "wear": "枷板孔缘磨圆（枷号示众摩擦）；架柱脚糟朽色高 80mm",
+      "light": "衙前示众位受天光：惩戒事件时枷号者立位投长影（午时语）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0195",
+      "name": "府印印匣",
+      "material": "铜木合制：铜匣锤揲錾云纹 P-01（单元 40×40mm 阴刻）#B87333、木匣座 #4A3220；匣内黄绫衬 #D4B76A、府印一方（铜印 #B87333 印文篆书）",
+      "textureDirection": "錾云纹顺匣面环列；木纹竖向",
+      "metalwork": "通体铜件 #B87333；锁扣铜 #D4A017",
+      "wear": "匣面提手（启匣位）磨亮；锁孔周缘漆积",
+      "light": "剧情道具：启匣取印时印面反光一闪 #FFC66E；二堂光域内匣面为最亮点",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0196",
+      "name": "教场器械架",
+      "material": "木器械架四具：架体 #4A3220 立柱横档、枪棒刀剑分类列架；架脚垫石片",
+      "textureDirection": "架柱直纹；横档水平",
+      "metalwork": "无金属件——兵器本体铁件另计",
+      "wear": "横档（取放器械磨线）磨亮；枪杆位一根空缺（学艺借出语）",
+      "light": "学艺交互：取械瞬间械身反天光一线；操练尘起 M-20 #C8B48A 极淡",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "C-ITM-0197",
+      "name": "更鼓",
+      "material": "皮木更鼓：鼓身木箍 #6B4A2B、鼓面皮绷（时辰报点高频）；悬谯楼梁心",
+      "textureDirection": "鼓桶板竖拼；皮面毛孔",
+      "metalwork": "鼓沿铁钉 #4A4E54",
+      "wear": "鼓面中心毛面白化（报时击点）；鼓裙围布 #2E4E7E 下缘磨须",
+      "light": "时辰提示：击鼓时楼内烛焰伏一息＋鼓面震动波纹一圈 #FFC66E（与登闻鼓演出语区分——更鼓单圈、登闻鼓三圈）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0001",
+      "name": "黑玉砖地面",
+      "material": "黑玉冥制砖烧磨：42×22m 整铺砖 640×640mm 镜面（反光 0.50／粗糙度 0.15）；脚步无声",
+      "textureDirection": "砖面无纹镜态；对缝缝线沥青描黑 #2B2B2B 级",
+      "metalwork": "无金属件",
+      "wear": "判官案前跪位两行砖磨雾（映像 50%）；御路口一线踩亮",
+      "light": "烛火倒映如墨渊：49 支白烛绿焰在砖面拖出 49 条绿光倒影（镜面黑玉核心光语）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0002",
+      "name": "判官案",
+      "material": "黑檀嵌铜：案长 6.0×宽 1.2×高 1.1m，案体阴沉木黑 #1F1A14、案沿嵌铜线 P-01 云雷（箍 #26282C、刻槽磷光 #3DFF9C）",
+      "textureDirection": "黑檀直纹顺案长；铜线沿案沿通长走",
+      "metalwork": "案沿铜嵌线、案足铜套 #26282C",
+      "wear": "案面前沿（判官执笔位）磨亮成带；案角一处旧磕（前任判官语）",
+      "light": "案面 #E8E3D5 案卷提亮（正殿型条款）；惊堂木拍落全殿烛焰齐伏一息时案面独亮",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0003",
+      "name": "生死簿·总册",
+      "material": "靛青封皮纸册：册 0.4×0.6m 封皮靛青 #223A5E、字迹自显自隐（翻页无声）",
+      "textureDirection": "封皮布纹经直；字迹浮现顺行栏",
+      "metalwork": "册角铜包角 #26282C 四枚",
+      "wear": "封皮脊线磨白一线（翻阅高频）；册角包角磨亮",
+      "light": "字迹自显时纸面行栏亮 #E8E3D5 一行、自隐时沉回；翻页无声配微光扫页",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0004",
+      "name": "生死簿架",
+      "material": "黑木高架：高 4.2m 十二格、格板 #1F1A14 榫卯；藏分册 3600 卷、卷签 #C9B380 字 #B03A2E 按甲子编排",
+      "textureDirection": "格板水平；卷签竖列成行",
+      "metalwork": "架角铜护角 #26282C",
+      "wear": "第三至五格（常用甲子段）卷签边缘磨须；一架一格签倒插（判官夜审急取错插）",
+      "light": "架格磷光 #3DFF9C 弱档 30% 逐格微亮；取卷时该格提亮、字签自明",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0005",
+      "name": "孽镜台",
+      "material": "铜镜铸造：镜径 1.6m 镜框錾云雷 P-01、座高 3.6m 石座 #33393F；镜面常蒙红雾",
+      "textureDirection": "镜背铸纹放射；云雷单元 40×40mm",
+      "metalwork": "镜框铜 #26282C、刻槽磷光常存",
+      "wear": "镜面下缘（近地潮位）铜绿结壳 #4E7A5E 一线；镜框两目位磨亮",
+      "light": "照恶人时红雾 #6E1F1F 散开、镜面切换 #BAFFEF 现影；穹顶业镜残片环与之同源联动",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0006",
+      "name": "惊堂木",
+      "material": "血柏木斫制：块 0.08×0.12m 木纹血红 #7E2A20、拍面磨平；全殿烛焰齐伏触发器",
+      "textureDirection": "血柏纹顺拍面横走；侧立面直纹",
+      "metalwork": "无金属件",
+      "wear": "拍面中心凹陷 3mm（断案高频位）；块角磨圆",
+      "light": "拍落演出：全殿烛焰齐伏一息→复燃，砖面绿焰倒影同步熄复（审案第三环节）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0007",
+      "name": "判官朱笔",
+      "material": "木杆缠红绳制：笔长 0.5m 杆 #7E2A20、缠红绳 #6E1F1F 螺距 5mm；笔锋赤光（落笔即定轮回去向）",
+      "textureDirection": "缠绳螺旋；杆直纹",
+      "metalwork": "笔帽铜箍 #26282C",
+      "wear": "缠绳起毛一段（执笔位）；笔锋秃后自锐（冥器不自损）",
+      "light": "笔锋赤光恒亮 #6E1F1F 级暗红微光；落笔瞬间锋光转 #BAFFEF 一闪定去向",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0008",
+      "name": "善恶签筒",
+      "material": "竹筒制：筒高 0.4m 竹 #8A5A2B 茶褐、口沿铜箍；竹签 36 支（善 12／恶 12／迷 12，签头漆点三色：善 #E8E3D5、恶 #7E2A20、迷 #223A5E）",
+      "textureDirection": "竹纹竖向顺筒；签纹顺签身",
+      "metalwork": "口沿铜箍 #26282C；筒底铜承",
+      "wear": "筒身握段磨亮；签头漆点善签最亮（掷签多为善签语）",
+      "light": "断案时阎罗亲掷一支：签落案面签头色点亮对应光（善 #E8E3D5／恶 #BAFFEF 冷光／迷 #4D7CFF）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0009",
+      "name": "白烛阵",
+      "material": "白烛 49 支三阵（案前七七阵／孽镜前九宫阵／门内双列阵）：烛体白蜡、烛台黑铁 #26282C；绿焰 M-21",
+      "textureDirection": "烛体旋制无纹；焰形程序化",
+      "metalwork": "烛台铁 #26282C",
+      "wear": "烛泪堆积沿烛台下垂 ≤100mm（§8.3 条款）；两支烛芯偏斜（风蚀语）",
+      "light": "绿焰随审案进度依次明灭：内芯 #BAFFEF→中层 #3DFF9C→外缘 #4D7CFF；砖面 49 条倒影与之同步",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0010",
+      "name": "刑具架·东",
+      "material": "黑木高架四层：架高 2.8m 体 #1F1A14；陈夹棍（木铁）、铁尺（#26282C）、铜锤（#B87333 暗面）、锁魂枷（木枷铁锁）",
+      "textureDirection": "架格横平；铁具锻痕水平条带",
+      "metalwork": "铁尺／锁枷锁具 #26282C；铜锤 #B87333",
+      "wear": "铜锤柄（展示位搬移）磨亮；夹棍木面油浸色深",
+      "light": "陈列泛冷光 #BAFFEF 架层灯弱档；锁魂枷锁孔磷光 #3DFF9C 一点常亮",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0011",
+      "name": "刑具架·西",
+      "material": "黑木高架四层同制：陈铁刷、钉板（M-12 钉阵）、业秤（铜盘铜秤）、勾魂叉（铁叉）",
+      "textureDirection": "架格横平；钉板钉阵正交成列",
+      "metalwork": "业秤铜盘 #B87333；叉体铁 #26282C",
+      "wear": "秤盘缘（称魂触位）磨亮；钉板缺钉三枚（历史刑余语）",
+      "light": "业秤盘面恒亮 #3DFF9C 一点感应善恶魂重；勾魂叉尖 #4D7CFF 幽蓝微光",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0012",
+      "name": "地藏龛",
+      "material": "石龛石像：龛框黑砖磨面线脚、地藏像石 #33393F 琢、锡杖明珠（杖 #26282C、珠 #E8F0FF）；龛前长明灯永不灭",
+      "textureDirection": "像体凿痕顺衣纹垂向；龛框线脚水平",
+      "metalwork": "锡杖铜杖身 #26282C",
+      "wear": "像前（发愿跪拜位）石面温润磨亮；龛框香熏极淡",
+      "light": "长明灯暖白 #E8F0FF 全殿唯一非绿光源（地府高明度色单画面 ≤1 处落位）；珠面反暖白一粒",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0013",
+      "name": "匾额「閻羅殿」",
+      "material": "金底绿字匾：匾 4.5×1.2m 底金 #FFD700 按地府旧档蒙灰烬灰 #57534E 罩涂 30%（金可辨不夺目）、字磷绿 #3DFF9C 自发光（已实装锚点）",
+      "textureDirection": "匾底蒙灰顺笔触横走；字顺笔画",
+      "metalwork": "挂环铁钩 #26282C",
+      "wear": "字口边缘积灰一线（夜发光区静电吸尘语）；匾角蒙灰剥落露原金一小片",
+      "light": "夜自发光为广场唯一强光锚点；发光态字周晕圈 #3DFF9C 半径 400mm 渐隐",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0014",
+      "name": "楹联·东",
+      "material": "木底暗朱字联：联底 #7E2A20 判官暗朱（地府朱深于人间市井朱）、字骨白 #E8E3D5 漆填；联文「阳世三间，积善作恶皆由你」",
+      "textureDirection": "联底漆纹顺木纹竖走；字竖列右起",
+      "metalwork": "挂销铁销 #26282C 一对",
+      "wear": "「你」字点漆微剥（讼魂仰读位）",
+      "light": "字面磷光 #3DFF9C 极弱档（比匾低两档）；审案高光时东联字同步提亮一息",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0015",
+      "name": "楹联·西",
+      "material": "木底暗朱字联：联底 #7E2A20 判官暗朱、字骨白 #E8E3D5 漆填；联文「古往今来，阴曹地府放过谁」",
+      "textureDirection": "联底漆纹顺木纹竖走；字竖列右起",
+      "metalwork": "挂销铁销 #26282C 一对",
+      "wear": "「谁」字勾口积灰（省视位尘埃自聚）",
+      "light": "字面磷光 #3DFF9C 极弱档；审案高光时西联字同步提亮一息，血月夜勾口积灰转 #6E1F1F 一息",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0016",
+      "name": "兽足香炉",
+      "material": "青铜三足炉：径 1.0m 范铸兽足三、炉腹素面抛光段＋雷纹带 P-01；燃冥香青烟出鼎盘旋结「善」字形不散",
+      "textureDirection": "铸纹顺腹环带；兽足錾爪纹",
+      "metalwork": "通体青铜 #26282C；足爪磨亮处露新铜 #B87333",
+      "wear": "炉口缘（添香位）磨亮；兽足爪尖磨圆",
+      "light": "青烟结「善」字 M-20 烟柱上升贯通业雾穹顶（顶心替位光路）；炉腹雷纹刻槽磷光随烟速明暗",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0017",
+      "name": "桥身拱券",
+      "material": "青黑石楔形拱砌：净跨 40m 矢高 6m 干砌灰缝 8mm；拱腹挂铜铃 12 枚",
+      "textureDirection": "楔石缝放射向拱心；铃身素铸",
+      "metalwork": "铜铃 12 枚 #26282C、铃舌锈凝",
+      "wear": "拱脚水线痕两道（没入红水位）；铃身铜绿 #4E7A5E 覆率 ≤40%",
+      "light": "风过哑响（铃舌凝雾）——哑响为声效设计；拱腹上映水面 #4D7CFF 波光带",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0018",
+      "name": "望柱栏板",
+      "material": "青黑石雕：望柱 24 根柱头小鬼面浮雕深 15mm（面面朝桥心）、栏高 1.1m 栏板渡魂纹浅刻 5mm 夹小额铭「各行其渡」",
+      "textureDirection": "渡魂纹顺栏板通长横向走；鬼面目向桥心放射",
+      "metalwork": "无金属件——全石作",
+      "wear": "柱头鬼面目部磨圆化（亿魂抚过）；栏板顶沿线手扶磨亮",
+      "light": "铭文「各行其渡」#E8E3D5 微光弱档；夜受桥列灯 #3DFF9C 上染栏面一线",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0019",
+      "name": "引魂灯·桥列",
+      "material": "石柱灯八盏：灯柱即望柱延长段、灯室石凿镂窗；灯焰 M-21 鬼火",
+      "textureDirection": "灯室凿窗十字四孔；焰形程序化",
+      "metalwork": "灯室铁栅细条 #26282C",
+      "wear": "第 4、5 盏灯室烟熏最重（回头灯高频燃）；一盏灯室裂纹填苔 #4A8B6F",
+      "light": "绿焰 #3DFF9C 间隔 6m 成忘川唯一光链；第 4、5 盏「回头灯」照回头者脸（惊吓演出灯语）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0020",
+      "name": "守桥岗·南",
+      "material": "桥头亭位岗制：鬼差提灯验「过桥魂籍」；岗位条石一方（石 #33393F 立位磨亮）",
+      "textureDirection": "条石凿面顺长；鬼差灵体族（半透 SSS 40%～70%、足下无影）",
+      "metalwork": "提灯铁架 #26282C",
+      "wear": "岗位条石立痕一双（鬼差恒立场）；灯柄握位磨亮",
+      "light": "放行演出：挥灯三次灯焰 #3DFF9C 扫过亡魂面三下；验籍时灯焰稳幅 ±5%",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0021",
+      "name": "守桥岗·北",
+      "material": "桥头亭位岗制同南岗对位；北岗立位石面无磨痕（刚换岗语）",
+      "textureDirection": "同 D-ITM-0020",
+      "metalwork": "提灯铁架 #26282C",
+      "wear": "灯柄握位磨亮",
+      "light": "喝止演出「过桥莫回头」灯焰 #3DFF9C 定格；二次停留推魂——灯焰熄一息复燃（推魂演出帧）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0022",
+      "name": "南桥头碑",
+      "material": "青黑石碑：碑高 2.4m 碑首圆首、碑阳「奈何桥」三字深 10mm 填 #E8E3D5、碑阴小字「善者过桥稳如砥，恶者临流无归期」浅刻填白",
+      "textureDirection": "碑面凿理顺竖；字顺竖列",
+      "metalwork": "无金属件——碑身整凿",
+      "wear": "碑阳三字（高频抚读）字口磨亮；碑座一圈苔线 #4A8B6F",
+      "light": "碑阳字面 #E8E3D5 微光；碑阴小字常暗、需近观（交互才显）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0023",
+      "name": "北桥头碑",
+      "material": "青黑石碑同制对位：碑阳「回头无岸」四字填 #E8E3D5、碑阴「桥归桥，路归路；过了此桥，休问来时路」",
+      "textureDirection": "同 D-ITM-0022",
+      "metalwork": "无金属件",
+      "wear": "碑身向北面风蚀粗于南碑（忘川深侧风）；字口锋利（新刻不久——与南碑老字对照语）",
+      "light": "碑阳字面微光同制；碑阴字在血月夜短暂泛 #4D7CFF（水汽语）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0024",
+      "name": "照魂镜",
+      "material": "铜镜悬制：镜径 0.8m 铜框錾云雷 P-01、悬桥心上方铁链四股 #26282C；镜面泛青白",
+      "textureDirection": "镜背铸纹放射；框雷纹环列",
+      "metalwork": "铜框 #26282C、悬链铁 #26282C",
+      "wear": "镜面下缘铜绿一线；框顶悬环磨亮",
+      "light": "恶鬼现原形：镜面切换 #BAFFEF 强现影态；玩家倒影延迟半拍（恐怖细节）——镜光投桥心光斑一枚",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0025",
+      "name": "锁魂链",
+      "material": "九股锻铁链：环径 120mm（狱门链径档）环环搭接 1/3、锻痕水平；水面下 0.5m 横江",
+      "textureDirection": "锻痕水平条带；锈皮颗粒 0.5mm",
+      "metalwork": "通体铁 #26282C、锈层 #6E1F1F",
+      "wear": "磨损环段发亮（汛期拉拽位）；断链茬口新亮一段（曾断续接）",
+      "light": "血月夜浮出水面：链身滴水 #4D7CFF 反光点；链声自水下如拽锚（声演）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0026",
+      "name": "魂痕桥面",
+      "material": "视觉细节件：桥面磨痕如泪渍成行（顺行进向平行细划痕组）；雨雾天显湿足印指向北岸",
+      "textureDirection": "泪渍痕顺桥长横向成组；足印成行纵列",
+      "metalwork": "无金属件",
+      "wear": "痕迹本体即「磨损」——南段痕密北段痕疏（越近北岸执念越少语）",
+      "light": "雨雾天足印反 #BAFFEF 微光（湿面反光）；血月夜足印消失（亡魂不敢留痕）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0027",
+      "name": "桥神香案",
+      "material": "石香案：案面 600×400mm 青黑石 #33393F 凿浅膛；残香三炷、香灰自聚成小丘不散",
+      "textureDirection": "案面凿理顺横；香灰堆积随机",
+      "metalwork": "无金属件",
+      "wear": "案面插香位三孔磨圆；案脚苔线一线",
+      "light": "香头余烬 #FF9E00 级暖点三粒（引魂态符文同色系，全桥唯一暖点）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0028",
+      "name": "导雾槽",
+      "material": "石槽两列：槽宽 120mm 深 80mm 顺桥面两侧栏内凿通；雾顺槽下泻成帘",
+      "textureDirection": "凿槽顺桥长通直；槽内水线痕",
+      "metalwork": "无金属件",
+      "wear": "槽底流水段磨亮；槽口两端崩茬",
+      "light": "雾瀑演出：雾 M-20（#1A2430→#57534E 渐变）顺槽下泻成帘，桥身两侧能见度局部降至 10m",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0029",
+      "name": "主棚茶棚",
+      "material": "阴沉木棚架歇山灰顶：棚 8×6m 柱 M-05 #1F1A14、棚面覆冥纱 M-13 透光 20%；前檐挑「汤」字幌（幌面 P-13 骨纹、字 #E8E3D5）",
+      "textureDirection": "棚柱直纹；纱面经纬细密",
+      "metalwork": "棚角铁护角 #26282C 四具",
+      "wear": "柱脚糟朽色 #57534E 高 200mm；纱面破口两处以锁链 M-23 缝缀",
+      "light": "夜幌字 #E8E3D5 微光；棚内灶光 #6B4226 自纱面透出成暖雾团",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0030",
+      "name": "孟婆汤锅",
+      "material": "铜锅径 2.4m：锅体铜锤揲 #26282C 墨铜、锅沿翻边、三石支锅；暗红汤面浮忘忧花瓣常沸不溢",
+      "textureDirection": "锤揲瓣纹放射向锅心；沸面环形纹",
+      "metalwork": "锅体铜 #26282C；锅沿两耳铜环 #B87333 磨亮",
+      "wear": "锅沿（舀汤磨线）磨亮一圈；锅身下缘锈层 #6E1F1F",
+      "light": "沸声如人群低泣（声演）；汤面 #6B4226 自发光极弱、气泡爆点提亮；汤气褐雾 M-20 缓升",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0031",
+      "name": "碗架",
+      "material": "木碗架三层：架体粗木 #4A3C33 榫卯；粗陶碗 108 只多为缺角碗（亡魂自取自还）",
+      "textureDirection": "架格横平；陶碗轮制弦纹",
+      "metalwork": "无金属件——架榫绑扎",
+      "wear": "架层板前缘磨亮；缺角碗 36 只（缺角率三分之一——庄史语）",
+      "light": "碗面受灶光 #6B4226 侧照成暗釉光列；「碗墙」投影分出领汤道",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0032",
+      "name": "孟婆位",
+      "material": "灶后蒲团位：蒲团草编 #4A3C33、团面织无纹素面；孟婆（D-CRT-007）常驻面客而坐",
+      "textureDirection": "草编纬纹环列",
+      "metalwork": "无金属件",
+      "wear": "团心压痕恒存（恒坐位）；孟婆灵体族足下无影",
+      "light": "位区灶光侧照：孟婆轮廓受光成剪影半明（半步通视纪律的光学实现）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0033",
+      "name": "忘川茶账",
+      "material": "纸账本：册 0.3×0.4m 纸页 #C9B380、墨字 #2B2B2B；记「谁人饮汤、饮了几分」全簿无签名只有指印（指印 #6E1F1F 血锈色）",
+      "textureDirection": "纸页纤维顺纹；字竖列",
+      "metalwork": "无金属件——线装麻线",
+      "wear": "账脊线磨裂一线；常翻页（「某」字页）纸角卷翘",
+      "light": "指印页受光泛 #6E1F1F 一点；夜账页自翻（无风自动彩蛋）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0034",
+      "name": "歇脚长凳",
+      "material": "木长凳六条：凳长 2.4m 凳面厚板 #4A3C33 素桐油；凳足埋沙固定",
+      "textureDirection": "凳面木纹横走",
+      "metalwork": "无金属件",
+      "wear": "凳面凹陷如经年坐痕（坐定后凳面微温——交互暖感）；凳沿手扶磨亮",
+      "light": "凳位受檐下绿灯笼晕 #3DFF9C 3m 覆盖；坐定瞬间凳面温度反馈（体感设计）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0035",
+      "name": "「孟婆汤」招幡",
+      "material": "白幡墨字：幡高 3m 幡底冥纸黄 #C9B380、墨字 #2B2B2B、夜泛微光；幡脚无风自摆",
+      "textureDirection": "幡布经直；字竖列大字",
+      "metalwork": "幡杆铁钩 #26282C",
+      "wear": "幡脚下摆磨须（常年自摆磨损）；一「汤」字点墨晕开",
+      "light": "夜泛微光 #3DFF9C 极弱档；幡影落地摆动（投影动画）——歇脚场观幌线锚点",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0036",
+      "name": "汤勺",
+      "material": "整木挖勺：柄长 1.2m 勺体整凿 #4A3C33、勺底刻「忘」字阴刻填灰",
+      "textureDirection": "木质顺柄直纹；凿膛旋纹",
+      "metalwork": "无金属件",
+      "wear": "勺沿（舀汤线）磨圆化；柄握段包浆发亮",
+      "light": "舀汤时花瓣避勺（演出）；勺底「忘」字受灶光偶尔反光一闪",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0037",
+      "name": "柴垛",
+      "material": "白骨柴与冥纸柴混垛：骨柴 M-17 骨白 #E8E3D5、纸柴 #C9B380；垛心绿火不熄",
+      "textureDirection": "骨柴纵向管纹；纸柴卷纹",
+      "metalwork": "无金属件——麻绳捆柴",
+      "wear": "垛底骨柴黄变一档（近地潮）；垛形每次取柴后微变",
+      "light": "垛心绿火 M-21 #3DFF9C 照半径 1.5m（灶间辅光）；纸柴边角偶燃火星 #FF9E00 一粒",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0038",
+      "name": "引水竹枧",
+      "material": "竹枧引忘川河水：枧长 9m 竹节打通斜架、枧尾入灶旁水缸；水流过枧声如泣如诉",
+      "textureDirection": "竹节间距 100mm；水线沿枧底走",
+      "metalwork": "无金属件——藤篾绑扎",
+      "wear": "枧底水线段竹色深 #8A5A2B（常湿）；枧身一处竹裂以泥补",
+      "light": "水光自枧内反 #4D7CFF 幽蓝细线（忘川水光入庄的唯一一条）；泣诉水声（声演）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0039",
+      "name": "灶膛双眼",
+      "material": "砖灶双眼：灶体砖 #4A3C33 砌、双眼砖拱；左眼煮汤右眼温「回味汤」（未饮者的寄存汤盂）",
+      "textureDirection": "砖缝水平 10mm；拱圈放射",
+      "metalwork": "灶门铁盖 #26282C",
+      "wear": "左眼拱圈烟熏最重；右眼温汤位砖面油浸色深",
+      "light": "左眼光 #6B4226 沸汤／右眼光弱一档；回味汤盂寄存时右眼上方浮盂影一枚（叙事光）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0040",
+      "name": "碗柜收碗台",
+      "material": "门板改台：台体旧门板 #4A3C33 立架成台、台面磨旧；空碗放上台面自行叠好归架",
+      "textureDirection": "旧门板木纹横走；台面划痕组",
+      "metalwork": "台角铁包角 #26282C 旧件",
+      "wear": "台面中心磨亮最重（收碗高频）；台角一处旧门轴孔（前身为门板语）",
+      "light": "收碗演出：空碗自行叠架时碗沿反 #3DFF9C 微光一次一批；归架后光敛",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0041",
+      "name": "绿灯笼对",
+      "material": "檐下灯笼两盏：灯骨阴沉木篾、外糊冥纱 M-13 #2B1B3D 透光 20%、焰 #3DFF9C",
+      "textureDirection": "纱面经纬；骨篾弧圈",
+      "metalwork": "灯钩铁 #26282C",
+      "wear": "一盏纱面雨雾渍晕（迎雨位）；灯钩磨亮",
+      "light": "雨雾中光晕晕开为庄内唯一照明（光照半径 3m 档）；两盏呼吸错频 0.15Hz",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0042",
+      "name": "取汤竹筹",
+      "material": "竹筹 36 支筒盛：筹体竹 #8A5A2B、筹头火印不同颜色对应饮几分（印色 #B03A2E 三档深浅）",
+      "textureDirection": "竹纹顺筹；火印烙纹",
+      "metalwork": "无金属件——筹筒竹筒",
+      "wear": "高频筹（常饮档）筹身包浆发亮；三支筹头印模糊（旧筹）",
+      "light": "领汤交互：递筹时筹头火印亮对应档一次；筒面受灶光成暖斑",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0043",
+      "name": "石身",
+      "material": "灰白巨石天然三棱：高 9m 棱线如刀刻、面态近青黑 M-08 冥石档；夜泛月白微光 #DCDCE8",
+      "textureDirection": "棱线三道竖向通贯；面内天然纹理水平层带",
+      "metalwork": "无金属件——整石天成",
+      "wear": "棱线（攀抚违禁痕）两段磨圆；面心（照影区）雾蚀斑驳",
+      "light": "夜泛月白自发光：三面同步、血月夜转 #6E1F1F 血色一息（联动警告）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0044",
+      "name": "石顶刻字",
+      "material": "「三生石」三字朱刻：字深 12mm 笔画渗朱如新滴（朱 #6E1F1F 级暗红渗色工艺）；字缝栖息鬼灯笼果藤一枚",
+      "textureDirection": "字顺石顶棱向横列；渗朱沿石理渗透",
+      "metalwork": "无金属件",
+      "wear": "字口渗朱常年不干（设定恒态非磨损）；字缝果藤随季结果——果壳 #E8E3D5 微透",
+      "light": "字面渗朱受月白微光反暗红；果藤果壳夜亮 #3DFF9C 极弱三点",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0045",
+      "name": "前世面",
+      "material": "南向雾面：面体整凿磨光后覆常驻雾膜 M-20 300mm；照影机制 A 显前身剪影随剧情变化",
+      "textureDirection": "面体凿理水平层带；雾膜流动顺面垂",
+      "metalwork": "无金属件",
+      "wear": "面心（观照视心）雾膜最薄；面下缘（手抚位）磨亮一线",
+      "light": "显影态 #BAFFEF 青白剪影；非显影时雾膜 #57534E 静伏",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0046",
+      "name": "今生面",
+      "material": "东向雾面实时镜像：机制 B 映玩家当前装备与随行状态",
+      "textureDirection": "同 D-ITM-0045",
+      "metalwork": "无金属件",
+      "wear": "面心磨亮最重（实时观照高频）；界桩侧石根藓疏",
+      "light": "显影实时：装备金属件反色联动＋随行灵体轮廓 #4D7CFF 一线",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0047",
+      "name": "来世面",
+      "material": "西向雾面常闭：机制 C 唯判官签可启、启后只见一团光不可辨形",
+      "textureDirection": "同 D-ITM-0045",
+      "metalwork": "无金属件",
+      "wear": "面体保存最完好（少启）；面缘雾蚀最重（常闭积雾）",
+      "light": "启面演出：面心亮一团 #E8F0FF（全地府唯一高明度借用点、单画面 ≤1 处）；闭面时仅铭文 #3DFF9C 微光",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0048",
+      "name": "石基座",
+      "material": "残莲台：半埋石座莲瓣八枚缺三、瓣刻深 20mm；缺口生白骨苔 #E8E3D5",
+      "textureDirection": "莲瓣放射向台心；台身凿理环列",
+      "metalwork": "无金属件",
+      "wear": "莲瓣尖（踏拂位）三瓣磨圆；缺口断口锋利（新缺不久语）",
+      "light": "苔色 #E8E3D5 夜微透；台面受石身月白光上漫一线",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0049",
+      "name": "香插石钵",
+      "material": "石钵凿制：钵径 0.5m 内膛浅凿；钵内香脚如林、无风自燃烟直上",
+      "textureDirection": "钵膛旋凿纹；香脚竖列成林",
+      "metalwork": "无金属件",
+      "wear": "钵口缘（插香位）磨圆；膛底香灰积层两指厚",
+      "light": "香头燃点 #FF9E00 暖点三至五粒（烟直上不散——与阎罗殿善字烟同工艺异形）；烟色 #57534E 灰一线",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0050",
+      "name": "祈愿红绳",
+      "material": "红绳 365 缕系石周铁环：绳 #9D2933 三股绞、绳尾木牌 #4A3C33；字迹自变凑近可读「勿忘」",
+      "textureDirection": "绳股绞纹螺旋；木牌纹顺牌",
+      "metalwork": "铁环 #26282C 一圈（锻环拼接 12 段）",
+      "wear": "旧绳褪 #C9B380 新绳饱和 #9D2933（新旧分层即时间叙事）；铁环挂点磨亮",
+      "light": "「勿忘」二字自变瞬间牌面亮 #BAFFEF 一息；风动绳摆受石身月白光投沙面绳影环",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0051",
+      "name": "隐显苔字",
+      "material": "苔痕铭文：石根显小字「来处是归处」雾浓时显、雾散即隐（苔 #3DFF9C 磷光藓构成）",
+      "textureDirection": "苔沿石根水平环生；字顺石根横列",
+      "metalwork": "无金属件",
+      "wear": "苔字无人为磨损（自生自隐）；苔层一处被抚薄（有人摸过「归处」二字）",
+      "light": "雾浓触发：苔字磷光 #3DFF9C 逐字点亮（显）／雾散逐字熄（隐）——湿度驱动动画",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0052",
+      "name": "止步界桩",
+      "material": "石桩三枚：桩高 800mm 方柱 #33393F、桩头刻「止步」填 #E8E3D5；越桩者石面照影转血色并低鸣警告",
+      "textureDirection": "桩身凿理竖直；刻字竖列",
+      "metalwork": "无金属件",
+      "wear": "桩头（抚读位）磨圆；西向桩身风蚀粗于东向",
+      "light": "越桩演出：桩头「止步」二字转亮 #6E1F1F 血色一息＋照影面同步转色低鸣",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0053",
+      "name": "残碑影壁",
+      "material": "石后残碑：碑高 1.8m 半埋、断口如刀截；可辨「……石照三生……忘川为证」数字",
+      "textureDirection": "碑面凿理竖直；断口面自然纹",
+      "metalwork": "无金属件",
+      "wear": "碑面字残存五字（余字风灭）；碑身半埋线随沙移微变",
+      "light": "字残存处 #E8E3D5 微光极弱；夹缝内磷光藓一点 #3DFF9C",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0054",
+      "name": "石前双灯",
+      "material": "引魂灯两盏石座制：灯座石凿 #33393F、灯室铁栅；石前左右常燃轮照三面",
+      "textureDirection": "灯室凿窗四孔十字",
+      "metalwork": "灯室铁栅 #26282C",
+      "wear": "东灯灯室烟熏重（东向今生面最常照）；灯座座面磨亮",
+      "light": "轮照机制：照一面时焰色 #3DFF9C 提亮、余两面隐入雾（联动三面照影切换）——灯光即三面照明总闸",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0055",
+      "name": "台基",
+      "material": "夯土包石台基：26×26m 台高 16m 收分三层、土中掺骨灰呈灰白色（M-04 冥制版骨粉掺料颗粒 1mm）；包石 #4A3C33",
+      "textureDirection": "版筑层理 80～100mm 水平；包石缝横平",
+      "metalwork": "无金属件",
+      "wear": "三层断面雨蚀竖沟两道；台脚泛碱白带高 200mm",
+      "light": "台身夜受盘道灯列 #3DFF9C 上染层理线（版缝亮线——夯土的「彩画」）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0056",
+      "name": "盘道石阶",
+      "material": "青黑石凿阶 64 级螺旋：阶石厚 250mm 凿面剁斧；阶心踩凹成弧",
+      "textureDirection": "凿痕顺踏面横走；凹弧螺旋递进",
+      "metalwork": "无金属件",
+      "wear": "全阶凹弧 10mm 均布；第 33 级「回头阶」凹深 15mm（回头者顿足位）＋踏响叹息声演",
+      "light": "阶面受灯列递升照明：愈高愈亮（登临节奏光）；回头阶踏响时阶面亮 #4D7CFF 一息",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0057",
+      "name": "白玉栏杆",
+      "material": "白玉栏杆望柱 20 根：柱高 1.1m 柱头云纹 P-16 浅刻、栏板素面雾蚀；望乡台用「白玉」为冥制仿玉档（骨白 #E8E3D5 基、近人烟处仿玉温润）",
+      "textureDirection": "云纹顺柱头环刻；栏板凿理竖直",
+      "metalwork": "无金属件——榫销入台",
+      "wear": "凭栏处栏杆温润磨亮成环、余处冰凉（触感分区交互）；两柱头云纹磨平",
+      "light": "栏板受雾幕 #BAFFEF 上染下缘一线；凭栏瞬间柱头云纹亮一息（「触玉」反馈）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0058",
+      "name": "罗盘刻纹",
+      "material": "青铜嵌地罗盘：径 6m 铜环嵌台心石面、刻纹阴刻 2mm 填 #E8E3D5；指针恒指阳世家山方位（追「北偏西 7°」）",
+      "textureDirection": "刻纹同心环列＋二十四山向放射",
+      "metalwork": "通体铜 #26282C；指针铜 #B87333 磨亮",
+      "wear": "指针轴心磨亮（恒转件）；盘面两向刻纹磨损浅（无人朝拜的方向）",
+      "light": "刻槽磷光 #3DFF9C 随针走（针到槽亮）；玩家转视角时指针追转（实时演出）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0059",
+      "name": "望乡雾幕",
+      "material": "望乡雾幕：台缘高 3m 常驻 M-20 幕体（灰烬灰 #57534E 基调）；幻象机制——亡魂见生前宅院炊烟／玩家见阳世实时低清倒影（截图流投幕）",
+      "textureDirection": "幕面微流动顺台缘横走",
+      "metalwork": "无金属件",
+      "wear": "幕体下缘（近栏位）雾最实、上缘渐散",
+      "light": "幕光 #BAFFEF 基调＋幻象内自发光（宅院灯火 #FFC66E 色点——阳世暖色唯一合法入幕形态）；超时转火场 #FF7F50／废墟 #57534E 警示演出",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0060",
+      "name": "焚香鼎",
+      "material": "青铜鼎四尊：台四角鼎高 900mm 范铸、双耳三足；香烟直上不散香灰落点围成圆",
+      "textureDirection": "鼎腹铸纹环带 P-01 变体；足錾爪纹",
+      "metalwork": "通体铜 #26282C；足尖磨亮露新铜 #B87333",
+      "wear": "鼎口缘（添香位）磨圆；一鼎耳残（历史风损）",
+      "light": "香烟直上四柱 #57534E 灰烟线（台角四柱定界）；香头 #FF9E00 暖点四粒（与守台棚计时香同色系）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0061",
+      "name": "泪痕石",
+      "material": "台心凹石：石 #33393F 天然凹面径 800mm 凿修一圈台口；常年湿润摸之温热",
+      "textureDirection": "凹面水线纹环列；台口凿理",
+      "metalwork": "无金属件",
+      "wear": "凹心（抚触位）石面温润磨亮；台口一圈指痕",
+      "light": "环音效极轻滴泪声＋凹心反光 #BAFFEF 极弱一点（全台最「人心」光点）；血月夜凹心转 #6E1F1F 一息",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0062",
+      "name": "界碑「望乡台」",
+      "material": "石界碑：碑高 2m 方首 #33393F；南面刻「望乡台」北面刻「一炷香为限，不得久留」填 #E8E3D5",
+      "textureDirection": "碑面凿理竖直；字竖列",
+      "metalwork": "无金属件",
+      "wear": "南面三字（正面抚读）字口磨亮；碑座苔线一线",
+      "light": "碑面字微光极弱；登台者过碑时北面小字提亮一息（规则提示光）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0063",
+      "name": "台门双灯",
+      "material": "引魂灯 2 盏盘道口：灯座石凿 #33393F、灯室铁栅；登台自动点亮下台即熄",
+      "textureDirection": "灯室凿窗四孔",
+      "metalwork": "灯室铁栅 #26282C",
+      "wear": "两灯座面磨亮（进出踏位）；一栅条断一格",
+      "light": "点熄联动演出：登台双灯同亮 #3DFF9C、下台同熄（留一息余烬 #FF9E00）——灯即「一炷香限时」的起止钟",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0064",
+      "name": "遮目垂幡",
+      "material": "白幡 12 条：幡底冥纸黄 #C9B380、幡通幅素面无字（遮目——不许看破幡后）；风动如招手",
+      "textureDirection": "幡布经直；幡脚摆幅 ±150mm",
+      "metalwork": "幡顶铁环 #26282C 挂台缘",
+      "wear": "幡脚下摆磨须成排（常年自摆）；两幡相邻处磨须最重（风涡位）",
+      "light": "幡影落台面如人影排行（投影演出）；血月夜幡影自摆 ×2 且幡面透 #4D7CFF 怨光一闪 2Hz（冥宅条款借用）",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0065",
+      "name": "守台棚位",
+      "material": "台脚小棚岗制：守台鬼差 1 尊执香计时、香尽挥手催下（交互点）；香架木 #4A3C33 悬香三档",
+      "textureDirection": "香架凿格横排；香体直纹",
+      "metalwork": "香架铁钩 #26282C",
+      "wear": "立位石面磨亮一双；香架插孔三孔磨圆",
+      "light": "计时香燃点 #FF9E00 暖点恒亮渐短（香长即剩余时间可视化）；催下演出鬼差挥手 #BAFFEF 轮廓光一振",
+      "source": "47-重点建筑室内装修全表.md"
+    },
+    {
+      "id": "D-ITM-0066",
+      "name": "骨阶扶索",
+      "material": "人骨串索：骨节 M-17 串制（骨管纵纹 0.2mm 间距）、索悬盘道外缘墙头一道；触之冰凉且轻微颤动",
+      "textureDirection": "骨节串向顺盘道螺旋；骨纹纵列",
+      "metalwork": "骨节间铁销 #26282C 细销",
+      "wear": "扶握段骨面磨亮（登临借力位）；两节间销松（颤动源）",
+      "light": "触索演出：冰凉触感＋骨节摩挲音效＋索身磷光藓 #3DFF9C 沿骨纹沟 3%（活纹）随手位流动",
+      "source": "47-重点建筑室内装修全表.md"
+    }
+  ],
+  "characters": [
+    {
+      "id": "CH-C-001",
+      "name": "呼保义·宋江",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-002",
+      "name": "玉麒麟·卢俊义",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-003",
+      "name": "智多星·吴用",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-004",
+      "name": "入云龙·公孙胜",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-005",
+      "name": "大刀·关胜",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-006",
+      "name": "豹子头·林冲",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-007",
+      "name": "霹雳火·秦明",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-008",
+      "name": "双鞭·呼延灼",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-009",
+      "name": "小李广·花荣",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-010",
+      "name": "小旋风·柴进",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-011",
+      "name": "扑天雕·李应",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-012",
+      "name": "美髯公·朱仝",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-013",
+      "name": "花和尚·鲁智深",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-014",
+      "name": "行者·武松",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-015",
+      "name": "双枪将·董平",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-016",
+      "name": "没羽箭·张清",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-017",
+      "name": "青面兽·杨志",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-018",
+      "name": "金枪手·徐宁",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-019",
+      "name": "急先锋·索超",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-020",
+      "name": "神行太保·戴宗",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-021",
+      "name": "赤发鬼·刘唐",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-022",
+      "name": "黑旋风·李逵",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-023",
+      "name": "九纹龙·史进",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-024",
+      "name": "没遮拦·穆弘",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-025",
+      "name": "插翅虎·雷横",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-026",
+      "name": "混江龙·李俊",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-027",
+      "name": "立地太岁·阮小二",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-028",
+      "name": "船火儿·张横",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-029",
+      "name": "短命二郎·阮小五",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-030",
+      "name": "浪里白条·张顺",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-031",
+      "name": "活阎罗·阮小七",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-032",
+      "name": "病关索·杨雄",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-033",
+      "name": "拚命三郎·石秀",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-034",
+      "name": "两头蛇·解珍",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-035",
+      "name": "双尾蝎·解宝",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-036",
+      "name": "浪子·燕青",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-037",
+      "name": "神机军师·朱武",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-038",
+      "name": "镇三山·黄信",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-039",
+      "name": "病尉迟·孙立",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-040",
+      "name": "丑郡马·宣赞",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-041",
+      "name": "井木犴·郝思文",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-042",
+      "name": "百胜将·韩滔",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-043",
+      "name": "天目将·彭玘",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-044",
+      "name": "圣水将·单廷珪",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-045",
+      "name": "神火将·魏定国",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-046",
+      "name": "圣手书生·萧让",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-047",
+      "name": "铁面孔目·裴宣",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-048",
+      "name": "摩云金翅·欧鹏",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-049",
+      "name": "火眼狻猊·邓飞",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-050",
+      "name": "锦毛虎·燕顺",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-051",
+      "name": "锦豹子·杨林",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-052",
+      "name": "轰天雷·凌振",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-053",
+      "name": "神算子·蒋敬",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-054",
+      "name": "小温侯·吕方",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-055",
+      "name": "赛仁贵·郭盛",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-056",
+      "name": "神医·安道全",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-057",
+      "name": "紫髯伯·皇甫端",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-058",
+      "name": "矮脚虎·王英",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-059",
+      "name": "一丈青·扈三娘",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-060",
+      "name": "丧门神·鲍旭",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-061",
+      "name": "混世魔王·樊瑞",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-062",
+      "name": "毛头星·孔明",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-063",
+      "name": "独火星·孔亮",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-064",
+      "name": "八臂哪吒·项充",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-065",
+      "name": "飞天大圣·李衮",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-066",
+      "name": "玉臂匠·金大坚",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-067",
+      "name": "铁笛仙·马麟",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-068",
+      "name": "出洞蛟·童威",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-069",
+      "name": "翻江蜃·童猛",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-070",
+      "name": "玉幡竿·孟康",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-071",
+      "name": "通臂猿·侯健",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-072",
+      "name": "跳涧虎·陈达",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-073",
+      "name": "白花蛇·杨春",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-074",
+      "name": "白面郎君·郑天寿",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-075",
+      "name": "九尾龟·陶宗旺",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-076",
+      "name": "铁扇子·宋清",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-077",
+      "name": "铁叫子·乐和",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-078",
+      "name": "花项虎·龚旺",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-079",
+      "name": "中箭虎·丁得孙",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-080",
+      "name": "小遮拦·穆春",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-081",
+      "name": "操刀鬼·曹正",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-082",
+      "name": "云里金刚·宋万",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-083",
+      "name": "摸着天·杜迁",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-084",
+      "name": "病大虫·薛永",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-085",
+      "name": "金眼彪·施恩",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-086",
+      "name": "打虎将·李忠",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-087",
+      "name": "小霸王·周通",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-088",
+      "name": "金钱豹子·汤隆",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-089",
+      "name": "鬼脸儿·杜兴",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-090",
+      "name": "出林龙·邹渊",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-091",
+      "name": "独角龙·邹润",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-092",
+      "name": "旱地忽律·朱贵",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-093",
+      "name": "笑面虎·朱富",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-094",
+      "name": "铁臂膊·蔡福",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-095",
+      "name": "一枝花·蔡庆",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-096",
+      "name": "催命判官·李立",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-097",
+      "name": "青眼虎·李云",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-098",
+      "name": "没面目·焦挺",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-099",
+      "name": "石将军·石勇",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-100",
+      "name": "小尉迟·孙新",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-101",
+      "name": "母大虫·顾大嫂",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-102",
+      "name": "菜园子·张青",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-103",
+      "name": "母夜叉·孙二娘",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-104",
+      "name": "活闪婆·王定六",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-105",
+      "name": "险道神·郁保四",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-106",
+      "name": "白日鼠·白胜",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-107",
+      "name": "鼓上蚤·时迁",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-108",
+      "name": "金毛犬·段景住",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N01",
+      "name": "茶博士·老周",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N02",
+      "name": "酒保·阿判",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N03",
+      "name": "炊饼郎·六哥",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N04",
+      "name": "老鱼牙·姚大秤",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N05",
+      "name": "货郎·担儿陈",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N06",
+      "name": "卦摊先生·铁口赵",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N07",
+      "name": "代书老儒·抄手翁",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N08",
+      "name": "说书人·醒木张",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N09",
+      "name": "琵琶女·素弦",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N10",
+      "name": "虹桥笛手·哑笛李",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N11",
+      "name": "轿夫·双杠刘",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N12",
+      "name": "车夫·老辕张",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N13",
+      "name": "漕船工·篷老大",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N14",
+      "name": "艄公·摇橹周",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N15",
+      "name": "驼夫·胡驼儿",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N16",
+      "name": "马倌·豆料孙",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N17",
+      "name": "更夫·梆子何",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N18",
+      "name": "巡铺兵·皂旗儿",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N19",
+      "name": "坊正·户帖钱",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N20",
+      "name": "牛马牙人·鞭杆胡",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N21",
+      "name": "绣娘·金线娘",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N22",
+      "name": "浆洗妇·皂角嫂",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N23",
+      "name": "卖花女·栀子妹",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N24",
+      "name": "乞者·铁碗翁",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N25",
+      "name": "泼皮·滚刀肉",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N26",
+      "name": "小沙弥·扫叶",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N27",
+      "name": "道人·云水散人",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N28",
+      "name": "码头脚夫·扁担九",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N29",
+      "name": "上水纤夫·背塔爷",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-C-N30",
+      "name": "饮子婆婆·梅婆婆",
+      "realm": "human",
+      "source": "42-人间角色全录.md"
+    },
+    {
+      "id": "CH-D-001",
+      "name": "阎罗王",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-002",
+      "name": "判官",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-003",
+      "name": "崔判官",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-004",
+      "name": "六道转轮官",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-005",
+      "name": "牛头",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-006",
+      "name": "马面",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-007",
+      "name": "狱卒头目",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-008",
+      "name": "钟馗",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-009",
+      "name": "日游神",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-010",
+      "name": "夜游神",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-011",
+      "name": "黑无常",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-012",
+      "name": "白无常",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-013",
+      "name": "鬼差",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-014",
+      "name": "引路童子",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-015",
+      "name": "送魂鸦灵",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-016",
+      "name": "孟婆",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-017",
+      "name": "孟婆娘",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-018",
+      "name": "桥头老龟",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-019",
+      "name": "土地爷",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-020",
+      "name": "城隍",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-021",
+      "name": "恶鬼",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-022",
+      "name": "鬼城游魂",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-023",
+      "name": "水鬼",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-024",
+      "name": "吊死鬼",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-025",
+      "name": "怨鬼",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-026",
+      "name": "鬼火精灵",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-027",
+      "name": "纸人",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-D-028",
+      "name": "骨犬",
+      "realm": "underworld",
+      "source": "43-地府角色全录.md"
+    },
+    {
+      "id": "CH-T-001",
+      "name": "玉皇大帝",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-002",
+      "name": "王母娘娘",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-003",
+      "name": "太上老君",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-004",
+      "name": "如来佛祖",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-005",
+      "name": "观音菩萨",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-006",
+      "name": "善财童子【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-007",
+      "name": "龙女【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-008",
+      "name": "木吒惠岸【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-009",
+      "name": "文殊菩萨【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-010",
+      "name": "普贤菩萨【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-011",
+      "name": "灵吉菩萨【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-012",
+      "name": "韦陀尊者【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-013",
+      "name": "伽蓝尊者【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-014",
+      "name": "孙悟空",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-015",
+      "name": "猪八戒【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-016",
+      "name": "沙悟净【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-017",
+      "name": "牛魔王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-018",
+      "name": "蛟魔王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-019",
+      "name": "鹏魔王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-020",
+      "name": "狮驼王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-021",
+      "name": "猕猴王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-022",
+      "name": "禺狨王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-023",
+      "name": "托塔李天王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-024",
+      "name": "哪吒三太子",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-025",
+      "name": "二郎神杨戬",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-026",
+      "name": "哮天犬",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-027",
+      "name": "巨灵神",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-028",
+      "name": "持国天王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-029",
+      "name": "增长天王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-030",
+      "name": "广目天王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-031",
+      "name": "多闻天王",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-032",
+      "name": "王灵官",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-033",
+      "name": "鱼肚将【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-034",
+      "name": "药叉将【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-035",
+      "name": "金甲力士·班首【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-036",
+      "name": "闻仲【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-037",
+      "name": "雷公",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-038",
+      "name": "电母",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-039",
+      "name": "风伯",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-040",
+      "name": "雨师",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-041",
+      "name": "角木蛟",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-042",
+      "name": "亢金龙",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-043",
+      "name": "奎木狼",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-044",
+      "name": "斗木獬",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-045",
+      "name": "牛金牛",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-046",
+      "name": "昴日星官",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-047",
+      "name": "心月狐",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-048",
+      "name": "毕月乌",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-049",
+      "name": "虚日鼠",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-050",
+      "name": "嫦娥仙子",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-051",
+      "name": "玉兔【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-052",
+      "name": "吴刚【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-053",
+      "name": "织女【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-054",
+      "name": "仙鹤童子【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-055",
+      "name": "七仙女·红衣",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-056",
+      "name": "七仙女·青衣",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-057",
+      "name": "七仙女·素衣",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-058",
+      "name": "紫衣仙女【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-059",
+      "name": "蟠桃园土地【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-060",
+      "name": "东方朔【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-061",
+      "name": "金角童子【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-062",
+      "name": "银角童子【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-063",
+      "name": "太白金星",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-064",
+      "name": "赤脚大仙",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-065",
+      "name": "仙官·甲",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-066",
+      "name": "仙官·乙",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-067",
+      "name": "仙官·丙",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-068",
+      "name": "日值功曹【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-069",
+      "name": "时值功曹【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-070",
+      "name": "千里眼【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-071",
+      "name": "顺风耳【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-072",
+      "name": "月老【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-073",
+      "name": "赵公明【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-074",
+      "name": "神荼【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-075",
+      "name": "郁垒【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-076",
+      "name": "六丁神将·丁卯【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    },
+    {
+      "id": "CH-T-077",
+      "name": "六甲神将·甲子【补充】",
+      "realm": "sky",
+      "source": "41-天宫角色全录.md"
+    }
+  ],
+  "plants": [
+    {
+      "id": "C-PLT-01",
+      "name": "植被全录",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-PLT-02",
+      "name": "槐",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-PLT-03",
+      "name": "松",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-PLT-04",
+      "name": "柏",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-PLT-05",
+      "name": "桃杏",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-PLT-06",
+      "name": "竹",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-PLT-07",
+      "name": "胡杨",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-PLT-08",
+      "name": "牧草",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "D-PLT-001",
+      "name": "植物 | … | ～ D-PLT-010 |",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-PLT-002",
+      "name": "冥河青萍",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-PLT-003",
+      "name": "尸香魔芋",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-PLT-004",
+      "name": "鬼灯笼果",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-PLT-005",
+      "name": "引魂木",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-PLT-006",
+      "name": "忘忧曼陀罗",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-PLT-007",
+      "name": "血珊瑚",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-PLT-008",
+      "name": "祭台骨缘",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-PLT-009",
+      "name": "黄泉芦",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-PLT-010",
+      "name": "D-PLT-001…",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "T-PLT-001",
+      "name": "- 资产 ID 规则：区域 `T-ZZ-01…`；建筑 `T-GZ-001…`；植物 `…`；生物 `T-CRT-001…`；仙迹 `T-MIR-001…`；物品 `T-ITM-0001…`。",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-002",
+      "name": "仙桂",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-003",
+      "name": "瑶草",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-004",
+      "name": "九叶灵芝",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-005",
+      "name": "天山雪莲",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-006",
+      "name": "青莲",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-007",
+      "name": "垂云竹",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-008",
+      "name": "星辉花",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-009",
+      "name": "迎宾茶灶",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-010",
+      "name": "醉霞石榴",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-011",
+      "name": "五色虹藤",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-012",
+      "name": "银霜橘",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-013",
+      "name": "含露昙花",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-PLT-014",
+      "name": "沉星柳",
+      "source": "10-天宫资产全录.md"
+    }
+  ],
+  "creatures": [
+    {
+      "id": "C-CRT-01",
+      "name": "生物群落全录",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-CRT-02",
+      "name": "丝路驼队",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-CRT-03",
+      "name": "草原马群",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-CRT-04",
+      "name": "雁阵",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-CRT-05",
+      "name": "鱼群",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-CRT-06",
+      "name": "狼群",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-CRT-07",
+      "name": "鹰",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "C-CRT-08",
+      "name": "鹿",
+      "source": "20-汴京城市资产全录.md"
+    },
+    {
+      "id": "D-CRT-001",
+      "name": "生物 | … | ～ D-CRT-017 |",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-002",
+      "name": "守关籍案",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-003",
+      "name": "牛头",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-004",
+      "name": "马面",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-005",
+      "name": "黑无常",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-006",
+      "name": "白无常",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-007",
+      "name": "孟婆位",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-008",
+      "name": "判官案",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-009",
+      "name": "阎罗王",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-010",
+      "name": "鬼城游魂",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-011",
+      "name": "水鬼",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-012",
+      "name": "吊死鬼",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-013",
+      "name": "怨鬼",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-014",
+      "name": "鬼火精灵",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-015",
+      "name": "纸人阵列",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-016",
+      "name": "骨犬",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "D-CRT-017",
+      "name": "D-CRT-001…",
+      "source": "30-地府资产全录.md"
+    },
+    {
+      "id": "T-CRT-001",
+      "name": "- 资产 ID 规则：区域 `T-ZZ-01…`；建筑 `T-GZ-001…`；植物 `T-PLT-001…`；生物 `…`；仙迹 `T-MIR-001…`；物品 `T-ITM-0001…`。",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-002",
+      "name": "驻留神仙NPC | 嫦娥、玉兔×1、吴刚 |",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-003",
+      "name": "麒麟",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-004",
+      "name": "天龙",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-005",
+      "name": "凤凰",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-006",
+      "name": "仙鹿",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-007",
+      "name": "- 联动：金鲤跃龙门以彩虹弧中段为「龙门」，二期开放。",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-008",
+      "name": "灵猴",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-009",
+      "name": "石狮",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-010",
+      "name": "貔貅门墩",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-011",
+      "name": "驻留神仙NPC | 太上老君、金角童子、银角童子、青牛 |",
+      "source": "10-天宫资产全录.md"
+    },
+    {
+      "id": "T-CRT-012",
+      "name": "哮天犬",
+      "source": "10-天宫资产全录.md"
+    }
+  ]
+};

@@ -1,0 +1,71 @@
+# ---- 依赖 ----
+node_modules/
+.pnpm-store/
+
+# ---- 构建产物 ----
+dist/
+dist-r10/
+*.tsbuildinfo
+
+# ---- 打包产物（每个 release 的 exe 有 190MB，绝不能进仓库）----
+release-v*/
+release-*/
+*.exe
+*.asar
+*.nupkg
+*.zip
+
+# ---- 截图与中间物（体积大、可重生成）----
+screenshots/
+artifacts/vf/
+artifacts/wq-river/
+artifacts/lane3/
+artifacts/cqwall/
+*.png
+*.jpg
+*.jpeg
+!docs/demo-poster.jpg
+
+# ---- 探针与调试的临时产物 ----
+scripts/_*.mjs
+_*.html
+_*.json
+.tmp/
+%TEMP%/
+
+# ---- agent 工作状态与备份（不是源码，且含中间态）----
+.acs/
+.audit/
+.moai/
+
+# ---- 缓存 ----
+.vite/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.cache/
+
+# ---- 凭据与本地配置（永远不进仓库）----
+.env
+.env.*
+*.pem
+*.key
+.npmrc
+config.local.*
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 根目录草稿探针（开发期临时脚本，含本机绝对路径）----
+/probe-*.mjs
+/audit-*.mjs
+/shot*.mjs
+/_*.mjs
+/.audit/
+/.acs/
+/.moai/
+/artifacts/gates-*.txt

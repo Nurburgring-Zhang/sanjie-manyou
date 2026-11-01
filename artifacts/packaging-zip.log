@@ -1,0 +1,11 @@
+  • electron-builder  version=25.1.8 os=10.0.26200
+  • loaded configuration  file=package.json ("build" field)
+  • description is missed in the package.json  appPackageFile=D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\package.json
+  • author is missed in the package.json  appPackageFile=D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\package.json
+  • executing @electron/rebuild  electronVersion=33.4.11 arch=x64 buildFromSource=false appDir=./
+  • installing native dependencies  arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=33.4.11 appOutDir=release-v11\win-unpacked
+  • copying Electron  source=D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\electron\dist destination=D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\release-v11\win-unpacked
+  • updating asar integrity executable resource  executablePath=release-v11\win-unpacked\CyberQingming.exe
+  • building        target=zip arch=x64 file=release-v11\赛博上河-CyberQingming-1.2.0-x64.zip

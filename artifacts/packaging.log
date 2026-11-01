@@ -1,0 +1,60 @@
+  • electron-builder  version=25.1.8 os=10.0.26200
+  • loaded configuration  file=package.json ("build" field)
+  • description is missed in the package.json  appPackageFile=D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\package.json
+  • author is missed in the package.json  appPackageFile=D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\package.json
+  • executing @electron/rebuild  electronVersion=33.4.11 arch=x64 buildFromSource=false appDir=./
+  • installing native dependencies  arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=33.4.11 appOutDir=release-v11\win-unpacked
+  • copying Electron  source=D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\electron\dist destination=D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\release-v11\win-unpacked
+  • updating asar integrity executable resource  executablePath=release-v11\win-unpacked\CyberQingming.exe
+  • building        target=portable file=release-v11\赛博上河-CyberQingming-x64.exe archs=x64
+  • default Electron icon is used  reason=application icon is not set
+  ⨯ Get "https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z": dial tcp 20.205.243.166:443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+github.com/develar/app-builder/pkg/download.(*Downloader).follow.func1
+	/Users/runner/work/app-builder/app-builder/pkg/download/downloader.go:206
+github.com/develar/app-builder/pkg/download.(*Downloader).follow
+	/Users/runner/work/app-builder/app-builder/pkg/download/downloader.go:234
+github.com/develar/app-builder/pkg/download.(*Downloader).DownloadNoRetry
+	/Users/runner/work/app-builder/app-builder/pkg/download/downloader.go:128
+github.com/develar/app-builder/pkg/download.(*Downloader).Download
+	/Users/runner/work/app-builder/app-builder/pkg/download/downloader.go:112
+github.com/develar/app-builder/pkg/download.DownloadArtifact
+	/Users/runner/work/app-builder/app-builder/pkg/download/artifactDownloader.go:107
+github.com/develar/app-builder/pkg/download.ConfigureArtifactCommand.func1
+	/Users/runner/work/app-builder/app-builder/pkg/download/artifactDownloader.go:27
+github.com/alecthomas/kingpin.(*actionMixin).applyActions
+	/Users/runner/go/pkg/mod/github.com/alecthomas/kingpin@v2.2.6+incompatible/actions.go:28
+github.com/alecthomas/kingpin.(*Application).applyActions
+	/Users/runner/go/pkg/mod/github.com/alecthomas/kingpin@v2.2.6+incompatible/app.go:557
+github.com/alecthomas/kingpin.(*Application).execute
+	/Users/runner/go/pkg/mod/github.com/alecthomas/kingpin@v2.2.6+incompatible/app.go:390
+github.com/alecthomas/kingpin.(*Application).Parse
+	/Users/runner/go/pkg/mod/github.com/alecthomas/kingpin@v2.2.6+incompatible/app.go:222
+main.main
+	/Users/runner/work/app-builder/app-builder/main.go:90
+runtime.main
+	/Users/runner/hostedtoolcache/go/1.21.13/arm64/src/runtime/proc.go:267
+runtime.goexit
+	/Users/runner/hostedtoolcache/go/1.21.13/arm64/src/runtime/asm_amd64.s:1650  
+  ⨯ D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\app-builder-bin\win\x64\app-builder.exe process failed ERR_ELECTRON_BUILDER_CANNOT_EXECUTE
+Exit code:
+1  failedTask=build stackTrace=Error: D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\app-builder-bin\win\x64\app-builder.exe process failed ERR_ELECTRON_BUILDER_CANNOT_EXECUTE
+Exit code:
+1
+    at ChildProcess.<anonymous> (D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\builder-util\src\util.ts:255:14)
+    at Object.onceWrapper (node:events:623:26)
+    at ChildProcess.emit (node:events:508:28)
+    at ChildProcess.cp.emit (D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\cross-spawn\lib\enoent.js:34:29)
+    at maybeClose (node:internal/child_process:1085:16)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:304:5)
+From previous event:
+    at processImmediate (node:internal/timers:504:21)
+From previous event:
+    at NsisTarget.buildInstaller (D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\app-builder-lib\src\targets\nsis\NsisTarget.ts:237:29)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at NsisTarget.finishBuild (D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\app-builder-lib\src\targets\nsis\NsisTarget.ts:138:9)
+    at Packager.doBuild (D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\app-builder-lib\src\packager.ts:478:7)
+    at executeFinally (D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\builder-util\src\promise.ts:12:14)
+    at Packager.build (D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\app-builder-lib\src\packager.ts:393:31)
+    at executeFinally (D:\kimi\赛博上河-CyberQingming-全量导出-20261024\cyber-qingming\node_modules\builder-util\src\promise.ts:12:14)

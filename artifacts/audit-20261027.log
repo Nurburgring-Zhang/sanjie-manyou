@@ -1,0 +1,21 @@
+shot bridge tp=true -> screenshots/audit-20261027/bridge.png
+shot sunyang tp=true -> screenshots/audit-20261027/sunyang.png
+shot wharf tp=true -> screenshots/audit-20261027/wharf.png
+shot gate tp=true -> screenshots/audit-20261027/gate.png
+shot lingxiao tp=true -> screenshots/audit-20261027/lingxiao.png
+shot jiangtai tp=true -> screenshots/audit-20261027/jiangtai.png
+shot star9 tp=true -> screenshots/audit-20261027/star9.png
+shot naihe tp=true -> screenshots/audit-20261027/naihe.png
+shot yanluo tp=true -> screenshots/audit-20261027/yanluo.png
+shot fengdu tp=true -> screenshots/audit-20261027/fengdu.png
+shot shibayu tp=true -> screenshots/audit-20261027/shibayu.png
+shot zichen tp=true -> screenshots/audit-20261027/zichen.png
+shot mt_泰山 tp=true -> screenshots/audit-20261027/mt_泰山.png
+shot desert tp=true -> screenshots/audit-20261027/desert.png
+shot yaochi tp=true -> screenshots/audit-20261027/yaochi.png
+shot sansheng tp=true -> screenshots/audit-20261027/sansheng.png
+shot wangxiang tp=true -> screenshots/audit-20261027/wangxiang.png
+shot mengpo tp=true -> screenshots/audit-20261027/mengpo.png
+shot scroll tp=true -> screenshots/audit-20261027/scroll.png
+STATS: {"live":616,"heroes":147,"renderer":{"calls":211,"triangles":148255260,"geometries":137,"textures":37}}
+ERRORS: NONE

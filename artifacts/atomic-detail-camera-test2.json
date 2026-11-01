@@ -1,0 +1,128 @@
+{
+  "checks": {
+    "auditPresent": true,
+    "eaveRafters": true,
+    "tileDrips": true,
+    "lattice": true,
+    "stools": false,
+    "bowls": false,
+    "kitchen": false,
+    "newMaterials": false,
+    "nonBlankExterior": true,
+    "nonBlankInterior": true,
+    "exteriorBloomNormal": true,
+    "interiorBloomReduced": false,
+    "noErrors": true
+  },
+  "detail": {
+    "eave.flyingRafter": 19428,
+    "eave.purlin": 3888,
+    "eave.rafter": 25336,
+    "eave.tileDrip": 37584,
+    "eave.windBell": 1944,
+    "facade.columnBase": 1096,
+    "facade.doorStud": 4752,
+    "facade.latticeSlat": 2760,
+    "facade.sideWindow": 528,
+    "facade.stoneSkirt": 264,
+    "facade.thresholdStep": 528
+  },
+  "exterior": {
+    "audit": {
+      "groups": {
+        "wood": {
+          "vertices": 1807384,
+          "triangles": 602461.3333333334
+        },
+        "wall": {
+          "vertices": 393226,
+          "triangles": 131075.33333333334
+        },
+        "roof": {
+          "vertices": 3106786,
+          "triangles": 1035595.3333333334
+        },
+        "ground": {
+          "vertices": 2232,
+          "triangles": 744
+        },
+        "glow": {
+          "vertices": 398182,
+          "triangles": 132727.33333333334
+        },
+        "leaf": {
+          "vertices": 11734,
+          "triangles": 3911.3333333333335
+        },
+        "trunk": {
+          "vertices": 4052,
+          "triangles": 1350.6666666666667
+        },
+        "water": {
+          "vertices": 96,
+          "triangles": 32
+        },
+        "ceramic": {
+          "vertices": 0,
+          "triangles": 0
+        },
+        "metal": {
+          "vertices": 215136,
+          "triangles": 71712
+        },
+        "fabric": {
+          "vertices": 0,
+          "triangles": 0
+        },
+        "lacquer": {
+          "vertices": 69664,
+          "triangles": 23221.333333333332
+        }
+      },
+      "detail": {
+        "eave.flyingRafter": 19428,
+        "eave.purlin": 3888,
+        "eave.rafter": 25336,
+        "eave.tileDrip": 37584,
+        "eave.windBell": 1944,
+        "facade.columnBase": 1096,
+        "facade.doorStud": 4752,
+        "facade.latticeSlat": 2760,
+        "facade.sideWindow": 528,
+        "facade.stoneSkirt": 264,
+        "facade.thresholdStep": 528
+      }
+    },
+    "renderer": {
+      "calls": 183,
+      "triangles": 76128479.66666664,
+      "geometries": 127,
+      "textures": 35
+    },
+    "camera": [
+      240,
+      16,
+      32
+    ],
+    "bloomScale": 1
+  },
+  "interior": {
+    "renderer": {
+      "calls": 53,
+      "triangles": 74377485.66666664,
+      "geometries": 131,
+      "textures": 35
+    },
+    "camera": [
+      226,
+      3,
+      82
+    ],
+    "bloomScale": 1
+  },
+  "screenshot": [
+    "screenshots/atomic-sunyang-exterior.png",
+    "screenshots/atomic-sunyang-interior.png"
+  ],
+  "errors": []
+}
