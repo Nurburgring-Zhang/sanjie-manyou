@@ -1,6 +1,11 @@
 import * as THREE from 'three';
 import { Baker, shade } from '../city/bake';
 import { RNG } from '../core/rng';
+// 只为类型（`import type` 编译期擦除，不构成 terrain → flora 的运行时环）
+import type { Mountain } from '../world/terrain';
+
+/** 山上五色花丛（与 terrain.ts 顶点色 FLOWER_COLORS 同序：两处一个是地形色斑、一个是实体花丛） */
+const FLOWER_COLORS = [0xff5478, 0xffb300, 0x9a6bff, 0xff6ad5, 0xff7a3c, 0xffe14d];
 
 // ============ B10 植物精化：仙植 14 选 6 / 鬼植 10 选 6（10/30 卷 T-PLT/D-PLT 表） ============
 // 静态烘焙散布（glow/wood/trunk/leaf 组，零新增材质）；彼岸花/忘忧曼陀罗/醉霞石榴已有
@@ -509,7 +514,7 @@ function windMaterial(): THREE.MeshStandardMaterial {
   return mat;
 }
 
-export interface WindFloraReport { tris: number; plants: number; drawCalls: number; species: Record<string, number> }
+export interface WindFloraReport { tris: number; plants: number; drawCalls: number; species: Record<string, number>; fauna?: number }
 export const windFloraReport: WindFloraReport = { tris: 0, plants: 0, drawCalls: 0, species: {} };
 
 /** 莲花：茎 + 圆叶 + 三层花瓣（8 外 / 6 中 / 5 内）+ 花蕊。池中漂浮，摆动最轻 */
@@ -759,6 +764,8 @@ export function buildWindFlora(scene: THREE.Scene): WindFloraReport {
     netherVine(w, dx + 0.7 + (i % 2) * 0.5, dy + 2.6 + (i % 3) * 0.35, dz + 0.3, 2.2 + (i % 4) * 0.35, 0.2 + i * 0.9, 0x33 + i);
     species.netherVine++;
   }
+  // ---- 七岳神兽神鸟：锚点在 buildMountainLife（山河·地形步）里落位，这里只做造型 ----
+  const fauna = buildMountainFauna(w);
   const geo = w.geo();
   const mat = windMaterial();
   const mesh = new THREE.Mesh(geo, mat);
@@ -772,8 +779,624 @@ export function buildWindFlora(scene: THREE.Scene): WindFloraReport {
   };
   scene.add(mesh);
   windFloraReport.tris = Math.round(w.tris);
-  windFloraReport.plants = Object.values(species).reduce((a, b) => a + b, 0);
+  windFloraReport.plants = Object.values(species).reduce((a, b) => a + b, 0) + fauna;
   windFloraReport.drawCalls = 1;
   windFloraReport.species = species;
+  windFloraReport.fauna = fauna;
+  if (typeof window !== 'undefined') (window as unknown as { __windFloraReport?: WindFloraReport }).__windFloraReport = windFloraReport;
   return windFloraReport;
+}
+
+// ============ 七岳山林生机（v92）：分带乔木 / 五色花丛 / 溪流瀑布 / 神兽神鸟锚点 ============
+// 约束：树与花走 Baker 静态合批（trunk/leaf 既有组，零新增 draw call、零实例池占用——
+// treeTrunk/treeCanopy 池已被 scatterVegetation 用掉 1500/1600，crane/qilin 池也被 mounts.ts 全额分配，
+// 再 alloc 会抛「槽位不足」把世界初始化打断）。神兽神鸟走本文件既有的 WindBatch 风动合批（1 draw call）。
+// 随机源全部是本山地种子 LCG 与坐标 hash，**不消耗共享 rng**：下游 scatterVegetation / 市井装饰逐值不变。
+
+// 再强调一次：树与花走 Baker 静态合批（trunk/leaf 既有组，零新增 draw call、零实例池占用——
+// treeTrunk/treeCanopy 池已被 scatterVegetation 用掉 1500/1600，crane/qilin 池也被 mounts.ts 全额分配，
+// 再 alloc 会抛「槽位不足」把世界初始化打断）。神兽神鸟走本文件既有的 WindBatch 风动合批（1 draw call）。
+export interface MountainSite {
+  /** 山体定义（只读） */
+  m: Mountain;
+  /** 解析峰（多数形制的实际最高点不在几何中心） */
+  summit: { x: number; y: number; z: number };
+  /** 林线 / 雪线（米） */
+  treeLine: number;
+  snowLine: number;
+  /** 溪流起始方位（弧度） */
+  streamAng: number;
+  /** 是否配瀑布 */
+  waterfall: boolean;
+}
+
+export interface FaunaAnchor { x: number; y: number; z: number; kind: 'crane' | 'deer' | 'qingluan' | 'qilin' | 'tiger'; ry: number; s: number }
+
+export interface MountainLifeReport {
+  trees: Record<string, number>;
+  shrubs: Record<string, number>;
+  flowers: Record<string, number>;
+  flowerColors: number;
+  streams: Record<string, number>;
+  waterfalls: { mountain: string; drop: number; at: [number, number, number] }[];
+  fauna: Record<string, number>;
+  faunaTotal: number;
+  /** 近景取证用的密林中心（山名 → [x,y,z]） */
+  groves: Record<string, [number, number, number]>;
+  tris: number;
+}
+
+let lifeReport: MountainLifeReport | null = null;
+export function getMountainLifeReport(): MountainLifeReport | null { return lifeReport; }
+
+/** 本山专用 LCG：只吃坐标与 salt，绝不碰共享 rng */
+function lifeRng(m: Mountain, salt: number): () => number {
+  let s = (Math.imul(Math.round(m.x * 31 + m.z * 17) ^ salt, 2246822519) >>> 0) || 7;
+  return (): number => ((s = (Math.imul(s ^ (s >>> 13), 1103515245) + 12345) >>> 0) / 4294967296);
+}
+
+function slopeAt(surfaceAt: (x: number, z: number) => number, x: number, z: number, e = 45): number {
+  const gx = (surfaceAt(x + e, z) - surfaceAt(x - e, z)) / (2 * e);
+  const gz = (surfaceAt(x, z + e) - surfaceAt(x, z - e)) / (2 * e);
+  return Math.hypot(gx, gz);
+}
+
+// 分带色：山脚阔叶（亮）→ 山腰针阔混 → 山腰以上针叶（墨绿）；都避开近白，防山顶爆白。
+// v92 提亮一档：低太阳角下 0x2f5c3a 这类深绿会读成黑剪影（山腰近景实拍确认），
+// 提亮后仍比草地深，近看是树、远看是林。
+const LEAF_BROAD = [0x5f9e44, 0x6aab4c, 0x55963e, 0x74b455, 0x63a247];
+const LEAF_MIXED = [0x4c8a3f, 0x579a46, 0x437c3a, 0x518f41];
+const LEAF_CONIF = [0x3d7245, 0x46804c, 0x356842, 0x407848];
+
+/** 单株乔木：针叶=三段锥，阔叶=扁球冠。返回构件数（诊断用） */
+function mountainTree(b: Baker, x: number, y: number, z: number, band: number, s: number, hex: number, rot: number): void {
+  const trunkC = 0x3b2b1c;
+  if (band >= 2) {
+    const h = 13 * s;
+    b.cyl('trunk', 0.42 * s, 0.72 * s, h * 0.5, 5, x, y + h * 0.25, z, trunkC);
+    for (let k = 0; k < 3; k++) {
+      const w = (3.6 - k * 0.85) * s, hh = (6.4 - k * 1.4) * s;
+      b.cyl('leaf', 0.12 * s, w, hh, 6, x, y + h * 0.42 + k * 3.4 * s, z, shade(hex, 0.94 + k * 0.06));
+    }
+  } else {
+    const h = 11 * s;
+    b.cyl('trunk', 0.5 * s, 0.82 * s, h * 0.55, 5, x, y + h * 0.28, z, trunkC);
+    b.sphere('leaf', 3.4 * s, 5, x, y + h * 0.72, z, hex, rot, 0, 0, 1.0, 0.72, 0.95);
+    if (band === 1) b.cyl('leaf', 0.1 * s, 2.2 * s, 4.2 * s, 6, x, y + h * 0.86, z, shade(hex, 0.9));
+  }
+}
+
+/** 花丛：低矮灌木 + 4 团同色花球（同色成片，不撒彩虹点） */
+function mountainFlowerBush(b: Baker, x: number, y: number, z: number, hex: number, s: number, rot: number): void {
+  b.sphere('leaf', 0.85 * s, 5, x, y + 0.55 * s, z, 0x3b6b30, rot, 0, 0, 1.25, 0.62, 1.1);
+  for (let k = 0; k < 4; k++) {
+    const a = rot + k * Math.PI * 0.5;
+    b.sphere('leaf', 0.32 * s, 4, x + Math.cos(a) * 0.55 * s, y + 0.72 * s + (k % 2) * 0.12 * s, z + Math.sin(a) * 0.55 * s, hex, 0, 0, 0, 1.15, 0.72, 1.15);
+  }
+}
+
+/** 林下灌丛：一丛两球，填满乔木之间的裸地（近景"郁郁葱葱"主要靠它，单丛 ~72 面） */
+function mountainShrub(b: Baker, x: number, y: number, z: number, hex: number, s: number, rot: number): void {
+  b.sphere('leaf', 0.95 * s, 5, x, y + 0.5 * s, z, hex, rot, 0, 0, 1.35, 0.66, 1.2);
+  b.sphere('leaf', 0.55 * s, 4, x + Math.cos(rot) * 0.7 * s, y + 0.62 * s, z + Math.sin(rot) * 0.7 * s, shade(hex, 1.12), 0, 0, 0, 1.1, 0.8, 1.05);
+}
+
+interface StreamPt { x: number; y: number; z: number }
+
+/** 沿下坡方向追一条溪流：梯度下降 + 外向偏置（不会走进山体内部的局部洼地） */
+function traceStream(site: MountainSite, surfaceAt: (x: number, z: number) => number, rnd: () => number): StreamPt[] {
+  const m = site.m;
+  let rr = m.r * 0.56;
+  let start: StreamPt | null = null;
+  // 找到山腰上一个确实有高度的起点（华山绝壁的 0.56r 已在山脚外）
+  for (let k = 0; k < 10 && !start; k++) {
+    const x = m.x + Math.cos(site.streamAng) * rr, z = m.z + Math.sin(site.streamAng) * rr;
+    const y = surfaceAt(x, z);
+    if (y > m.h * 0.1) start = { x, y, z };
+    rr -= m.r * 0.05;
+  }
+  if (!start) return [];
+  const pts: StreamPt[] = [start];
+  let px = start.x, pz = start.z;
+  for (let i = 0; i < 60; i++) {
+    const y = surfaceAt(px, pz);
+    if (y < 3.5) break;
+    const gx = (surfaceAt(px + 40, pz) - surfaceAt(px - 40, pz)) / 80;
+    const gz = (surfaceAt(px, pz + 40) - surfaceAt(px, pz - 40)) / 80;
+    const ox = px - m.x, oz = pz - m.z;
+    const ol = Math.hypot(ox, oz) || 1;
+    let dx = -gx * 170 + (ox / ol) * 52 + (rnd() - 0.5) * 12;
+    let dz = -gz * 170 + (oz / ol) * 52 + (rnd() - 0.5) * 12;
+    const L = Math.hypot(dx, dz) || 1;
+    px += (dx / L) * 68;
+    pz += (dz / L) * 68;
+    if (Math.hypot(px - m.x, pz - m.z) > m.r * 1.22) break;
+    pts.push({ x: px, y: surfaceAt(px, pz), z: pz });
+  }
+  return pts;
+}
+
+/** 溪流缎带 + 岸石 + 源头泉眼。返回米数 */
+function buildStreamRibbon(b: Baker, pts: StreamPt[], rnd: () => number): number {
+  if (pts.length < 3) return 0;
+  let len = 0;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i], c = pts[i + 1];
+    const dx = c.x - a.x, dz = c.z - a.z;
+    const L = Math.hypot(dx, dz) || 1;
+    len += L;
+    const yaw = Math.atan2(dx, dz);
+    const rx = -Math.atan2(c.y - a.y, L);
+    const w = 10 + (i % 3) * 1.6;
+    b.box('water', w, 0.5, L + 4, (a.x + c.x) / 2, (a.y + c.y) / 2 + 0.55, (a.z + c.z) / 2, 0x2f7f96, yaw, rx, 0);
+    if (i % 3 === 1) { // 白沫：短段、窄、压在水面
+      b.box('ash', w * 0.45, 0.28, L * 0.5, (a.x + c.x) / 2, (a.y + c.y) / 2 + 0.85, (a.z + c.z) / 2, 0xcfe4ea, yaw, rx, 0);
+    }
+    if (i % 2 === 0) { // 两岸石
+      for (const sd of [-1, 1]) {
+        const ox = Math.cos(yaw) * sd * (w * 0.5 + 3.5);
+        const oz = -Math.sin(yaw) * sd * (w * 0.5 + 3.5);
+        const rr = 1.6 + rnd() * 2.4;
+        b.sphere('ash', rr, 5, a.x + ox, a.y + rr * 0.3, a.z + oz, shade(0x7d7f78, 0.86 + rnd() * 0.2), 0, 0, 0, 1.2, 0.6, 1.1);
+      }
+    }
+  }
+  // 源头泉眼：石砌小涵洞 + 一汪浅潭
+  const s = pts[0];
+  b.cyl('water', 7, 8, 0.6, 12, s.x, s.y + 0.4, s.z, 0x2f7f96);
+  for (let k = 0; k < 5; k++) {
+    const a = (k / 5) * Math.PI * 2;
+    b.sphere('ash', 2.4 + rnd() * 1.2, 5, s.x + Math.cos(a) * 8.5, s.y + 0.6, s.z + Math.sin(a) * 8.5, 0x74766f, 0, 0, 0, 1.1, 0.75, 1.1);
+  }
+  return len;
+}
+
+/** 找最陡的崖面（用于瀑布）：28 方位 × 13 段径向，取落差最大的一跨 */
+function findCliff(site: MountainSite, surfaceAt: (x: number, z: number) => number): { top: StreamPt; foot: StreamPt; drop: number } | null {
+  const m = site.m;
+  let best: { top: StreamPt; foot: StreamPt; drop: number } | null = null;
+  for (let k = 0; k < 28; k++) {
+    const a = (k / 28) * Math.PI * 2;
+    for (let f = 0.16; f <= 0.82; f += 0.05) {
+      const x0 = m.x + Math.cos(a) * m.r * f, z0 = m.z + Math.sin(a) * m.r * f;
+      const x1 = m.x + Math.cos(a) * m.r * (f + 0.13), z1 = m.z + Math.sin(a) * m.r * (f + 0.13);
+      const y0 = surfaceAt(x0, z0), y1 = surfaceAt(x1, z1);
+      const drop = y0 - y1;
+      if (drop > 120 && (!best || drop > best.drop)) best = { top: { x: x0, y: y0, z: z0 }, foot: { x: x1, y: y1, z: z1 }, drop };
+    }
+  }
+  return best;
+}
+
+/** 瀑布：贴着坡面走的水幕（沿落线逐段取样地表）+ 崖口水舌 + 潭 + 水雾 + 白沫 */
+function buildWaterfall(
+  b: Baker,
+  c: { top: StreamPt; foot: StreamPt; drop: number },
+  rnd: () => number,
+  surfaceAt: (x: number, z: number) => number,
+): void {
+  const { top, foot } = c;
+  const dx = foot.x - top.x, dz = foot.z - top.z;
+  const dl = Math.hypot(dx, dz) || 1;
+  const ox = (dx / dl) * 26, oz = (dz / dl) * 26; // 横向悬出 26m（避让 206m 网格的坡面鼓包）
+  const yaw = Math.atan2(dx, dz);
+  const N = 22, width = 32;
+  // 关键：**逐段取渲染地表高度**，让水幕贴着坡面走。
+  // 直弦（top→foot）在凸坡上会插进山体，只剩抬高的白板（实拍确认：一串孤立白 plank）。
+  const pts: StreamPt[] = [];
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const x = top.x + dx * t, z = top.z + dz * t;
+    pts.push({ x: x + ox, y: surfaceAt(x + ox, z + oz) + 1.4, z: z + oz });
+  }
+  for (let i = 0; i < N; i++) {
+    const a = pts[i], e = pts[i + 1];
+    const sx = e.x - a.x, sz = e.z - a.z;
+    const ry = Math.atan2(sx, sz);
+    const t = (i + 0.5) / N;
+    const w = width; // 等宽：渐细会让每一段露出台阶边
+    // 竖直水帘：一段一块，**下缘压到下一段地表以下 8m**，相邻段水平间距只有 ~19m（远小于 32m 宽），
+    // 因此侧面互相重叠、读成一条连续落水，不会出现斜板旋转错位后的"钻石串"。
+    const yTop = a.y + 2.0;
+    const yBot = e.y - 8;
+    const h = Math.max(6, yTop - yBot);
+    const cy = (yTop + yBot) / 2;
+    b.box('water', w, h, 6, a.x, cy, a.z, 0x54aec2, ry);
+    // 白水带只留中间一条窄练（0.24w）：太宽会把整段读成白块
+    b.box('ash', w * 0.24, h, 1.8, a.x + (ox / 26) * 2.4, cy + 0.6, a.z + (oz / 26) * 2.4, 0xbfe0e8, ry);
+    if (i % 3 === 0) {
+      b.box('fabric', w * 0.5, h * 0.55, 1.2, a.x + (ox / 26) * 4.5, cy + 2.0, a.z + (oz / 26) * 4.5, 0x9fc9d4, ry);
+    }
+  }
+  // 崖口岩唇（水从石头缝里出来，不是凭空挂一条蓝带）
+  b.box('ash', width * 1.3, 3.2, 10, top.x + ox * 0.35, top.y + 1.4, top.z + oz * 0.35, 0x6e695e, yaw);
+  // 崖口水舌（溢流边缘）与底部潭
+  b.box('water', width * 1.1, 1.4, 7, top.x + ox * 0.6, top.y + 0.6, top.z + oz * 0.6, 0x3f92a8, yaw);
+  b.cyl('water', 38, 46, 0.9, 18, foot.x + ox * 0.6, foot.y + 0.35, foot.z + oz * 0.6, 0x2f7f96);
+  // 潭缘白沫环
+  for (let k = 0; k < 12; k++) {
+    const a = (k / 12) * Math.PI * 2;
+    b.sphere('ash', 4 + rnd() * 3, 5, foot.x + ox * 0.6 + Math.cos(a) * 40, foot.y + 0.7, foot.z + oz * 0.6 + Math.sin(a) * 40,
+      shade(0xc9e2e8, 0.9 + rnd() * 0.1), 0, 0, 0, 1.5, 0.35, 1.2);
+  }
+  // 水雾：低饱和冷白（fabric 受光，不走 glow，不会被 bloom 拉成白团）。
+  // 14 团、半径 5–11、铺开 10–45m：太少太大会读成一个白球（实拍确认）。
+  for (let k = 0; k < 14; k++) {
+    const a = rnd() * Math.PI * 2, rr = 10 + rnd() * 35;
+    b.sphere('fabric', 5 + rnd() * 6, 6, foot.x + ox * 0.6 + Math.cos(a) * rr, foot.y + 3 + rnd() * 22, foot.z + oz * 0.6 + Math.sin(a) * rr,
+      shade(0xbcd6dd, 0.92 + rnd() * 0.1), 0, 0, 0, 1.35, 0.6, 1.35);
+  }
+  // 潭缘卵石
+  for (let k = 0; k < 10; k++) {
+    const a = (k / 10) * Math.PI * 2;
+    b.sphere('ash', 2 + rnd() * 2.6, 5, foot.x + ox * 0.6 + Math.cos(a) * 50, foot.y + 0.8, foot.z + oz * 0.6 + Math.sin(a) * 50,
+      shade(0x777a72, 0.86 + rnd() * 0.2), 0, 0, 0, 1.2, 0.7, 1.2);
+  }
+}
+
+/** 山形点景：每座山一件标志物（南天门/悬空寺/少林山门/冰川/瑶池），落在实地 */
+function buildSignaturePiece(b: Baker, site: MountainSite, surfaceAt: (x: number, z: number) => number, rnd: () => number): void {
+  const m = site.m;
+  const put = (x: number, z: number): number => surfaceAt(x, z);
+  if (m.name === '泰山') {
+    // 南天门：山顶南侧石砌门阙（两柱一门楣 + 小瓦顶），对应"十八盘尽头"
+    const x = site.summit.x, z = site.summit.z + 44, y = put(x, z);
+    for (const sd of [-1, 1]) {
+      b.box('ash', 2.6, 9.5, 2.6, x + sd * 6.5, y + 4.3, z, 0x9a958a);
+      b.box('ash', 3.4, 0.8, 3.4, x + sd * 6.5, y + 0.4, z, 0x8f8a7e);
+    }
+    b.box('ash', 19, 1.8, 3.0, x, y + 9.2, z, 0x8f8a7e);
+    b.box('roof', 21, 0.9, 4.6, x, y + 10.2, z, 0x3b4045);
+    b.cyl('glow', 0.22, 0.3, 0.7, 6, x, y + 6.4, z + 1.7, 0xffd25e);
+    b.kit('mtn.southGate', 1, y);
+  } else if (m.name === '恒山') {
+    // 悬空寺：峡谷南壁的贴崖木构（六柱撑出的半悬平台 + 三间小殿）
+    const cx = m.x + m.r * 0.12, cz = m.z + m.r * 0.20;
+    const cy = put(cx, cz);
+    const deck = cy + 2.4;
+    b.box('wood', 26, 0.6, 11, cx, deck, cz, 0x6a4a2c);
+    for (let k = 0; k < 6; k++) {
+      const px = cx - 11 + k * 4.4;
+      const g = put(px, cz + 4.4);
+      const hh = Math.max(0.5, deck - g + 0.4);
+      b.box('wood', 0.42, hh, 0.42, px, deck - hh * 0.5, cz + 4.4, 0x5a3e22);
+      b.box('ash', 0.9, 0.5, 0.9, px, g + 0.2, cz + 4.4, 0x7d786c);
+    }
+    for (let k = 0; k < 3; k++) {
+      b.box('wall', 6.2, 3.2, 6.4, cx - 8 + k * 8, deck + 1.9, cz, 0xb8a88c);
+      b.box('roof', 8.2, 1.2, 8.0, cx - 8 + k * 8, deck + 4.0, cz, 0x454b52);
+    }
+    b.kit('mtn.hangingTemple', 1, deck);
+  } else if (m.name === '嵩山') {
+    // 少林山门：山脚三开间门屋 + 八字墙（"少林在山脚"）
+    const a = site.streamAng + 1.9;
+    const x = m.x + Math.cos(a) * m.r * 1.03, z = m.z + Math.sin(a) * m.r * 1.03;
+    const y = put(x, z);
+    b.box('ash', 22, 1.2, 14, x, y + 0.6, z, 0x8d897e);
+    b.box('wall', 17, 5.2, 8, x, y + 3.8, z, 0xc9b891);
+    b.box('roof', 20, 1.6, 10.5, x, y + 7.0, z, 0x3b4045);
+    for (const sd of [-1, 1]) b.box('wall', 1.2, 4.2, 12, x + sd * 12, y + 2.2, z + 2, 0xb0a084);
+    b.box('wood', 3.2, 3.4, 1.0, x, y + 2.0, z + 4.2, 0x4a2f1c);
+    b.kit('mtn.shaolinGate', 1, y);
+  } else if (m.name === '天山') {
+    // 冰川舌：脊间谷底的一列冰塔 + 冰面（"雪线 + 冰川"）
+    for (let k = 0; k < 9; k++) {
+      const t = k / 8;
+      const a = -0.4;
+      const bx = m.x + Math.cos(m.axis) * m.r * (t * 0.9 - 0.45) + Math.cos(a) * m.r * 0.26;
+      const bz = m.z + Math.sin(m.axis) * m.r * (t * 0.9 - 0.45) + Math.sin(a) * m.r * 0.26;
+      const y = put(bx, bz);
+      b.box('ash', 34 - k * 2, 1.2, 44, bx, y + 0.6, bz, 0xa9c6d4, m.axis, 0, 0.02);
+      b.cyl('ash', 0.6, 2.6, 7 + rnd() * 9, 5, bx + (rnd() - 0.5) * 22, y + 4, bz + (rnd() - 0.5) * 30, 0xb8d2de);
+    }
+    b.kit('mtn.glacier', 9, 0);
+  } else if (m.name === '昆仑') {
+    // 瑶池：高原台面上一汪碧水（西王母道场）
+    const px = site.summit.x + m.r * 0.14, pz = site.summit.z + m.r * 0.10;
+    const py = put(px, pz);
+    b.cyl('water', 42, 48, 0.7, 20, px, py + 0.4, pz, 0x2f8fa0);
+    for (let k = 0; k < 10; k++) {
+      const a = (k / 10) * Math.PI * 2;
+      b.cyl('ash', 1.1, 1.5, 2.6 + rnd() * 2.2, 6, px + Math.cos(a) * 52, py + 1.3, pz + Math.sin(a) * 52, 0xd6d1c4);
+    }
+    b.kit('mtn.yaochi', 1, py);
+  }
+}
+
+/** 神兽锚点：每山 3 只（峰顶/山腰/溪畔各一），供 buildWindFlora 用 WindBatch 造型 */
+const FAUNA_PLAN: Record<string, FaunaAnchor['kind'][]> = {
+  '泰山': ['crane', 'crane', 'deer'],
+  '华山': ['qingluan', 'qingluan', 'tiger'],
+  '衡山': ['deer', 'deer', 'crane'],
+  '恒山': ['qilin', 'qilin', 'crane'],
+  '嵩山': ['tiger', 'tiger', 'crane'],
+  '天山': ['qingluan', 'qingluan', 'qilin'],
+  '昆仑': ['qilin', 'qilin', 'crane'],
+};
+let mountainFaunaAnchors: FaunaAnchor[] = [];
+export function mountainFauna(): FaunaAnchor[] { return mountainFaunaAnchors; }
+
+/**
+ * 七岳山林生机总装。返回可机检台账（每山株数/花丛色数/溪长/瀑布落差/神兽数/密林中心）。
+ * `heightAt` 用解析高度（判形制），`surfaceAt` 用渲染面（贴地落点不浮空）。
+ */
+export async function buildMountainLife(
+  b: Baker,
+  sites: MountainSite[],
+  heightAt: (x: number, z: number) => number,
+  surfaceAt: (x: number, z: number) => number,
+): Promise<MountainLifeReport> {
+  const rep: MountainLifeReport = {
+    trees: {}, shrubs: {}, flowers: {}, flowerColors: FLOWER_COLORS.length, streams: {}, waterfalls: [], fauna: {}, faunaTotal: 0, groves: {}, tris: 0,
+  };
+  const triOf = (): number => {
+    const st = b.stats();
+    let t = 0;
+    for (const k of Object.keys(st.groups)) t += st.groups[k as keyof typeof st.groups].triangles;
+    return Math.round(t);
+  };
+  const t0 = triOf();
+  mountainFaunaAnchors = [];
+  for (let si = 0; si < sites.length; si++) {
+    const site = sites[si];
+    const m = site.m;
+    const rnd = lifeRng(m, 0x7a11 + si * 37);
+    const treeFrac = site.treeLine / m.h;
+    const treeCount = 540;
+    let placedTrees = 0;
+    const groveCenters: { x: number; z: number; y: number }[] = [];
+    // 6 片密林：给"山腰近景"取证用（散点在山体尺度上会太稀）。密林内 72 株/片，
+    // 半径 300m → 平均 35m 一株；配合林下灌丛与花丛，近景才读得成"林"。
+    for (let g = 0; g < 6 && groveCenters.length < 6; g++) {
+      for (let tries = 0; tries < 28; tries++) {
+        const a = rnd() * Math.PI * 2;
+        const rr = m.r * (0.3 + rnd() * 0.45);
+        const x = m.x + Math.cos(a) * rr, z = m.z + Math.sin(a) * rr;
+        const y = surfaceAt(x, z);
+        if (y < m.h * 0.08 || y > site.treeLine * 0.9) continue;
+        if (slopeAt(surfaceAt, x, z, 40) > 1.1) continue;
+        if (Math.hypot(x - site.summit.x, z - site.summit.z) < 140) continue;
+        groveCenters.push({ x, z, y });
+        break;
+      }
+    }
+    let gi = 0;
+    // 两遍：先按"正常林地"坡度（≤50°）铺，绝壁形制（华山 69.5°）铺不满时放宽到山崖附生（≤65°），
+    // 保证"每座山 ≥400 株"是硬读数而不是靠放宽全局阈值糊出来。
+    let guard = 0;
+    for (const maxSlope of [1.18, 2.15]) {
+      guard = 0;
+      while (placedTrees < treeCount && guard++ < treeCount * 7) {
+        let x: number, z: number;
+        const inGrove = gi < groveCenters.length && placedTrees < treeCount * 0.8;
+        if (inGrove) {
+          const c = groveCenters[gi];
+          // 密林半径 150m（不是 300）：72 株/片 → 平均 31m 一株，近景才读得成林
+          const a = rnd() * Math.PI * 2, rr = Math.sqrt(rnd()) * 150;
+          x = c.x + Math.cos(a) * rr; z = c.z + Math.sin(a) * rr;
+          if ((placedTrees + 1) % 72 === 0) gi++;
+        } else {
+          const a = rnd() * Math.PI * 2, rr = m.r * (0.22 + Math.sqrt(rnd()) * 0.78);
+          x = m.x + Math.cos(a) * rr; z = m.z + Math.sin(a) * rr;
+        }
+        const y = surfaceAt(x, z);
+        if (y < m.h * 0.03 || y > site.treeLine) continue;
+        if (Math.hypot(x - site.summit.x, z - site.summit.z) < 130) continue;
+        if (slopeAt(surfaceAt, x, z, 38) > maxSlope) continue;
+        const local = y / m.h;
+        const band = local < treeFrac * 0.52 ? 0 : local < treeFrac * 0.82 ? 1 : 2;
+        const palette = band === 0 ? LEAF_BROAD : band === 1 ? LEAF_MIXED : LEAF_CONIF;
+        const hex = palette[Math.floor(rnd() * palette.length)];
+        const s = 0.8 + rnd() * 0.75;
+        mountainTree(b, x, y - 0.6, z, band, s, hex, rnd() * Math.PI * 2);
+        placedTrees++;
+        if (placedTrees % 60 === 0) await new Promise<void>((r) => setTimeout(r, 0));
+      }
+      if (placedTrees >= treeCount) break;
+    }
+    rep.trees[m.name] = placedTrees;
+    // 近景取证点取"最高的那片密林"（山脚密林拍不出花木分带）
+    let gBest = groveCenters[0];
+    for (const g of groveCenters) if (!gBest || g.y > gBest.y) gBest = g;
+    rep.groves[m.name] = gBest ? [gBest.x, gBest.y, gBest.z] : [m.x, m.h * 0.4, m.z];
+
+    // 林下灌丛：每片密林 55 丛（~72 面/丛），填掉乔木之间的裸地
+    let shrubs = 0;
+    for (const c of groveCenters) {
+      for (let k = 0; k < 55; k++) {
+        const a = rnd() * Math.PI * 2, rr = Math.sqrt(rnd()) * 150;
+        const x = c.x + Math.cos(a) * rr, z = c.z + Math.sin(a) * rr;
+        const y = surfaceAt(x, z);
+        if (y < m.h * 0.03 || y > site.treeLine) continue;
+        if (slopeAt(surfaceAt, x, z, 30) > 1.6) continue;
+        // 灌丛 1.1–2.2 倍（0.7–0.8 倍的只有脚踝高，近景读成一粒黑点）
+        mountainShrub(b, x, y - 0.3, z, LEAF_MIXED[Math.floor(rnd() * LEAF_MIXED.length)], 1.1 + rnd() * 1.1, rnd() * Math.PI * 2);
+        shrubs++;
+      }
+    }
+    rep.shrubs[m.name] = shrubs;
+
+    // 五色花丛：12 片，每片同色 9 丛 —— 成片而不是均匀撒点。
+    // 前 6 片直接压在密林中心：保证"山腰近景"一定拍得到五色花丛与花木同框。
+    let patches = 0, bushes = 0;
+    for (let g = 0; g < groveCenters.length && patches < 6; g++) {
+      const c = groveCenters[g];
+      const cHex = FLOWER_COLORS[patches % FLOWER_COLORS.length];
+      for (let k = 0; k < 9; k++) {
+        const aa = rnd() * Math.PI * 2, rr2 = Math.sqrt(rnd()) * 60;
+        const fx = c.x + Math.cos(aa) * rr2, fz = c.z + Math.sin(aa) * rr2;
+        const fy = surfaceAt(fx, fz);
+        mountainFlowerBush(b, fx, fy - 0.2, fz, cHex, 0.85 + rnd() * 0.6, rnd() * Math.PI * 2);
+        bushes++;
+      }
+      patches++;
+    }
+    for (const maxSlope of [0.62, 1.35]) {
+      for (let p = patches; p < 12; p++) {
+        const cHex = FLOWER_COLORS[p % FLOWER_COLORS.length];
+        for (let tries = 0; tries < 24; tries++) {
+          const a = rnd() * Math.PI * 2, rr = m.r * (0.3 + rnd() * 0.55);
+          const cx = m.x + Math.cos(a) * rr, cz = m.z + Math.sin(a) * rr;
+          const cy = surfaceAt(cx, cz);
+          if (cy < m.h * 0.05 || cy > site.treeLine * 0.85) continue;
+          if (slopeAt(surfaceAt, cx, cz, 30) > maxSlope) continue;
+          if (Math.hypot(cx - site.summit.x, cz - site.summit.z) < 120) continue;
+          for (let k = 0; k < 9; k++) {
+            const aa = rnd() * Math.PI * 2, rr2 = Math.sqrt(rnd()) * 95;
+            const fx = cx + Math.cos(aa) * rr2, fz = cz + Math.sin(aa) * rr2;
+            const fy = surfaceAt(fx, fz);
+            mountainFlowerBush(b, fx, fy - 0.2, fz, cHex, 0.8 + rnd() * 0.7, rnd() * Math.PI * 2);
+            bushes++;
+          }
+          patches++;
+          break;
+        }
+      }
+      if (patches >= 10) break;
+    }
+    rep.flowers[m.name] = bushes;
+
+    // 溪流 + 瀑布（泰山/华山/天山指定瀑布；其余山只走溪流）
+    const pts = traceStream(site, surfaceAt, rnd);
+    const len = buildStreamRibbon(b, pts, rnd);
+    rep.streams[m.name] = Math.round(len);
+    if (site.waterfall) {
+      const cliff = findCliff(site, surfaceAt);
+      if (cliff) {
+        buildWaterfall(b, cliff, rnd, surfaceAt);
+        rep.waterfalls.push({ mountain: m.name, drop: Math.round(cliff.drop), at: [cliff.top.x, cliff.top.y, cliff.top.z] });
+      }
+    }
+    await new Promise<void>((r) => setTimeout(r, 0));
+
+    // 点景
+    buildSignaturePiece(b, site, surfaceAt, rnd);
+
+    // 神兽锚点：峰顶附近 / 山腰密林 / 溪畔
+    const plan = FAUNA_PLAN[m.name] ?? ['crane', 'deer', 'qilin'];
+    const spots: { x: number; z: number }[] = [];
+    const half = m.r * 0.05;
+    spots.push({ x: site.summit.x + half, z: site.summit.z + half * 0.6 });
+    spots.push({ x: groveCenters[1] ? groveCenters[1].x : m.x + m.r * 0.3, z: groveCenters[1] ? groveCenters[1].z : m.z + m.r * 0.2 });
+    spots.push({ x: pts[Math.min(6, pts.length - 1)]?.x ?? m.x, z: pts[Math.min(6, pts.length - 1)]?.z ?? m.z + m.r * 0.5 });
+    for (let k = 0; k < 3; k++) {
+      const sp = spots[k];
+      const y = surfaceAt(sp.x, sp.z);
+      const kind = plan[k % plan.length];
+      const s = kind === 'tiger' || kind === 'qilin' ? 2.6 : kind === 'deer' ? 2.9 : 2.4;
+      mountainFaunaAnchors.push({ x: sp.x, y: y + (kind === 'crane' ? 1.2 * s : 0), z: sp.z, kind, ry: rnd() * Math.PI * 2, s });
+      rep.fauna[m.name] = (rep.fauna[m.name] ?? 0) + 1;
+      rep.faunaTotal++;
+    }
+    await new Promise<void>((r) => setTimeout(r, 0));
+    void heightAt;
+  }
+  rep.tris = Math.max(0, triOf() - t0);
+  lifeReport = rep;
+  if (typeof window !== 'undefined') (window as unknown as { __mtnLifeStats?: MountainLifeReport }).__mtnLifeStats = rep;
+  return rep;
+}
+
+// ---- 神兽神鸟造型（WindBatch，1 draw call；神化比例 2.4–2.9 倍，3km 外仍能凭剪影辨认） ----
+function beastCrane(w: WindBatch, a: FaunaAnchor): void {
+  const { x, y, z, s } = a;
+  const ry = a.ry, ca = Math.cos(ry), sa = Math.sin(ry);
+  w.plant(y, y + 3.6 * s, a.ry);
+  for (const off of [-0.4, 0.4]) w.cyl(0.05 * s, 0.07 * s, 1.5 * s, 4, x + ca * off * s, y + 0.75 * s, z - sa * off * s, 0x2a2e34);
+  w.sphere(0.9 * s, 7, x, y + 1.95 * s, z, 0xe8eef2, ry, 0, 0, 1.35, 0.9, 0.78);
+  for (const sd of [-1, 1]) {
+    w.box(0.5 * s, 0.5 * s, 1.5 * s, x + ca * sd * 0.8 * s, y + 2.05 * s, z - sa * sd * 0.8 * s, 0xdbe4ea, ry, 0, sd * 0.25);
+  }
+  w.cyl(0.13 * s, 0.3 * s, 1.5 * s, 5, x + ca * 0.6 * s, y + 2.95 * s, z - sa * 0.6 * s, 0xe8eef2, 0, 0.32, 0);
+  w.sphere(0.26 * s, 5, x + ca * 0.85 * s, y + 3.75 * s, z - sa * 0.85 * s, 0xeef3f5);
+  w.cyl(0.015 * s, 0.08 * s, 0.6 * s, 4, x + ca * 1.05 * s, y + 3.7 * s, z - sa * 1.05 * s, 0xffb300, ry + Math.PI / 2);
+  w.sphere(0.1 * s, 4, x + ca * 0.9 * s, y + 3.95 * s, z - sa * 0.9 * s, 0xff3b30);
+  for (let k = 0; k < 3; k++) {
+    w.box(0.16 * s, 0.7 * s, 0.2 * s, x - ca * (0.9 + k * 0.15) * s, y + 2.2 * s - k * 0.1 * s, z + sa * (0.9 + k * 0.15) * s, 0xcfdae2, ry, 0.5, 0);
+  }
+}
+
+function beastDeer(w: WindBatch, a: FaunaAnchor): void {
+  const { x, y, z, s } = a;
+  const ry = a.ry, ca = Math.cos(ry), sa = Math.sin(ry);
+  w.plant(y, y + 3.2 * s, a.ry);
+  for (const [ox, oz] of [[-0.45, 0.55], [0.45, 0.55], [-0.45, -0.55], [0.45, -0.55]] as const) {
+    w.cyl(0.08 * s, 0.1 * s, 1.5 * s, 4, x + ca * ox * s - sa * oz * s, y + 0.75 * s, z - sa * ox * s - ca * oz * s, 0xd8d2c2);
+  }
+  w.sphere(0.9 * s, 6, x, y + 2.0 * s, z, 0xe4ded0, ry, 0, 0, 1.3, 0.85, 0.7);
+  w.cyl(0.12 * s, 0.22 * s, 1.0 * s, 5, x + ca * 0.95 * s, y + 2.65 * s, z - sa * 0.95 * s, 0xe4ded0, 0, 0.4, 0);
+  w.sphere(0.3 * s, 5, x + ca * 1.2 * s, y + 3.15 * s, z - sa * 1.2 * s, 0xe8e2d4, ry, 0, 0, 1.25, 0.95, 0.8);
+  // 鹿角：两枝分叉
+  for (const sd of [-1, 1]) {
+    w.cyl(0.035 * s, 0.05 * s, 0.95 * s, 4, x + ca * 1.2 * s + Math.cos(ry + sd) * 0.16 * s, y + 3.72 * s, z - sa * 1.2 * s + Math.sin(ry + sd) * 0.16 * s, 0x6a5a44, 0, 0.4, sd * 0.5);
+    w.cyl(0.03 * s, 0.04 * s, 0.5 * s, 4, x + ca * 1.05 * s + Math.cos(ry + sd) * 0.4 * s, y + 3.95 * s, z - sa * 1.05 * s + Math.sin(ry + sd) * 0.4 * s, 0x6a5a44, 0, -0.5, sd * 0.8);
+  }
+  w.box(0.14 * s, 0.4 * s, 0.14 * s, x - ca * 0.95 * s, y + 2.1 * s, z + sa * 0.95 * s, 0xe4ded0, ry, 0.5, 0);
+}
+
+function beastTiger(w: WindBatch, a: FaunaAnchor): void {
+  const { x, y, z, s } = a;
+  const ry = a.ry, ca = Math.cos(ry), sa = Math.sin(ry);
+  w.plant(y, y + 3.0 * s, a.ry);
+  for (const [ox, oz] of [[-0.45, 0.6], [0.45, 0.6], [-0.45, -0.6], [0.45, -0.6]] as const) {
+    w.cyl(0.1 * s, 0.13 * s, 1.2 * s, 4, x + ca * ox * s - sa * oz * s, y + 0.6 * s, z - sa * ox * s - ca * oz * s, 0xd97a2a);
+  }
+  w.sphere(0.95 * s, 6, x, y + 1.6 * s, z, 0xd97a2a, ry, 0, 0, 1.35, 0.8, 0.72);
+  for (let k = 0; k < 6; k++) { // 虎斑
+    const t = -0.7 + k * 0.28;
+    w.box(0.9 * s, 0.1 * s, 0.16 * s, x + ca * t * s, y + 2.05 * s, z - sa * t * s, 0x2a1c12, ry);
+  }
+  w.sphere(0.42 * s, 5, x + ca * 1.1 * s, y + 2.2 * s, z - sa * 1.1 * s, 0xe08a34, ry, 0, 0, 1.1, 0.95, 1.0);
+  w.cyl(0.06 * s, 0.1 * s, 1.6 * s, 4, x - ca * 1.1 * s, y + 1.9 * s, z + sa * 1.1 * s, 0xc86a22, 0, 0.9, 0);
+  for (const sd of [-1, 1]) w.box(0.14 * s, 0.14 * s, 0.08 * s, x + ca * 1.2 * s + Math.cos(ry + sd) * 0.2 * s, y + 2.5 * s, z - sa * 1.2 * s + Math.sin(ry + sd) * 0.2 * s, 0x2a1c12, ry);
+}
+
+function beastQilin(w: WindBatch, a: FaunaAnchor): void {
+  const { x, y, z, s } = a;
+  const ry = a.ry, ca = Math.cos(ry), sa = Math.sin(ry);
+  w.plant(y, y + 3.4 * s, a.ry);
+  for (const [ox, oz] of [[-0.5, 0.6], [0.5, 0.6], [-0.5, -0.6], [0.5, -0.6]] as const) {
+    w.cyl(0.11 * s, 0.15 * s, 1.5 * s, 4, x + ca * ox * s - sa * oz * s, y + 0.75 * s, z - sa * ox * s - ca * oz * s, 0xb88a4a);
+    w.box(0.24 * s, 0.16 * s, 0.3 * s, x + ca * ox * s - sa * oz * s, y + 0.08 * s, z - sa * ox * s - ca * oz * s, 0x8a6a2a);
+  }
+  w.sphere(1.0 * s, 6, x, y + 2.0 * s, z, 0xc89a58, ry, 0, 0, 1.3, 0.85, 0.75);
+  for (let k = 0; k < 3; k++) w.cyl(0.12 * s, 0.2 * s, 0.5 * s, 4, x + ca * (-0.5 + k * 0.5) * s, y + 2.85 * s, z - sa * (-0.5 + k * 0.5) * s, 0xffcf5e);
+  w.sphere(0.42 * s, 5, x + ca * 1.2 * s, y + 2.5 * s, z - sa * 1.2 * s, 0xd4a866, ry, 0, 0, 1.1, 0.95, 1.05);
+  w.cyl(0.05 * s, 0.14 * s, 0.9 * s, 4, x + ca * 1.25 * s, y + 3.3 * s, z - sa * 1.25 * s, 0xffcf5e, 0, -0.35, 0);
+  w.cyl(0.06 * s, 0.1 * s, 1.9 * s, 4, x - ca * 1.2 * s, y + 2.3 * s, z + sa * 1.2 * s, 0xffcf5e, 0, 0.7, 0);
+  for (let k = 0; k < 4; k++) w.box(0.18 * s, 0.5 * s, 0.22 * s, x + ca * (-0.45 + k * 0.3) * s, y + 2.9 * s, z - sa * (-0.45 + k * 0.3) * s, 0xff7a2d);
+}
+
+function beastQingluan(w: WindBatch, a: FaunaAnchor): void {
+  const { x, y, z, s } = a;
+  const ry = a.ry, ca = Math.cos(ry), sa = Math.sin(ry);
+  w.plant(y, y + 3.4 * s, a.ry);
+  w.sphere(0.85 * s, 6, x, y + 2.1 * s, z, 0x3f9a92, ry, 0, 0, 1.25, 0.85, 0.75);
+  // 展开的双翼
+  for (const sd of [-1, 1]) {
+    w.box(2.0 * s, 0.18 * s, 1.1 * s, x + ca * sd * 1.2 * s, y + 2.35 * s, z - sa * sd * 1.2 * s, 0x4fb0a2, ry, 0, sd * 0.35);
+    for (let k = 0; k < 3; k++) w.box(0.35 * s, 0.1 * s, 0.9 * s - k * 0.2 * s, x + ca * sd * (1.9 + k * 0.25) * s, y + 2.45 * s, z - sa * sd * (1.9 + k * 0.25) * s, 0x62c4b2, ry, 0, sd * (0.45 + k * 0.12));
+  }
+  w.sphere(0.32 * s, 5, x + ca * 0.95 * s, y + 2.75 * s, z - sa * 0.95 * s, 0x54b8aa, ry, 0, 0, 1.1, 0.95, 1.1);
+  w.cyl(0.02 * s, 0.07 * s, 0.5 * s, 4, x + ca * 1.15 * s, y + 2.7 * s, z - sa * 1.15 * s, 0xffcf5e, ry + Math.PI / 2);
+  for (let k = 0; k < 3; k++) w.box(0.12 * s, 0.14 * s, 0.7 * s, x + ca * 0.9 * s, y + 2.95 * s + k * 0.1 * s, z - sa * 0.9 * s, 0xffcf5e, ry, 0.2, 0);
+  // 长尾羽三根
+  for (let k = 0; k < 3; k++) {
+    w.box(0.16 * s, 0.1 * s, 2.6 * s, x - ca * (1.2 + k * 0.3) * s, y + 2.0 * s - k * 0.15 * s, z + sa * (1.2 + k * 0.3) * s, k === 1 ? 0x2f7f78 : 0x54b8aa, ry, 0.12, 0);
+  }
+}
+
+export function buildMountainFauna(w: WindBatch): number {
+  let n = 0;
+  for (const a of mountainFaunaAnchors) {
+    switch (a.kind) {
+      case 'crane': beastCrane(w, a); break;
+      case 'deer': beastDeer(w, a); break;
+      case 'tiger': beastTiger(w, a); break;
+      case 'qilin': beastQilin(w, a); break;
+      default: beastQingluan(w, a); break;
+    }
+    n++;
+  }
+  return n;
 }

@@ -5,6 +5,8 @@ import { buildCountryside } from '../city/infill';
 import { RIVER_WATER_Y } from '../city/river';
 import { buildPostStation } from './desertOutpost';
 import { RNG } from '../core/rng';
+// 山林生机（乔木/花丛/溪瀑/神兽锚点）：flora.ts 只 import type，运行时无环
+import { buildMountainLife, type MountainSite } from '../sky/flora';
 
 // ============ 方圆百里山河：程序化地形高度场（五岳/天山/昆仑/沙漠/草原/森林/河湖） ============
 
@@ -28,15 +30,37 @@ function fbm(x: number, z: number, oct = 3): number {
 }
 
 // ---- 山川定义 ----
-export interface Mountain { name: string; x: number; z: number; h: number; r: number; snow: number; poe: string }
+/** 山形制：七岳各走一套剖面，不再是同一个锥换缩放 */
+export type MountainForm = 'blocky' | 'pyramidal' | 'rolling' | 'ridged' | 'twin' | 'parallel' | 'plateau';
+export interface Mountain {
+  name: string; x: number; z: number; h: number; r: number; snow: number; poe: string;
+  /** 地貌形制（决定剖面/褶皱/峰列） */
+  form: MountainForm;
+  /** 主脊走向（弧度，0=+x，π/2=+z）：ridged/twin/parallel/pyramidal 的脊线与峡谷按此旋转 */
+  axis: number;
+  /** 雪线（0..1，按 h 归一）：覆盖 snow 字段的派生值，便于逐山定线 */
+  snowLine?: number;
+  /** 主溪流起始方位（弧度）：从山腰下到山脚 */
+  streamAng: number;
+  /** 是否配瀑布（泰山/华山/天山） */
+  waterfall?: boolean;
+}
 export const MOUNTAINS: Mountain[] = [
-  { name: '泰山', x: 14000, z: -6000, h: 1550, r: 3600, snow: 0.86, poe: '东岳泰山·五岳独尊' },
-  { name: '华山', x: -15000, z: 4000, h: 1700, r: 3200, snow: 0.82, poe: '西岳华山·奇险天下第一' },
-  { name: '衡山', x: 2000, z: 16500, h: 1250, r: 3900, snow: 0.95, poe: '南岳衡山·五岳独秀' },
-  { name: '恒山', x: -3500, z: -16200, h: 1350, r: 3500, snow: 0.8, poe: '北岳恒山·人天北柱' },
-  { name: '嵩山', x: 9500, z: 10500, h: 1150, r: 3000, snow: 0.97, poe: '中岳嵩山·少林祖庭' },
-  { name: '天山', x: -22000, z: -16000, h: 3300, r: 7000, snow: 0.52, poe: '天山·雪峰连绵七千里' },
-  { name: '昆仑', x: -27000, z: 4000, h: 3800, r: 8000, snow: 0.45, poe: '昆仑·万山之祖，西王母道场' },
+  // 泰山：浑圆厚重、方顶（superquadric 台体）、南坡十八盘台阶、顶上南天门
+  // 五岳的 snowLine 压在 1.1 以上 = 秋季无雪盖（真实五岳秋季就是满山葱郁）；雪只留给天山/昆仑
+  { name: '泰山', x: 14000, z: -6000, h: 1550, r: 3600, snow: 0.86, form: 'blocky',    axis: Math.PI / 2, snowLine: 1.12, streamAng: 0.95, waterfall: true, poe: '东岳泰山·五岳独尊' },
+  // 华山：五峰如莲、四面绝壁、一条苍龙岭险道
+  { name: '华山', x: -15000, z: 4000, h: 1700, r: 3200, snow: 0.82, form: 'pyramidal', axis: -Math.PI / 2, snowLine: 1.14, streamAng: 2.35, waterfall: true, poe: '西岳华山·奇险天下第一' },
+  // 衡山：舒缓连绵、多峰、山林茂密
+  { name: '衡山', x: 2000, z: 16500, h: 1250, r: 3900, snow: 0.95, form: 'rolling',   axis: 0, snowLine: 1.16, streamAng: 0.35, poe: '南岳衡山·五岳独秀' },
+  // 恒山：东西横亘、峭壁夹峙（中央一道峡谷）、悬空寺贴崖
+  { name: '恒山', x: -3500, z: -16200, h: 1350, r: 3500, snow: 0.8, form: 'ridged',    axis: 0, snowLine: 1.12, streamAng: 1.9, poe: '北岳恒山·人天北柱' },
+  // 嵩山：双峰对峙、中间峡谷、少林在山脚
+  { name: '嵩山', x: 9500, z: 10500, h: 1150, r: 3000, snow: 0.97, form: 'twin',      axis: 0, snowLine: 1.18, streamAng: 2.6, poe: '中岳嵩山·少林祖庭' },
+  // 天山：三列平行山脉 + 雪线 + 冰川谷
+  { name: '天山', x: -22000, z: -16000, h: 3300, r: 7000, snow: 0.52, form: 'parallel',  axis: 0, snowLine: 0.56, streamAng: 0.6, waterfall: true, poe: '天山·雪峰连绵七千里' },
+  // 昆仑：高原来台、万山之祖、雪峰连绵、山体最厚重
+  { name: '昆仑', x: -27000, z: 4000, h: 3800, r: 8000, snow: 0.45, form: 'plateau',   axis: 0, snowLine: 0.5, streamAng: 2.9, poe: '昆仑·万山之祖，西王母道场' },
 ];
 export interface Lake { name: string; x: number; z: number; rx: number; rz: number }
 export const LAKES: Lake[] = [
@@ -104,6 +128,155 @@ function smoothstep(a: number, b: number, x: number): number {
   return t * t * (3 - 2 * t);
 }
 
+// ============ 七岳形制：每座山一套剖面 ============
+/**
+ * 旧版七山共用 `h * pow(1 - md, 1.9)` 一个锥（只有 h/r 不同），所以用户看到的是
+ * 「七座山长得一模一样」。这里按真实地貌给每座山一套独立的归一化高度场：
+ *
+ *   泰山 blocky    超二次方（方）台体 + 平顶 + 南坡十八盘台阶化
+ *   华山 pyramidal 四面绝壁 + 五峰如莲 + 苍龙岭窄脊
+ *   衡山 rolling   宽基座 + 6 个高斯峰（舒缓连绵）
+ *   恒山 ridged    东西长脊 + 中央峡谷（峭壁夹峙）
+ *   嵩山 twin      东西双峰 + 中间深切峡谷
+ *   天山 parallel  三列平行山脊 + 不归零的冰川谷底
+ *   昆仑 plateau   陡缘高台 + 台上五座雪峰
+ *
+ * 返回值归一到 ≈1（再乘 m.h），各形制的最大高度由 MOUNTAIN_K 标定到 m.h ±3%。
+ * 全程只用确定性 vnoise/fbm，不碰 Math.random。
+ */
+const MOUNTAIN_K: Record<MountainForm, number> = {
+  blocky: 1.0, pyramidal: 1.0, rolling: 1.05, ridged: 1.2, twin: 0.91, parallel: 1.08, plateau: 1.015,
+};
+
+/** 把 (u,v) 旋到山脊坐标系：a 沿 axis，b 垂直 axis */
+function ridgeRot(u: number, v: number, axis: number): [number, number] {
+  const c = Math.cos(axis), s = Math.sin(axis);
+  return [u * c + v * s, -u * s + v * c];
+}
+
+function mountainField(m: Mountain, x: number, z: number): number {
+  const u = (x - m.x) / m.r, v = (z - m.z) / m.r;
+  const [a, b] = ridgeRot(u, v, m.axis);
+  let k: number;
+  switch (m.form) {
+    case 'blocky': {
+      // 方顶台体：|a|^4+|b|^4 与欧氏半径混合，山脚仍圆润（浑圆厚重）
+      const sq = Math.pow(Math.pow(Math.abs(a), 4) + Math.pow(Math.abs(b), 4), 0.25);
+      const rn = sq * 0.55 + Math.hypot(u, v) * 0.45;
+      k = Math.pow(1 - smoothstep(0.34, 1.0, rn), 1.05);
+      // 十八盘：**世界坐标的南坡（v>0）**把连续坡面量化成十级石阶。
+      // 不能用旋转后的 b：泰山 axis=π/2 时 b=-u，台阶会跑到西坡（实拍是一条贴在左坡的黑带），
+      // 从南面看反而看不到登山道。
+      const wedge = smoothstep(0.06, 0.26, v) * (1 - smoothstep(0.42, 0.7, Math.abs(u)));
+      if (wedge > 0 && k > 0.02) {
+        const steps = 10;
+        const terr = (Math.floor(k * steps) + 0.55) / steps;
+        k = k * (1 - 0.6 * wedge) + terr * 0.6 * wedge;
+      }
+      k *= 1 + fbm(a * 2.2 + m.x * 0.01, b * 2.2, 3) * 0.05;
+      break;
+    }
+    case 'pyramidal': {
+      // 四面绝壁：rn 很小就把高度放掉（1.42 倍拉伸让山脚落在 r 附近）
+      const rn = Math.hypot(a, b) * 1.42;
+      k = 1 - smoothstep(0.04, 0.72, rn);
+      // 五峰如莲：五瓣环列，各有独立峰顶
+      for (let i = 0; i < 5; i++) {
+        const ang = (i / 5) * Math.PI * 2 + 0.32;
+        const px = Math.cos(ang) * 0.4, pz = Math.sin(ang) * 0.4;
+        const d2 = ((a - px) * (a - px) + (b - pz) * (b - pz)) / (0.155 * 0.155);
+        k = Math.max(k, 0.86 * Math.exp(-d2));
+      }
+      // 苍龙岭：沿 +axis 伸出的一道窄脊（宽 0.11r，长到 1.28r）
+      if (a > 0.05) {
+        const spur = Math.exp(-((b / 0.055) ** 2)) * (1 - smoothstep(0.35, 1.28, a)) * 0.66;
+        k = Math.max(k, spur);
+      }
+      k *= 1 + fbm(a * 3.1 + m.x * 0.01, b * 3.1 + 7.7, 3) * 0.05;
+      break;
+    }
+    case 'rolling': {
+      // 舒缓连绵：宽基座 + 六个缓峰（σ 0.30–0.36r，最大坡度约 43°）
+      const rn = Math.hypot(u / 1.12, v);
+      k = 0.4 * (1 - smoothstep(0.16, 1.3, rn));
+      const peaks: [number, number, number, number][] = [
+        [-0.36, -0.18, 0.86, 0.36], [0.32, -0.32, 0.8, 0.34], [0.48, 0.28, 0.76, 0.32],
+        [-0.22, 0.4, 0.74, 0.33], [0.04, 0.1, 1.0, 0.3], [-0.54, 0.26, 0.7, 0.3],
+      ];
+      for (const [px, pz, hh, sg] of peaks) {
+        const d2 = ((u - px) * (u - px) + (v - pz) * (v - pz)) / (sg * sg);
+        k = Math.max(k, hh * Math.exp(-d2));
+      }
+      k *= 1 + fbm(u * 2 + m.x * 0.01, v * 2 + 3.3, 3) * 0.05;
+      break;
+    }
+    case 'ridged': {
+      // 东西横亘：长轴 1.48r、短轴 0.66r；中央一道峡谷把山体劈成南北两壁
+      const rn = Math.hypot(a / 1.48, b / 0.66);
+      k = 1 - smoothstep(0.06, 0.8, rn);
+      const canyon = Math.exp(-((b / 0.085) ** 2)) * (1 - smoothstep(0.1, 0.92, Math.abs(a)));
+      k = Math.max(0, k - canyon * 0.46);
+      // 脊上锯齿：东西横亘的多峰（波长约 0.55r）
+      k *= 0.9 + 0.1 * Math.sin(a * 11.5 + 1.3) + 0.05 * fbm(a * 6.2, b * 4.1, 2);
+      break;
+    }
+    case 'twin': {
+      // 双峰对峙：东西两峰各 0.66/0.62 高，中间一道深峡谷
+      const rn = Math.hypot(a / 1.06, b / 0.92);
+      const base = 0.52 * (1 - smoothstep(0.16, 1.1, rn));
+      const p1 = 0.66 * Math.exp(-(((a - 0.38) ** 2) / (2 * 0.24 ** 2) + (b ** 2) / (2 * 0.3 ** 2)));
+      const p2 = 0.62 * Math.exp(-(((a + 0.38) ** 2) / (2 * 0.25 ** 2) + (b ** 2) / (2 * 0.31 ** 2)));
+      k = base + Math.max(p1, p2);
+      const gorge = Math.exp(-((a / 0.13) ** 2)) * (1 - smoothstep(0.02, 0.72, Math.abs(b)));
+      k = Math.max(0, k - gorge * 0.3);
+      k *= 1 + fbm(a * 3.4 + 2.2, b * 3.4, 3) * 0.05;
+      break;
+    }
+    case 'parallel': {
+      // 三列平行山脉：沿 axis 各一条长脊，脊间是冰川谷；每条脊各有一个主峰
+      k = 0;
+      const rows: [number, number, number, number][] = [[-0.48, 0.84, 0.155, -0.26], [0, 1.0, 0.17, 0.1], [0.48, 0.88, 0.15, 0.44]];
+      for (const [off, hh, w, bump] of rows) {
+        const rr = Math.hypot(a / 1.55, (b - off) / w);
+        const kk = hh * (1 - smoothstep(0.04, 1.0, rr)) * (0.9 + 0.1 * Math.exp(-(((a - bump) / 0.35) ** 2)));
+        k = Math.max(k, kk);
+      }
+      // 冰川谷底不归零：两列脊之间是一条 0.17h 高的冰碛谷
+      k = Math.max(k, 0.17 * (1 - smoothstep(0.3, 1.24, Math.hypot(a / 1.62, b / 0.92))));
+      k *= 1 + fbm(a * 2.4 + 5.1, b * 5, 3) * 0.04;
+      break;
+    }
+    default: {
+      // 高原来台：0.76h 的宽台面 + 陡缘，台上再立五座雪峰（0.96–1.02h）
+      const rn = Math.hypot(u, v);
+      k = 0.76 * (1 - smoothstep(0.5, 1.02, rn)) + 0.05 * (1 - smoothstep(0, 0.72, rn));
+      const peaks: [number, number, number, number][] = [
+        [-0.26, -0.2, 0.22, 0.1], [0.3, -0.28, 0.2, 0.09], [0.2, 0.3, 0.18, 0.1], [-0.36, 0.22, 0.16, 0.09], [0.02, -0.02, 0.12, 0.12],
+      ];
+      // 峰项只做"台面上加雪峰"：乘台缘掩码后**叠加**在台面上，不能写成 `max(k, 0.79+bump)`——
+      // 那样会在台缘外造出一圈 0.79 高的假台面（实测把华山抬到 3162m），且掩码本身把外缘切成 70° 陡壁。
+      const peakMask = 1 - smoothstep(0.8, 1.02, rn);
+      for (const [px, pz, hh, sg] of peaks) {
+        const bump = hh * Math.exp(-(((u - px) ** 2 + (v - pz) ** 2) / (sg * sg)));
+        k += bump * peakMask;
+      }
+      k *= 1 + fbm(u * 2.6 + m.x * 0.01, v * 2.6, 3) * 0.035;
+      break;
+    }
+  }
+  return k * MOUNTAIN_K[m.form];
+}
+
+/** 雪线高度（米）：逐山可覆盖；默认按 snow 折减（原口径 0.78 倍） */
+function snowLineOf(m: Mountain): number {
+  return m.h * (m.snowLine ?? Math.min(0.9, Math.max(0.55, m.snow * 0.78)));
+}
+
+/** 林线高度（米）：雪线下方留一段裸岩带 */
+function treeLineOf(m: Mountain): number {
+  return Math.min(m.h * 0.62, snowLineOf(m) * 0.94);
+}
+
 /** 大地高度场（米）。城内（半径<5200）保持 0 平原 */
 export function terrainHeight(x: number, z: number): number {
   // 城内必须整体压平：旧版只压平「半径 5250 的圆盘」，而城墙是 5000 的**方形**（角半径 7071），
@@ -117,25 +290,27 @@ export function terrainHeight(x: number, z: number): number {
   // 沙丘
   const dd = Math.hypot((x - DESERT.cx) / DESERT.rx, (z - DESERT.cz) / DESERT.rz);
   if (dd < 1.15) h += (1 - smoothstep(0.7, 1.15, dd)) * (14 + Math.abs(fbm(x * 0.0017, z * 0.0017, 2)) * 34);
-  // 群山
+  // 群山：按形制逐座计算（不再是同一个锥）
   for (const m of MOUNTAINS) {
-    const md = Math.hypot(x - m.x, z - m.z) / m.r;
-    if (md < 1.35) {
-      const ridge = 0.72 + 0.28 * fbm((x - m.x) * 0.0012 + m.x * 0.01, (z - m.z) * 0.0012, 3);
-      const peak = m.h * Math.pow(Math.max(0, 1 - md), 1.9) * ridge;
-      if (peak > h) h = peak;
-    }
+    const u = (x - m.x) / m.r, v = (z - m.z) / m.r;
+    if (u > 1.7 || u < -1.7 || v > 1.7 || v < -1.7) continue;
+    const peak = m.h * mountainField(m, x, z);
+    if (peak > h) h = peak;
   }
-  // 河流切割（仅低地）
-  for (const r of RIVERS) {
-    for (let i = 0; i < r.pts.length - 1; i++) {
-      const [ax, az] = r.pts[i], [bx, bz] = r.pts[i + 1];
-      const dist = distToSeg(x, z, ax, az, bx, bz);
-      if (dist < r.w * 0.5) { h = Math.min(h, -6); break; }
-      if (dist < r.w * 0.5 + 90) {
-        const bank = -6 + (dist - r.w * 0.5) / 90 * 26;
-        if (bank < h) h = bank;
-        break;
+  // 河流切割（仅低地）。旧版没有高度上限：泰山河/西河的末段已经爬进山脚（rn 0.42–0.65），
+  // 下切公式把 900–1400m 的山坡直接压到 −6 —— 山脚被切出一道千尺深崖（实拍泰山左侧的绿色裂谷），
+  // 形制四量测的最大坡度也被它污染到 73°。山体段一律不再下切，河尾自然埋进山脚（泉洞收口）。
+  if (h < 180) {
+    for (const r of RIVERS) {
+      for (let i = 0; i < r.pts.length - 1; i++) {
+        const [ax, az] = r.pts[i], [bx, bz] = r.pts[i + 1];
+        const dist = distToSeg(x, z, ax, az, bx, bz);
+        if (dist < r.w * 0.5) { h = Math.min(h, -6); break; }
+        if (dist < r.w * 0.5 + 90) {
+          const bank = -6 + (dist - r.w * 0.5) / 90 * 26;
+          if (bank < h) h = bank;
+          break;
+        }
       }
     }
   }
@@ -179,6 +354,148 @@ export function waterAt(x: number, z: number): number | null {
     if (Math.hypot((x - l.x) / l.rx, (z - l.z) / l.rz) < 0.92) return -3.4;
   }
   return null;
+}
+
+// ============ 七岳形制四量测（坡度角 / 峰数 / 脊走向 / 峰顶平坦度） ============
+/**
+ * 判据不是「看着不一样」，而是同一套采样口径下的四个量互不全同。口径：
+ *  · 采样 96×96、覆盖 2.5r，3×3 平滑两遍（压掉噪声伪峰，与 206.7m 渲染网格同量级）；
+ *  · 最大坡度角：相邻采样点中心差分的最大坡度；
+ *  · 峰数：>0.76×峰值 的连通块（4 邻域，面积≥2 格）——方顶/高原会并成 1 块；
+ *  · 脊走向：高度>0.25 峰值的单元上，梯度结构张量主方向的垂线（东西向脊 ≈ 0°）；
+ *  · 峰顶平坦度：0.30r 圆盘内、落在该盘中位数 ±7% 的面积占比。
+ */
+export interface MountainShape {
+  name: string; form: MountainForm;
+  maxH: number; peakAt: [number, number];
+  maxSlopeDeg: number; peaks: number; ridgeAzDeg: number; summitFlat: number;
+}
+
+export function mountainShapeStats(): MountainShape[] {
+  const N = 96;
+  return MOUNTAINS.map((m) => {
+    const span = m.r * 2.5;
+    let hs = new Float32Array(N * N);
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      // 只量形制本身（解析山体场），不含河床下切/邻山/大地起伏——
+      // 否则泰山河的末段下切会把"最大坡度"顶到 70°+，量到的就不是这座山的形制。
+      const px = m.x + (i / (N - 1) - 0.5) * span, pz = m.z + (j / (N - 1) - 0.5) * span;
+      hs[j * N + i] = Math.max(0, m.h * mountainField(m, px, pz));
+    }
+    for (let pass = 0; pass < 2; pass++) {
+      const sm = new Float32Array(N * N);
+      for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+        let s = 0, c = 0;
+        for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+          const jj = j + dj, ii = i + di;
+          if (jj < 0 || jj >= N || ii < 0 || ii >= N) continue;
+          s += hs[jj * N + ii]; c++;
+        }
+        sm[j * N + i] = s / c;
+      }
+      hs = sm;
+    }
+    let max = -1e9, mx = 0, mz = 0;
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const hv = hs[j * N + i];
+      if (hv > max) { max = hv; mx = m.x + (i / (N - 1) - 0.5) * span; mz = m.z + (j / (N - 1) - 0.5) * span; }
+    }
+    const st = span / (N - 1);
+    let slope = 0;
+    for (let j = 1; j < N - 1; j++) for (let i = 1; i < N - 1; i++) {
+      const gx = (hs[j * N + i + 1] - hs[j * N + i - 1]) / (2 * st);
+      const gz = (hs[(j + 1) * N + i] - hs[(j - 1) * N + i]) / (2 * st);
+      slope = Math.max(slope, Math.hypot(gx, gz));
+    }
+    // 峰数：连通块
+    const seen = new Uint8Array(N * N);
+    let peaks = 0;
+    for (let j0 = 0; j0 < N; j0++) for (let i0 = 0; i0 < N; i0++) {
+      const s0 = j0 * N + i0;
+      if (seen[s0] || hs[s0] < max * 0.76) continue;
+      let cnt = 0;
+      const stack = [s0];
+      seen[s0] = 1;
+      while (stack.length) {
+        const s = stack.pop()!;
+        const j = (s / N) | 0, i = s % N;
+        cnt++;
+        const nb = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        for (const [dj, di] of nb) {
+          const jj = j + dj, ii = i + di;
+          if (jj < 0 || jj >= N || ii < 0 || ii >= N) continue;
+          const s2 = jj * N + ii;
+          if (seen[s2] || hs[s2] < max * 0.76) continue;
+          seen[s2] = 1;
+          stack.push(s2);
+        }
+      }
+      if (cnt >= 2) peaks++;
+    }
+    // 脊走向：梯度结构张量
+    let jxx = 0, jzz = 0, jxz = 0;
+    for (let j = 1; j < N - 1; j++) for (let i = 1; i < N - 1; i++) {
+      if (hs[j * N + i] < max * 0.25) continue;
+      const gx = (hs[j * N + i + 1] - hs[j * N + i - 1]) / (2 * st);
+      const gz = (hs[(j + 1) * N + i] - hs[(j - 1) * N + i]) / (2 * st);
+      const w = Math.hypot(gx, gz);
+      jxx += w * gx * gx; jzz += w * gz * gz; jxz += w * gx * gz;
+    }
+    const thetaG = (0.5 * Math.atan2(2 * jxz, jxx - jzz) * 180) / Math.PI;
+    const az = ((thetaG + 90 + 90) % 180) - 90;
+    // 峰顶平坦度
+    const disc: number[] = [];
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const dx = (i / (N - 1) - 0.5) * span, dz = (j / (N - 1) - 0.5) * span;
+      if (Math.hypot(dx, dz) <= m.r * 0.3) disc.push(hs[j * N + i]);
+    }
+    disc.sort((a, b) => a - b);
+    const med = disc[Math.floor(disc.length / 2)] || 0;
+    let flat = 0;
+    for (const hv of disc) if (Math.abs(hv - med) <= med * 0.07) flat++;
+    return {
+      name: m.name, form: m.form,
+      maxH: Math.round(max), peakAt: [Math.round(mx - m.x), Math.round(mz - m.z)],
+      maxSlopeDeg: +(Math.atan(slope) * 180 / Math.PI).toFixed(1),
+      peaks, ridgeAzDeg: +az.toFixed(1),
+      summitFlat: +(flat / Math.max(1, disc.length)).toFixed(3),
+    };
+  });
+}
+
+/**
+ * 实际峰位：多数形制的最高点不在几何中心（双峰/长脊/五瓣），庙观与点景必须落在真峰上。
+ * 两级搜索（±0.55r 粗网格 → ±0.07r 细网格），y 取解析峰与渲染面的较大者。
+ */
+const SUMMITS = new Map<string, { x: number; y: number; z: number }>();
+export function mountainSummit(m: Mountain): { x: number; y: number; z: number } {
+  const hit = SUMMITS.get(m.name);
+  if (hit) return hit;
+  let bx = m.x, bz = m.z, best = -1e9;
+  const scan = (cx: number, cz: number, half: number, step: number): void => {
+    for (let dz = -half; dz <= half + 1e-6; dz += step) {
+      for (let dx = -half; dx <= half + 1e-6; dx += step) {
+        const x = cx + dx, z = cz + dz;
+        const y = terrainHeight(x, z);
+        if (y > best) { best = y; bx = x; bz = z; }
+      }
+    }
+  };
+  scan(m.x, m.z, m.r * 0.55, m.r * 0.055);
+  scan(bx, bz, m.r * 0.07, m.r * 0.0117);
+  const y = Math.max(best, terrainSurfaceY(bx, bz));
+  const out = { x: bx, y, z: bz };
+  SUMMITS.set(m.name, out);
+  return out;
+}
+
+/** 七山生机站点（给 flora.buildMountainLife） */
+export function mountainSites(): MountainSite[] {
+  return MOUNTAINS.map((m) => ({
+    m, summit: mountainSummit(m),
+    treeLine: treeLineOf(m), snowLine: snowLineOf(m),
+    streamAng: m.streamAng, waterfall: !!m.waterfall,
+  }));
 }
 
 // ============ 河道足迹与河床带（WS-WATER-BED） ============
@@ -511,18 +828,46 @@ function biomeColor(x: number, z: number, h: number, out: THREE.Color, skyBot?: 
   const dd = Math.hypot((x - DESERT.cx) / DESERT.rx, (z - DESERT.cz) / DESERT.rz);
   const gd = Math.hypot((x - GRASS.cx) / GRASS.rx, (z - GRASS.cz) / GRASS.rz);
   if (h > 20) {
-    // 山地：草地→岩石→雪顶
-    const snowK = smoothstep(500, 900, h);
+    // 山地：林带 → 裸岩 → 雪顶。七山按各自雪线/林线分带，山脚再叠五色花丛。
     out.setHex(0x4e6e3c).lerp(_rock.setHex(0x5c6266), smoothstep(120, 520, h));
     for (const m of MOUNTAINS) {
-      const md = Math.hypot(x - m.x, z - m.z) / m.r;
-      if (md < 1.3) {
-        const line = m.h * m.snow;
-        if (h > line * 0.55) out.lerp(_snow.setHex(0x9fabb8), smoothstep(line * 0.55, line, h));
-        break;
+      const u = (x - m.x) / m.r, v = (z - m.z) / m.r;
+      if (Math.abs(u) > 1.25 || Math.abs(v) > 1.25) continue;
+      const local = h / m.h;                       // 0..1 相对高度
+      const snow = snowLineOf(m) / m.h;
+      const tree = treeLineOf(m) / m.h;
+      // 林带：山脚阔叶（亮绿）→ 山腰针阔混（黄绿）→ 山腰以上针叶（墨绿）。
+      // v92：混合权重 0.72→0.88、色相提饱和、再加一层 ±14% 的中频明度斑驳——
+      // 旧值在暖米底贴图下会褪成橄榄褐（山腰近景实拍确认），撑不起"郁郁葱葱"。
+      if (local < snow * 0.98) {
+        const band = local < tree * 0.55 ? 0x4e9c3a : local < tree * 0.82 ? 0x41903a : 0x347f42;
+        const mote = 0.86 + 0.28 * (vnoise(x * 0.006 + 3.1, z * 0.006 - 1.7) * 0.5 + 0.5);
+        out.lerp(_forest.setHex(band).multiplyScalar(mote), smoothstep(0.02, 0.18, local) * 0.88);
+        // 五色花丛：低频斑块聚成片（不是均匀撒点），只在林线以下 0.55 高度内。
+        // 花斑内部再按更低频的 hue 噪声选色（~1.5km 尺度），否则逐顶点换色会读成彩色噪点。
+        // 华山（pyramidal）整座是 69° 绝壁：任何顶点色花斑都会被拉成竖条纹（像泼了颜料），
+        // 花木交给实体的花丛/灌丛，地形只上林色。
+        if (local < 0.5 && m.form !== 'pyramidal') {
+          const patch = vnoise(x * 0.0021 + m.x * 0.01, z * 0.0021 - m.z * 0.01);
+          const cluster = smoothstep(0.56, 0.74, patch);
+          if (cluster > 0) {
+            const hue = vnoise(x * 0.00063 + 31.7 + m.x * 0.001, z * 0.00063 - 12.9 + m.z * 0.001);
+            const ci = Math.min(FLOWER_COLORS.length - 1, Math.floor(hue * FLOWER_COLORS.length));
+            out.lerp(_flower.setHex(FLOWER_COLORS[ci]), cluster * 0.24);
+          }
+        }
       }
+      // 裸岩带：林线到雪线之间
+      out.lerp(_rock.setHex(0x6d6a62), smoothstep(tree * 0.95, tree * 1.22, local) * 0.55);
+      // 雪顶：冷灰蓝，不用纯白（旧 0x9fabb8 在暖光下会烧成白团）
+      if (local > snow * 0.9) out.lerp(_snow.setHex(0x93a2b0), smoothstep(snow * 0.9, snow * 1.04, local) * 0.88);
+      // 天山冰川：脊间谷底（local 0.2~0.55）给一层冰蓝
+      if (m.form === 'parallel') {
+        const glacier = smoothstep(0.2, 0.3, local) * (1 - smoothstep(0.5, 0.6, local));
+        out.lerp(_ice.setHex(0x9fc4d2), glacier * 0.5);
+      }
+      break;
     }
-    void snowK;
   } else if (dd < 1) {
     out.setHex(0xd8c08a).lerp(_rock.setHex(0xc0a070), smoothstep(0.5, 1, dd) * 0.4);
   } else if (gd < 1) {
@@ -542,9 +887,12 @@ function biomeColor(x: number, z: number, h: number, out: THREE.Color, skyBot?: 
   // 大气透视：远处融入黛青山色（远山如黛，避免破碎剪影）
   const d = Math.hypot(x, z);
   // 雾霾色插值收敛：0.95 权重会把高空视野的整片中远景地形染成灰蓝（高空灰幕元凶）
-  out.lerp(_haze.setHex(0xc8bfa8), smoothstep(9000, 26000, d) * 0.55);
+  out.lerp(_haze.setHex(0xc8bfa8), smoothstep(12000, 30000, d) * 0.42);
 }
+/** 山上五色花丛（顶点色版）：与 flora 的花丛同色系，远看是成片色斑 */
+const FLOWER_COLORS = [0xff5478, 0xffb300, 0x9a6bff, 0xff6ad5, 0xff7a3c, 0xffe14d];
 const _rock = new THREE.Color(), _snow = new THREE.Color(), _wet = new THREE.Color(), _haze = new THREE.Color(), _cityCol = new THREE.Color(), _white2 = new THREE.Color();
+const _forest = new THREE.Color(), _flower = new THREE.Color(), _ice = new THREE.Color();
 
 export interface TerrainResult { heightAt: typeof terrainHeight; waterMeshes: number }
 
@@ -556,7 +904,7 @@ const MOUNTAIN_TEMPLES: Record<string, { nm: string; roof: number; trim: number 
   '衡山': { nm: '祝融殿', roof: 0x3a6b8c, trim: 0xff9e00 },   // 火神祝融赤霄剪边
   '恒山': { nm: '北嶽廟', roof: 0x454b52, trim: 0xffb300 },
   '嵩山': { nm: '中嶽廟', roof: 0x3b4045, trim: 0xb8ff2e },   // 少林祖庭
-  '天山': { nm: '雪簾禪院', roof: 0xe8ecf2, trim: 0x00e5ff }, // 雪顶白瓦
+  '天山': { nm: '雪簾禪院', roof: 0xc6d2de, trim: 0x00e5ff }, // 雪顶冷灰瓦（旧 0xe8ecf2 近白，暖光下烧成白团）
   '昆仑': { nm: '瑤池行宮', roof: 0x3a6b8c, trim: 0xd8b0ff }, // 西王母道场
 };
 
@@ -599,10 +947,13 @@ function buildMountainTemple(b: Baker, sg: SignMesher, atlas: SignAtlas, m: Moun
     }
   }
   if (m.name === '天山') { // 冰凌檐挂（45 卷 049：M-19 檐口垂凌）
-    for (let k = 0; k < 9; k++) b.cyl('glow', 0.08, 0.22, 1.1 + (k % 3) * 0.4, 5, m.x - 8 + k * 2, gy + 6.7, m.z + 5.6, shade(0xf8f8ff, 0.75), 0, Math.PI);
+    // 冰凌走 glow（unlit 自发光）时 0xf8f8ff 直出近白 + 泛光，是"宫殿前高反光"的来源之一；
+    // 改 ash（受光、roughness 0.95）+ 冷青灰，冰的透亮靠颜色不靠自发光。
+    for (let k = 0; k < 9; k++) b.cyl('ash', 0.08, 0.22, 1.1 + (k % 3) * 0.4, 5, m.x - 8 + k * 2, gy + 6.7, m.z + 5.6, shade(0xc9dce8, 0.9), 0, Math.PI);
   }
   if (m.name === '昆仑') { // 白玉柱廊（45 卷 050：M-18 白玉柱）
-    for (let k = 0; k < 6; k++) b.cyl('glow', 0.3, 0.34, 4.6, 8, m.x - 7.5 + k * 3, gy + 4.0, m.z + 7.2, shade(0xf2efe9, 0.85));
+    // 白玉柱原为 glow + 0xf2efe9（≈纯白无光照），远看是六根发光白条；改受光石材色。
+    for (let k = 0; k < 6; k++) b.cyl('ash', 0.3, 0.34, 4.6, 8, m.x - 7.5 + k * 3, gy + 4.0, m.z + 7.2, shade(0xd6d1c4, 0.95));
   }
   // WS-33 山林庙观六件：香亭/遥参亭/悬空栈道门/冰纹窗/雪廊/石碣，按山分派
   buildSanctumPieces(b, sg, atlas, m, gy);
@@ -815,11 +1166,11 @@ function mtIceCrackWindows(b: Baker, m: Mountain, plat: number): void {
       }
       b.box('glow', 0.42, 0.42, 0.03, wx, y + 1.78, f.z + 0.06, 0xcfe6f2); // 明瓦
     }
-    // 瓦小檐＋雪脊＋檐口冰凌
+    // 瓦小檐＋雪脊＋檐口冰凌（雪脊/冰凌不再用近白：0xeef3f8 / 0xf8f8ff 是山顶爆白的主色）
     b.box('roof', 7.9, 0.2, 1.1, f.x, y + 3.16, f.z, 0x3a4046);
-    b.box('ash', 7.7, 0.12, 0.92, f.x, y + 3.29, f.z, 0xeef3f8);
+    b.box('ash', 7.7, 0.12, 0.92, f.x, y + 3.29, f.z, 0xc7d3dd);
     for (let k = 0; k < 5; k++) {
-      b.cyl('glow', 0.06, 0.16, 0.55, 5, f.x - 3.1 + k * 1.55, y + 2.9, f.z + 0.52, shade(0xf8f8ff, 0.8), 0, Math.PI);
+      b.cyl('ash', 0.06, 0.16, 0.55, 5, f.x - 3.1 + k * 1.55, y + 2.9, f.z + 0.52, shade(0xc9dce8, 0.9), 0, Math.PI);
     }
     b.kit('mt.iceCrackWindow', 3, y);
   }
@@ -837,16 +1188,16 @@ function mtSnowGallery(b: Baker, m: Mountain, plat: number, roof: number): void 
     b.box('wood', 3.1, 0.18, span - 0.1, cx, fy, zc, shade(0x6a4a2c, 0.92 + (i % 3) * 0.05));
     // 外侧（西）挡雪矮墙＋雪压顶
     b.box('earth', 0.3, 1.0, span - 0.1, cx - 1.5, fy + 0.5, zc, 0x8b7f6a);
-    b.box('ash', 0.44, 0.12, span - 0.1, cx - 1.5, fy + 1.06, zc, 0xeef3f8);
+    b.box('ash', 0.44, 0.12, span - 0.1, cx - 1.5, fy + 1.06, zc, 0xc7d3dd);
     // 内侧（院）栏杆
     b.box('wood', 0.12, 0.1, span - 0.1, cx + 1.5, fy + 0.98, zc, 0x7a5533);
     b.box('wood', 0.1, 0.1, span - 0.1, cx + 1.5, fy + 0.56, zc, 0x6a4a2c);
     // 单坡瓦顶（向院内低，雪从外侧滑落）＋雪脊
     b.box('roof', 3.7, 0.16, span - 0.04, cx, plat + 2.62, zc, roof, 0, 0, -0.2);
-    b.box('ash', 3.6, 0.12, span - 0.16, cx, plat + 2.74, zc, 0xeef3f8, 0, 0, -0.2);
+    b.box('ash', 3.6, 0.12, span - 0.16, cx, plat + 2.74, zc, 0xc7d3dd, 0, 0, -0.2);
     b.box('wood', 3.5, 0.12, 0.14, cx, plat + 2.5, zc + span / 2 - 0.1, 0x7a5533);
     for (let k = 0; k < 3; k++) {
-      b.cyl('glow', 0.05, 0.13, 0.5, 5, cx + 1.55, plat + 2.4, zc - 1.0 + k * 1.0, shade(0xf8f8ff, 0.8), 0, Math.PI);
+      b.cyl('ash', 0.05, 0.13, 0.5, 5, cx + 1.55, plat + 2.4, zc - 1.0 + k * 1.0, shade(0xc9dce8, 0.9), 0, Math.PI);
     }
   }
   // 柱列：逐柱 terrainHeight 取样（台基范围内取台面），柱脚一律落在实地
@@ -908,7 +1259,9 @@ function buildSanctumPieces(b: Baker, sg: SignMesher, atlas: SignAtlas, m: Mount
   }
 }
 
-// ---- 远山三层色带：雪线 / 裸岩 / 碎石。7km 外山体只剩几十米起伏，靠顶点色读不出层次，必须铺体块 ----
+// ---- 【停用·v92】远山三层色带：旧版"七座同形锥"的补丁，在光滑坡面上铺体块找层次。
+// 新形制 + 顶点色林带/岩带/雪线 + 540 株乔木已取代它；30–60m 扁平板在 4km 外读作"撒了一坡灰卡片"，
+// 正是用户投诉的高反光物体，故 buildTerrain 不再调用。代码保留仅供对照/回滚（BAND_MTNS 同）。
 const BAND_MTNS = new Set(['嵩山', '泰山', '华山']);
 
 function buildMountainBands(b: Baker, m: Mountain): void {
@@ -1001,17 +1354,10 @@ function buildMountainBands(b: Baker, m: Mountain): void {
       }
     }
   };
-  const snowLine = Math.min(0.9, Math.max(0.55, m.snow * 0.78));
-  const sSpan = 1 - snowLine;
-  ring([snowLine, snowLine + sSpan * 0.3, snowLine + sSpan * 0.58, snowLine + sSpan * 0.82, snowLine + sSpan * 0.95],
-    1.45, 0.6, 3, 7,
-    [0xeef3f8, 0xe1eaf2, 0xf7fafd, 0xd8e3ee], 'ash', 'mt.snowLineBand');
-  const rockLo = snowLine * 0.48, rockHi = snowLine * 0.94, rSpan = rockHi - rockLo;
-  ring([rockLo, rockLo + rSpan * 0.34, rockLo + rSpan * 0.68, rockHi],
-    1.4, 0.64, 8, 18,
-    [0x5b564e, 0x676158, 0x4e4943, 0x726b60], 'ash', 'mt.ridgeRockBand');
-  ring([0.1, 0.18], 1.35, 0.72, 2, 5, [0x9c9079, 0xa8977f], 'earth', 'mt.screeApron');
-  ring([0.14, 0.25], 1.3, 0.66, 1.5, 4, [0x8b8479, 0x7d7870], 'ash', 'mt.screeApron');
+  // 体块环带：**整组删除**。旧版四色 0xeef3f8/0xe1eaf2/0xf7fafd/0xd8e3ee 是用户看到的
+  // 「山上成片高反光白块」；压暗到冷灰蓝后实拍仍在坡面排成一圈圈浅色板（30–60m 的扁平卡片，
+  // 3.8km 外读作撒了一坡纸片）。顶点色已经有完整的林线/岩带/雪线分带（见 biomeColor），
+  // 体块只剩"山脊棱线"这一项：它是沿脊走的长条岩骨，不是横着排的环带。
   // 山脊棱线：取最延展的 3 个方位往下铺岩脊，远看是山的"骨"
   const score: number[] = [];
   for (let k = 0; k < 24; k++) {
@@ -1146,7 +1492,10 @@ interface WaterUniforms { uTime: { value: number }; uSky: { value: THREE.Color }
 function makeWaterMaterial(): THREE.MeshStandardMaterial {
   const mat = new THREE.MeshStandardMaterial({
     vertexColors: true, transparent: true, depthWrite: true,
-    roughness: 0.38, metalness: 0.0, side: THREE.DoubleSide, dithering: true,
+    // envMapIntensity 必须压到 ~0.2：RoomEnvironment 是明亮的摄影棚环境，roughness 0.38 的水面
+    // 在掠射角会整条反射成白带（实拍华山北望：西河在 6km 外是一条爆白横带 + 泛光）。
+    // 菲涅尔色仍走 scene.fog.color，随昼夜换档；只是不再叠一层环境镜面。
+    roughness: 0.82, metalness: 0.0, envMapIntensity: 0.05, side: THREE.DoubleSide, dithering: true,
   });
   mat.name = 'water';
   const uni: WaterUniforms = { uTime: { value: 0 }, uSky: { value: new THREE.Color(0x9fb4c4) } };
@@ -1460,11 +1809,14 @@ export async function buildTerrain(scene: THREE.Scene, skyBotRef?: { c: THREE.Co
   mark('riverHoles');
   geo.computeVertexNormals();
   mark('normals');
-  // 程序化地表纹理（草地噪点+泥土斑块）
+  // 程序化地表纹理（草地噪点+泥土斑块）。
+  // 底色从暖米 #c8c0b0 改为中性浅灰 #c6c8c3：这张图是**乘性**贴图，暖米底会把所有顶点色
+  // 往黄灰拽（山腰森林顶点色 0x4f8a3c × 米底 ≈ 橄榄褐，近景实拍确认"郁郁葱葱"起不来）。
+  // 中性底只保留明度噪点，绿色由顶点色承担；城区夯土色本来就是暖赭，不受影响。
   const gc = document.createElement('canvas');
   gc.width = gc.height = 1024;
   const gctx = gc.getContext('2d')!;
-  gctx.fillStyle = '#c8c0b0'; gctx.fillRect(0, 0, 1024, 1024);
+  gctx.fillStyle = '#c6c8c3'; gctx.fillRect(0, 0, 1024, 1024);
   for (let i = 0; i < 3000; i++) {
     if (i > 0 && i % 1200 === 0) await yieldFrame();
     gctx.fillStyle = `rgba(${60 + Math.random() * 120 | 0},${70 + Math.random() * 100 | 0},${30 + Math.random() * 60 | 0},${0.06 + Math.random() * 0.12})`;
@@ -1484,7 +1836,9 @@ export async function buildTerrain(scene: THREE.Scene, skyBotRef?: { c: THREE.Co
   groundTex.repeat.set(SIZE / 64, SIZE / 64);
   groundTex.anisotropy = 8;
   groundTex.colorSpace = THREE.SRGBColorSpace;
-  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.92, metalness: 0.0, map: groundTex });
+  // 山体材质：roughness 0.95 / metalness 0（岩雪都是漫反射），envMapIntensity 压到 0.22 ——
+  // RoomEnvironment 的 PMREM 在掠射角会给出整片天空反射，是"山体发亮"的第二个来源。
+  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, metalness: 0.0, envMapIntensity: 0.22, map: groundTex });
   const mesh = new THREE.Mesh(geo, mat);
   mark('mesh');
   mesh.name = 'terrain';
@@ -1543,18 +1897,24 @@ export async function buildTerrain(scene: THREE.Scene, skyBotRef?: { c: THREE.Co
   scene.add(group);
   const waterMeshes = 2;
   mark('water');
-  // 七山庙观：山巅建庙（需 baker/sg/atlas，世界装配时传入）
+  // 七山庙观：山巅建庙（需 baker/sg/atlas，世界装配时传入）。
+  // 位置取实际峰位（双峰/长脊/五瓣形制的几何中心可能是鞍部或峡谷），庙随峰走。
   if (b && sg && atlas) {
     for (const m of MOUNTAINS) {
-      buildMountainTemple(b, sg, atlas, m, terrainHeight(m.x, m.z));
+      const s = mountainSummit(m);
+      buildMountainTemple(b, sg, atlas, { ...m, x: s.x, z: s.z }, s.y);
     }
   }
   mark('mtnTemple');
-  // 远山三层色带：只做近景三座，近山色带才有像素可用
-  if (b) {
-    for (const m of MOUNTAINS) if (BAND_MTNS.has(m.name)) buildMountainBands(b, m);
-  }
+  // 远山三层色带已停用：它是旧版"七座同形锥"的补丁（在光滑坡面上铺体块找层次）。
+  // 新形制 + 顶点色林带/岩带/雪线 + 540 株乔木已经给足层次；实拍确认这些 30–60m 的
+  // 扁平板在 4km 外读作"撒了一坡灰卡片"，正是用户投诉的高反光物体。
   mark('mtnBands');
+  // 七岳山林生机：分带乔木 / 五色花丛 / 溪流瀑布 / 神兽锚点（Baker 合批，零新增 draw call）
+  if (b) {
+    await buildMountainLife(b, mountainSites(), terrainHeight, terrainSurfaceY);
+    mark('mtnLife');
+  }
   // 城外郊野（田垄/村落/土路/山体细节）：与地形同批烘焙，且必须先于 scatterVegetation 登记田块
   if (b) {
     countryFields = buildCountryside(b, new RNG(0x2f6b1d), terrainSurfaceY, waterAt).fields;
@@ -1562,6 +1922,17 @@ export async function buildTerrain(scene: THREE.Scene, skyBotRef?: { c: THREE.Co
     // 驿路两件（WS-33）：驿楼／望楼落在东郊驿道 (5600,−420)→(5790,−980) 段东侧路肩外 52m，路向 1.243
     buildPostStation(b, 5744, -683, 1.243, terrainHeight);
     mark('postStation');
+  }
+  // 探针句柄：形制四量测按需计算（避免把 7×9216 次采样压进加载）
+  if (typeof window !== 'undefined') {
+    const w2 = window as unknown as Record<string, unknown>;
+    w2.__mtnHeight = terrainHeight;
+    w2.__mtnSurface = terrainSurfaceY;
+    w2.__mtnStats = () => mountainShapeStats();
+    w2.__mtnSummit = (name: string) => {
+      const m = MOUNTAINS.find((mm) => mm.name === name);
+      return m ? mountainSummit(m) : null;
+    };
   }
   flushT();
   return { heightAt: terrainHeight, waterMeshes };
