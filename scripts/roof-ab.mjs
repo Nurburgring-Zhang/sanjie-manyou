@@ -2,11 +2,12 @@
  *  机位：人间河岸铺面 / 天宫南天门街区 / 地府丰都鬼市
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const TAG = process.argv[2] || 'ab';
 const MODE = process.argv[3] === 'old' ? 'old' : 'new';
 const URLX = 'http://127.0.0.1:4263/' + (MODE === 'old' ? '?roofOld=1' : '');
-const UA = '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe';
+const UA = CHROME;
 
 const SHOTS = [
   // 人间：河右岸那排商业铺面（用户截图位置）

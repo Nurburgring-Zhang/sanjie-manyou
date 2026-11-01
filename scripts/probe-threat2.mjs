@@ -6,9 +6,10 @@
  * 用法：node scripts/probe-threat2.mjs   （需 npx vite preview --port 4173）
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const b = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--no-sandbox', '--enable-unsafe-swiftshader'],
 });

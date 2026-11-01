@@ -12,6 +12,7 @@
  * 退出码 0 = 峰值 ≤600，1 = 超标。
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const URL = process.env.PROBE_URL || process.env.PREVIEW_URL || 'http://localhost:4173/';
 const LIMIT = 600;
@@ -28,7 +29,7 @@ const VIEWS = [
 ];
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--window-size=1280,720', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });

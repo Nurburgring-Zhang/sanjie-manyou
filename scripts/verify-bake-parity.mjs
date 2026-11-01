@@ -11,9 +11,10 @@
  * 退出码：0 = 全部一致（允许已解释的面数差）；1 = 有未解释的差异。
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const CHROME = '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe';
+const CHROME = CHROME;
 const URL = process.env.PROBE_URL || 'http://127.0.0.1:4243/';
 const args = process.argv.slice(2);
 const dumpMode = args.includes('--dump');

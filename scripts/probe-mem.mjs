@@ -11,9 +11,10 @@
  * 用法： node scripts/probe-mem.mjs [--runs 3] [--url http://127.0.0.1:4243/] [--json out.json]
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 import { writeFileSync } from 'node:fs';
 
-const CHROME = '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe';
+import { CHROME } from './chromePath.mjs';
 const argv = process.argv.slice(2);
 const argOf = (name, dflt) => {
   const i = argv.indexOf(name);

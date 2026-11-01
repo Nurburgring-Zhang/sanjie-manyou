@@ -1,6 +1,7 @@
 /** 阴影预算验证：视锥必须裁到 ≤160m 且 far ≤800；同帧 calls 不得反弹 */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
+import { CHROME } from './chromePath.mjs';
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
 const p = await b.newPage();
 await p.setViewport({ width:1280, height:720 });
 await p.goto('http://localhost:4173/', { waitUntil:'networkidle2', timeout:180000 });

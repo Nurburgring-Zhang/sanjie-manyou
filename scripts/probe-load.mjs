@@ -1,12 +1,13 @@
 // 载入探针：逐步打印 [加载] 日志，并在超时后判定主线程是否被同步死循环冻住。
 // 用法：node scripts/probe-load.mjs [url] [ms]
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const url = process.argv[2] || 'http://localhost:4173/';
 const budget = Number(process.argv[3] || 90000);
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   protocolTimeout: 120000,
   args: ['--window-size=800,600', '--no-sandbox', '--enable-unsafe-swiftshader'],

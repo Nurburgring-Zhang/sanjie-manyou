@@ -6,7 +6,7 @@ const url = process.argv[2] || 'http://localhost:4173/';
 const waitMs = Number(process.argv[3] || 25000);
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   protocolTimeout: 120000,
   args: ['--window-size=800,600', '--no-sandbox', '--enable-unsafe-swiftshader'],

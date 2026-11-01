@@ -7,9 +7,10 @@
  *   ④ 手动把 near 档标未就绪，仍不得出现空帧（保留上一档）。
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const b = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--no-sandbox', '--enable-unsafe-swiftshader', '--window-size=1280,720'],
 });

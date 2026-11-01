@@ -14,6 +14,7 @@
  * 退出码 0 = 最大裸地 < 90m，1 = 超标或探针失败。
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 import zlib from 'node:zlib';
 
 const CX = Number(process.argv[2] ?? 0);
@@ -70,7 +71,7 @@ function decodePng(buf) {
 }
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--window-size=1400,1000', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });

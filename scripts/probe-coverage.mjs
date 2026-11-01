@@ -1,7 +1,8 @@
 /** 屏幕覆盖率探针：给定机位，按投影半径算出每个网格占屏面积，列出真正「遮住画面」的前 10 名 */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 const [cx, cy, cz, tx, ty, tz] = process.argv.slice(2).map(Number);
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
 const p = await b.newPage();
 await p.setViewport({ width:1280, height:720 });
 await p.goto('http://localhost:4173/', { waitUntil:'domcontentloaded', timeout:180000 });

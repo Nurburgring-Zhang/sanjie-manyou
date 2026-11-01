@@ -7,7 +7,8 @@
  * 说明：初始站位用测试夹具（把玩家放到 Boss 身边），伤害与阶段全部由真实按键驱动。
  */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
+import { CHROME } from './chromePath.mjs';
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
 const p = await b.newPage();
 await p.goto('http://localhost:4173/', { waitUntil:'networkidle2', timeout:120000 });
 await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:120000 });

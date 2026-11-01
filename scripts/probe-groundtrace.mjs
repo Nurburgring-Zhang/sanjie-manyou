@@ -1,6 +1,7 @@
 /** 地坪归因：在 bridge-top 机位把 ground 台账投影到屏幕，列出落在「深色区块」矩形内的构件 */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
+import { CHROME } from './chromePath.mjs';
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
 const p = await b.newPage();
 await p.setViewport({ width:1280, height:720 });
 await p.goto('http://localhost:4173/', { waitUntil:'domcontentloaded', timeout:180000 });

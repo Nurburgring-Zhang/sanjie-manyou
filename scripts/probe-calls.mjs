@@ -1,6 +1,7 @@
 /** draw call 预算验证：静态合批后 calls 必须显著下降（目标 ≤600） */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
+import { CHROME } from './chromePath.mjs';
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
 const p = await b.newPage();
 await p.setViewport({ width:1280, height:720 });
 p.on('console', (m) => { const t = m.text(); if (t.includes('静态合批')) console.log('LOG', t); });

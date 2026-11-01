@@ -1,6 +1,7 @@
 /** 载入预算门：任一加载步 >1200ms 即 FAIL（给 SPEC §11 一个机检出口，防止「慢」被当「没问题」） */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
+import { CHROME } from './chromePath.mjs';
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
 const p = await b.newPage();
 await p.goto('http://localhost:4173/', { waitUntil:'domcontentloaded', timeout:120000 });
 await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:180000 });

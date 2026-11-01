@@ -8,6 +8,7 @@
  */
 import fs from 'node:fs';
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const URL = process.env.URL || 'http://127.0.0.1:4247/';
 const [mode, out, how, ...rest] = process.argv.slice(2);
@@ -16,7 +17,7 @@ const hideRe = hideArg ? new RegExp(hideArg.slice(5)) : null;
 const nums = rest.filter((a) => !a.startsWith('hide=')).map(Number);
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--window-size=1600,900', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });

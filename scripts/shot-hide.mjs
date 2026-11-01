@@ -1,7 +1,7 @@
 /** 定点截图 + 可隐藏指定名字前缀的网格：node scripts/shot-hide.mjs <out> <x y z> <tx ty tz> <namePrefix|-> */
 import puppeteer from 'puppeteer-core';
 const [out, x, y, z, tx, ty, tz, pref] = process.argv.slice(2);
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--window-size=1600,900','--no-sandbox','--enable-unsafe-swiftshader'] });
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--window-size=1600,900','--no-sandbox','--enable-unsafe-swiftshader'] });
 const p = await b.newPage();
 await p.setViewport({ width: 1600, height: 900 });
 await p.goto(process.env.PREVIEW_URL||'http://localhost:4173/', { waitUntil:'networkidle2', timeout:120000 });

@@ -1,6 +1,7 @@
 /** 按顶点色检索 city_ground：统计出现最多的色值及其包围盒，直接定位「深灰矩形」是哪一块 */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
+import { CHROME } from './chromePath.mjs';
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
 const p = await b.newPage();
 await p.goto('http://localhost:4173/', { waitUntil:'domcontentloaded', timeout:180000 });
 await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:180000 });

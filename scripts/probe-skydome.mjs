@@ -15,6 +15,7 @@
  * 退出码 0 = 全部通过，1 = 有天穹被裁剪。
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 import zlib from 'node:zlib';
 
 /** 极简 PNG 解码：只支持 bitDepth 8 / colorType 2(RGB) 或 6(RGBA) / 无隔行 */
@@ -82,7 +83,7 @@ const VIEWS = [
 const LIMIT = 0.03;
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--window-size=1600,900', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });

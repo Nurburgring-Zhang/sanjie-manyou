@@ -1,6 +1,6 @@
 /** 主线程阻塞验证：加载期间用 rAF 间隔当「冻结时长」的直接度量（步耗时含让帧，不能反映卡顿） */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
 const p = await b.newPage();
 await p.evaluateOnNewDocument(() => {
   window.__gaps = [];

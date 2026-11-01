@@ -1,6 +1,7 @@
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 const target = process.argv[2];
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--window-size=1600,900','--no-sandbox','--enable-unsafe-swiftshader'] });
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--window-size=1600,900','--no-sandbox','--enable-unsafe-swiftshader'] });
 const p = await b.newPage();
 await p.setViewport({ width:1600, height:900 });
 await p.goto('http://localhost:4173/', { waitUntil:'networkidle2', timeout:120000 });

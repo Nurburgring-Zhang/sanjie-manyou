@@ -7,6 +7,7 @@
  * 用法：PROBE_URL=http://localhost:4249/ node scripts/probe-calls-shots.mjs
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 import { mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -25,7 +26,7 @@ const VIEWS = [
 ];
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--window-size=1280,720', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });

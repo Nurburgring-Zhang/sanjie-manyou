@@ -21,7 +21,7 @@
  */
 import puppeteer from 'puppeteer-core';
 
-const CHROME = '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe';
+import { CHROME } from './chromePath.mjs';
 const CANDIDATES = [
   process.env.PROBE_URL,
   'http://localhost:4173/',

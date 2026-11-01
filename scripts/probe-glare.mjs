@@ -9,9 +9,10 @@
  * 输出：按「越线顶点数」排序的材质组清单 + 每组的代表世界坐标；pass=false 表示仍有越线面片。
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const b = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--no-sandbox', '--enable-unsafe-swiftshader'],
 });

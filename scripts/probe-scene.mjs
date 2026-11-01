@@ -1,6 +1,6 @@
 /** 场景清单：列出 Points / InstancedMesh 与自发光大件，用于定位「画面上的爆白/白块」 */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--window-size=1200,700','--no-sandbox','--enable-unsafe-swiftshader'] });
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--window-size=1200,700','--no-sandbox','--enable-unsafe-swiftshader'] });
 const p = await b.newPage();
 await p.goto(process.env.PREVIEW_URL||'http://localhost:4173/', { waitUntil:'networkidle2', timeout:120000 });
 await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:120000 });

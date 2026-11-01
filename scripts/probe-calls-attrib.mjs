@@ -13,6 +13,7 @@
  * 用法：PROBE_URL=http://localhost:4249/ node scripts/probe-calls-attrib.mjs [topN]
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const URL = process.env.PROBE_URL || 'http://localhost:4249/';
 const TOPN = Number(process.argv[2]) || 24;
@@ -27,7 +28,7 @@ const VIEWS = [
 ];
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--window-size=1280,720', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });

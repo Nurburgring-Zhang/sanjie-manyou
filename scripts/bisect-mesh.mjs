@@ -4,6 +4,7 @@
  * 用法：node scripts/bisect-mesh.mjs [x y z tx ty tz]
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 import zlib from 'node:zlib';
 
 function decodePng(buf) {
@@ -45,7 +46,7 @@ const CAM = args.length === 6 ? args : [1180, 26, 1180, 1230, 6, 1230];
 const CLIP = { x: 1150, y: 150, width: 420, height: 320 };
 
 const b = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true, args: ['--window-size=1600,900', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });
 const p = await b.newPage();

@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless: true, args: ['--no-sandbox','--enable-unsafe-swiftshader','--enable-precise-memory-info'] });
+import { CHROME } from './chromePath.mjs';
+const b = await puppeteer.launch({ executablePath: CHROME, headless: true, args: ['--no-sandbox','--enable-unsafe-swiftshader','--enable-precise-memory-info'] });
 const p = await b.newPage();
 await p.goto('http://127.0.0.1:4243/?boxAudit=1', { waitUntil: 'domcontentloaded', timeout: 180000 });
 await p.waitForFunction(() => !document.getElementById('loading') && !!window.__qingming?.world?.assetAudit, { timeout: 240000, polling: 300 });

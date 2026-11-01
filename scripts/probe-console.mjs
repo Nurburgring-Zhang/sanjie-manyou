@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
+import { CHROME } from './chromePath.mjs';
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
 const p = await b.newPage();
 const seen = new Map();
 p.on('console', (m) => { const t = m.text(); const k = t.slice(0,90); seen.set(k, (seen.get(k)||0)+1); });

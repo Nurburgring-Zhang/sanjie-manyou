@@ -1,6 +1,6 @@
 /** 音效行为验证：给 AudioContext 打桩计数，再真实触发「传送」「开图鉴」「跨界」，看节点是否真的新建 */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required'] });
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required'] });
 const p = await b.newPage();
 await p.evaluateOnNewDocument(() => {
   window.__audioNodes = 0;

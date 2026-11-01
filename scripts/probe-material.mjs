@@ -1,6 +1,6 @@
 /** 材质爆白防线：金属度/清漆/环境反射必须压在阈值下，否则掠射角会整片返白 */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader'] });
 const p = await b.newPage();
 await p.goto('http://localhost:4173/', { waitUntil:'domcontentloaded', timeout:180000 });
 await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:180000 });

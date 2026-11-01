@@ -13,10 +13,9 @@
  * 运行：先 `npx vite dev --port 4201`，再 `node scripts/probe-goalchain.mjs`
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const URL = process.env.PROBE_URL ?? 'http://localhost:4173/';
-const CHROME = process.env.PROBE_CHROME
-  ?? '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe';
 
 const results = [];
 const check = (name, pass, detail) => results.push({ name, pass, detail: pass ? detail : { ...detail, FAIL: true } });

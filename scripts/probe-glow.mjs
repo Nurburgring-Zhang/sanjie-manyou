@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1200,700'] });
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1200,700'] });
 const p = await b.newPage();
 await p.goto((process.env.PREVIEW_URL||'http://localhost:4173/') + '?traceGlow=1', { waitUntil:'networkidle2', timeout:120000 });
 await p.waitForFunction(()=>!document.getElementById('loading'), { timeout:120000 });

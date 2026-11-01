@@ -16,6 +16,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const URL = process.env.URL || 'http://127.0.0.1:4255/';
 const OUT = process.env.OUT || 'screenshots/house-overlap';
@@ -23,7 +24,7 @@ const W = Number(process.env.W || 1600);
 const H = Number(process.env.H || 900);
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   protocolTimeout: 300000,
   args: [`--window-size=${W},${H}`, '--no-sandbox', '--enable-unsafe-swiftshader'],

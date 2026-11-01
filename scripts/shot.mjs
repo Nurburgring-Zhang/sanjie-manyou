@@ -1,8 +1,9 @@
 /** 定点截图：node scripts/shot.mjs <out.png> <x> <y> <z> <tx> <ty> <tz> [w] [h] */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 const [out, x, y, z, tx, ty, tz] = process.argv.slice(2);
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true, args: ['--window-size=1600,900', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });
 const page = await browser.newPage();

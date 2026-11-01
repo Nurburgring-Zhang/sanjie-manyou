@@ -3,10 +3,11 @@
  * 用法：node scripts/probe-face.mjs <ax> <ay> <az> <bx> <by> <bz>
  */
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const [AX, AY, AZ, BX, BY, BZ] = process.argv.slice(2).map(Number);
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--window-size=800,600', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });

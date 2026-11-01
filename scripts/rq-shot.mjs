@@ -4,6 +4,7 @@
  */
 import fs from 'node:fs';
 import puppeteer from 'puppeteer-core';
+import { CHROME } from './chromePath.mjs';
 
 const SHOTS = process.argv[2];
 const PORT = process.argv[3] ?? '4265';
@@ -11,7 +12,7 @@ const LIST = JSON.parse(fs.readFileSync(SHOTS, 'utf8'));
 const OUT = 'screenshots/rq';
 fs.mkdirSync(OUT, { recursive: true });
 
-const EXE = '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe';
+const EXE = CHROME;
 const browser = await puppeteer.launch({
   executablePath: EXE, headless: true,
   args: ['--window-size=1600,900', '--no-sandbox', '--enable-unsafe-swiftshader', '--use-gl=swiftshader', '--disable-dev-shm-usage'],

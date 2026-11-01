@@ -1,6 +1,6 @@
 /** 关卡四件套验证：每个 POI 都有非空目标/威胁/恢复点，且恢复点 key 真实存在；HUD 目标行随传送变化 */
 import puppeteer from 'puppeteer-core';
-const b = await puppeteer.launch({ executablePath:'<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe', headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
+const b = await puppeteer.launch({ executablePath: CHROME, headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader','--window-size=1280,720'] });
 const p = await b.newPage();
 await p.setViewport({ width:1280, height:720 });
 await p.goto('http://localhost:4173/', { waitUntil:'networkidle2', timeout:120000 });
