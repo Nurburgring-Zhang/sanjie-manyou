@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { Crowd } from '../actors/crowd';
 import type { Actor } from '../actors/types';
-import type { Engine } from '../core/engine';
+import { PITCH_LIMIT, type Engine } from '../core/engine';
 import { bridgeDeckY, BRIDGE_HALF } from '../city/layout';
 import { terrainHeight, waterAt } from '../world/terrain';
 import { bus } from '../core/rng';
@@ -58,7 +58,6 @@ export class PlayerController {
   boat: DriveBoat | null = null;
   interact: { pos: THREE.Vector3; r: number; label: string; exec: () => void } | null = null;
   busyUntil = 0;                                  // 交互动作锁定
-  private drag = false; private px = 0; private py = 0;
   private downX = 0; private downY = 0;
   private fadeEl: HTMLElement | null = null;
 
@@ -134,43 +133,28 @@ export class PlayerController {
       if (ev.code === 'KeyE' && this.mode === 'avatar') this.tryInteract();
       if (ev.code === 'KeyF') this.tryAttack();
     });
-    this.engine.renderer.domElement.addEventListener('pointerup', (e) => {
+    const el = this.engine.renderer.domElement;
+    el.addEventListener('pointerdown', (e) => { this.downX = e.clientX; this.downY = e.clientY; });
+    el.addEventListener('pointerup', (e) => {
       if (e.pointerType !== 'touch') {
         // 仅点击（非拖拽）才出拳
         if (Math.hypot(e.clientX - this.downX, e.clientY - this.downY) < 6) this.tryAttack();
       }
     });
-    const el = this.engine.renderer.domElement;
-    el.addEventListener('pointerdown', (e) => {
-      this.downX = e.clientX; this.downY = e.clientY;
-      if (e.pointerType === 'touch' || this.mode !== 'avatar') return;
-      this.drag = true; this.px = e.clientX; this.py = e.clientY;
-    });
-    window.addEventListener('pointermove', (e) => {
-      if (!this.drag || e.pointerType === 'touch') return;
-      this.camYaw -= (e.clientX - this.px) * 0.0042;
-      this.camPitch = THREE.MathUtils.clamp(this.camPitch - (e.clientY - this.py) * 0.003, -1.2, 0.9);
-      this.px = e.clientX; this.py = e.clientY;
-    });
-    window.addEventListener('pointerup', () => { this.drag = false; });
+    // 视角拖拽不再在 Player 里挂第二套 pointermove：
+    // engine.dragLook → onAvatarDrag → avatarLookDrag 是唯一通道。
+    // 旧版引擎与 Player 各挂一套，附身态一次拖动会双倍转视角（灵敏度忽高忽低）。
     el.addEventListener('wheel', (e) => {
       if (this.mode !== 'avatar') return;
       this.camDist = THREE.MathUtils.clamp(this.camDist + Math.sign(e.deltaY) * 0.8, 2.5, 16);
     }, { passive: true });
-    window.addEventListener('touchmove', (ev) => {
-      for (const t of Array.from(ev.touches)) {
-        // 右屏拖拽转相机（avatar 触控）
-        if (this.mode === 'avatar' && t.clientX > innerWidth * 0.45 && t.clientY < innerHeight * 0.62) {
-          // lookzone 已在 ui 处理 fly；avatar 复用 dragLook 通道由 world 桥接
-        }
-      }
-    }, { passive: true });
   }
 
+  /** 附身模式相机：由 engine.dragLook 统一转发（拖拽 / 指针锁定都走这里） */
   avatarLookDrag(dx: number, dy: number): void {
     if (this.mode !== 'avatar') return;
     this.camYaw -= dx * 0.0042;
-    this.camPitch = THREE.MathUtils.clamp(this.camPitch - dy * 0.003, -1.2, 0.9);
+    this.camPitch = THREE.MathUtils.clamp(this.camPitch - dy * 0.003, -PITCH_LIMIT, PITCH_LIMIT);
   }
 
   /** 交互入口由 interact 模块注入 */

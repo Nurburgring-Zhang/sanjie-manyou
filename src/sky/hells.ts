@@ -937,10 +937,12 @@ export function buildEighteenHells(b: Baker, sg: SignMesher, atlas: SignAtlas): 
     {
       const bw = 16, bd = 16, bh = 9, wt = 0.9;
       // 后墙（背离环心，local −z）
-      b.box('wall', bw, bh, wt, h.x - ux * (bd / 2 - wt / 2), y + 1.5, h.z - uz * (bd / 2 - wt / 2), shade(BLACKB, 0.96), ry);
+      // 狱墙原挂 'wall' 组（MeshLambert + emissive 0x3a3d48）：十八座狱共 54 面 16×9m 的墙因此全是灰蓝素板，
+      // 改 'ash' 石作后自发光消失、石纹与顶点色才立得住。
+      b.box('ash', bw, bh, wt, h.x - ux * (bd / 2 - wt / 2), y + 1.5, h.z - uz * (bd / 2 - wt / 2), shade(BLACKB, 0.96), ry);
       // 两侧墙（local ±x）
       for (const s of [-1, 1]) {
-        b.box('wall', wt, bh, bd, h.x + vx * s * (bw / 2 - wt / 2), y + 1.5, h.z + vz * s * (bw / 2 - wt / 2), shade(BLACKB, 0.9), ry);
+        b.box('ash', wt, bh, bd, h.x + vx * s * (bw / 2 - wt / 2), y + 1.5, h.z + vz * s * (bw / 2 - wt / 2), shade(BLACKB, 0.9), ry);
       }
       // 顶罩只盖后 8m（辇前半敞，让环境光落进院内照出刑具），前半留天
       b.box('roof', bw, 0.8, 8, h.x - ux * 4, y + 6.2, h.z - uz * 4, 0x14161a, ry);
@@ -961,9 +963,9 @@ export function buildEighteenHells(b: Baker, sg: SignMesher, atlas: SignAtlas): 
     b.pyramid('roof', 0.2, 0.8, h.x, y + 6.6, h.z, 0x14161a, ry, 15, 1.8, 15);
     // 门柱 + 门楣梁（门洞净宽 4.2，朝向环心）
     const gx = h.x + ux * 8, gz = h.z + uz * 8;
-    b.box('wall', 0.6, 4.5, 0.6, gx + vx * 2.4, y + 2.25, gz + vz * 2.4, shade(0x33393f, 1.05));
-    b.box('wall', 0.6, 4.5, 0.6, gx - vx * 2.4, y + 2.25, gz - vz * 2.4, shade(0x33393f, 1.05));
-    b.box('wall', 5.4, 1.0, 0.7, gx, y + 4.9, gz, shade(BLACKB, 0.9), ry);
+    b.box('ash', 0.6, 4.5, 0.6, gx + vx * 2.4, y + 2.25, gz + vz * 2.4, shade(0x33393f, 1.05));
+    b.box('ash', 0.6, 4.5, 0.6, gx - vx * 2.4, y + 2.25, gz - vz * 2.4, shade(0x33393f, 1.05));
+    b.box('ash', 5.4, 1.0, 0.7, gx, y + 4.9, gz, shade(BLACKB, 0.9), ry);
     // 立面（六狱型：双扇门/门钉/匾框/锁链桩/檐下灯/按型械具）
     hellFacade(b, sg, atlas, i, h, y, ux, uz, vx, vz, ry);
     // 逐狱装置 + 狱体环外空地填充
@@ -2248,8 +2250,23 @@ function rodTo(b: Baker, rad: number, len: number, x: number, y: number, z: numb
 export function buildWangxiang(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   const y = UNDER.y;
   const x = -150, z = -150;
-  // 台基三层收分（26→20→14，各高 5.3）
-  for (let k = 0; k < 3; k++) b.box('wall', 26 - k * 6, 5.3, 26 - k * 6, x, y + 2.65 + k * 5.3, z, shade(0x4a3c33, 0.85 + k * 0.06));
+  // 台基三层收分（26→20→14，各高 5.3）——旧版是三块 26m 见方的素板挂在 'wall' 组，
+  // 蓝灰自发光把顶点色压平，远看就是一摞灰盒子（用户截图里的「下部平台也是灰色」）。
+  // 改为须弥座：下枋 / 束腰 / 上枋 + 四面壸门，材质回到石作 'ash'。
+  for (let k = 0; k < 3; k++) {
+    const tw = 26 - k * 6, hh = 5.3, yb = y + k * 5.3;
+    const c = shade(0x4a3c33, 0.9 + k * 0.05);
+    b.box('ash', tw, hh * 0.3, tw, x, yb + hh * 0.15, z, shade(c, 0.96));
+    b.box('ash', tw - 1.2, hh * 0.44, tw - 1.2, x, yb + hh * 0.5, z, shade(c, 0.84));
+    b.box('ash', tw - 0.3, hh * 0.28, tw - 0.3, x, yb + hh * 0.86, z, shade(c, 1.08));
+    for (let i = 0; i < 5; i++) {
+      const o = -tw / 2 + 3 + i * ((tw - 6) / 4);
+      for (const s of [-1, 1]) {
+        b.box('ash', 1.4, hh * 0.24, 0.2, x + o, yb + hh * 0.5, z + s * (tw / 2 - 0.62), shade(c, 0.7));
+        b.box('ash', 0.2, hh * 0.24, 1.4, x + s * (tw / 2 - 0.62), yb + hh * 0.5, z + o, shade(c, 0.7));
+      }
+    }
+  }
   const top = y + 15.9;
   // ---- 盘道：8 段螺旋（南起，绕东-北-西），半径与起止角度原位不动；段内拆 3 级踏面 ----
   const RP = { n: 8, span: 0.72, r0: 15.5, dr: 1.2, y0: 1.2, rise: 1.85, tread: 0.62 };

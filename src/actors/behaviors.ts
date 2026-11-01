@@ -1,7 +1,45 @@
 import * as THREE from 'three';
 import type { Actor } from './types';
 import { JOB_MAP, SpotRegistry } from '../data/jobs';
-import { NavGraph } from '../city/layout';
+import { NavGraph, BRIDGE_HALF, bridgeDeckY, H_STREETS, V_STREETS } from '../city/layout';
+import { inRiverFootprint } from '../city/riverGeom';
+
+// ============ 干地判定（目标点级，只加严不放宽） ============
+// 行为层的游荡目标以前只看路网节点，完全不看河道；驻场者（里坊/寺观/瓦舍）的圆内取点更容易
+// 落到汴河里，于是「人往水面走、tick 末尾再被 keepOffRiver 推回岸」——视觉上就是贴着水线走。
+// 这里在**选目标时**就拒绝水面：桥带内一律算干地（桥面几何归 layout 所有），其余点必须离河 3m。
+const onBridgeSpan = (x: number, z: number): boolean => Math.abs(x) <= 8 && Math.abs(z) <= BRIDGE_HALF;
+const dryPoint = (x: number, z: number): boolean => onBridgeSpan(x, z) || !inRiverFootprint(x, z, 3.0);
+/** 起点到终点是否全程干地（4m 采样）：拦住「同岸两点直线斜穿河道」 */
+function drySegment(x0: number, z0: number, x1: number, z1: number): boolean {
+  const span = Math.hypot(x1 - x0, z1 - z0);
+  const n = Math.max(1, Math.ceil(span / 4));
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    if (!dryPoint(x0 + (x1 - x0) * t, z0 + (z1 - z0) * t)) return false;
+  }
+  return true;
+}
+
+// ============ 局部避让网格 ============
+// 4m 格，由 Crowd.update 每 4 帧重建一次（O(n)）。行人只在自己这一格与 8 邻格里找
+// 1.6m 内的邻居，得到横向排斥向量；目标值每 0.15s 刷新一次，避免每帧几十万次距离判定。
+const AVOID_CELL = 4;
+const AVOID_LOOK = 1.6;
+let AVOID: Map<number, Actor[]> = new Map();
+const cellKey = (ix: number, iz: number): number => (ix + 100000) * 200003 + (iz + 100000);
+export function rebuildAvoidGrid(actors: Actor[]): void {
+  const g = new Map<number, Actor[]>();
+  for (const a of actors) {
+    if (a.hidden) continue;
+    const k = cellKey(Math.floor(a.pos.x / AVOID_CELL), Math.floor(a.pos.z / AVOID_CELL));
+    let arr = g.get(k);
+    if (!arr) { arr = []; g.set(k, arr); }
+    arr.push(a);
+  }
+  AVOID = g;
+}
+
 
 // ============ 行为库（R12-B）：12 类世相 × 各自停留时长 ============
 // 与既有「职业 → 单个动作」的区别：这里的 12 类是「这段时间他在过什么日子」，
@@ -215,6 +253,12 @@ interface BehState {
   stepDur: number;
   pendingDur: number;
   origin: THREE.Vector3;
+  // ---- 自由行走（R26）----
+  lane: number;         // 个人横向车道偏移（米，-3.2…3.2）：同向的人不再共用一条脚印线
+  speedMul: number;     // 个人步速系数（0.72–1.32）
+  avoidX: number;       // 邻居排斥向量（世界 x/z）
+  avoidZ: number;
+  avoidT: number;       // 上次刷新排斥向量的仿真时刻
 }
 const STATE = new WeakMap<Actor, BehState>();
 
@@ -222,7 +266,12 @@ function stateOf(a: Actor): BehState {
   let st = STATE.get(a);
   if (!st) {
     // 初相位随机：否则 4000 人会同一秒集体换行为
-    st = { kind: null, kindT: 0, kindDur: 30, step: null, stepT: 0, stepDur: 0, pendingDur: 8, origin: a.pos.clone() };
+    st = {
+      kind: null, kindT: 0, kindDur: 30, step: null, stepT: 0, stepDur: 0, pendingDur: 8, origin: a.pos.clone(),
+      lane: (Math.random() * 2 - 1) * 3.2,
+      speedMul: 0.72 + Math.random() * 0.6,
+      avoidX: 0, avoidZ: 0, avoidT: -1,
+    };
     st.kindDur = 30 + Math.random() * 150;
     st.kindT = Math.random() * 30;
     STATE.set(a, st);
@@ -285,15 +334,25 @@ export function setPathTo(a: Actor, nav: NavGraph, target: THREE.Vector3): void 
 function straightWalk(a: Actor, st: BehState, dist: number): boolean {
   st.origin.y = a.pos.y;
   const away = a.pos.distanceTo(st.origin);
-  let dirX = Math.sin(a.yaw), dirZ = Math.cos(a.yaw);
-  if (away > 260) { // 走远了就往出生地回，避免长跑后漂出城
-    dirX = st.origin.x - a.pos.x; dirZ = st.origin.z - a.pos.z;
-    const l = Math.hypot(dirX, dirZ) || 1;
-    dirX /= l; dirZ /= l;
+  const baseX = Math.sin(a.yaw), baseZ = Math.cos(a.yaw);
+  for (let i = 0; i < 6; i++) {
+    let dirX = baseX, dirZ = baseZ;
+    if (away > 260) { // 走远了就往出生地回，避免长跑后漂出城
+      dirX = st.origin.x - a.pos.x; dirZ = st.origin.z - a.pos.z;
+      const l = Math.hypot(dirX, dirZ) || 1;
+      dirX /= l; dirZ /= l;
+    }
+    // 每次试走随机偏转 ±40°：外城没有路网，也不能沿一条直线排成队
+    const ang = (Math.random() - 0.5) * 1.4;
+    const cs = Math.cos(ang), sn = Math.sin(ang);
+    const dx = dirX * cs - dirZ * sn, dz = dirX * sn + dirZ * cs;
+    const tx = a.pos.x + dx * dist, tz = a.pos.z + dz * dist;
+    if (!dryPoint(tx, tz) || !drySegment(a.pos.x, a.pos.z, tx, tz)) continue;
+    a.path = [new THREE.Vector3(tx, a.pos.y, tz)];
+    a.pathI = 0;
+    return true;
   }
-  a.path = [new THREE.Vector3(a.pos.x + dirX * dist, a.pos.y, a.pos.z + dirZ * dist)];
-  a.pathI = 0;
-  return true;
+  return false;
 }
 
 /** 路网外框（缓存）：街尾折返与出生权重都要用 */
@@ -313,6 +372,67 @@ export function navBounds(nav: NavGraph): { minX: number; maxX: number; minZ: nu
   return b;
 }
 
+/** 街面走廊：目标点允许落在「街宽/2 + 3.2m」内，既铺得开又不穿进沿街建筑体 */
+function onStreetCorridor(x: number, z: number): boolean {
+  if (onBridgeSpan(x, z)) return true;
+  for (const s of H_STREETS) {
+    if (x >= s.x0 - 8 && x <= s.x1 + 8 && Math.abs(z - s.z) <= s.w / 2 + 3.2) return true;
+  }
+  for (const s of V_STREETS) {
+    if (z >= s.z0 - 8 && z <= s.z1 + 8 && Math.abs(x - s.x) <= s.w / 2 + 3.2) return true;
+  }
+  return false;
+}
+
+/** 直线段是否全程在街面走廊内（斜穿/过街可以直接走，不会切进建筑体） */
+function streetSegment(x0: number, z0: number, x1: number, z1: number): boolean {
+  const span = Math.hypot(x1 - x0, z1 - z0);
+  const n = Math.max(1, Math.ceil(span / 4));
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    if (!onStreetCorridor(x0 + (x1 - x0) * t, z0 + (z1 - z0) * t)) return false;
+  }
+  return true;
+}
+
+/**
+ * 独立游荡目标：在街面走廊内随机取点，而不是「路网节点」。
+ * 旧实现的目标点只有 26m 间距的节点，全城同一条街的人共享同一串终点，
+ * 于是所有人先汇到街心、再沿同一条折线走——实测采样离街心中位数 0.14m、65% 的人挤在 0.9m 内。
+ * 现在 45% 沿当前朝向取 12–44m、35% 垂直过街取 3–11m、20% 全向取 8–32m：
+ * 转向时刻、方向、步速都按人独立，才有「自由乱走」而不是一条队列。
+ */
+function pickFreeTarget(a: Actor, ctx: BehCtx): THREE.Vector3 | null {
+  const nb = navBounds(ctx.nav);
+  // 三档取点：45% 沿当前朝向、35% 斜穿/横过街、20% 全向回头。
+  // 只取「前半球」会让 30s 朝向直方图始终只有沿街两个峰；斜穿档专门制造第三、四个峰。
+  const roll = Math.random();
+  const mode = roll < 0.45 ? 0 : roll < 0.8 ? 1 : 2;
+  // 桥上的人：目标只能落在桥面净宽内，或越过桥两端走下去；不能横着跨过栏杆（桥面净宽 W=10.4）
+  const onBridgeNow = !a.sky && a.pos.y > 0.5 && Math.abs(a.pos.x) <= 9 && Math.abs(a.pos.z) <= BRIDGE_HALF;
+  for (let i = 0; i < 8; i++) {
+    const ang = mode === 0 ? a.yaw + (Math.random() - 0.5) * 2.2
+      : mode === 1 ? a.yaw + (Math.random() < 0.5 ? 1 : -1) * (Math.PI / 2) + (Math.random() - 0.5) * 0.5
+        : Math.random() * Math.PI * 2;
+    const d = mode === 0 ? 12 + Math.random() * 32
+      : mode === 1 ? 3 + Math.random() * 8
+        : 8 + Math.random() * 24;
+    const x = a.pos.x + Math.sin(ang) * d;
+    const z = a.pos.z + Math.cos(ang) * d;
+    if (x < nb.minX - 24 || x > nb.maxX + 24 || z < nb.minZ - 24 || z > nb.maxZ + 24) continue;
+    if (!a.sky && !onStreetCorridor(x, z)) continue;
+    if (onBridgeNow) {
+      const deckTarget = Math.abs(x) <= 4.6 && Math.abs(z) <= BRIDGE_HALF;
+      const offEnd = Math.abs(z) > BRIDGE_HALF + 1 && Math.abs(x) <= 9;
+      if (!deckTarget && !offEnd) continue;
+    }
+    if (!a.sky && (!dryPoint(x, z) || !drySegment(a.pos.x, a.pos.z, x, z))) continue;
+    const y = a.sky ? a.pos.y : (onBridgeSpan(x, z) ? bridgeDeckY(z) : 0);
+    return new THREE.Vector3(x, y, z);
+  }
+  return null;
+}
+
 function randomRoam(a: Actor, nav: NavGraph, st: BehState): boolean {
   const from = nav.nearest(a.pos, 40);
   if (from < 0) return false;
@@ -327,9 +447,8 @@ function randomRoam(a: Actor, nav: NavGraph, st: BehState): boolean {
   const cx = (nb.minX + nb.maxX) / 2, cz = (nb.minZ + nb.maxZ) / 2;
   const dCenter = Math.hypot(a.pos.x - cx, a.pos.z - cz);
   const atEdge = a.pos.x < nb.minX + 24 || a.pos.x > nb.maxX - 24 || a.pos.z < nb.minZ + 24 || a.pos.z > nb.maxZ - 24;
-  // 70% 走前半球（行人多数时候按自己这一侧继续走，双向流才留得住），
-  // 30% 允许掉头：否则持续单向会把人流一路推到街尾，街尾格子变成只剩一个方向。
-  const forward = !back && !atEdge && Math.random() < 0.7;
+  // 55% 走前半球（双向流留得住），45% 允许掉头/斜穿：旧值 70% 太强，人流会一路单向推下去。
+  const forward = !back && !atEdge && Math.random() < 0.55;
   const cands: number[] = [];
   const backCands: number[] = [];
   for (let i = 0; i < nav.nodes.length; i++) {
@@ -346,8 +465,6 @@ function randomRoam(a: Actor, nav: NavGraph, st: BehState): boolean {
       continue;
     }
     if (!forward) { cands.push(i); continue; }
-    // 前半球优先：行人按自己这一侧的方向继续走，不会每一步都掉头。
-    // 这是「每条街双向流」能持续存在（而不是被随机掉头抹成一片）的关键。
     const dx = node.x - a.pos.x, dz = node.z - a.pos.z;
     if (dx * fx + dz * fz > 0) cands.push(i);
   }
@@ -363,8 +480,21 @@ function randomRoam(a: Actor, nav: NavGraph, st: BehState): boolean {
   if (pool.length === 0) return false;
   const to = pool[Math.floor(Math.random() * pool.length)];
   a.path = nav.path(from, to);
-  a.pathI = Math.min(1, a.path.length - 1);
   if (a.path.length === 0) return false;
+  // 终点从街心偏到个人车道：同一条街的两个方向各留一侧，再加 ±0.6m 抖动。
+  const last = a.path[a.path.length - 1];
+  if (!a.sky) {
+    const node = nav.nodes[to];
+    const dx = node.x - a.pos.x, dz = node.z - a.pos.z;
+    const l = Math.hypot(dx, dz) || 1;
+    const off = st.lane + (Math.random() - 0.5) * 1.2;
+    let tx = node.x + (-dz / l) * off;
+    let tz = node.z + (dx / l) * off;
+    // 桥面净宽半宽 5.2m：个人车道不能把终点推到栏杆外
+    if (onBridgeSpan(node.x, node.z) && Math.abs(tz) <= BRIDGE_HALF) tx = THREE.MathUtils.clamp(tx, -4.4, 4.4);
+    if (dryPoint(tx, tz) && drySegment(a.pos.x, a.pos.z, tx, tz)) last.set(tx, last.y, tz);
+  }
+  a.pathI = Math.min(1, a.path.length - 1);
   return true;
 }
 
@@ -388,23 +518,49 @@ function crossStreet(a: Actor, nav: NavGraph): boolean {
   const f1 = Math.sin(a.yaw) * c1x + Math.cos(a.yaw) * c1z;
   const f2 = Math.sin(a.yaw) * c2x + Math.cos(a.yaw) * c2z;
   const dx = f1 >= f2 ? c1x : c2x, dz = f1 >= f2 ? c1z : c2z;
-  const d = 6 + Math.random() * 8;
-  a.path = [new THREE.Vector3(a.pos.x + dx * d, a.pos.y, a.pos.z + dz * d)];
-  a.pathI = 0;
-  return true;
+  for (let t = 0; t < 5; t++) {
+    const d = 6 + Math.random() * 8;
+    const tx = a.pos.x + dx * d, tz = a.pos.z + dz * d;
+    // 过街也不能穿河：靠河一侧的横穿若直插水面，就换一次落点
+    if (!dryPoint(tx, tz) || !drySegment(a.pos.x, a.pos.z, tx, tz)) continue;
+    a.path = [new THREE.Vector3(tx, a.pos.y, tz)];
+    a.pathI = 0;
+    return true;
+  }
+  return false;
 }
 
 function wander(a: Actor, ctx: BehCtx, st: BehState): boolean {
   // 驻场者：只在岗位半径内取点，不碰城市路网（场所人群与街道人群互不串场）
   const post = POST.get(a);
   if (post) {
-    const ang = Math.random() * Math.PI * 2;
-    const rr = Math.sqrt(Math.random()) * post.r;
-    a.path = [new THREE.Vector3(post.x + Math.cos(ang) * rr, a.pos.y, post.z + Math.sin(ang) * rr)];
-    a.pathI = 0;
-    return true;
+    // 圆内取点必须落在干地：里坊矩形横跨汴河，旧版会把坊民送到水面上（用户：「为什么还有人在水面上走」）
+    for (let i = 0; i < 8; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      const rr = Math.sqrt(Math.random()) * post.r;
+      const x = post.x + Math.cos(ang) * rr;
+      const z = post.z + Math.sin(ang) * rr;
+      if (!a.sky && (!dryPoint(x, z) || !drySegment(a.pos.x, a.pos.z, x, z))) continue;
+      a.path = [new THREE.Vector3(x, a.pos.y, z)];
+      a.pathI = 0;
+      return true;
+    }
+    return false;
   }
   if (isCrossing(a) && Math.random() < 0.55) { if (crossStreet(a, ctx.nav)) return true; }
+  // 先取独立自由点，再退回路网节点：目标点不再全是同一串节点
+  const free = pickFreeTarget(a, ctx);
+  if (free) {
+    // 同一街面走廊内的目标直接走直线：过街/斜穿不再先被 setPathTo 拉回路网中线，
+    // 否则斜穿只发生在最后一小段，30s 朝向直方图仍只剩沿街两个峰。
+    if (!a.sky && streetSegment(a.pos.x, a.pos.z, free.x, free.z)) {
+      a.path = [free.clone()];
+      a.pathI = 0;
+    } else {
+      setPathTo(a, ctx.nav, free);
+    }
+    return true;
+  }
   if (randomRoam(a, ctx.nav, st)) return true;
   // 路网还在附近（随机游走失败多半是 40m 内没点）→ 先走回最近的路上，
   // 否则离网角色会沿着当前朝向一路直线飘出城，最后在街尾堆成同向的一串（实测低 yaw 方差格）。
@@ -414,9 +570,13 @@ function wander(a: Actor, ctx: BehCtx, st: BehState): boolean {
     const dx = n.x - a.pos.x, dz = n.z - a.pos.z;
     const d = Math.hypot(dx, dz);
     if (d > 10) {
-      a.path = [new THREE.Vector3(n.x, a.pos.y, n.z)];
-      a.pathI = 0;
-      return true;
+      const tx = n.x + (Math.random() - 0.5) * 3;
+      const tz = n.z + (Math.random() - 0.5) * 3;
+      if (dryPoint(tx, tz) && drySegment(a.pos.x, a.pos.z, tx, tz)) {
+        a.path = [new THREE.Vector3(tx, a.pos.y, tz)];
+        a.pathI = 0;
+        return true;
+      }
     }
   }
   return straightWalk(a, st, 14 + Math.random() * 26);
@@ -570,17 +730,63 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
           a.yaw += (Math.random() - 0.5) * 4.4;
           return;
         }
+        // 到站后按个人节奏停一下（30%）：市井里本来就有人走两步就站住看摊
+        if (Math.random() < 0.3) {
+          a.action = 'stand';
+          a.doing = '驻足';
+          a.curDoing = a.doing;
+          st.stepT = 0;
+          st.stepDur = 1.4 + Math.random() * 3.2;
+          a.timer = st.stepDur;
+          return;
+        }
         a.timer = 0;
       }
     } else {
-      const sp = a.speed;
+      // 局部避让：每 0.15s 刷新一次邻居排斥向量（4m 网格，只统计相机 150m 内的人）
+      const nowT = ctx.t ?? 0;
+      if (nowT - st.avoidT > 0.15 && a.pos.distanceToSquared(ctx.camPos) < 150 * 150) {
+        let ax = 0, az = 0;
+        const ix = Math.floor(a.pos.x / AVOID_CELL), iz = Math.floor(a.pos.z / AVOID_CELL);
+        for (let gx = -1; gx <= 1; gx++) {
+          for (let gz = -1; gz <= 1; gz++) {
+            const arr = AVOID.get(cellKey(ix + gx, iz + gz));
+            if (!arr) continue;
+            for (const b of arr) {
+              if (b === a || b.hidden) continue;
+              const dx = a.pos.x - b.pos.x, dz = a.pos.z - b.pos.z;
+              const d2 = dx * dx + dz * dz;
+              if (d2 < 1e-4 || d2 > AVOID_LOOK * AVOID_LOOK) continue;
+              const d = Math.sqrt(d2);
+              const w = (AVOID_LOOK - d) / AVOID_LOOK;   // 1.6m → 0，0m → 1
+              ax += (dx / d) * w;
+              az += (dz / d) * w;
+            }
+          }
+        }
+        st.avoidX = ax;
+        st.avoidZ = az;
+        st.avoidT = nowT;
+      }
+      // 个人步速：职业速度 × 个人系数 × 缓慢步态起伏（同一条街不会齐步走）
+      const sp = a.speed * st.speedMul * (0.9 + 0.1 * Math.sin((ctx.t ?? 0) * 0.9 + a.seed));
       _v.normalize();
-      a.pos.addScaledVector(_v, sp * dt);
-      const targetYaw = Math.atan2(_v.x, _v.z);
+      // 个人横向车道：沿行进方向的右/左侧偏 lane 米；接近终点时收回，保证真的到站
+      const laneW = Math.min(1, dist / 7);
+      let mx = _v.x + _v.z * st.lane * laneW;
+      let mz = _v.z - _v.x * st.lane * laneW;
+      // 邻居排斥：向空侧让开 0.6–1.2m（只在相机附近计算）
+      mx += st.avoidX * 0.55;
+      mz += st.avoidZ * 0.55;
+      const ml = Math.hypot(mx, mz) || 1;
+      mx /= ml; mz /= ml;
+      a.pos.x += mx * sp * dt;
+      a.pos.z += mz * sp * dt;
+      const targetYaw = Math.atan2(mx, mz);
       let dy = targetYaw - a.yaw;
       while (dy > Math.PI) dy -= Math.PI * 2;
       while (dy < -Math.PI) dy += Math.PI * 2;
-      a.yaw += dy * Math.min(1, dt * 6);
+      a.yaw += dy * Math.min(1, dt * 4.6);
       return;
     }
   }
@@ -629,17 +835,24 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
   // 驻场者不追热点：热点在 46m 内也不去（否则会被街面摊子拉出场子）
   if (step.spot && !POST.has(a)) {
     const spot = ctx.spots.nearest(a.pos, step.spot, 46);
+    // 热点环上的落点也要过干地关：码头/河岸热点贴着水线，旧版会让人站到水面上
+    let tgt: THREE.Vector3 | null = null;
     if (spot) {
-      const ring = 0.9 + Math.random() * 1.8;
-      const ang = Math.random() * Math.PI * 2;
-      const tgt = new THREE.Vector3(spot.pos.x + Math.cos(ang) * ring, spot.pos.y, spot.pos.z + Math.sin(ang) * ring);
+      for (let t = 0; t < 5; t++) {
+        const ring = 0.9 + Math.random() * 1.8;
+        const ang = Math.random() * Math.PI * 2;
+        const p = new THREE.Vector3(spot.pos.x + Math.cos(ang) * ring, spot.pos.y, spot.pos.z + Math.sin(ang) * ring);
+        if (a.sky || (dryPoint(p.x, p.z) && drySegment(a.pos.x, a.pos.z, p.x, p.z))) { tgt = p; break; }
+      }
+    }
+    if (tgt) {
       setPathTo(a, ctx.nav, tgt);
       a.pendingAct = step.act;
       a.pendingSpot = true;
       a.action = 'walk';
       return;
     }
-    // 附近没有对应热点 → 退化成「在这一带走动」，不硬塞一个不存在的摊子
+    // 附近没有对应热点（或落点在水里）→ 退化成「在这一带走动」，不硬塞一个不存在的摊子
     step = { ...step, spot: undefined, move: true };
     st.step = step;
     st.stepDur = step.dur[0] + Math.random() * (step.dur[1] - step.dur[0]);

@@ -93,7 +93,7 @@ export function buildFengduGround(b: Baker, sg: SignMesher, atlas: SignAtlas, rn
       for (const s of [-1, 1]) {
         const lx = x + (s > 0 ? 11 : -11);
         const lz = z + s * 7.6;
-        b.box('wall', 0.7, 0.32, 0.7, lx, y + 0.16, lz, STONE);
+        b.box('ash', 0.7, 0.32, 0.7, lx, y + 0.16, lz, STONE);
         b.cyl('wood', 0.1, 0.14, 3.5, 6, lx, y + 1.9, lz, 0x1c141a);
         b.box('metal', 0.34, 0.6, 0.34, lx, y + 3.9, lz, 0x2a2622);
         b.box('glow', 0.26, 0.44, 0.26, lx, y + 3.9, lz, ((x / 40) | 0) % 3 === 0 ? RED : PHOS);
@@ -171,9 +171,9 @@ export function buildFengduGround(b: Baker, sg: SignMesher, atlas: SignAtlas, rn
 
   // ---- 街口石狮与香炉供桌 ----
   for (const [sx, sz] of [[edgeX0 + 46, gz + 9], [edgeX0 + 46, gz - 9]] as const) {
-    b.box('wall', 0.9, 0.7, 1.0, sx, y + 0.35, sz, STONE);
-    b.box('wall', 0.7, 0.8, 0.8, sx, y + 1.1, sz, shade(STONE, 1.15));
-    b.box('wall', 0.5, 0.45, 0.55, sx, y + 1.7, sz, shade(STONE, 1.25));
+    b.box('ash', 0.9, 0.7, 1.0, sx, y + 0.35, sz, STONE);
+    b.box('ash', 0.7, 0.8, 0.8, sx, y + 1.1, sz, shade(STONE, 1.15));
+    b.box('ash', 0.5, 0.45, 0.55, sx, y + 1.7, sz, shade(STONE, 1.25));
     b.box('glow', 0.09, 0.09, 0.06, sx, y + 1.78, sz + 0.3, RED);
     b.kit('fengdu.stoneLion', 1, y + 1);
   }
@@ -212,7 +212,7 @@ export function buildFengduGround(b: Baker, sg: SignMesher, atlas: SignAtlas, rn
     if (rng.chance(0.5)) {
       const n = 2 + ((rng.next() * 3) | 0);
       for (let i = 0; i < n; i++) {
-        b.box('wall', 0.1, 0.5, 0.1, px + rng.range(-0.5, 0.5), y + 0.2, pz + rng.range(-0.5, 0.5), 0xcfc7ae, rng.range(0, 3.14), 0, rng.range(-1.2, 1.2));
+        b.box('ash', 0.1, 0.5, 0.1, px + rng.range(-0.5, 0.5), y + 0.2, pz + rng.range(-0.5, 0.5), 0xcfc7ae, rng.range(0, 3.14), 0, rng.range(-1.2, 1.2));
       }
       b.kit('fengdu.bonePile', 1, y + 0.2);
     } else {

@@ -17,6 +17,9 @@ export interface Updatable { update(t: number, dt: number): void }
 export type CamMode = 'cinema' | 'fly' | 'walk' | 'focus';
 export type QualityName = 'high' | 'med' | 'low';
 
+/** 俯仰上限 ±85°：留 5° 余量避免万向节翻转（旧值 -71.6°…77.3°，抬头受限且两种模式不一致） */
+export const PITCH_LIMIT = (85 * Math.PI) / 180;
+
 export interface QualityTier {
   name: QualityName; crowd: number; bloom: boolean; shadows: boolean; shadowSize: number; pixelRatio: number;
 }
@@ -608,6 +611,9 @@ export class Engine {
 
   focusOn(pos: THREE.Vector3, radius = 14, hold = 7): void {
     this.camMode = 'focus'; bus.emit('cam:mode', 'focus');
+    // 聚焦档必须在补间开始前就占住 focusUntil：旧值要等补间结束才写，
+    // 而 updateCamera 每帧判 t > focusUntil，于是下一帧就退回 fly——「聚焦」实际从未生效。
+    this.focusUntil = this.t + 1.4 + hold;
     const dir = new THREE.Vector3().subVectors(this.camera.position, pos).normalize();
     if (dir.lengthSq() < 0.01) dir.set(0, 0.3, 1).normalize();
     dir.y = Math.max(dir.y, 0.25); dir.normalize();
@@ -628,18 +634,36 @@ export class Engine {
     window.addEventListener('keydown', (e) => {
       this.keys.add(e.code);
       if (this.camMode === 'cinema' && (e.code === 'Space' || e.code === 'Escape' || e.code === 'Enter')) this.stopCinema();
+      // L：切换指针锁定（连续鼠标视角，不用按住左键）。Esc 由浏览器解除，pointerlockchange 里同步状态。
+      if (e.code === 'KeyL' && !e.repeat
+        && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) this.togglePointerLock();
     });
     window.addEventListener('keyup', (e) => this.keys.delete(e.code));
+    // 左键拖拽：**所有模式**都从这里进入（cinema/focus 一拖即接管，fly/walk 直接转，avatar 交玩家控制器）。
     this.canvas.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'touch') return;
+      if (e.pointerType === 'touch' || e.button !== 0) return;
+      if (document.pointerLockElement === this.canvas) return;
       this.dragOn = true; this.px = e.clientX; this.py = e.clientY;
+      try { this.canvas.setPointerCapture(e.pointerId); } catch { /* 老浏览器没有 pointer capture */ }
     });
     window.addEventListener('pointermove', (e) => {
       if (e.pointerType === 'touch' || !this.dragOn) return;
       this.dragLook(e.clientX - this.px, e.clientY - this.py);
       this.px = e.clientX; this.py = e.clientY;
     });
-    window.addEventListener('pointerup', () => { this.dragOn = false; });
+    const endDrag = (): void => { this.dragOn = false; };
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+    window.addEventListener('blur', endDrag);
+    // 指针锁定下的连续视角：movementX/Y 是相对位移，直接进同一条 dragLook 通道。
+    window.addEventListener('mousemove', (e) => {
+      if (document.pointerLockElement !== this.canvas) return;
+      this.dragLook(e.movementX || 0, e.movementY || 0);
+    });
+    document.addEventListener('pointerlockchange', () => {
+      const on = document.pointerLockElement === this.canvas;
+      bus.emit('ui:toast', on ? '鼠标已锁定：移动鼠标转视角（L / Esc 解除）' : '鼠标已解锁');
+    });
     this.canvas.addEventListener('wheel', (e) => {
       if (this.camMode !== 'fly' && this.camMode !== 'walk') return;
       const d = Math.sign(e.deltaY) * 2;
@@ -663,13 +687,32 @@ export class Engine {
     this.canvas.addEventListener('touchend', () => { this.pinchD = 0; });
   }
 
-  dragLook(dx: number, dy: number): void {
-    if (this.camMode !== 'fly' && this.camMode !== 'walk') {
-      this.onAvatarDrag?.(dx, dy);
+  /** L 键：进入/退出指针锁定（连续鼠标视角）。浏览器只允许用户手势触发，所以放在 keydown 里。 */
+  togglePointerLock(): void {
+    if (document.pointerLockElement === this.canvas) {
+      document.exitPointerLock?.();
       return;
     }
+    const p = this.canvas.requestPointerLock?.() as unknown as Promise<void> | undefined;
+    p?.catch?.(() => bus.emit('ui:toast', '浏览器拒绝了鼠标锁定（需要用户手势）'));
+  }
+
+  /**
+   * 统一视角入口：任何相机模式都必须走这里。
+   *  - 附身（avatarCtl 非空）：yaw/pitch 交给 PlayerController.camYaw/camPitch；
+   *  - 运镜/聚焦：自动机位一被拖动就交还控制权（旧版在这里直接 return，所以这两种模式鼠标完全不动）；
+   *  - 飞行/漫游：直接改引擎 yaw/pitch。
+   * 俯仰统一钳在 ±85°，不再出现「附身 -69°…52°、飞行 -72°…77°」两套上限。
+   */
+  dragLook(dx: number, dy: number): void {
+    if (this.avatarCtl && this.onAvatarDrag) { this.onAvatarDrag(dx, dy); return; }
+    if (this.camMode === 'cinema' || this.camMode === 'focus') {
+      this.focusUntil = 0;
+      this.tweener.clear();          // 聚焦补间还在跑：不清掉会继续覆盖相机位姿
+      this.stopCinema('fly');
+    }
     this.yaw -= dx * 0.0032;
-    this.pitch = THREE.MathUtils.clamp(this.pitch - dy * 0.0028, -1.25, 1.35);
+    this.pitch = THREE.MathUtils.clamp(this.pitch - dy * 0.0028, -PITCH_LIMIT, PITCH_LIMIT);
   }
 
   private onResize(): void {
@@ -736,6 +779,17 @@ export class Engine {
   avatarCtl: ((dt: number) => void) | null = null;
   onAvatarDrag: ((dx: number, dy: number) => void) | null = null;
 
+  /** 自动机位（运镜/聚焦）每帧把 yaw/pitch 同步到实际视线方向。
+   *  否则自动模式下这两个字段停在旧值，鼠标一接管会先按旧值起跳——
+   *  实测聚焦切入后的第一拖 yaw 跳 0.41rad（视觉上不跳，但连续拖动序列断成两段）。 */
+  private syncAnglesFromView(): void {
+    const dx = this.lookTarget.x - this.camera.position.x;
+    const dy = this.lookTarget.y - this.camera.position.y;
+    const dz = this.lookTarget.z - this.camera.position.z;
+    this.yaw = Math.atan2(-dx, -dz);
+    this.pitch = Math.atan2(dy, Math.hypot(dx, dz));
+  }
+
   private updateCamera(dt: number): void {
     if (this.avatarCtl) { this.avatarCtl(dt); return; }
     const k = this.keys;
@@ -749,9 +803,13 @@ export class Engine {
       const u = Math.max(0, this.cinemaT % 1);
       this.camera.position.copy(this.cinemaCurve.getPoint(u));
       this.lookTarget.copy(this.cinemaLook.getPoint((u + 0.015) % 1));
+      this.syncAnglesFromView();
     } else if (this.camMode === 'focus') {
       if (this.t > this.focusUntil) this.setCamMode('fly');
-      else this.lookTarget.lerp(this.focusPos, Math.min(1, dt * 3));
+      else {
+        this.lookTarget.lerp(this.focusPos, Math.min(1, dt * 3));
+        this.syncAnglesFromView();
+      }
     } else {
       mv.set(0, 0, 0);
       fwd.set(-Math.sin(this.yaw), 0, -Math.cos(this.yaw));

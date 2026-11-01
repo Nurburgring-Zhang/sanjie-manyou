@@ -771,7 +771,10 @@ export function buildLingxiaoInterior(b: Baker, sg: SignMesher, atlas: SignAtlas
   const x = 0, z = 95;
   const fy = 214 + 5.6; // 顶层台基顶（殿内地面）
   // 金砖地面高光映像带（R02：对缝≤1mm 沥青描黑+桐油映像 80%——Baker 无镜面，用玉白高光片表意）
-  b.box('glow', 17, 0.06, 14, x, fy + 0.04, z, shade(0x2b2b2b, 1.6));
+  // W47：原是一块 glow（unlit）0x2b2b2b×1.6 的 17×14 大板，压在 lingxiaoNave 的金砖地（含对缝线）上方 4cm。
+  //      unlit 不吃光，所以殿内点光修好之后它仍然是一整块死黑；改受光色又会盖掉对缝、读成水泥地。
+  //      结论是这块板本身多余——金砖地与其对缝已由 lingxiaoNave 铺好，这里直接让位。
+  // （保留注释与编号 R02 锚点，避免上游台账的锚点检索断链）
   // 九龙金漆背屏（R02/T-ITM-0002：北正位高 5m 五联扇）+ 明黄云锦帷六幅两侧
   for (let i = 0; i < 5; i++) {
     const h = i === 2 ? 5.0 : 4.2;
@@ -802,6 +805,121 @@ export function buildLingxiaoInterior(b: Baker, sg: SignMesher, atlas: SignAtlas
     b.cyl('wood', 0.12, 0.3, 1.4, 8, x + s * 5.5, fy + 0.7, z + 2, GOLD2);
     b.box('glow', 0.16, 0.4, 0.16, x + s * 5.5, fy + 1.6, z + 2, JADE_L);
   }
+
+  // ============ W47：明间陈设列（宝座 / 御案 / 香亭 / 仙鹤 / 麒麟 / 宫灯 / 垂幔 / 陈设） ============
+  // 台账：原明间 17.2×20.8 = 358 ㎡ 只摆了背屏 + 2 烛台（≈120 ㎡/件），
+  // 皇宫三殿约 9.7 ㎡/件。这里补 33 件，落在 ≈10.8 ㎡/件，与人间正殿同档；
+  // 尺寸一律按 pre-scale 写（本段几何随后被 2.2× × 1.75× 等比放大，与既有构件同一口径）。
+  const WH = 0x8a8478;   // 汉白玉座
+  const INK = 0x2a2f38;  // 玄铁 / 墨
+  // ① 宝座台座：三层须弥座 5.6→4.8→4.0，正面三级踏跺（踏跺朝南 = +z）
+  for (let i = 0; i < 3; i++) {
+    const w = 5.6 - i * 0.8;
+    b.box('ash', w, 0.32, w, x, fy + 0.16 + i * 0.32, 87.6 - i * 0.1, shade(WH, 1.04 - i * 0.03));
+  }
+  for (let k = 0; k < 3; k++) {
+    b.box('ash', 2.2, 0.32, 0.36, x, fy + 0.16 + k * 0.32, 90.6 - k * 0.34 + 0.18, shade(WH, 1.0));
+  }
+  // ② 九龙宝座：座面 + 束腰 + 靠背 + 双扶手 + 御座金漆
+  const BY = fy + 0.96;
+  b.box('wood', 2.02, 0.22, 1.42, x, BY, z - 7.4, 0xc3272b);          // 座面
+  b.box('wood', 1.86, 0.34, 1.26, x, BY - 0.28, z - 7.4, 0x8a1c14);    // 束腰
+  b.box('glow', 1.6, 0.06, 1.1, x, BY + 0.14, z - 7.4, shade(GOLD2, 0.9));
+  b.box('wood', 2.02, 1.22, 0.18, x, BY + 0.7, z - 8.08, 0xc3272b);     // 靠背
+  b.box('glow', 1.7, 1.0, 0.06, x, BY + 0.72, z - 8.16, shade(GOLD, 0.72));
+  for (let k = 0; k < 4; k++) {                                          // 靠背四道金线（九龙意向）
+    b.box('glow', 0.06, 1.0, 0.04, x - 0.66 + k * 0.44, BY + 0.72, z - 8.2, shade(GOLD2, 0.85));
+  }
+  for (const s of [-1, 1]) {
+    b.box('wood', 0.18, 0.34, 1.42, x + s * 0.92, BY + 0.3, z - 7.4, 0xc3272b);  // 扶手
+    b.box('glow', 0.2, 0.06, 1.3, x + s * 0.92, BY + 0.5, z - 7.4, shade(GOLD2, 0.95));
+  }
+  // ③ 御案：案面 + 四腿 + 案上宝册 / 朱笔 / 镇纸
+  const DY = fy + 0.98;
+  b.box('lacquer', 3.0, 0.14, 1.1, x, DY, z - 4.6, shade(0x6b2a1e, 1.05));
+  b.box('glow', 2.86, 0.04, 0.98, x, DY + 0.09, z - 4.6, shade(GOLD, 0.55));
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    b.box('lacquer', 0.14, 0.98, 0.14, x + sx * 1.34, fy + 0.49, z - 4.6 + sz * 0.44, shade(0x5a2218, 1.0));
+  }
+  b.box('wood', 0.5, 0.1, 0.7, x - 0.72, DY + 0.12, z - 4.6, 0xc3272b);   // 宝册（朱函）
+  b.box('glow', 0.42, 0.03, 0.6, x - 0.72, DY + 0.18, z - 4.6, shade(JADE_L, 0.85));
+  b.cyl('wood', 0.035, 0.045, 0.34, 6, x + 0.5, DY + 0.24, z - 4.45, 0x7c2a1c, 0, 0, 0.5);  // 朱笔
+  b.box('ceramic', 0.26, 0.16, 0.26, x + 1.05, DY + 0.15, z - 4.7, 0xe8eef6);                  // 玉镇
+  // ④ 香亭 ×2：四柱 + 小歇山 + 亭内香炉（一缕烟由既有 vfx 承担）
+  for (const s of [-1, 1]) {
+    const px = x + s * 4.9, pz = z - 5.4;
+    for (const a of [-1, 1]) for (const c of [-1, 1]) {
+      b.box('wood', 0.1, 1.9, 0.1, px + a * 0.62, fy + 0.95, pz + c * 0.62, shade(0x6b4a2b, 1.1));
+    }
+    b.box('wood', 1.5, 0.12, 1.5, px, fy + 1.98, pz, shade(0x4a3a26, 1.1));
+    // W47：原是一块 1.9×0.5×1.9 绕 Y 转 45° 的平板 —— 读成「悬空的金色菱形板」而不是亭顶。
+    // 改成「檐板 + 收分顶 + 宝顶」三件，正面才有屋顶的层次。
+    b.box('roof', 2.0, 0.14, 2.0, px, fy + 2.02, pz, shade(0x6a5a2c, 1.2));
+    b.box('roof', 1.5, 0.28, 1.5, px, fy + 2.2, pz, shade(0x7a6630, 1.25), Math.PI / 4);
+    b.box('roof', 0.9, 0.26, 0.9, px, fy + 2.44, pz, shade(0x8a7434, 1.3), Math.PI / 4);
+    b.box('glow', 0.16, 0.16, 0.16, px, fy + 2.66, pz, shade(GOLD_LINE, 0.9), Math.PI / 4);
+    b.cyl('metal', 0.24, 0.3, 0.5, 10, px, fy + 0.25, pz, shade(0x8a6a32, 1.1));
+    b.cyl('glow', 0.2, 0.2, 0.05, 10, px, fy + 0.52, pz, shade(0xffb060, 0.5));
+  }
+  // ⑤ 仙鹤 ×2（东侧）/ 麒麟 ×2（西侧）：立像，台座 + 身 + 颈 + 首
+  for (const s of [-1, 1]) {
+    // 仙鹤
+    const cx2 = x + s * 6.6, cz2 = z - 1.6;
+    b.box('ash', 0.9, 0.18, 0.9, cx2, fy + 0.09, cz2, shade(WH, 1.02));
+    for (const a of [-1, 1]) b.cyl('metal', 0.035, 0.045, 0.62, 5, cx2 + a * 0.1, fy + 0.5, cz2, shade(0xc8c0a8, 1.1));
+    b.box('ash', 0.34, 0.26, 0.72, cx2, fy + 0.95, cz2, 0xf2efe9);
+    b.box('wood', 0.3, 0.1, 0.3, cx2, fy + 0.86, cz2 + 0.34, 0x1e2228);        // 尾羽
+    b.cyl('ash', 0.07, 0.09, 0.66, 6, cx2, fy + 1.4, cz2 + 0.28, 0xf2efe9, 0.34, 0, 0);
+    b.box('ash', 0.14, 0.14, 0.24, cx2, fy + 1.76, cz2 + 0.42, 0xf6f2ea);      // 首
+    b.box('glow', 0.05, 0.05, 0.16, cx2, fy + 1.74, cz2 + 0.56, 0xd04020);     // 丹顶 / 喙
+    b.box('glow', 0.06, 0.05, 0.06, cx2, fy + 1.84, cz2 + 0.4, 0xc0201c);      // 顶红
+    // 麒麟
+    const kx = x + s * 6.6, kz = z - 8.4;
+    b.box('ash', 1.0, 0.18, 0.9, kx, fy + 0.09, kz, shade(WH, 1.02));
+    for (const a of [-1, 1]) for (const c of [-1, 1]) {
+      b.box('metal', 0.12, 0.4, 0.12, kx + a * 0.24, fy + 0.38, kz + c * 0.3, shade(0x6a5a2a, 1.15));
+    }
+    b.box('metal', 0.5, 0.42, 0.86, kx, fy + 0.78, kz, shade(0x8a6a2c, 1.05));
+    b.box('metal', 0.26, 0.26, 0.3, kx, fy + 1.02, kz + 0.5, shade(0x9a7a30, 1.1));
+    b.box('glow', 0.08, 0.06, 0.06, kx, fy + 1.16, kz + 0.56, 0xffd25e);       // 目
+    b.box('metal', 0.06, 0.22, 0.06, kx, fy + 1.2, kz + 0.4, shade(0x6a5a2a, 1.2)); // 独角
+    b.box('metal', 0.1, 0.1, 0.42, kx, fy + 0.96, kz - 0.6, shade(0x7a6428, 1.1)); // 尾
+  }
+  // ⑥ 成列宫灯：东西各 5 盏，柱式灯杆 + 六角灯罩 + 顶金珠
+  for (const s of [-1, 1]) for (let i = 0; i < 5; i++) {
+    const lx2 = x + s * 7.7, lz2 = z - 9.0 + i * 3.4;
+    b.cyl('wood', 0.07, 0.11, 2.3, 6, lx2, fy + 1.15, lz2, shade(0x4a2e1c, 1.1));
+    b.cyl('metal', 0.22, 0.22, 0.06, 6, lx2, fy + 0.03, lz2, shade(GOLD_TRIM, 1.1));
+    b.box('glow', 0.36, 0.5, 0.36, lx2, fy + 2.5, lz2, shade(0xffe3a8, 0.62), Math.PI / 6);
+    b.cyl('wood', 0.02, 0.24, 0.12, 6, lx2, fy + 2.81, lz2, shade(0x3a2418, 1.1));
+    b.box('glow', 0.05, 0.05, 0.05, lx2, fy + 2.9, lz2, shade(GOLD_LINE, 0.9));
+  }
+  // ⑦ 垂幔：背屏两侧各 4 幅，自天花垂到 2.2m，明黄云锦
+  for (const s of [-1, 1]) for (let i = 0; i < 4; i++) {
+    const mx2 = x + s * (3.0 + i * 1.05);
+    b.box('fabric', 0.62, 3.4, 0.06, mx2, fy + 2.4, z - 9.2, shade(0xd9a63a, 0.58 + 0.06 * (i % 2)));
+    b.box('glow', 0.66, 0.05, 0.08, mx2, fy + 4.12, z - 9.2, shade(GOLD_TRIM, 0.85));
+  }
+  // ⑧ 陈设列：东西山墙各 3 件宝器（玉璧 / 铜鼎 / 瓷瓶），各带须弥座
+  const RELIC: readonly [number, number, number][] = [[0.9, 0x2a4a6a, 0], [1.3, 0x8a6a32, 1], [0.75, 0xdfe6ee, 2]];
+  for (const s of [-1, 1]) for (let i = 0; i < 3; i++) {
+    const [hh, col, kind] = RELIC[i];
+    const rx2 = x + s * 8.0, rz2 = z - 6.0 + i * 4.0;
+    b.box('ash', 0.7, 0.42, 0.7, rx2, fy + 0.21, rz2, shade(WH, 1.0));
+    if (kind === 0) {                                    // 玉璧（立环）
+      b.cyl('ash', 0.44, 0.44, 0.09, 16, rx2, fy + 0.42 + hh * 0.5, rz2, shade(col, 1.0), Math.PI / 2);
+      b.cyl('glow', 0.2, 0.2, 0.1, 12, rx2, fy + 0.42 + hh * 0.5, rz2, shade(0x1a2a3a, 1.0), Math.PI / 2);
+    } else if (kind === 1) {                             // 铜鼎
+      b.cyl('metal', 0.3, 0.36, 0.5, 8, rx2, fy + 0.66, rz2, shade(col, 1.05));
+      b.cyl('metal', 0.34, 0.34, 0.08, 8, rx2, fy + 0.94, rz2, shade(col, 1.15));
+      for (const a of [-1, 1]) b.box('metal', 0.06, 0.2, 0.06, rx2 + a * 0.3, fy + 1.02, rz2, shade(col, 1.2));
+    } else {                                             // 瓷瓶
+      b.cyl('ceramic', 0.16, 0.3, 0.62, 10, rx2, fy + 0.72, rz2, shade(col, 0.95));
+      b.cyl('ceramic', 0.09, 0.14, 0.24, 8, rx2, fy + 1.12, rz2, shade(col, 1.0));
+      b.cyl('glow', 0.1, 0.1, 0.03, 8, rx2, fy + 1.24, rz2, shade(0x8a6a32, 0.8));
+    }
+  }
+  void INK;
   void sg; void atlas;
 }
 
@@ -875,7 +993,39 @@ export function buildGuanghanInterior(b: Baker, sg: SignMesher, atlas: SignAtlas
 // 本工程点光走 three r180 物理单位，既有 SKY_LIGHTS 为 40–140 cd，按字面写 0.3 cd 在 18m 处照度 <0.001 lux，等于假灯。
 // 落点压在各殿天花/梁下：凌霄 −0.7（室内天花 222.56）、星宿 −1.45（天花 217.95）、瑶池宫 −1.6（廊顶板底 211.50）、
 // 瑶池主亭 −0.25（梁底 212.40），蟠桃园保持 207.5（看园厅屋面止于 206.7，该层只余园内空腔）。
-export const SKY_LIGHTS: { x: number; y: number; z: number; color: number; int: number; dist: number }[] = [
+/** 天宫放大系数：与 expansion.ts 的 HEAVEN_SCALE / LINGXIAO_SCALE 同源（那边不可反向 import，此处复刻并在此说明） */
+const SKY_SCALE = 2.2;
+const LINGXIAO_K = 1.75;
+const SKY_BASE_Y = 196;
+/** 凌霄二次放大的锚点与范围，与 expansion.ts 的 enlargeLingxiao 逐字一致 */
+const LX_A = { x: 0, y: 233, z: 209 } as const;
+const LX_HX = 56, LX_HZ = 62, LX_YMIN = 233;
+
+/**
+ * 室内点光的世界坐标换算。
+ *
+ * 灯不是网格 —— expansion.scaleHeavenGeometry 只动 Mesh 顶点，所以几何被放大 2.2×（凌霄再 1.75×）后，
+ * 原先按 pre-scale 坐标写死的 12 盏室内点光全部留在原处，等于**灯沉到台基底下**：
+ * 凌霄明间那盏在 223.5，而放大后的殿内地坪已经到 256，灯在地板下 33m —— 殿内实际是没灯的。
+ * 这里把「位置按同一套变换搬到放大后坐标、半径与强度按倍数补齐」，
+ * 强度按 k² 是因为点光照度 ∝ 1/d²：房间放大 k 倍，同一盏灯必须亮 k² 倍才维持同一照度。
+ */
+function skyLightWorld(x: number, y: number, z: number): [number, number, number, number] {
+  let wx = x * SKY_SCALE;
+  let wy = SKY_BASE_Y + (y - SKY_BASE_Y) * SKY_SCALE;
+  let wz = z * SKY_SCALE;
+  let k = SKY_SCALE;
+  if (wy >= LX_YMIN && Math.abs(wx - LX_A.x) <= LX_HX && Math.abs(wz - LX_A.z) <= LX_HZ) {
+    wx = LX_A.x + (wx - LX_A.x) * LINGXIAO_K;
+    wy = LX_A.y + (wy - LX_A.y) * LINGXIAO_K;
+    wz = LX_A.z + (wz - LX_A.z) * LINGXIAO_K;
+    k = SKY_SCALE * LINGXIAO_K;
+  }
+  return [wx, wy, wz, k];
+}
+
+/** 天宫室内点光（玉白/丹火/月白——物理单位）。坐标为 pre-scale 天宫坐标，导出前统一换算到放大后世界。 */
+const SKY_LIGHTS_RAW: { x: number; y: number; z: number; color: number; int: number; dist: number }[] = [
   { x: 0, y: 214 + 9.5, z: 95, color: 0xfff3d8, int: 140, dist: 22 },    // 凌霄明间玉白
   // 背屏金辉：点光色不是反照率，不随金饰压档（压它等于改室内照明/曝光，本包不动）
   { x: 0, y: 214 + 6.5, z: 89, color: 0xffd700, int: 40, dist: 10 },     // 凌霄背屏金辉
@@ -890,6 +1040,12 @@ export const SKY_LIGHTS: { x: number; y: number; z: number; color: number; int: 
   { x: -150, y: 207.5, z: 45, color: 0xfff4dc, int: 32, dist: 24 },      // 蟠桃园心：看园厅屋面止于 206.7，此层只余园内空腔
   { x: 220, y: 217.55, z: 80, color: 0xfff4dc, int: 26, dist: 18 },      // 星宿·亢金龙府室内（原值 219 会落进 218.9 屋面）
 ];
+
+export const SKY_LIGHTS: { x: number; y: number; z: number; color: number; int: number; dist: number }[] =
+  SKY_LIGHTS_RAW.map((L) => {
+    const [wx, wy, wz, k] = skyLightWorld(L.x, L.y, L.z);
+    return { x: wx, y: wy, z: wz, color: L.color, int: L.int * k * k, dist: L.dist * k };
+  });
 
 // ============ WS-46：云海色系与浮岛底盘（玉盘 + 垂云 + 云团簇） ============
 // 三视角验证判词：浮岛底缘是一圈深色石鼓，鼓下直接露出人间里坊网格，整片「上界」读成
@@ -2139,7 +2295,12 @@ function lingxiaoNave(b: Baker): void {
   b.box('ash', 17.2, 0.16, 20.8, x, y + 0.08, z, shade(0x2e2e2e, 1));
   for (let k = 1; k < 4; k++) b.box('ash', 0.06, 0.03, 20.6, x - 8.6 + (17.2 * k) / 4, fy, z, shade(0x171717, 1));
   for (let k = 1; k < 5; k++) b.box('ash', 17.0, 0.03, 0.06, x, fy, z - 10.4 + (20.8 * k) / 5, shade(0x171717, 1));
-  b.box('ash', 17, 0.62, 14, x, fy + 0.31, z, shade(0xd8d0c0, 1));
+  // W47：殿内台明原为汉白玉色 0xd8d0c0 —— 在 65×54m 的殿内尺度上被殿内点光（修正落地后约 7 盏）
+  // 直接推成纯白，整片地面读成「曝光过度」。金砖地本应是深暖灰（故宫太和殿金砖≈#3a352d），
+  // 这里按金砖反照率改色，并在台明面补对缝线（原对缝线铺在更低一层的板面上，被台明盖住了）。
+  b.box('ash', 17, 0.62, 14, x, fy + 0.31, z, shade(0x2b2722, 1));
+  for (let k = 1; k < 4; k++) b.box('ash', 0.04, 0.02, 13.8, x - 8.5 + (17 * k) / 4, fy + 0.63, z, 0x14110e);
+  for (let k = 1; k < 5; k++) b.box('ash', 16.8, 0.02, 0.04, x, fy + 0.63, z - 7 + (14 * k) / 5, 0x14110e);
   b.box('ash', 12, 0.16, 0.9, x, y + 0.08, 105.65, shade(0x2e2e2e, 1));
   b.box('ash', 8, 0.3, 1.0, x, fy + 0.15, z + 7.5, shade(0xd0c8b8, 1));
   for (let k = 0; k < 3; k++) b.box('ash', 13, 0.4, 0.9, x, fy - 0.56 - k * 0.4, 106.45 + k * 0.9, shade(0xd0c8b8, 1 - k * 0.04));

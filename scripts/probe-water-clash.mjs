@@ -20,13 +20,18 @@
  * 用法：PROBE_URL=http://localhost:4253/ node scripts/probe-water-clash.mjs
  * 退出码 0 = A/B/C 全部为 0。
  */
+import os from 'node:os';
+import path from 'node:path';
 import puppeteer from 'puppeteer-core';
 
 const URL = process.env.PROBE_URL || process.env.PREVIEW_URL || 'http://localhost:4173/';
+/** 浏览器路径不写死 <HOME> 占位符：按本机实际安装解析，可用 CHROME_PATH 覆盖 */
+const CHROME = process.env.CHROME_PATH
+  || path.join(os.homedir(), 'AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe');
 const MARGIN = 5; // 「近岸悬空」报告用：河道足迹外扩（米）
 
 const browser = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--window-size=1280,720', '--no-sandbox', '--enable-unsafe-swiftshader'],
 });

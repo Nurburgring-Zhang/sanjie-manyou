@@ -5,10 +5,15 @@
  *     places:{ wards, temples, palace, washe }, axisShare }
  * 缺字段时按「未实现」判红，不猜。
  */
+import os from 'node:os';
+import path from 'node:path';
 import puppeteer from 'puppeteer-core';
 
+const CHROME = process.env.CHROME_PATH
+  || path.join(os.homedir(), 'AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe');
+
 const b = await puppeteer.launch({
-  executablePath: '<HOME>/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe',
+  executablePath: CHROME,
   headless: true,
   args: ['--no-sandbox', '--enable-unsafe-swiftshader'],
 });

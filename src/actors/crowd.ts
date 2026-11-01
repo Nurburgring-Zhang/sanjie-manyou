@@ -7,7 +7,7 @@ import { JOBS, JOB_MAP, SpotRegistry } from '../data/jobs';
 import { NavGraph, H_STREETS, V_STREETS, BRIDGE_HALF, POIS, bridgeDeckY } from '../city/layout';
 import {
   tickActor, BehCtx, markCrossing, isCrossing, actionKindOf, behaviorChangeStats,
-  ACTION_KINDS, CROSS_SHARE, navBounds, BehaviorKind, initBehavior, setPost,
+  ACTION_KINDS, CROSS_SHARE, navBounds, BehaviorKind, initBehavior, setPost, rebuildAvoidGrid,
 } from './behaviors';
 import { SignAtlas } from '../city/bake';
 import { wardCells, PALACE } from '../city/imperial';
@@ -58,6 +58,30 @@ function keepOffRiver(pos: THREE.Vector3): void {
   // 纤道外缘 = hw + 0.6(缝) + 3.2(道宽) = hw + 3.8；再让 0.4m，站到岸上地面
   pos.z = cz + (pos.z >= cz ? 1 : -1) * (hw + 4.2);
   pos.y = 0;
+}
+
+/**
+ * 桥面贴合（R26）：桥面高度随 z 变化（bridgeDeckY），但行为层的移动积分只改 x/z、不改 y。
+ * 结果桥上的人保持出生时的 y，沿桥走到另一端就悬空/陷进桥面——实测严格口径抓到
+ * id=1167 在 x=-8.21、z=-29.91、y=7.48 处行走，而该 z 的桥面只有 5.84m：
+ * 人悬在桥面之上 1.6m、又在桥面净宽（W=10.4，半宽 5.2）之外，远看就是「在河面上走」。
+ * 这里逐帧把桥带内的地面行人贴到桥面、夹进桥面净宽；attach 演员（桥面往返者）与天空/地府不在此列。
+ */
+function keepOnBridgeDeck(a: Actor): void {
+  if (a.sky || a.freeze || a.attach || a.hidden) return;
+  if (a.pos.y > 12) return;
+  if (Math.abs(a.pos.z) > BRIDGE_HALF + 10 || Math.abs(a.pos.x) > 10) return;
+  if (Math.abs(a.pos.z) > BRIDGE_HALF) {
+    // 刚走下桥（桥端外 10m 内）：桥面高度收回到街面，否则会带着 0.7m 的桥端高度在街上飘
+    if (a.pos.y > 0.4 && a.pos.y < 9) a.pos.y = 0;
+    return;
+  }
+  // 已经悬空/站在桥面上的人按净宽 ±10 收回来（实测悬空点在 x=-8.2）；
+  // 贴地的人只有本来就落在桥面足迹（±5.2）内才抬上桥，避免把桥头的岸上行人吸到桥面。
+  const elevated = a.pos.y > 0.5;
+  if (Math.abs(a.pos.x) > (elevated ? 10 : 5.2)) return;
+  a.pos.x = THREE.MathUtils.clamp(a.pos.x, -4.8, 4.8);
+  a.pos.y = bridgeDeckY(THREE.MathUtils.clamp(a.pos.z, -BRIDGE_HALF, BRIDGE_HALF));
 }
 
 const DARK = new THREE.Color(0x241f1a);
@@ -1195,10 +1219,11 @@ export class Crowd {
       }
       return anchors[lo];
     };
-    // 沿街 ±12m / 横向 ±2.8m：把「节点珠链」摊成一片，桥面按坡度重算高度
+    // 沿街 ±12m / 横向 ±3.2m：把「节点珠链」摊成一片，桥面按坡度重算高度。
+    // ±2.8 太窄（街宽 8–11m），出生时就已经是一条窄带；±3.2 让双向流各占一侧。
     const jitter = (b: Anchor): { x: number; y: number; z: number } => {
       const along = (Math.random() * 2 - 1) * 12;
-      const across = (Math.random() * 2 - 1) * 2.8;
+      const across = (Math.random() * 2 - 1) * 3.2;
       const fx = Math.sin(b.dir), fz = Math.cos(b.dir);
       const x = b.x + fx * along + fz * across;
       const z = b.z + fz * along - fx * across;
@@ -1256,11 +1281,15 @@ export class Crowd {
   }
 
   private spawnWalker(occ: string, p: { x: number; y: number; z: number }, b: Anchor | null): Actor {
-    // 双向流：沿街两个方向各半（±π），加 ±0.5rad 抖动；15% 改成横向穿行（±π/2）
+    // 出生朝向：15% 横向穿行（±π/2）、13% 全向（斜穿/回头），其余沿街双向各半。
+    // 旧版非穿行者只有 dir 与 dir+π 两档，出生瞬间就已经排成两列。
     let yaw: number;
-    const crossing = Math.random() < CROSS_SHARE;
+    const r = Math.random();
+    const crossing = r < CROSS_SHARE;
     if (crossing) {
       yaw = (b ? b.dir : 0) + (Math.random() < 0.5 ? Math.PI / 2 : -Math.PI / 2) + (Math.random() - 0.5) * 0.8;
+    } else if (r < CROSS_SHARE + 0.13) {
+      yaw = Math.random() * Math.PI * 2;
     } else {
       yaw = (b ? b.dir : 0) + (Math.random() < 0.5 ? 0 : Math.PI) + (Math.random() - 0.5) * 1.0;
     }
@@ -1746,6 +1775,9 @@ export class Crowd {
     this.simT = t;
     // 首帧补建场所人群（此时 world 的寺院/瓦舍热点、天宫/地府角色、POIS 地府条目都已就位）
     this.ensureVenues();
+    // 局部避让网格每 4 帧重建一次（O(n)）：行人靠它在 1.6m 内找邻居并向空侧让开。
+    // 每帧重建没有必要，4 帧 ≈ 66ms，远小于一个人走完半个身位的时间。
+    if ((this.frame & 3) === 0) rebuildAvoidGrid(this.actors);
     const ctx = this.ctx(camPos, t);
     const now = performance.now();
     for (const a of this.actors) {
@@ -1761,6 +1793,9 @@ export class Crowd {
       // sky 不再一律跳过：R12-D 新加的天宫/地府驻场者要产生行为（既有神佛/天兵/名将都是 freeze，照旧不动）
       if (!a.freeze && !a.attach && now >= a.impactUntil) tickActor(a, dt, ctx);
       if (a.attach) a.attach({ pos: a.pos, yaw: a.yaw, y: a.yOff });
+      // R26 桥面不变量先做：桥带内的人先贴到 bridgeDeckY(z)（抬到 0.7m 以上），
+      // 再让 keepOffRiver 判河道——否则从街上走上桥的人 y=0，会先被当成河里的人推回岸上。
+      keepOnBridgeDeck(a);
       // R20 河道不变量：行为层的横向穿行不许把人带进水面（attach 演员由各自系统定位，不在此列）
       if (!a.freeze && !a.attach && !a.sky && !a.hidden) keepOffRiver(a.pos);
 

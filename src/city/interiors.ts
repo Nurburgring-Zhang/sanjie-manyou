@@ -1,4 +1,5 @@
 import { Baker, SignMesher, SignAtlas, shade, BGroup } from './bake';
+import * as THREE from 'three';
 import { RNG } from '../core/rng';
 import {
   table, stool, jar, bowl, tray, vase, cabinet, censer, cushion, scrollRack, type ItemBuilder,
@@ -2649,3 +2650,426 @@ export const W13_INTERIOR_LIGHTS: { x: number; y: number; z: number; color: numb
   { x: 540, y: 2.2, z: 118, color: 0xffa04e, int: 62, dist: 11 },       // 上清观正殿
   { x: 0, y: 3.2, z: 0, color: 0xffb25e, int: 90, dist: 16 },           // 相国寺殿心（宿主建成后启用）
 ];
+
+// ============ R16：街铺业态室内（centralbelt / riverbank 共用） ============
+// 判词（用户原话）：「所有店铺等场所内，应该有什么家具、摆设、布局、物品、装饰等，
+// 以前设计开发过，现在怎么都没了，只剩桌椅？？？」
+//
+// 现场（对源核对）：本文件前四套 dress* 只服务 9 座手工街屋；centralbelt.ts（临街 559 + 后巷 320）
+// 与 riverbank.ts（临水排 1017 + 内侧排 1004）的 2900 间铺面是**实心盒**，没有门洞也没有内衬，
+// 进屋这件事在那两条街上根本不成立。本节给出能被这两条带直接调用的业态陈设库：
+//
+//   · 8 个业态，每业态 12 件常备 + 每形态 4 件独有（共 24 个器物名），单间 16 件；
+//   · 同业态任意两种形态的器物集合差异 = 8/20 = 40%（要求 ≥20%）；
+//   · 随机性只走坐标 hash，不消耗共享 RNG（与本文件既有约定一致）；
+//   · 预算：单间 ≈ 200 面（2900 间 ≈ 580k），全部单件/双件构件，不用任何曲面屋顶。
+//
+// 与既有 dress* 的关系：不替换、不删除。9 座手工街屋继续走原来的 dressShop/dressTavern/
+// dressTeahouse（它们本来就有柜台/货架/酒垆/茶灶），本节只补两条商业带那 2900 间。
+
+export type ShopTrade = 'teahouse' | 'tavern' | 'cloth' | 'pharmacy' | 'bookshop' | 'bank' | 'noodle' | 'general';
+
+export const SHOP_TRADES: readonly ShopTrade[] = [
+  'teahouse', 'tavern', 'cloth', 'pharmacy', 'bookshop', 'bank', 'noodle', 'general',
+];
+
+export const TRADE_LABEL: Record<ShopTrade, string> = {
+  teahouse: '茶楼', tavern: '酒楼', cloth: '布庄', pharmacy: '药铺',
+  bookshop: '书坊', bank: '钱铺', noodle: '面馆', general: '杂货铺',
+};
+
+/** 器物形制：单盒 / 圆柱 / 桌（面+腿）/ 货架（背板+两层担）/ 架（两柱一横）/ 摞（三件小件） */
+type Arche = 'box' | 'cyl' | 'table' | 'shelf' | 'frame' | 'stack';
+
+interface ItemDef {
+  /** 中文名（审计/报告直接用，判据「每类业态 ≥12 件可辨识器物」按它数） */
+  n: string;
+  g: BGroup;
+  a: Arche;
+  w: number; h: number; d: number;
+  hex: number;
+  hex2?: number;
+  /** 长轴方向：'u' 沿面阔靠后墙，'v' 沿进深靠侧墙 */
+  rot?: 'u' | 'v';
+  /** 挂件：贴墙抬到 F + h*0.55 */
+  wall?: boolean;
+}
+
+const T_WOOD = 0x6b4a2b;
+const T_WOOD_D = 0x4a3220;
+const T_LAC = 0x4a2a20;
+const T_CLOTH = 0xe6dcc2;
+const T_RED = 0x9d2933;
+const T_CLAY = 0x955539;
+const T_IRON = 0x4a4030;
+const T_BRONZE = 0x8a6a3a;
+const T_PAPER = 0xd8cbb0;
+const T_STONE = 0x8d8a80;
+
+/** 器物字典：55 个可辨识器件，8 个业态从里面组 24 件/业态 */
+const ITEM: Record<string, ItemDef> = {
+  // —— 通用家具 ——
+  counter: { n: '柜台', g: 'wood', a: 'box', w: 2.4, h: 0.92, d: 0.62, hex: T_WOOD },
+  shelf: { n: '货架', g: 'wood', a: 'shelf', w: 1.9, h: 1.86, d: 0.44, hex: T_WOOD },
+  table: { n: '方桌', g: 'wood', a: 'table', w: 0.95, h: 0.78, d: 0.95, hex: T_WOOD },
+  longTable: { n: '长条案', g: 'wood', a: 'table', w: 2.0, h: 0.76, d: 0.62, hex: T_LAC },
+  stool: { n: '方凳', g: 'wood', a: 'box', w: 0.36, h: 0.46, d: 0.36, hex: T_WOOD_D },
+  bench: { n: '长凳', g: 'wood', a: 'box', w: 1.4, h: 0.46, d: 0.32, hex: T_WOOD_D },
+  cabinet: { n: '立柜', g: 'wood', a: 'box', w: 1.1, h: 1.9, d: 0.55, hex: T_WOOD_D },
+  chest: { n: '木箱', g: 'wood', a: 'box', w: 0.9, h: 0.6, d: 0.55, hex: T_LAC },
+  altar: { n: '供案', g: 'lacquer', a: 'box', w: 1.6, h: 0.95, d: 0.5, hex: T_LAC },
+  screen: { n: '屏风', g: 'lacquer', a: 'box', w: 1.8, h: 1.85, d: 0.09, hex: T_CLOTH },
+  mat: { n: '苇席', g: 'fabric', a: 'box', w: 1.5, h: 0.09, d: 1.5, hex: T_CLOTH },
+  cushion: { n: '蒲团', g: 'fabric', a: 'box', w: 0.44, h: 0.16, d: 0.44, hex: 0xb9a08a },
+  lantern: { n: '灯笼', g: 'glow', a: 'box', w: 0.3, h: 0.42, d: 0.3, hex: 0xffa04e },
+  banner: { n: '幌子', g: 'fabric', a: 'box', w: 0.06, h: 1.5, d: 0.62, hex: T_RED, rot: 'v' },
+  scroll: { n: '挂画', g: 'fabric', a: 'box', w: 0.7, h: 1.2, d: 0.04, hex: T_CLOTH, wall: true },
+  brazier: { n: '火盆', g: 'metal', a: 'cyl', w: 0.62, h: 0.42, d: 0.62, hex: T_IRON },
+  censer: { n: '香炉', g: 'metal', a: 'cyl', w: 0.36, h: 0.32, d: 0.36, hex: T_BRONZE },
+  waterVat: { n: '水缸', g: 'ceramic', a: 'cyl', w: 0.76, h: 0.72, d: 0.76, hex: 0x7a6a52 },
+  jar: { n: '陶坛', g: 'ceramic', a: 'cyl', w: 0.56, h: 0.86, d: 0.56, hex: T_CLAY },
+  basket: { n: '竹筐', g: 'wood', a: 'cyl', w: 0.54, h: 0.4, d: 0.54, hex: 0x9a7b4a },
+  sack: { n: '粮袋', g: 'fabric', a: 'box', w: 0.52, h: 0.62, d: 0.44, hex: 0xc9b48c },
+  scoop: { n: '量斗', g: 'wood', a: 'box', w: 0.32, h: 0.26, d: 0.32, hex: 0x8a6a3a },
+  // —— 茶 / 酒 ——
+  kettle: { n: '汤瓶', g: 'metal', a: 'cyl', w: 0.32, h: 0.36, d: 0.32, hex: T_BRONZE },
+  cupRow: { n: '盏列', g: 'ceramic', a: 'stack', w: 0.72, h: 0.2, d: 0.26, hex: 0xe6dcc2 },
+  teaBoard: { n: '茶牌水牌', g: 'wood', a: 'box', w: 0.06, h: 0.9, d: 0.42, hex: T_PAPER, rot: 'v' },
+  teaMill: { n: '茶碾', g: 'ash', a: 'box', w: 0.9, h: 0.4, d: 0.42, hex: T_STONE },
+  wineBoard: { n: '酒牌', g: 'wood', a: 'box', w: 0.06, h: 0.44, d: 0.3, hex: T_PAPER, rot: 'v' },
+  wineJar: { n: '酒瓮', g: 'ceramic', a: 'cyl', w: 0.62, h: 0.92, d: 0.62, hex: 0x8a5a3a },
+  wineSea: { n: '银酒海', g: 'metal', a: 'cyl', w: 0.8, h: 0.72, d: 0.8, hex: 0x9a9a92 },
+  // —— 布 ——
+  rack: { n: '布架', g: 'wood', a: 'frame', w: 1.9, h: 1.72, d: 0.4, hex: T_WOOD, rot: 'u' },
+  boltStack: { n: '布匹', g: 'fabric', a: 'stack', w: 0.86, h: 0.34, d: 0.42, hex: 0x2a5c42 },
+  measuringRod: { n: '量尺', g: 'wood', a: 'box', w: 0.94, h: 0.05, d: 0.06, hex: 0xd4b76a },
+  scissors: { n: '剪刀', g: 'metal', a: 'box', w: 0.28, h: 0.05, d: 0.1, hex: 0x8a8a86 },
+  dyeVat: { n: '染缸', g: 'ceramic', a: 'cyl', w: 0.92, h: 0.8, d: 0.92, hex: 0x2f4a5a },
+  // —— 药 ——
+  drawerCabinet: { n: '百眼药柜', g: 'wood', a: 'box', w: 1.7, h: 1.92, d: 0.44, hex: T_WOOD_D, rot: 'u' },
+  mortar: { n: '碾槽', g: 'ash', a: 'box', w: 1.1, h: 0.42, d: 0.44, hex: T_STONE },
+  beamScale: { n: '杆秤', g: 'metal', a: 'frame', w: 0.9, h: 0.92, d: 0.3, hex: T_BRONZE, rot: 'u' },
+  herbBale: { n: '药包', g: 'fabric', a: 'box', w: 0.36, h: 0.28, d: 0.28, hex: 0xcbbfa2 },
+  medicineScale: { n: '戥子', g: 'metal', a: 'box', w: 0.34, h: 0.16, d: 0.22, hex: T_BRONZE },
+  cauldron: { n: '药鼎', g: 'metal', a: 'cyl', w: 0.66, h: 0.56, d: 0.66, hex: T_IRON },
+  // —— 书 ——
+  bookStack: { n: '书堆', g: 'fabric', a: 'stack', w: 0.62, h: 0.44, d: 0.44, hex: 0xcbbfa2 },
+  inkSlab: { n: '砚台笔架', g: 'ash', a: 'box', w: 0.54, h: 0.14, d: 0.3, hex: 0x2b2b2b },
+  brushPot: { n: '笔筒', g: 'ceramic', a: 'cyl', w: 0.18, h: 0.26, d: 0.18, hex: 0x5a6472 },
+  paperStack: { n: '纸垛', g: 'fabric', a: 'box', w: 0.62, h: 0.32, d: 0.46, hex: T_CLOTH },
+  // —— 钱 ——
+  abacus: { n: '算盘', g: 'lacquer', a: 'box', w: 0.46, h: 0.07, d: 0.28, hex: 0x2e1a16 },
+  coinString: { n: '钱串', g: 'metal', a: 'box', w: 0.32, h: 0.38, d: 0.32, hex: 0xb08a34 },
+  lockBox: { n: '钱箱', g: 'lacquer', a: 'box', w: 0.62, h: 0.46, d: 0.44, hex: 0x5a1f18 },
+  ledgerStand: { n: '账簿架', g: 'wood', a: 'frame', w: 0.82, h: 1.1, d: 0.32, hex: T_WOOD, rot: 'u' },
+  // —— 面馆 ——
+  stove: { n: '灶台', g: 'earth', a: 'box', w: 1.1, h: 0.82, d: 0.68, hex: 0xa8926a },
+  pot: { n: '铁锅', g: 'metal', a: 'cyl', w: 0.62, h: 0.26, d: 0.62, hex: T_IRON },
+  bowlRow: { n: '面碗', g: 'ceramic', a: 'stack', w: 0.74, h: 0.18, d: 0.28, hex: 0xe6dcc2 },
+  chopstickTub: { n: '筷筒', g: 'wood', a: 'cyl', w: 0.2, h: 0.3, d: 0.2, hex: 0x9a7b4a },
+  steamer: { n: '蒸笼', g: 'wood', a: 'cyl', w: 0.52, h: 0.38, d: 0.52, hex: 0xb08a56 },
+  firewood: { n: '柴堆', g: 'wood', a: 'box', w: 0.92, h: 0.5, d: 0.5, hex: 0x574530 },
+  doughBoard: { n: '面案', g: 'wood', a: 'box', w: 1.2, h: 0.82, d: 0.68, hex: 0x8a6a3a },
+  noodleRack: { n: '面架', g: 'wood', a: 'frame', w: 1.6, h: 1.6, d: 0.36, hex: T_WOOD, rot: 'u' },
+  meatHook: { n: '肉钩', g: 'metal', a: 'frame', w: 0.6, h: 1.42, d: 0.12, hex: T_IRON, rot: 'u' },
+  // —— 杂货 ——
+  oilJar: { n: '油篓', g: 'wood', a: 'cyl', w: 0.46, h: 0.62, d: 0.46, hex: 0x8a5a2a },
+  ropeCoil: { n: '绳圈', g: 'fabric', a: 'cyl', w: 0.42, h: 0.14, d: 0.42, hex: 0xb9a06a },
+  fishBarrel: { n: '鱼盆', g: 'ceramic', a: 'cyl', w: 0.72, h: 0.42, d: 0.72, hex: 0x3a5a6a },
+};
+
+/** 一行器物：id / 面阔向比例 / 进深向比例 / 形态掩码（0=全形态，1<<v）/ 缩放 */
+type KitRow = readonly [string, number, number, number, number?];
+
+const V0 = 1, V1 = 2, V2 = 4;
+
+/** 8 业态 × (12 常备 + 3×4 独有) */
+const TRADE_KIT: Record<ShopTrade, readonly KitRow[]> = {
+  teahouse: [
+    ['counter', 0.58, 0.66, 0], ['shelf', -0.72, 0.72, 0], ['table', -0.26, -0.18, 0],
+    ['table', 0.34, 0.12, 0], ['stool', -0.32, -0.66, 0], ['stool', 0.42, -0.2, 0],
+    ['jar', -0.82, -0.62, 0], ['lantern', 0.0, 0.0, 0], ['banner', 0.86, -0.34, 0],
+    ['waterVat', -0.84, 0.06, 0], ['censer', 0.12, 0.78, 0], ['scroll', 0.0, 0.95, 0],
+    ['screen', 0.62, -0.66, V0], ['cushion', -0.3, 0.1, V0], ['teaBoard', -0.9, 0.42, V0], ['kettle', 0.62, 0.6, V0],
+    ['longTable', 0.0, 0.32, V1], ['cupRow', 0.16, 0.32, V1], ['mat', 0.0, -0.42, V1], ['jar', 0.72, 0.7, V1],
+    ['stove', -0.66, 0.42, V2], ['teaMill', 0.66, 0.42, V2], ['basket', 0.7, 0.72, V2], ['firewood', -0.66, -0.14, V2],
+  ],
+  tavern: [
+    ['counter', -0.62, 0.52, 0], ['wineSea', -0.62, 0.52, 0], ['wineJar', -0.86, 0.76, 0],
+    ['longTable', -0.1, -0.2, 0], ['longTable', 0.56, 0.22, 0], ['bench', -0.1, -0.66, 0],
+    ['bench', 0.56, -0.24, 0], ['jar', 0.88, 0.62, 0], ['lantern', 0.0, 0.0, 0],
+    ['banner', 0.88, -0.5, 0], ['cabinet', 0.86, 0.8, 0], ['scroll', 0.0, 0.95, 0],
+    ['wineBoard', -0.9, 0.34, V0], ['cupRow', 0.2, -0.2, V0], ['screen', -0.5, -0.7, V0], ['waterVat', 0.6, 0.74, V0],
+    ['steamer', 0.56, 0.7, V1], ['pot', 0.72, 0.7, V1], ['firewood', 0.86, 0.34, V1], ['meatHook', -0.88, 0.1, V1],
+    ['brazier', -0.5, 0.2, V2], ['abacus', -0.3, 0.52, V2], ['chest', 0.74, -0.6, V2], ['sack', -0.84, -0.4, V2],
+  ],
+  cloth: [
+    ['rack', -0.66, 0.72, 0], ['rack', 0.2, 0.72, 0], ['boltStack', -0.2, 0.3, 0],
+    ['counter', 0.56, 0.34, 0], ['cabinet', 0.86, 0.74, 0], ['chest', -0.86, -0.5, 0],
+    ['table', 0.1, -0.24, 0], ['stool', 0.1, -0.66, 0], ['lantern', 0.0, 0.0, 0],
+    ['banner', 0.88, -0.34, 0], ['scroll', 0.0, 0.95, 0], ['jar', -0.8, 0.28, 0],
+    ['measuringRod', 0.56, 0.34, V0], ['abacus', 0.8, 0.34, V0], ['scissors', 0.36, 0.34, V0], ['dyeVat', -0.66, -0.2, V0],
+    ['oilJar', 0.68, 0.76, V1], ['basket', -0.66, -0.2, V1], ['sack', 0.84, -0.44, V1], ['waterVat', -0.86, 0.76, V1],
+    ['paperStack', 0.4, 0.76, V2], ['herbBale', 0.06, 0.72, V2], ['ropeCoil', -0.4, -0.66, V2], ['teaMill', -0.5, 0.34, V2],
+  ],
+  pharmacy: [
+    ['drawerCabinet', -0.62, 0.86, 0], ['counter', 0.46, 0.42, 0], ['shelf', 0.86, 0.72, 0],
+    ['mortar', -0.5, -0.1, 0], ['beamScale', 0.66, 0.42, 0], ['jar', -0.86, 0.74, 0],
+    ['table', 0.1, -0.44, 0], ['stool', 0.46, -0.6, 0], ['lantern', 0.0, 0.0, 0],
+    ['banner', 0.88, -0.34, 0], ['censer', 0.1, 0.8, 0], ['waterVat', -0.84, -0.3, 0],
+    ['herbBale', -0.3, 0.62, V0], ['abacus', 0.28, 0.42, V0], ['medicineScale', 0.2, 0.42, V0], ['basket', -0.66, -0.62, V0],
+    ['herbBale', 0.72, -0.16, V1], ['jar', 0.84, 0.16, V1], ['table', -0.1, 0.16, V1], ['sack', -0.72, 0.2, V1],
+    ['cauldron', 0.6, -0.34, V2], ['chest', 0.86, 0.06, V2], ['screen', -0.4, 0.72, V2], ['mortar', -0.76, -0.6, V2],
+  ],
+  bookshop: [
+    ['shelf', -0.7, 0.78, 0], ['shelf', 0.1, 0.78, 0], ['bookStack', -0.3, 0.3, 0],
+    ['table', 0.5, -0.1, 0], ['stool', 0.5, -0.5, 0], ['inkSlab', 0.5, -0.1, 0],
+    ['counter', 0.84, 0.6, 0], ['cabinet', -0.86, -0.44, 0], ['lantern', 0.0, 0.0, 0],
+    ['banner', 0.88, -0.44, 0], ['scroll', 0.0, 0.95, 0], ['censer', 0.16, 0.72, 0],
+    ['brushPot', 0.5, -0.1, V0], ['paperStack', -0.62, -0.6, V0], ['abacus', 0.84, 0.6, V0], ['screen', 0.4, 0.66, V0],
+    ['cushion', 0.5, -0.5, V1], ['bookStack', 0.66, -0.6, V1], ['brushPot', 0.72, -0.1, V1], ['longTable', -0.2, -0.4, V1],
+    ['brazier', -0.66, -0.16, V2], ['paperStack', 0.7, 0.3, V2], ['chest', 0.84, -0.3, V2], ['stool', -0.2, -0.7, V2],
+  ],
+  bank: [
+    ['counter', 0.1, 0.5, 0], ['cabinet', -0.7, 0.82, 0], ['chest', 0.84, 0.7, 0],
+    ['abacus', 0.1, 0.5, 0], ['beamScale', 0.62, 0.5, 0], ['lockBox', -0.2, 0.5, 0],
+    ['stool', 0.6, -0.34, 0], ['table', -0.2, -0.44, 0], ['lantern', 0.0, 0.0, 0],
+    ['banner', 0.88, -0.4, 0], ['waterVat', -0.84, -0.34, 0], ['scroll', 0.0, 0.95, 0],
+    ['coinString', 0.3, 0.5, V0], ['ledgerStand', -0.6, 0.42, V0], ['screen', -0.4, -0.7, V0], ['sack', 0.84, -0.2, V0],
+    ['oilJar', 0.3, 0.62, V1], ['brazier', 0.7, -0.2, V1], ['jar', -0.5, 0.56, V1], ['kettle', 0.74, 0.3, V1],
+    ['paperStack', 0.74, 0.76, V2], ['inkSlab', 0.58, 0.42, V2], ['ropeCoil', -0.5, 0.5, V2], ['scoop', -0.2, -0.62, V2],
+  ],
+  noodle: [
+    ['stove', -0.7, 0.62, 0], ['pot', -0.7, 0.62, 0], ['steamer', 0.72, 0.62, 0],
+    ['longTable', -0.12, -0.16, 0], ['longTable', 0.56, 0.2, 0], ['bench', -0.12, -0.62, 0],
+    ['bench', 0.56, -0.18, 0], ['bowlRow', -0.5, 0.3, 0], ['jar', -0.86, -0.5, 0],
+    ['lantern', 0.0, 0.0, 0], ['banner', 0.88, -0.5, 0], ['waterVat', 0.84, 0.8, 0],
+    ['firewood', -0.86, 0.16, V0], ['chopstickTub', -0.1, 0.24, V0], ['doughBoard', 0.4, 0.66, V0], ['basket', 0.86, 0.3, V0],
+    ['noodleRack', 0.1, 0.72, V1], ['bowlRow', 0.5, 0.2, V1], ['kettle', -0.5, 0.24, V1], ['sack', -0.86, -0.64, V1],
+    ['meatHook', 0.82, 0.34, V2], ['cupRow', 0.34, 0.2, V2], ['firewood', 0.7, -0.6, V2], ['pot', 0.4, 0.62, V2],
+  ],
+  general: [
+    ['shelf', -0.7, 0.8, 0], ['shelf', 0.1, 0.8, 0], ['counter', 0.62, 0.4, 0],
+    ['basket', -0.3, 0.24, 0], ['jar', 0.3, 0.24, 0], ['sack', -0.8, -0.34, 0],
+    ['chest', 0.84, 0.56, 0], ['table', 0.1, -0.46, 0], ['stool', 0.5, -0.6, 0],
+    ['lantern', 0.0, 0.0, 0], ['banner', 0.88, -0.44, 0], ['scoop', 0.6, 0.4, 0],
+    ['oilJar', -0.86, 0.6, V0], ['ropeCoil', -0.4, 0.72, V0], ['fishBarrel', 0.62, 0.82, V0], ['measuringRod', 0.8, 0.4, V0],
+    ['paperStack', 0.66, -0.1, V1], ['boltStack', -0.5, 0.3, V1], ['kettle', 0.42, 0.24, V1], ['basket', 0.86, 0.16, V1],
+    ['meatHook', -0.7, 0.44, V2], ['oilJar', 0.66, 0.2, V2], ['sack', 0.9, 0.66, V2], ['firewood', -0.66, -0.6, V2],
+  ],
+};
+
+/** 一个业态在某个形态下的器物名集合（审计/报告直接读，便于机检 ≥12 件与 ≥20% 差异） */
+export function tradeItemNames(trade: ShopTrade, variant: number): string[] {
+  const out: string[] = [];
+  for (const r of TRADE_KIT[trade]) {
+    const mask = r[3];
+    if (mask !== 0 && (mask & (1 << (variant & 3))) === 0) continue;
+    out.push(ITEM[r[0]].n);
+  }
+  return out;
+}
+
+/** 纯数据审计：每业态每形态件数 + 同业态三种形态两两差异比 */
+export function shopInteriorAudit(): {
+  trade: ShopTrade; label: string; perVariant: number[]; distinct: number;
+  pairwise: number[]; minPairwise: number;
+}[] {
+  return SHOP_TRADES.map((trade) => {
+    const sets = [0, 1, 2].map((v) => new Set(tradeItemNames(trade, v)));
+    const pairwise: number[] = [];
+    for (let a = 0; a < 3; a++) {
+      for (let b = a + 1; b < 3; b++) {
+        const A = sets[a], B = sets[b];
+        let inter = 0;
+        for (const x of A) if (B.has(x)) inter++;
+        const uni = A.size + B.size - inter;
+        pairwise.push(uni > 0 ? (uni - inter) / uni : 0);
+      }
+    }
+    const all = new Set<string>();
+    for (const r of TRADE_KIT[trade]) all.add(ITEM[r[0]].n);
+    return {
+      trade, label: TRADE_LABEL[trade],
+      perVariant: sets.map((s) => s.size),
+      distinct: all.size,
+      pairwise,
+      minPairwise: Math.min(...pairwise),
+    };
+  });
+}
+
+/** 坐标 hash（0–1）：与 centralbelt / riverbank 同式，不消耗共享 RNG */
+function r16hash(a: number, b: number): number {
+  const v = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453;
+  return v - Math.floor(v);
+}
+
+/** 花色 5 种：桃红 / 杏黄 / 梨白 / 紫 / 金——不许全是绿球（判据 ⑤） */
+export const FLOWER_TONES = [0xe4576f, 0xf0b23a, 0xf2e6d8, 0x9a6bd0, 0xe8c04a] as const;
+
+/** 花丛：一丛绿篱 + 一球花（44 面），5 色轮换。中央商业带与河岸带共用 */
+export function flowerBush(b: Baker, x: number, z: number, s: number, tone: number): void {
+  const c = FLOWER_TONES[((tone % 5) + 5) % 5];
+  b.box('leaf', 1.05 * s, 0.5 * s, 1.05 * s, x, 0.25 * s, z, shade(0x3f6a3c, 0.94));
+  b.sphere('leaf', 0.46 * s, 4, x, 0.62 * s, z, c);
+  b.kit('belt.flower', 1, 0.6 * s);
+}
+
+/**
+ * 山墙三角（双面各一片，共 2 面）：封住 `roofC` 曲面单元与双坡板顶两端的敞口。
+ *
+ * 判词：「很多房顶为什么两侧都是空的？？？审核所有宫殿、建筑！！！」
+ * 现场：`centralbelt.frontShop` 的 `roofC` 是半圆筒形壳体，**两端本来就是敞口**；
+ * `backShop` / `riverbank` 的双坡斜板也只铺到面阔两端就断，端头直接露出屋腔。
+ * 逐顶补一块薄盒子封山会撑出屋面（矩形盒在檐口处高出曲面），补两块斜板又是 48 面/顶；
+ * 三角单面只用 **2 面/顶端、4 面/顶**，是唯一能覆盖 3400 顶的写法。
+ *
+ * @param halfW 三角底半宽（进深方向，取屋面进深的 0.53 倍把檐口包住）
+ * @param rise  脊高（从檐口算）
+ * @param ry    旋转：法线朝 +z 用 0，朝 −z 用 π，朝 ±x 用 ∓π/2
+ */
+export function gableTriangle(b: Baker, halfW: number, rise: number, x: number, y: number, z: number, ry: number, hex: number): void {
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute([
+    -halfW, 0, 0, halfW, 0, 0, 0, rise, 0,
+    halfW, 0, 0, -halfW, 0, 0, 0, rise, 0,
+  ], 3));
+  geo.setAttribute('normal', new THREE.Float32BufferAttribute([
+    0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1,
+  ], 3));
+  const uu = halfW * 2 * 0.24, vv = rise * 0.24;
+  geo.setAttribute('uv', new THREE.Float32BufferAttribute([0, 0, uu, 0, uu * 0.5, vv, uu, 0, 0, 0, uu * 0.5, vv], 2));
+  b.addGeo('wall', geo, x, y, z, hex, ry, 0, 0);
+}
+
+
+/** 按坐标挑业态与形态：同一街区不会整排同一种店 */
+export function pickTrade(x: number, z: number): { trade: ShopTrade; variant: number } {
+  const t = r16hash(x * 0.0021 + z * 0.0137, 977);
+  const trade = SHOP_TRADES[Math.min(SHOP_TRADES.length - 1, (t * SHOP_TRADES.length) | 0)];
+  const variant = Math.min(2, (r16hash(z * 0.031 + x * 0.017, 311) * 3) | 0);
+  return { trade, variant };
+}
+
+export interface TradeRoomSpec {
+  /** 房间中心（世界） */
+  cx: number; cz: number;
+  /** 室内净空：面阔（u）/ 进深（v） */
+  w: number; d: number;
+  /** 地坪上皮 y */
+  y0: number;
+  /** 净高 */
+  h: number;
+  trade: ShopTrade;
+  variant: number;
+  /** local +u（面阔）的世界方向，单位轴向量 */
+  ux: number; uz: number;
+  /** local +v（由门指向店内）的世界方向，单位轴向量 */
+  vx: number; vz: number;
+  /** 是否铺吊顶：roofC 屋盖下方必须铺，双坡板顶的下皮本身可见 */
+  ceiling?: boolean;
+  /** 简装：桌/架/摞这类多构件形制塌成单盒（外围铺面用，省 60% 面数） */
+  compact?: boolean;
+  /** 只落前 N 件（缺省全落） */
+  maxItems?: number;
+}
+
+interface Put {
+  box: (g: BGroup, w: number, h: number, d: number, u: number, y: number, v: number, hex: number) => void;
+  cyl: (g: BGroup, rt: number, rb: number, h: number, seg: number, u: number, y: number, v: number, hex: number) => void;
+}
+
+/**
+ * 单间铺面室内：吊顶 + 按业态摆 16 件器物。
+ * 不建地坪（台基顶面即地坪），不建墙（外墙由调用方做成薄壁 + 门洞）。
+ * 返回落位件数，供调用方打 kit 台账。
+ */
+export function buildTradeInterior(b: Baker, s: TradeRoomSpec): number {
+  const halfU = s.w / 2;
+  const halfV = s.d / 2;
+  const F = s.y0;
+  const ax = Math.abs(s.ux), az = Math.abs(s.uz);
+  const bx = Math.abs(s.vx), bz = Math.abs(s.vz);
+  const put: Put = {
+    box: (g, w, h, d, u, y, v, hex) => {
+      b.box(g, w * ax + d * bx, h, w * az + d * bz, s.cx + s.ux * u + s.vx * v, y, s.cz + s.uz * u + s.vz * v, hex);
+    },
+    cyl: (g, rt, rb, h, seg, u, y, v, hex) => {
+      b.cyl(g, rt, rb, h, seg, s.cx + s.ux * u + s.vx * v, y, s.cz + s.uz * u + s.vz * v, hex);
+    },
+  };
+
+  // 吊顶：椽子看不见的一层望板（只给曲面屋盖的房间）
+  if (s.ceiling) {
+    put.box('wood', s.w, 0.09, s.d, 0, F + s.h - 0.06, 0, 0x3f2c1c);
+    put.box('wood', s.w, 0.18, 0.2, 0, F + s.h - 0.18, 0, 0x5a3f26);
+  }
+
+  let n = 0;
+  const cap = s.maxItems ?? Infinity;
+  for (const row of TRADE_KIT[s.trade]) {
+    if (n >= cap) break;
+    const mask = row[3];
+    if (mask !== 0 && (mask & (1 << (s.variant & 3))) === 0) continue;
+    const def = ITEM[row[0]];
+    if (!def) continue;
+    const sc = row[4] ?? 1;
+    // 墙面家具随房间尺度拉伸：12m 通间里 2.4m 的柜台只占 1/5，读不成柜台
+    const stretch = def.w >= 1.4 ? Math.min(2.0, Math.max(1, halfU / 4.6)) : 1;
+    const w = def.w * sc * stretch, h = def.h * sc, d = def.d * sc;
+    // 贴墙件朝向：rot='v' 时长轴转到进深方向
+    const along = def.rot === 'v';
+    const wu = along ? d : w;
+    const dv = along ? w : d;
+    const limU = Math.max(0.2, halfU - wu / 2 - 0.16);
+    const limV = Math.max(0.2, halfV - dv / 2 - 0.16);
+    const u = Math.max(-limU, Math.min(limU, row[1] * halfU));
+    // 靠墙的（|fv| > 0.45）一律推到墙上，别浮在屋子中间
+    const v = Math.abs(row[2]) > 0.45 ? Math.sign(row[2]) * limV : Math.max(-limV, Math.min(limV, row[2] * halfV));
+    if (def.wall) {
+      put.box(def.g, w, h, 0.05, u, F + s.h * 0.52, v, def.hex);
+      n++;
+      continue;
+    }
+    switch (def.a) {
+      case 'box':
+        put.box(def.g, wu, h, dv, u, F + h / 2, v, def.hex);
+        break;
+      case 'cyl':
+        put.cyl(def.g, w / 2, (w / 2) * 0.92, h, 5, u, F + h / 2, v, def.hex);
+        break;
+      case 'table':
+        if (s.compact) { put.box(def.g, wu, h, dv, u, F + h / 2, v, def.hex); break; }
+        put.box(def.g, wu, 0.08, dv, u, F + h - 0.04, v, def.hex2 ?? shade(def.hex, 1.12));
+        put.box(def.g, wu * 0.82, h - 0.08, dv * 0.24, u, F + (h - 0.08) / 2, v, def.hex);
+        n += 2;
+        break;
+      case 'shelf':
+        if (s.compact) { put.box(def.g, wu, h, dv * 0.9, u, F + h / 2, v, def.hex); break; }
+        put.box(def.g, wu, h, dv * 0.9, u, F + h / 2, v, def.hex);
+        put.box(def.g, wu * 0.94, 0.06, dv, u, F + h * 0.52, v, def.hex2 ?? shade(def.hex, 1.2));
+        n += 2;
+        break;
+      case 'frame':
+        if (s.compact) { put.box(def.g, wu, h, Math.max(0.12, dv), u, F + h / 2, v, def.hex); break; }
+        put.box(def.g, 0.09, h, 0.09, u - wu / 2 + 0.05, F + h / 2, v, def.hex);
+        put.box(def.g, 0.09, h, 0.09, u + wu / 2 - 0.05, F + h / 2, v, def.hex);
+        put.box(def.g, wu, 0.09, 0.09, u, F + h - 0.05, v, def.hex);
+        n += 3;
+        break;
+      case 'stack':
+        if (s.compact) { put.box(def.g, wu, h, dv, u, F + h / 2, v, def.hex); break; }
+        put.box(def.g, wu * 0.4, h, dv, u - wu * 0.28, F + h / 2, v, def.hex);
+        put.box(def.g, wu * 0.4, h * 0.86, dv, u, F + h * 0.43, v, def.hex2 ?? shade(def.hex, 0.9));
+        put.box(def.g, wu * 0.4, h * 0.7, dv, u + wu * 0.28, F + h * 0.35, v, def.hex);
+        n += 3;
+        break;
+    }
+    n++;
+  }
+  b.kit(`shopint.${s.trade}.shop`, 1);
+  b.kit(`shopint.${s.trade}.items`, n);
+  b.kit(`shopint.variant${s.variant}`, 1);
+  return n;
+}

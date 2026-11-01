@@ -11,6 +11,128 @@ import { RNG } from '../core/rng';
 // ============ 天庭广厦：方圆百里云海 + 群宫 + 天河 ============
 const yieldFrameS = (): Promise<void> => new Promise((r) => { if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => r()); else setTimeout(r, 0); });
 
+// ============ W47：南天门门洞贯通 ============
+/**
+ * 天宫南天门锚点，与 realm.ts `SkyCenters.gate` 同一个数（203 为云台面）。
+ * 不改 realm.ts（禁改文件），本段只做两件事：摘掉堵死门洞的实心墩座、补回「两墩 + 券洞」。
+ */
+const SKY_GATE = { x: 0, y: 203, z: -85, w: 44, h: 8, d: 18 } as const;
+
+type TypedArr = Float32Array | Int16Array | Uint16Array | Uint8Array | Int32Array;
+
+/**
+ * 从已烘焙的合并几何里按「整块盒体的 8 个角点」摘掉该盒体的 12 个三角形。
+ * 判据是**三个顶点都落在角点 ±eps 内**：合并几何里同材质的其它构件（墩柱、面砖…）
+ * 顶点都不落在这 8 个点上，所以不会误伤。
+ *
+ * 为什么必须这么做：realm.ts 的城台是一整块 44×8×18 实心盒（`b.box('wall', 44, 8, 18, …)`），
+ * 它把 8m 高的门洞从地面一直堵到顶，射线打上去是一块 `#6a5a3e` 的棕灰色大板 —— 用户说的
+ * 「门框中的棕灰色的大长方体」就是它。盒体没有洞，只能整块摘掉再用新几何重建。
+ * @returns 摘掉的三角形数
+ */
+function stripBoxTriangles(scene: THREE.Scene, namePrefix: string, box: { x: number; y: number; z: number; w: number; h: number; d: number }): number {
+  const EPS = 0.02;
+  const hx = box.w / 2, hy = box.h / 2, hz = box.d / 2;
+  const corners: number[][] = [];
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) corners.push([box.x + sx * hx, box.y + sy * hy, box.z + sz * hz]);
+  const atCorner = (x: number, y: number, z: number): boolean => {
+    for (const c of corners) if (Math.abs(x - c[0]) <= EPS && Math.abs(y - c[1]) <= EPS && Math.abs(z - c[2]) <= EPS) return true;
+    return false;
+  };
+  const targets: THREE.Mesh[] = [];
+  scene.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (m.isMesh && m.name.startsWith(namePrefix)) targets.push(m);
+  });
+  let removed = 0;
+  for (const m of targets) {
+    const g = m.geometry as THREE.BufferGeometry | undefined;
+    const pos = g?.getAttribute('position') as THREE.BufferAttribute | undefined;
+    if (!g || !pos) continue;
+    const idx = g.getIndex();
+    const triCount = idx ? idx.count / 3 : pos.count / 3;
+    const keep: number[] = [];
+    let hit = 0;
+    for (let t = 0; t < triCount; t++) {
+      const ia = idx ? idx.getX(t * 3) : t * 3;
+      const ib = idx ? idx.getX(t * 3 + 1) : t * 3 + 1;
+      const ic = idx ? idx.getX(t * 3 + 2) : t * 3 + 2;
+      const isBox = atCorner(pos.getX(ia), pos.getY(ia), pos.getZ(ia))
+        && atCorner(pos.getX(ib), pos.getY(ib), pos.getZ(ib))
+        && atCorner(pos.getX(ic), pos.getY(ic), pos.getZ(ic));
+      if (isBox) { hit++; continue; }
+      keep.push(ia, ib, ic);
+    }
+    if (hit === 0) continue;
+    const ng = new THREE.BufferGeometry();
+    for (const name of Object.keys(g.attributes)) {
+      const src = g.getAttribute(name) as THREE.BufferAttribute;
+      const is = src.itemSize;
+      const Ctor = (src.array as TypedArr).constructor as new (n: number) => TypedArr;
+      const dst = new Ctor(keep.length * is);
+      for (let i = 0; i < keep.length; i++) {
+        for (let k = 0; k < is; k++) dst[i * is + k] = (src.array as TypedArr)[keep[i] * is + k];
+      }
+      ng.setAttribute(name, new THREE.BufferAttribute(dst, is, src.normalized));
+    }
+    g.dispose();
+    m.geometry = ng;
+    ng.computeBoundingSphere();
+    removed += hit;
+  }
+  return removed;
+}
+
+/**
+ * 南天门城台重建：两墩 + 半圆券洞 + 券脸 + 抱框 + 门槛。
+ * 尺寸全部按 pre-scale 天宫坐标写（本段几何在 buildCloudSeaView 里统一 ×2.2），
+ * 与 realm.ts 的 44×8×18 城台同footprint，只把中间掏成能望穿的洞。
+ */
+function rebuildSkyGatePassage(b: Baker, gate: { x: number; y: number; z: number; w: number; h: number; d: number }): void {
+  const { x: gx, y: gy, z: gz, w, h, d } = gate;
+  const hw = w / 2;                 // 22
+  const hd = d / 2;                 // 9
+  const R = 5.4;                    // 券洞半宽 = 起券半径
+  const YS = gy + 2.6;              // 起券线 205.6
+  const TOP = gy + h;               // 211
+  const WALL = shade(0x6a5a3e, 1);  // 与旧墩座同色，重建后前后观感一致
+  // ① 两侧墩台（把洞口让到 ±R 之外，进深与旧城台一致）
+  for (const s of [-1, 1]) {
+    const pw = hw - R;              // 16.6
+    b.box('wall', pw, h, d, gx + s * (R + pw / 2), gy + h / 2, gz, WALL);
+  }
+  // ② 起券线以上：按半圆逐层收进，填满拱肩（24 层 × 0.225，2.2× 后每层 0.5m，读成石砌层）
+  const LAYERS = 24;
+  const lh = (TOP - YS) / LAYERS;
+  for (let i = 0; i < LAYERS; i++) {
+    const yy = YS + (i + 0.5) * lh;
+    const dy = Math.max(0, yy - YS);
+    const halfGap = Math.sqrt(Math.max(0, R * R - dy * dy));
+    const sw = hw - halfGap;
+    if (sw <= 0.02) continue;
+    for (const s of [-1, 1]) b.box('wall', sw, lh * 1.02, d, gx + s * (halfGap + sw / 2), yy, gz, shade(0x6a5a3e, 1 - (i % 3) * 0.02));
+  }
+  // ③ 券脸（拱券石圈）：19 块沿半圆排布，进深比墙面各出 0.2m，正面读成一圈券石
+  const NV = 19;
+  const arc = (Math.PI * (R + 0.28)) / NV;
+  for (let i = 0; i < NV; i++) {
+    const th = ((i + 0.5) / NV) * Math.PI;
+    // 块宽取 1.45×弧长：块与块之间必须压住，留缝的话整圈券石会读成一把「齿」
+    b.box('ash', arc * 1.45, 0.62, d + 0.4,
+      gx + Math.cos(th) * (R + 0.29), YS + Math.sin(th) * (R + 0.29), gz,
+      shade(0xb4b0a8, 1.02), 0, 0, th + Math.PI / 2);
+  }
+  // ④ 抱框（券洞两侧竖框，压边 + 金线）
+  for (const s of [-1, 1]) {
+    b.box('ash', 0.42, YS - gy, d + 0.34, gx + s * (R + 0.21), (gy + YS) / 2, gz, shade(0xb4b0a8, 1.06));
+    b.box('glow', 0.1, YS - gy - 0.6, 0.1, gx + s * (R + 0.4), (gy + YS) / 2, gz + hd + 0.24, GOLD_LINE);
+  }
+  // ⑤ 门槛石 + 门洞铺地（比台面深一档，踏进去有「过门」的读数）
+  b.box('ash', R * 2 + 0.9, 0.26, d, gx, gy + 0.13, gz, shade(0x8a8478, 0.9));
+  b.box('ash', R * 2, 0.08, d - 1.2, gx, gy + 0.3, gz, shade(0x7a7468, 0.86));
+}
+
+
 /**
  * 天宫扩展（三环群岛/云桥/远景宫阙/云海）。**异步分片**：
  * 2200 颗星尘 + 700 天河粒子 + 900 云沿 + 76 岛 + 102 建筑，一次跑完 1.8s。
@@ -85,6 +207,17 @@ export async function buildSkyExpansion(b: Baker, ps: PoolSet, scene: THREE.Scen
   // 天宫云片：至此全部浮岛（realm/palace 的云台 + 本段 hIsland 的三环 76 岛 + 远景宫阙）已发完云团，
   // 一次性把 palace.ts 攒下的软边云片挂进场景（按象限 4 个 mesh，透明层，depthWrite:false）
   flushSkyCloudSheets(scene);
+  // ---- W47：南天门门洞贯通 ----
+  // realm.ts 的城台是一整块 44×8×18 实心盒（门洞位置被它 100% 堵死，射线打上去是 #6a5a3e 大板）。
+  // 先按 8 角点精确摘掉那 12 个三角形，再用同 footprint 的「两墩 + 券洞」补回。
+  // 必须在 compactStatic 合批之前做：合批后同材质的城台与其它构件会并进同一块几何，无法再定位。
+  // 城台盒心的世界 y 是「台面 + 半高」（realm.ts 写的是 gate.y + 4），不是台面本身
+  const gateCut = stripBoxTriangles(scene, 'city_wall', {
+    x: SKY_GATE.x, y: SKY_GATE.y + SKY_GATE.h / 2, z: SKY_GATE.z,
+    w: SKY_GATE.w, h: SKY_GATE.h, d: SKY_GATE.d,
+  });
+  rebuildSkyGatePassage(b, SKY_GATE);
+  if (typeof window !== 'undefined') (window as unknown as { __gateCut?: number }).__gateCut = gateCut;
 }
 
 // ============ 云海可调淡出：人间仰视不再被云海盘挡死 ============
@@ -160,6 +293,122 @@ function scaleHeavenGeometry(scene: THREE.Scene, s: number): number {
     meshes++;
   });
   return meshes;
+}
+
+// ============ W47：凌霄宝殿二次放大（仙宫尺度） ============
+// 现状（几何直读）：2.2× 后台基 105.6×70.4、柱网面阔 88、台基底 232.96 → 宝顶 317.7，总高 84.7。
+// 对标太和殿（面阔 200 含廊庑 / 本体 64m）与用户要求「面阔 ≥150、总高 ≥120」，
+// 天宫正殿应比皇宫正殿再大一档，故在 2.2× 之上再叠 1.75×：
+//   面阔 88 → 154、总高 84.7 → 148.2、台基 184.8。
+// 倍率取**等比**而不是 x/z 拉宽 + y 拉高：非等比会把蟠龙柱压成椭圆（差 20%），近看即穿帮。
+// 只缩放「台基 + 殿身 + 屋面 + 室内陈设」这一块（|x|≤56、z 209±62、y≥230），
+// 不动云台岩盘与岛裙：云台半径 197 仍大于放大后 184.8 的台基，殿不会悬空；
+// 云台不动也就不会与南侧斗法云台（中心 z −17.6、半径 96.8）相撞。
+const LINGXIAO_SCALE = 1.75;
+/** 放大锚点：台基底（缩放时台基底面不动，殿身向上长高） */
+const LINGXIAO_ANCHOR = { x: 0, y: 233, z: 209 } as const;
+const LINGXIAO_HALF_X = 56;
+const LINGXIAO_HALF_Z = 62;
+const LINGXIAO_Y_MIN = 230;
+
+/** 凌霄殿与朝房（z 162.8）一并放大，避免放大后的台基（z 147.4 起）把朝房埋进去 */
+function enlargeLingxiao(scene: THREE.Scene, k: number): number {
+  if (k <= 1) return 0;
+  const a = LINGXIAO_ANCHOR;
+  let meshes = 0;
+  scene.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (!m.isMesh || !m.name.startsWith('city_')) return;
+    const g = m.geometry as THREE.BufferGeometry | undefined;
+    const pos = g?.getAttribute('position') as AnyAttr | undefined;
+    if (!g || !pos) return;
+    let any = false;
+    for (let i = 0; i < pos.count; i++) {
+      const y = pos.getY(i);
+      if (y < LINGXIAO_Y_MIN) continue;
+      const x = pos.getX(i), z = pos.getZ(i);
+      if (Math.abs(x - a.x) > LINGXIAO_HALF_X || Math.abs(z - a.z) > LINGXIAO_HALF_Z) continue;
+      pos.setXYZ(i, a.x + (x - a.x) * k, a.y + (y - a.y) * k, a.z + (z - a.z) * k);
+      any = true;
+    }
+    if (!any) return;
+    pos.needsUpdate = true;
+    g.computeBoundingSphere();
+    meshes++;
+  });
+  return meshes;
+}
+
+/**
+ * 南天门背面补匾。
+ *
+ * 现场取证：`SignMesher.quad` 其实已经生成双面（背面镜像 UV，文字正读），但正面匾挂在
+ * 门楼 z −176.9，而门楼「横梁 40×3×5」（z −192.5…−181.5）整块挡在它后面 —— 从背面看，
+ * 匾被自己的梁遮死，所以「只有一侧有牌匾」。
+ *
+ * 做法：把 `city_signs` 里属于这块匾的三角形整体复制一份，沿 −z 平移到门楼背面外侧
+ * （z −193.1，比梁背面 −192.5 再出 0.6m），背面即获得一块同样可读的匾。
+ * 只复制三角形，不动任何既有实例。
+ */
+function cloneGatePlaque(scene: THREE.Scene): number {
+  const ZF = (SKY_GATE.z + 4.6) * HEAVEN_SCALE;   // 正面匾世界 z = −176.88
+  const ZB = -193.1;                              // 背面匾落位（门楼梁背面 −192.5，再出 0.6）
+  const Y0 = HEAVEN_BASE_Y + (SKY_GATE.y + 25 - HEAVEN_BASE_Y) * HEAVEN_SCALE; // 266.4
+  const HX = 11.5, HY = 3.6, EZ = 0.25;
+  let added = 0;
+  const targets: THREE.Mesh[] = [];
+  scene.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (m.isMesh && m.name.startsWith('city_signs')) targets.push(m);
+  });
+  for (const m of targets) {
+    const g = m.geometry as THREE.BufferGeometry | undefined;
+    const pos = g?.getAttribute('position') as THREE.BufferAttribute | undefined;
+    if (!g || !pos || g.getIndex()) continue;     // 匾是 non-indexed（SignMesher 逐三角推入）
+    const nv = pos.count;
+    const clone: number[] = [];
+    for (let t = 0; t < nv / 3; t++) {
+      let ok = true;
+      for (let k = 0; k < 3; k++) {
+        const i = t * 3 + k;
+        const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+        if (Math.abs(z - ZF) > EZ || Math.abs(x) > HX || Math.abs(y - Y0) > HY) { ok = false; break; }
+      }
+      if (ok) clone.push(t * 3, t * 3 + 1, t * 3 + 2);
+    }
+    if (!clone.length) continue;
+    const ng = new THREE.BufferGeometry();
+    for (const name of Object.keys(g.attributes)) {
+      const src = g.getAttribute(name) as THREE.BufferAttribute;
+      const is = src.itemSize;
+      const Ctor = (src.array as TypedArr).constructor as new (n: number) => TypedArr;
+      const dst = new Ctor((nv + clone.length) * is);
+      for (let i = 0; i < nv; i++) for (let k = 0; k < is; k++) dst[i * is + k] = (src.array as TypedArr)[i * is + k];
+      for (let j = 0; j < clone.length; j++) {
+        const s = clone[j];
+        for (let k = 0; k < is; k++) dst[(nv + j) * is + k] = (src.array as TypedArr)[s * is + k];
+      }
+      if (name === 'position') {
+        // 不是平移，是「绕 Y 轴 180°」：SignMesher.quad 生成了两块共面的面片
+        // （+z 法线用正常 UV、−z 法线用镜像 UV，后者才是从背面正读的那块）。
+        // 如果只平移，从背面看到的是原本朝 +z 的那块，字是反的（实测截图为「門天南」）。
+        // 转 180° 后，原本朝 +z 的面改为朝 −z，从背面读就是正的。
+        for (let j = 0; j < clone.length; j++) {
+          const s = clone[j];
+          const sx = (src.array as TypedArr)[s * is] as number;
+          const sz = (src.array as TypedArr)[s * is + 2] as number;
+          dst[(nv + j) * is] = -sx;
+          dst[(nv + j) * is + 2] = ZB + ZF - sz;
+        }
+      }
+      ng.setAttribute(name, new THREE.BufferAttribute(dst, is, src.normalized));
+    }
+    g.dispose();
+    m.geometry = ng;
+    ng.computeBoundingSphere();
+    added += clone.length / 3;
+  }
+  return added;
 }
 
 const _cloudUnder = new THREE.Color(0x46566b);   // 云底 / 背光下沿：冷蓝灰
@@ -381,18 +630,20 @@ function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
       (0.16 + skyJitter(i, 356.7) * 0.26) * edge);
   }
   // ①b 云根：正殿台基四周 + 台底，把「殿骑在云上」做实
+  // W47：云根环原先贴到 r 26（放大后 57m），正压在凌霄台基与丹陛上，把殿身下半截糊成一片白。
+  //      外推 1.6×、压低不透明度 —— 云托住台基，但不吃台基。
   for (let i = 0; i < 26; i++) {
     const a = (i / 26) * Math.PI * 2 + skyJitter(i, 301.7) * 0.35;
-    const rr = 26 + skyJitter(i, 302.9) * 74;
-    push(Math.cos(a) * rr, 194 + skyJitter(i, 303.7) * 22, Math.sin(a) * rr,
-      16 + skyJitter(i, 304.1) * 20, 0.55 + skyJitter(i, 305.3) * 0.25, 0.28 + skyJitter(i, 306.7) * 0.26);
+    const rr = 42 + skyJitter(i, 302.9) * 112;
+    push(Math.cos(a) * rr, 192 + skyJitter(i, 303.7) * 20, Math.sin(a) * rr,
+      16 + skyJitter(i, 304.1) * 20, 0.55 + skyJitter(i, 305.3) * 0.25, 0.17 + skyJitter(i, 306.7) * 0.16);
   }
   // ② 冠云：正殿屋面之上与两侧
   for (let i = 0; i < 12; i++) {
     const a = (i / 12) * Math.PI * 2 + skyJitter(i, 311.3) * 0.4;
     const rr = 20 + skyJitter(i, 312.7) * 78;
     push(Math.cos(a) * rr, 238 + skyJitter(i, 313.9) * 20, Math.sin(a) * rr,
-      9 + skyJitter(i, 314.3) * 9, 0.6 + skyJitter(i, 315.1) * 0.2, 0.16 + skyJitter(i, 316.3) * 0.2);
+      9 + skyJitter(i, 314.3) * 9, 0.6 + skyJitter(i, 315.1) * 0.2, 0.10 + skyJitter(i, 316.3) * 0.12);
   }
   // ③ 缭绕环：宫阙外的第一圈云海气团
   for (let i = 0; i < 34; i++) {
@@ -413,6 +664,11 @@ function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
   const n = spots.length;
   const phase = new Float32Array(n);
   const opacity = new Float32Array(n);
+  // W47：云团反照率收到「受光面不过 1.0 线性」的档。
+  // 现场取证：旧值 color 0xffffff + instanceColor 0xe4ebf6（线性 0.78/0.85/0.94），
+  // 天宫主光 1.4 + 补光 0.95 + 半球 0.55 + 环境 0.35 ≈ 3.2 倍照度，乘积 2.5–3.0，
+  // ACES 之后整团裁成 (255,255,255) —— 用户看到的「一片死白」就是这一步。
+  // 现取 albedo≈0.29 线性（0x969fac）→ 受光 0.9、背光 0.4，留出可见的明暗过渡。
   const mesh = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({
     color: 0xffffff, roughness: 1, metalness: 0, transparent: true, depthWrite: false,
     // 云团不反环境（默认 envMapIntensity 1.0 会把云团拉成白球）
@@ -428,10 +684,10 @@ function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
     // 横向各向异性：正圆球在正上方看是一圈圆圈，压扁 + 拉长后读成云絮
     m4.compose(v.set(x, y, z), q, s.set(r * (0.85 + skyJitter(i, 345.1) * 0.6), Math.max(6, r * sy), r * (0.7 + skyJitter(i, 342.7) * 0.6)));
     mesh.setMatrixAt(i, m4);
-    // 云色：只给近中性的冷白（暖/冷由场景主光与补光自己分）。
-    // 之前给过偏暖的 0xd6c1a2，背光面上读成"褐色脏棉团"，在正上方视角里像污渍。
+    // 云色：冷调的两档中性灰蓝（暖/冷由场景主光与补光自己分）。
+    // 旧值 0xe4ebf6 / 0xcdd8e8 是「近白反照率」，任何直射光都会把它顶到裁白；这里压到中调。
     const warm = skyJitter(i, 343.1);
-    c.setHex(warm > 0.55 ? 0xe4ebf6 : 0xcdd8e8);
+    c.setHex(warm > 0.55 ? 0x9aa5b5 : 0x828d9e);
     mesh.setColorAt(i, c);
     phase[i] = skyJitter(i, 344.3) * 6.283;
     opacity[i] = a;
@@ -469,13 +725,21 @@ function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
         // 边缘淡出：只保留「法线朝向相机」的核心，剪影处 alpha→0。
         // 用 pow 而不是窄 smoothstep —— 窄带宽会让球体 90% 面积不透明，几十个球叠起来就是「棉花球」。
         float mistRim = clamp(abs(dot(normalize(vNormal), normalize(vViewPosition))), 0.0, 1.0);
-        gl_FragColor.a *= vMistAlpha * pow(mistRim, 1.9);`);
+        // W47 上下面分层：朝上的面吃天光（1.0），朝下的面最暗（0.62）。
+        // 没有这一条时，一团云在屏幕上是一块亮度均匀的半透明白斑，
+        // 叠上几十团就读成"一片死白"；有了它每团自带顶亮底暗的立体感。
+        float mistUp = clamp(vNormal.y * 0.5 + 0.5, 0.0, 1.0);
+        gl_FragColor.rgb *= mix(0.62, 1.0, mistUp);
+        // 总不透明度再压 0.62：242 团互相叠的地方，单团 alpha 再低也会累加到 1.0
+        gl_FragColor.a *= vMistAlpha * 0.62 * pow(mistRim, 2.4);`);
   };
   scene.add(mesh);
   return { mesh, uniforms };
 }
 
 let _cloudSeaView: { scene: THREE.Scene; handle: CloudSeaHandle } | null = null;
+/** 凌霄殿二次放大只允许跑一次：bind() 若被重入（loadingDone 竞态）会把台基放大两次 */
+let palaceScaled = false;
 
 /**
  * 建立云海视图句柄（同一 scene 幂等）。加载完成后调用一次，之后每帧 `setViewerY(相机/化身 y)`。
@@ -541,6 +805,13 @@ export function buildCloudSeaView(scene: THREE.Scene): CloudSeaHandle {
     //    只有「几十米的小亭」的量级；放大后才有「高大恢弘」的尺度。云海已先切出，不受影响。
     const scaled = scaleHeavenGeometry(scene, HEAVEN_SCALE);
     void scaled;
+    // ②b W47：凌霄宝殿在 2.2× 之上再叠 1.75×（面阔 88→154、总高 84.7→148.2）。
+    //     必须在 2.2× 之后、云海成片之前，且只跑一次（bind 若被重入会把台基放大两次）。
+    if (!palaceScaled) {
+      palaceScaled = true;
+      const n = enlargeLingxiao(scene, LINGXIAO_SCALE);
+      if (typeof window !== 'undefined') (window as unknown as { __lxScaled?: number }).__lxScaled = n;
+    }
     // ③ 云海重造型（裁半径 + 分层顶点色 + 径向 alpha）与成片
     for (const cloudGeo of cutClouds) {
       const kept = sculptCloudSea(cloudGeo);
@@ -580,6 +851,9 @@ export function buildCloudSeaView(scene: THREE.Scene): CloudSeaHandle {
     }
     meshCount = group.children.reduce((n, c) => n + ((c as THREE.Mesh).isMesh ? 1 : 0), 0);
     group.userData.cloudSea = { plates, plateVertices, meshes: meshCount };
+    // ⑤ W47：南天门背面补匾（正面匾被门楼横梁从背面遮死，这里复制一块到梁背外侧）
+    const plaqueTris = cloneGatePlaque(scene);
+    if (typeof window !== 'undefined') (window as unknown as { __gatePlaqueTris?: number }).__gatePlaqueTris = plaqueTris;
     bound = plates > 0 || meshCount > 0;
     return bound;
   };

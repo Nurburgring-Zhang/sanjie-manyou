@@ -116,9 +116,13 @@ export function buildGhostShopDetail(b: Baker, o: GhostShopSpec): void {
     for (const s of [-1, 1]) bx('roof', 0.22, 0.24, 0.18, lx, roofBaseLy + 0.08, s * d * 0.66, shade(ROOF_RIB, 1.15));
   }
   b.kit('fengdu.tileEnd', 30, groundY + h);
-  // 正脊 + 脊头
-  bx('roof', w * 0.96, 0.22, 0.34, 0, roofBaseLy + roofH * 0.97, 0, shade(ROOF_TILE, 1.3));
-  for (const s of [-1, 1]) bx('roof', 0.3, 0.5, 0.34, s * w * 0.48, roofBaseLy + roofH * 1.02, 0, shade(ROOF_TILE, 1.45), 0);
+  // 正脊 + 脊头。roofC 是**四坡顶**：t=0 的脊环只有 0.32 单位宽，世界尺度下平顶仅 0.32×1.32w ≈ 0.42w。
+  // 旧写法按 w*0.96 铺满面阔，两端各越出平顶约 0.27w；越出段下方已没有瓦面承托（只剩檐口薄板），
+  // 于是这条 0.34m 宽的正脊在街面上读成一根横跨屋面、两端悬空的横条。
+  // 与九道瓦垄同源（固定长度/高度铺直条，而屋面是曲面 + 四坡收分），正脊只能压在实际平顶上。
+  const ridgeLen = w * 0.40;
+  bx('roof', ridgeLen, 0.22, 0.34, 0, roofBaseLy + roofH * 0.97, 0, shade(ROOF_TILE, 1.3));
+  for (const s of [-1, 1]) bx('roof', 0.3, 0.5, 0.34, s * ridgeLen * 0.5, roofBaseLy + roofH * 1.02, 0, shade(ROOF_TILE, 1.45), 0);
   b.kit('fengdu.ridge', 1, groundY + h + roofH);
   // 四角起翘
   for (const sx of [-1, 1]) {

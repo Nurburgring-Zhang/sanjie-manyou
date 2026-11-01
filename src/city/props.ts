@@ -5,6 +5,7 @@ import { C } from './buildings';
 import { SpotRegistry } from '../data/jobs';
 import { bowl, jar, tray, cabinet, scrollRack, censer, vase, umbrella, book, fan, table, stool } from './itemKit';
 import { buildPavementDetail } from './pavement';
+import { flowerBush } from './interiors';
 import { RIVER_END, riverCenterZ, riverHalfWidth } from './river';
 
 // ============ 市井道具：地面/街面/摊位/柳树/灯笼/纸鸢 ============
@@ -688,6 +689,28 @@ export function buildTrees(b: Baker, rng: RNG): void {
     [478, 41, 1, 2.5], [512, 43, 1, 2.5], [548, 40.5, 1, 2.5], [586, 42.5, 1, 2.5],
     [-256, 22.5, 1, 2.0], [-226, 24, 1, 2.0],
   ], 4.5, (x, z) => teaStove(b, x, z, size(), (prnd() - 0.5) * 0.5, z > 10 && z < 30 ? 1.15 : 0));
+
+  // ---- R16：核心河岸五色花带（判据 ⑤「整个城市都要这样」）----
+  // 只走坐标 hash，**一次都不取共享 rng**：上面 柳/松/桂/莲/果木/茶灶 的取数与下游
+  // （buildLanterns / buildStalls）逐值不变。110 丛 × 44 面 ≈ 4.8k，落在 +800k 预算的尾款里。
+  let fb = 0;
+  for (const sz of [1, -1] as const) {
+    for (let x = -600; x < 610; x += 22) {
+      if (Math.abs(x) < 46) continue;                              // 虹桥桥头让开
+      const hx = x + (flr(x * 0.013, sz + 3) - 0.5) * 8;
+      const z = sz * (46.6 + flr(x * 0.017, sz + 9) * 1.5);
+      if (inLandmarkKeepout(hx, z)) continue;
+      flowerBush(b, hx, z, 0.92, fb % 5);
+      fb++;
+    }
+  }
+  b.kit('core.flower', fb, 0);
+}
+
+/** 坐标 hash（0–1）：与 centralbelt / riverbank 同式，不消耗共享 RNG */
+function flr(a: number, c: number): number {
+  const v = Math.sin(a * 12.9898 + c * 78.233) * 43758.5453;
+  return v - Math.floor(v);
 }
 
 export function buildLanterns(b: Baker, sg: SignMesher, atlas: SignAtlas, rng: RNG): void {

@@ -957,17 +957,18 @@ export function buildUnderworld(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
     b.box('glow', 1.2 + (i % 3) * 0.8, 0.05, 0.8 + (i % 4) * 0.5, rx, y + 0.19, rz, 0x9a2430);
   }
   // 石砌河岸：两岸挡墙 + 望柱 + 临水石阶
+  // 760m 通长的挡墙原先挂 'wall' 组（蓝灰自发光）——整条黄泉两岸因此是一条灰带，全部改石作 'ash'。
   for (const bank of [-88.6, -31.4]) {
-    b.box('wall', 760, 1.5, 1.4, 0, y + 0.55, bank, shade(0x33393f, 1.0));
-    b.box('wall', 760, 0.22, 1.7, 0, y + 1.36, bank, shade(0x3b424a, 1.05));
+    b.box('ash', 760, 1.5, 1.4, 0, y + 0.55, bank, shade(0x33393f, 1.0));
+    b.box('ash', 760, 0.22, 1.7, 0, y + 1.36, bank, shade(0x3b424a, 1.05));
     for (let k = -18; k <= 18; k++) {
-      b.box('wall', 0.4, 0.9, 0.4, k * 20, y + 1.9, bank, shade(0x3b424a, 1.1));
+      b.box('ash', 0.4, 0.9, 0.4, k * 20, y + 1.9, bank, shade(0x3b424a, 1.1));
       if (k % 2 === 0) b.box('glow', 0.14, 0.2, 0.14, k * 20, y + 2.42, bank, bank < -60 ? 0x3dff9c : 0xff3a4a);
     }
     for (let k = -2; k <= 2; k++) {
       if (k === 0) continue;
       for (let st = 0; st < 3; st++) {
-        b.box('wall', 6, 0.3, 1.0, k * 120, y - 0.3 - st * 0.3, bank + (bank < -60 ? 1.2 + st * 1.0 : -1.2 - st * 1.0), shade(0x3b424a, 1.0 - st * 0.04));
+        b.box('ash', 6, 0.3, 1.0, k * 120, y - 0.3 - st * 0.3, bank + (bank < -60 ? 1.2 + st * 1.0 : -1.2 - st * 1.0), shade(0x3b424a, 1.0 - st * 0.04));
       }
     }
   }
@@ -995,34 +996,273 @@ export function buildUnderworld(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
   sg.quad(atlas.text('naihe', '奈何橋', 300, 90, { color: '#b8ffd8', glow: '#3dff9c', bg: 'rgba(6,10,8,0.9)', border: 'rgba(61,255,156,.8)', fontPx: 64 }), 6, 1.8, 0, y + 7.6, -88, 0);
   // 阎罗殿
   const py = y, px = 0, pz = 60;
-  b.box('wall', 52, 2.6, 30, px, py + 1.3, pz, 0x2c1a24);
-// 空心化（B2：法庭可进入，47 卷 §八）——背/侧实墙，正面敞列柱
-  b.box('wall', 42, 11, 1.4, px, py + 2.6 + 5.5, pz - 10.6, 0x38202c);
-  b.box('wall', 1.4, 11, 20, px - 20.6, py + 8.1, pz, 0x38202c);
-  b.box('wall', 1.4, 11, 20, px + 20.6, py + 8.1, pz, 0x38202c);
-  b.box('wall', 42, 1.6, 22, px, py + 13.2, pz, shade(0x38202c, 0.85));
-  for (let f = 0; f < 6; f++) {
-    for (let w = 0; w < 5; w++) {
-      b.box('glow', 0.9, 1.2, 0.1, px - 16 + w * 8, py + 5.4 + (f % 2) * 3.4, pz + 11.2, f % 2 ? 0xff3a4a : 0x3dff9c);
+  // ============ 阎罗殿大朝：按凌霄殿构造层级重做（灰模根治 + 体量拉到天宫同级） ============
+  // 判词（用户原话）：「地府的建筑都有灰模？彻底解决！」「要和天宫一样高大、精致、壮观、宏伟、瑰丽！」
+  // 旧版两条病根：
+  //   ① 殿身四面全挂在 'wall' 组。该组是 MeshLambertMaterial + emissive 0x3a3d48（蓝灰自发光），
+  //      顶点色再深也被自发光压平 —— 实测补光后整面读作灰蓝素板，这就是「没材质」的真相；
+  //   ② 几何本身就是 42×11×20 的实心盒 + 两片平屋面：无台基分层、无柱列、无额枋、无斗栱、无瓦垄。
+  // 新版层级与凌霄殿同构：三层须弥座 → 丹陛御路 → 栏板望柱 → 九间檐柱 → 额枋彩画 → 密排斗栱
+  //   → 下檐 → 二层殿身 → 中檐 → 三层殿身 → 上檐 → 正脊 / 鸱吻 / 宝顶。
+  // 原 42m 法庭（buildYanluoRooms R01–R08）整组保留在新殿身内，作「殿中殿」；室内坐标一格未动。
+  const HW = 76, HD = 40, HZ = 52;            // 面阔 76m / 进深 40m / 殿心 z=52
+  const FLR = py + 2.6;                       // 殿内地坪 = 旧台基顶（室内壳不动，故必须对齐）
+  const X0 = px - HW / 2, X1 = px + HW / 2;   // ±38
+  const Z0 = HZ - HD / 2, Z1 = HZ + HD / 2;   // 32 / 72
+  const MB = 0x4a4450;                        // 青石（地府不用汉白玉）
+  const LACQ = 0x3a1420;                      // 朱漆
+  const PAINT = 0x2b4a52;                     // 和玺彩画青绿底
+  const TILE = 0x39404c;                      // 冥制筒瓦（比旧 #33393F 提亮半档：太暗整顶溶进夜空，太亮俯视像水泥板）
+  const CU = 0x8a6a2a;                        // 铜饰
+
+  // ---- ① 三层须弥座台基：每层「下枋 / 束腰 / 上枋」，逐层收 8×4m ----
+  // 旧版是一整块 52×2.6×30 的灰板（'wall' 组），没有任何石作线脚。
+  const tier = (tw: number, td: number, yb: number, top: number, n: number): void => {
+    const h = top - yb;
+    b.box('ash', tw, h * 0.38, td, px, yb + h * 0.19, HZ, shade(MB, 0.96));            // 下枋
+    b.box('ash', tw - 0.9, h * 0.30, td - 0.9, px, yb + h * 0.52, HZ, shade(MB, 0.84)); // 束腰
+    b.box('ash', tw - 0.2, h * 0.18, td - 0.2, px, yb + h * 0.89, HZ, shade(MB, 1.06)); // 上枋
+    // 束腰壸门：南北两面各一排浅龛，读出「石作」而不是一块板
+    const span = tw - 3.2;
+    for (let i = 0; i < n; i++) {
+      const gx = px - span / 2 + (i * span) / (n - 1);
+      b.box('ash', 1.5, h * 0.2, 0.22, gx, yb + h * 0.52, HZ + td / 2 - 0.42, shade(MB, 0.72));
+      b.box('ash', 1.5, h * 0.2, 0.22, gx, yb + h * 0.52, HZ - td / 2 + 0.42, shade(MB, 0.72));
+    }
+    const nd = Math.max(3, Math.round((td - 4) / 5));
+    for (let i = 0; i < nd; i++) {
+      const gz = HZ - (td - 3.2) / 2 + (i * (td - 3.2)) / (nd - 1);
+      for (const s of [-1, 1]) b.box('ash', 0.22, h * 0.2, 1.5, px + s * (tw / 2 - 0.42), yb + h * 0.52, gz, shade(MB, 0.72));
+    }
+  };
+  tier(104, 50, py, py + 0.85, 12);
+  tier(96, 46, py + 0.85, py + 1.75, 11);
+  tier(88, 42, py + 1.75, py + 2.6, 10);
+  // 台面铺装：阶条石 + 双向分缝（俯视时台明不是一整块灰板）
+  for (const [yy, tw, td] of [[py + 0.85, 104, 50], [py + 1.75, 96, 46], [py + 2.6, 88, 42]] as const) {
+    b.box('ash', tw - 0.6, 0.06, 0.34, px, yy + 0.03, HZ + td / 2 - 0.7, shade(MB, 1.14));
+    b.box('ash', tw - 0.6, 0.06, 0.34, px, yy + 0.03, HZ - td / 2 + 0.7, shade(MB, 1.14));
+    for (let x2 = -tw / 2 + 3; x2 <= tw / 2 - 3; x2 += 4.2) b.box('ash', 0.14, 0.03, td - 1.6, px + x2, yy + 0.02, HZ, shade(MB, 0.7));
+    for (let z2 = -td / 2 + 3; z2 <= td / 2 - 3; z2 += 4.2) b.box('ash', tw - 1.6, 0.03, 0.14, px, yy + 0.02, HZ + z2, shade(MB, 0.7));
+    b.kit('yanluo.terracePave', 1, yy);
+  }
+  b.kit('yanluo.terrace', 3, py + 0.9);
+
+  // ---- ② 栏板望柱：台基外缘一圈，望柱 2.6m 一柱；正面让开丹陛 ----
+  const railAt = (ax: number, az: number, bx: number, bz: number, yy: number): void => {
+    const dx = bx - ax, dz = bz - az, len = Math.hypot(dx, dz);
+    if (len < 0.5) return;
+    const ry = Math.atan2(-dz, dx);
+    const n = Math.max(1, Math.round(len / 2.6));
+    for (let i = 0; i <= n; i++) {
+      const t = i / n;
+      b.box('ash', 0.26, 1.16, 0.26, ax + dx * t, yy + 0.58, az + dz * t, shade(MB, 1.04));
+      b.box('ash', 0.36, 0.16, 0.36, ax + dx * t, yy + 1.24, az + dz * t, shade(MB, 1.16));
+    }
+    b.box('ash', len, 0.16, 0.18, (ax + bx) / 2, yy + 0.96, (az + bz) / 2, shade(MB, 1.0), ry);
+    b.box('ash', len, 0.1, 0.14, (ax + bx) / 2, yy + 0.5, (az + bz) / 2, shade(MB, 0.92), ry);
+    b.box('ash', len, 0.36, 0.12, (ax + bx) / 2, yy + 0.26, (az + bz) / 2, shade(MB, 0.86), ry);
+    b.kit('yanluo.rail', n + 3, yy);
+  };
+  const RY = py + 0.85;                       // 一层台明顶
+  railAt(X0 - 14, HZ + 25, px - 8, HZ + 25, RY);   // 正面（左）
+  railAt(px + 8, HZ + 25, X1 + 14, HZ + 25, RY);   // 正面（右）
+  railAt(X0 - 14, HZ - 25, X1 + 14, HZ - 25, RY);  // 背面
+  railAt(X0 - 14, HZ - 25, X0 - 14, HZ + 25, RY);  // 西侧
+  railAt(X1 + 14, HZ - 25, X1 + 14, HZ + 25, RY);  // 东侧
+
+  // ---- ③ 丹陛：九级踏跺 + 御路石 + 垂带，自台基前缘（z=77）落到冥土 ----
+  const ST_Z = HZ + 25, ST_N = 9, ST_RISE = 2.6 / ST_N, ST_TREAD = 0.56;
+  for (let i = 1; i <= ST_N; i++) {
+    const top = 2.6 - i * ST_RISE;
+    if (top <= 0.02) break;
+    b.box('ash', 16, top, ST_TREAD, px, py + top / 2, ST_Z + (i - 1) * ST_TREAD + ST_TREAD / 2, shade(MB, i % 2 ? 0.98 : 1.03));
+  }
+  const RUN = ST_N * ST_TREAD, MIDZ = ST_Z + RUN / 2, MIDY = py + 1.3;
+  const SANG = Math.atan2(2.6, RUN), SLOPE = Math.hypot(RUN, 2.6) + 0.5;
+  b.box('ash', 3.8, 0.4, SLOPE, px, MIDY + 0.12, MIDZ, shade(MB, 1.08), 0, SANG, 0);   // 御路石
+  for (let k = 0; k < 6; k++) {                                                        // 云龙浅刻（暗色薄片）
+    const s = (k - 2.5) * 0.9;
+    b.box('ash', 2.2, 0.06, 0.7, px, MIDY + 0.34 - s * Math.sin(SANG), MIDZ + s * Math.cos(SANG), shade(MB, 0.7), 0, SANG, 0);
+  }
+  for (const s of [-1, 1]) {
+    b.box('ash', 0.5, 0.52, SLOPE, px + s * 2.15, MIDY + 0.2, MIDZ, shade(MB, 1.02), 0, SANG, 0); // 垂带
+    b.box('ash', 0.7, 0.3, 0.7, px + s * 2.15, py + 2.72, ST_Z - 0.2, shade(MB, 1.14));           // 抱鼓石
+  }
+  b.kit('yanluo.stair', ST_N + 10, py + 1.3);
+  // 镇殿石兽四尊（沿用 W37 既有石兽形制，不新建系统）
+  for (const s of [-1, 1]) {
+    w37Beast(b, px + s * 12, ST_Z + 2.6, s > 0 ? -0.35 : 0.35, 0x3e4650);
+    w37Beast(b, px + s * 12, ST_Z + 7.4, s > 0 ? -0.2 : 0.2, 0x3e4650);
+  }
+
+  // ---- ④ 殿身：朱漆板壁 + 石作墙裙 + 壁柱 + 直棂窗 ----
+  // 原四面板壁一律 'wall' 组 —— 换成 lacquer（朱漆，PBR 清漆）后自发光消失，颜色才立得住。
+  const WH = 20;                               // 檐柱高（压低殿身、抬举屋面，才不是「三个盒子叠起来」）
+  const wallRun = (ax: number, az: number, bx: number, bz: number, h: number, yb: number): void => {
+    const dx = bx - ax, dz = bz - az, len = Math.hypot(dx, dz);
+    const ry = Math.atan2(-dz, dx);
+    // 板壁走 'lacquer'：地府没有日光，只有 0.24 环境光 + 少量点光；粗糙组（wood/ash）整面会沉成纯黑。
+    // 清漆层靠环境反射把墙面从黑里提出来——这不是「自发光」，暗部仍然吃光，不会像 'wall' 那样压平顶点色。
+    b.box('lacquer', len, h, 1.8, (ax + bx) / 2, yb + h / 2, (az + bz) / 2, shade(LACQ, 1.35), ry);
+    b.box('ash', len, 2.4, 2.1, (ax + bx) / 2, yb + 1.2, (az + bz) / 2, shade(MB, 0.9), ry);        // 墙裙
+    b.box('wood', len, 0.34, 2.2, (ax + bx) / 2, yb + h - 0.17, (az + bz) / 2, shade(LACQ, 1.6), ry); // 墙帽
+    // 两道横枋：把 20m 高的整面墙断开，避免又是一块「大板」
+    for (const k of [0.34, 0.68]) b.box('wood', len, 0.26, 2.05, (ax + bx) / 2, yb + h * k, (az + bz) / 2, shade(LACQ, 1.75), ry);
+  };
+  wallRun(X0, Z0, X1, Z0, WH, FLR);                                     // 后墙
+  wallRun(X0, Z0, X0, Z1, WH, FLR);                                     // 西墙
+  wallRun(X1, Z0, X1, Z1, WH, FLR);                                     // 东墙
+  wallRun(X0, Z1, px - 23.75, Z1, WH, FLR);                             // 前墙西段
+  wallRun(px + 23.75, Z1, X1, Z1, WH, FLR);                             // 前墙东段
+  b.box('lacquer', 47.5, 6.2, 1.8, px, FLR + 17.0, Z1, LACQ);           // 明间上部走马板
+  b.box('wood', 47.8, 0.3, 2.0, px, FLR + 13.95, Z1, shade(LACQ, 1.7)); // 门楣
+  b.kit('yanluo.wall', 5, FLR);
+
+  // 壁柱（每间一根，与檐柱对位）+ 墙裙压线
+  for (let i = 1; i < 8; i++) {
+    const gx = X0 + i * (HW / 8);
+    for (const zz of [Z0 + 0.9, Z1 - 0.9]) b.box('wood', 1.7, WH, 1.7, gx, FLR + WH / 2, zz, shade(LACQ, 1.35));
+  }
+  // 东西山面直棂窗（每面 4 樘，内透磷光）
+  for (const s of [-1, 1]) {
+    for (let i = 0; i < 4; i++) {
+      const wz = Z0 + 6 + i * 9;
+      b.box('glow', 0.1, 2.4, 4.2, px + s * (HW / 2 + 0.95), FLR + 12, wz, 0x2e6a52);
+      for (let k = 0; k <= 6; k++) b.box('wood', 0.18, 2.5, 0.12, px + s * (HW / 2 + 1.0), FLR + 12, wz - 2.1 + k * 0.7, 0x1a1418);
     }
   }
-  for (let i = 0; i <= 8; i++) {
-    const lx = -20 + i * 5;
-    b.box('wood', 1.5, 11, 1.5, px + lx, py + 8, pz + 11.4, 0x3a1420);
-    b.box('glow', 0.18, 11, 0.18, px + lx, py + 8, pz + 12.2, i % 2 ? 0x3dff9c : 0xff3a4a);
+
+  // ---- ⑤ 九间檐柱：76m 面阔 8 间 × 9.5m，柱径 1.5，柱高 26m ----
+  const col = (cx: number, cz: number): void => {
+    b.cyl('ash', 1.05, 1.15, 0.5, 12, cx, FLR + 0.25, cz, shade(MB, 0.94));    // 柱础
+    b.cyl('wood', 0.75, 0.8, WH, 12, cx, FLR + WH / 2, cz, LACQ);              // 柱身
+    b.cyl('wood', 0.86, 0.86, 0.36, 12, cx, FLR + WH - 0.3, cz, CU);           // 柱头箍
+    b.box('glow', 0.2, WH - 2, 0.2, cx + 0.35, FLR + WH / 2, cz + 0.85, 0x3dff9c);
+  };
+  for (let i = 0; i <= 8; i++) col(X0 + i * (HW / 8), Z1 + 0.4);
+  for (let i = 0; i <= 8; i++) col(X0 + i * (HW / 8), Z0 - 0.4);
+  for (let i = 1; i < 4; i++) {
+    for (const s of [-1, 1]) col(px + s * (HW / 2 + 0.4), Z0 + i * (HD / 4));
   }
-  roofOn(b, 50, 30, py + 13.5, px, pz, 0, 0x0f0a12, 0x3dff9c);
-  roofOn(b, 32, 18, py + 18.5, px, pz, 0, 0x120c16, 0x3dff9c);
-  b.box('glow', 1.1, 1.1, 1.1, px, py + 25, pz, 0x3dff9c, 0, 0, Math.PI / 4);
-  // 匾额原位置（15.5 / z+11.2）被 50×30 大屋面挡住大半，改为檐下悬挂并提高贴图分辨率
-  sg.quad(atlas.text('yanluo', '閻羅殿', 768, 192, { color: '#b8ffd8', glow: '#3dff9c', bg: 'rgba(4,8,6,0.92)', border: 'rgba(61,255,156,.9)', fontPx: 132 }), 11, 2.8, px, py + 12.75, pz + 14.3, 0);
-  // 檐下斗栱与椽头：大屋面下方原本是一整片空板
-  dougongBand(b, px, py + 12.15, pz + 11.9, 41, 0, 0x4a2434);
-  for (let r = 0; r < 18; r++) {
-    b.box('wood', 0.14, 0.14, 1.1, px - 19.5 + r * 2.3, py + 12.9, pz + 11.6, 0x3a1c28);
+  b.kit('yanluo.column', 9 + 9 + 6, FLR + 13);
+
+  // ---- ⑥ 额枋 / 平板枋 / 和玺彩画 / 密排斗栱 ----
+  const archY = FLR + WH + 0.8;
+  const arch = (len: number, cx: number, cz: number, ry: number): void => {
+    b.box('wood', len, 1.5, 1.0, cx, archY, cz, PAINT, ry);
+    b.box('wood', len + 0.1, 0.16, 1.04, cx, archY + 0.75, cz, CU, ry);
+    b.box('wood', len + 0.1, 0.16, 1.04, cx, archY - 0.75, cz, CU, ry);
+    b.box('wood', len + 0.1, 0.28, 1.24, cx, archY + 1.02, cz, shade(PAINT, 1.3), ry);
+  };
+  arch(HW + 1.2, px, Z1 + 0.4, 0);
+  arch(HW + 1.2, px, Z0 - 0.4, 0);
+  arch(HD + 1.2, px - HW / 2 - 0.4, HZ, Math.PI / 2);
+  arch(HD + 1.2, px + HW / 2 + 0.4, HZ, Math.PI / 2);
+  const dgY = archY + 1.55;
+  dougongBand(b, px, dgY, Z1 + 0.4, HW, 0, 0x4a2434);
+  dougongBand(b, px, dgY, Z0 - 0.4, HW, Math.PI, 0x4a2434);
+  dougongBand(b, px - HW / 2 - 0.4, dgY, HZ, HD, Math.PI / 2, 0x4a2434);
+  dougongBand(b, px + HW / 2 + 0.4, dgY, HZ, HD, -Math.PI / 2, 0x4a2434);
+  b.kit('yanluo.bracket', 2 * (Math.round(HW / 1.6) + 1) + 2 * (Math.round(HD / 1.6) + 1), dgY);
+  for (let r = 0; r < 30; r++) b.box('wood', 0.16, 0.16, 1.6, X0 + 1.5 + r * 2.5, dgY + 0.9, Z1 + 1.1, 0x3a1c28);
+  b.kit('yanluo.rafter', 30, dgY + 0.9);
+
+  // ---- ⑦ 三重檐：下檐 84×52 / 中檐 72×46 / 上檐 56×36 ----
+  // roofOn 自带反宇曲面、0.34m 瓦垄顶点色条纹、垂脊、正脊鸱吻、瓦当滴水与檐口连檐。
+  // 举高按「檐口起 1/3.5 坡度」定：84m 檐口 11.5m 举高 ≈ 15°（旧版 6.6m 只有 9°，远看是一条平盖）。
+  const EAVE1 = FLR + 23.8, EAVE2 = FLR + 39.9, EAVE3 = FLR + 54.8;
+  roofOn(b, 84, 52, EAVE1, px, HZ, 0, TILE, 0x2e8a62, 11.5);
+  // 二层殿身（围脊墙）：下檐正脊藏在这层里面，「重檐」的重就在这一圈
+  b.box('lacquer', 60, 12.6, 34, px, EAVE1 + 6.4, HZ, shade(LACQ, 1.4));
+  b.box('ash', 60.6, 0.6, 34.6, px, EAVE1 + 0.3, HZ, shade(MB, 0.8));      // 围脊
+  // 二层直棂窗：木框 + 竖棂 + 内透磷光（旧版是七个纯色方块，读作贴纸）
+  for (let i = 0; i < 7; i++) {
+    for (const s of [-1, 1]) {
+      const wx = px - 24 + i * 8, wz = HZ + s * 17.05;
+      b.box('wood', 3.8, 4.6, 0.4, wx, EAVE1 + 6.6, wz, 0x1a1418);
+      b.box('glow', 3.2, 4.0, 0.16, wx, EAVE1 + 6.6, wz + s * 0.12, 0x2e6a52);
+      for (let k = 0; k < 5; k++) b.box('wood', 0.14, 4.1, 0.24, wx - 1.5 + k * 0.75, EAVE1 + 6.6, wz + s * 0.2, 0x1a1418);
+      b.box('wood', 3.9, 0.2, 0.5, wx, EAVE1 + 4.25, wz, CU);
+    }
   }
-  b.kit('yanluo.bracket', 15, py + 12.1);
-  b.kit('yanluo.rafter', 18, py + 12.9);
+  b.box('wood', 62, 1.3, 1.0, px, EAVE1 + 12.4, HZ + 17, PAINT);
+  b.box('wood', 62, 1.3, 1.0, px, EAVE1 + 12.4, HZ - 17, PAINT);
+  dougongBand(b, px, EAVE1 + 13.6, HZ + 17.2, 60, 0, 0x4a2434);
+  dougongBand(b, px, EAVE1 + 13.6, HZ - 17.2, 60, Math.PI, 0x4a2434);
+  b.kit('yanluo.bracket2', 2 * (Math.round(60 / 1.6) + 1), EAVE1 + 13.6);
+  roofOn(b, 72, 46, EAVE2, px, HZ, 0, TILE, 0x2e8a62, 10.5);
+  // 三层殿身
+  b.box('lacquer', 42, 11.4, 24, px, EAVE2 + 5.75, HZ, shade(LACQ, 1.4));
+  b.box('ash', 42.6, 0.5, 24.6, px, EAVE2 + 0.25, HZ, shade(MB, 0.8));
+  for (let i = 0; i < 5; i++) {
+    for (const s of [-1, 1]) {
+      const wx = px - 16 + i * 8, wz = HZ + s * 12.05;
+      b.box('wood', 2.6, 3.4, 0.36, wx, EAVE2 + 5.6, wz, 0x1a1418);
+      b.box('glow', 2.1, 2.9, 0.14, wx, EAVE2 + 5.6, wz + s * 0.1, 0x2e6a52);
+    }
+  }
+  b.box('wood', 43.2, 1.2, 0.9, px, EAVE2 + 11.9, HZ + 12, PAINT);
+  b.box('wood', 43.2, 1.2, 0.9, px, EAVE2 + 11.9, HZ - 12, PAINT);
+  dougongBand(b, px, EAVE2 + 13.1, HZ + 12.2, 42, 0, 0x4a2434);
+  dougongBand(b, px, EAVE2 + 13.1, HZ - 12.2, 42, Math.PI, 0x4a2434);
+  b.kit('yanluo.bracket3', 2 * (Math.round(42 / 1.6) + 1), EAVE2 + 13.1);
+  roofOn(b, 56, 36, EAVE3, px, HZ, 0, TILE, 0x2e8a62, 9.5);
+  // 宝顶：鎏铜葫芦，压在上檐正脊
+  const RIDGE = EAVE3 + 9.5 * 1.06;
+  b.cyl('metal', 1.0, 1.15, 0.5, 10, px, RIDGE + 0.55, HZ, shade(CU, 0.72));
+  b.cyl('metal', 0.72, 0.9, 1.1, 10, px, RIDGE + 1.35, HZ, CU);
+  b.cyl('metal', 0.4, 0.54, 0.34, 8, px, RIDGE + 2.05, HZ, shade(CU, 1.15));
+  b.cyl('metal', 0.52, 0.4, 0.7, 10, px, RIDGE + 2.55, HZ, CU);
+  b.cyl('glow', 0.12, 0.2, 0.5, 8, px, RIDGE + 3.1, HZ, 0x3dff9c);
+  b.kit('yanluo.finial', 1, RIDGE + 2);
+
+  // ---- ⑧ 正面五间格扇 + 明间大门 + 匾额 ----
+  // 原内殿格扇（z=71.1）保留在新门内侧 0.5m，作法庭内门；此处是外檐五间格心。
+  for (const s of [-1, 1]) {
+    for (const [a, b2] of [[4.75, 14.25], [14.25, 23.75]] as const) {
+      const xa = s * a, xb = s * b2;
+      inLattice(b, xa, Z1 + 0.1, xb, Z1 + 0.1, FLR + 0.4, 13.2);
+      b.box('lacquer', b2 - a - 0.3, 1.2, 0.34, (xa + xb) / 2, FLR + 1.0, Z1 + 0.1, LACQ);
+      b.box('wood', b2 - a - 0.2, 0.16, 0.42, (xa + xb) / 2, FLR + 1.66, Z1 + 0.1, CU);
+    }
+  }
+  // 明间：门槛 + 门框 + 门簪（净宽 9.5，车马可入）
+  b.box('wood', 9.5, 0.4, 1.2, px, FLR + 0.2, Z1 + 0.1, 0x241820);
+  for (const s of [-1, 1]) b.box('wood', 0.7, 13.6, 0.9, px + s * 4.9, FLR + 6.8, Z1 + 0.1, shade(LACQ, 1.4));
+  b.box('wood', 10.4, 0.8, 1.0, px, FLR + 13.8, Z1 + 0.1, shade(LACQ, 1.5));
+  for (let i = 0; i < 4; i++) b.box('wood', 0.34, 0.34, 1.2, px - 3 + i * 2, FLR + 14.4, Z1 + 0.1, CU);
+  sg.quad(atlas.text('yanluo', '閻羅殿', 768, 192, { color: '#b8ffd8', glow: '#3dff9c', bg: 'rgba(4,8,6,0.92)', border: 'rgba(61,255,156,.9)', fontPx: 132 }), 15, 3.8, px, FLR + 17.1, Z1 + 1.05, 0);
+  b.box('wood', 16, 0.26, 0.3, px, FLR + 19.2, Z1 + 1.1, CU);
+  b.box('wood', 16, 0.26, 0.3, px, FLR + 15.0, Z1 + 1.1, CU);
+  for (const s of [-1, 1]) b.box('wood', 0.3, 4.4, 0.3, px + s * 7.8, FLR + 17.1, Z1 + 1.1, CU);
+  // 楹联：挂在明间两侧金柱（x=±9.5）柱面，竖排七言
+  sg.quad(atlas.text('yanluo_lianw', '陽世三間多昧己', 96, 460, { color: '#ffd9a8', glow: '#ffb060', vertical: true, fontPx: 58, bg: 'rgba(18,6,8,0.9)', border: 'rgba(255,176,96,.7)' }), 1.6, 7.6, px - 9.5, FLR + 9.4, Z1 + 1.35, 0);
+  sg.quad(atlas.text('yanluo_liane', '陰司一筆不容情', 96, 460, { color: '#ffd9a8', glow: '#ffb060', vertical: true, fontPx: 58, bg: 'rgba(18,6,8,0.9)', border: 'rgba(255,176,96,.7)' }), 1.6, 7.6, px + 9.5, FLR + 9.4, Z1 + 1.35, 0);
+  // 檐下宫灯：四盏（灯绳 + 铜盖 + 骨白灯身 + 磷光内芯）
+  for (const s of [-1, 1]) {
+    for (const lx of [14.25, 28.5]) {
+      const gx = px + s * lx;
+      b.box('metal', 0.06, 1.4, 0.06, gx, FLR + 19.7, Z1 + 2.3, CU);
+      b.cyl('metal', 0.44, 0.56, 0.24, 8, gx, FLR + 18.9, Z1 + 2.3, shade(CU, 0.9));
+      b.cyl('glow', 0.5, 0.5, 1.1, 8, gx, FLR + 18.2, Z1 + 2.3, 0xffb060);
+      b.cyl('metal', 0.52, 0.36, 0.16, 8, gx, FLR + 17.6, Z1 + 2.3, shade(CU, 0.8));
+      b.box('glow', 0.1, 0.5, 0.1, gx, FLR + 17.25, Z1 + 2.3, 0xff7a2d);
+      b.kit('yanluo.lantern', 1, FLR + 18);
+    }
+  }
+
+  // ---- ⑨ 殿内天花：井口格 + 中心藻井（把上部屋架藏住，站在殿里不再看见旧屋面） ----
+  b.box('lacquer', 74, 1.2, 38, px, FLR + 22.6, HZ, shade(LACQ, 0.7));       // 天花大板（压在下檐之下）
+  for (let i = 0; i <= 8; i++) b.box('wood', 0.34, 0.5, 38, X0 + i * (HW / 8), FLR + 22.0, HZ, 0x241a20);
+  for (let i = 0; i <= 5; i++) b.box('wood', 74, 0.5, 0.34, px, FLR + 22.0, Z0 + i * (HD / 5), 0x241a20);
+  b.box('lacquer', 15, 0.9, 15, px, FLR + 21.5, 58, shade(LACQ, 1.2));
+  b.box('glow', 12.4, 0.1, 12.4, px, FLR + 21.0, 58, 0x123c2c);
+  for (const s of [-1, 1]) {
+    b.box('metal', 0.3, 0.3, 0.3, px + s * 5.4, FLR + 21.1, 58, CU);
+    b.box('metal', 0.3, 0.3, 0.3, px, FLR + 21.1, 58 + s * 5.4, CU);
+  }
+  b.kit('yanluo.ceiling', 60, FLR + 24);
 
   // ---- 殿身正面：格扇（次间/梢间装格心，明间留空以见法庭内景）----
   // 列柱 x=−20..20 每 5m 一柱（z = pz+11.4，柱净距 3.5），格扇贴在柱列内侧一格。
@@ -1042,7 +1282,7 @@ export function buildUnderworld(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
 
   // ---- 两侧判官案（案 + 生死簿 + 朱笔 + 令签筒，inDeskTop 内已含四件陈设）----
   for (const sx of [-1, 1]) {
-    const dx2 = sx * 11.5, dz2 = 72.8;
+    const dx2 = sx * 11.5, dz2 = 66.6;
     inDesk(b, dx2, dz2, py + 2.6, 0, 3.4);
     // 判官（坐姿剪影：座/身/肩/头/冠/眼；案后 −z 一侧，正面朝广场 +z）
     b.box('wood', 1.5, 0.5, 1.2, dx2, py + 2.85, dz2 - 1.0, 0x1c1418);
@@ -1060,11 +1300,11 @@ export function buildUnderworld(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
     b.kit('yanluo.judgeDesk', 1, py + 3.7);
   }
 
-  // ---- 殿前香案 + 鼎炉 ----
-  inAltar(b, px, 74.2, py + 2.6, 0, 5.2);
+  // ---- 殿前香案 + 鼎炉（香案移入殿内明间前；鼎炉移到丹陛之下的神道正中） ----
+  inAltar(b, px, 69.0, py + 2.6, 0, 5.2);
   b.kit('yanluo.incense', 1, py + 4.2);
   {
-    const dz3 = 80.5;
+    const dz3 = 87.5;
     // 石础 + 鼎身 + 双耳 + 三足 + 炉心炭火 + 烟柱
     b.box('ash', 6.2, 0.5, 6.2, px, py + 0.25, dz3, shade(INP.rough, 1.02));
     b.cyl('metal', 3.0, 2.2, 2.1, 14, px, py + 1.55, dz3, shade(INP.cu, 0.62));
@@ -1088,10 +1328,12 @@ export function buildUnderworld(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
     b.kit('yanluo.cauldron', 1, py + 2.6);
   }
 
-  // 丹墀石灯笼
+  // 丹墀石灯笼（原在旧殿后 z=42，新殿身覆盖后移至台明前缘两侧；'wall' 组一并换掉——它是灰模第二来源）
   for (const sx of [-1, 1]) {
-    b.box('wall', 2.2, 4.2, 2.2, px + sx * 16, py + 2.1, pz - 18, 0x2c2028);
-    b.box('glow', 1.0, 1.2, 1.0, px + sx * 16, py + 4.6, pz - 18, 0xff3a4a);
+    b.box('ash', 2.2, 4.2, 2.2, px + sx * 20, py + 2.6 + 2.1, 73.6, shade(MB, 0.9));
+    b.box('ash', 2.6, 0.3, 2.6, px + sx * 20, py + 2.6 + 4.2, 73.6, shade(MB, 1.1));
+    b.box('glow', 1.0, 1.2, 1.0, px + sx * 20, py + 2.6 + 3.4, 73.6, 0xff3a4a);
+    b.kit('yanluo.stoneLamp', 1, py + 6.8);
   }
   // 孟婆摊（桥南头）
   const mx = 6, mz2 = -92;
