@@ -1,15 +1,63 @@
 import * as THREE from 'three';
 import { Baker, SignMesher, SignAtlas, shade } from './bake';
 import type { BGroup } from './bake';
-import { roofOn, C, dougongBand, commonerRoof, wardRoofHex } from './buildings';
+import { roofOn, roofTierAt, C, dougongBand, commonerRoof, wardRoofHex } from './buildings';
 import { buildJiaolou, buildWengcheng, buildWatchtower, buildPaifang, furnishHall, furnishCourt, furnishGateHall } from './architecture';
-import { buildPalaceHall } from './palaceDetail';
+import { buildPalaceHall, roofEndHips } from './palaceDetail';
 import { buildPalaceGrounds, buildPalaceOuterGrounds, palaceGroundsAudit } from './palaceGrounds';
 import { RNG } from '../core/rng';
 import { inRiverFootprint } from './riverGeom';
 
 // ============ 十公里帝都：城墙十二门/里坊百格/宫城皇城/东西两市/御街 ============
 export const WALL = 5000;
+
+/**
+ * 直坡双坡顶的端头山花：局部 X 沿脊向，三角面立在端头平面上（底边沿 z、顶点在脊高）。
+ * 与 interiors.gableTriangle 同形，但自带双面法线与 3.2m 一张的 UV，不跨文件耦合。
+ */
+function gableEnd(b: Baker, g: BGroup, x: number, y: number, z: number, ry: number, halfSpan: number, rise: number, hex: number): void {
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute([
+    -halfSpan, 0, 0, halfSpan, 0, 0, 0, rise, 0,
+    halfSpan, 0, 0, -halfSpan, 0, 0, 0, rise, 0,
+  ], 3));
+  geo.setAttribute('normal', new THREE.Float32BufferAttribute([
+    0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1,
+  ], 3));
+  const u = (halfSpan * 2) / 3.2, v = rise / 3.2;
+  geo.setAttribute('uv', new THREE.Float32BufferAttribute([0, 0, u, 0, u / 2, v, u, 0, 0, 0, u / 2, v], 2));
+  b.addGeo(g, geo, x, y, z, hex, ry, 0, 0);
+  b.kit('roof.gableEnd', 1, y + rise);
+}
+
+/** 原版 roofOn：roofOnCapped 只包一层，屋面本体仍走它，避免复制一份曲面参数 */
+const roofOnCore = roofOn;
+
+/**
+ * roofOn 的封山版：同签名，先落曲面屋面，再补两端山面。
+ * bake.buildCurvedUnit 只造 ±Z 两片坡，±X 两端从脊端到檐角是敞口（详见 palaceDetail.roofEndHips）。
+ */
+function roofOnCapped(b: Baker, w: number, d: number, y: number, x: number, z: number, ry: number, tileC: number, neon?: number, hOverride?: number): void {
+  roofOnCore(b, w, d, y, x, z, ry, tileC, neon, hOverride);
+  const h = hOverride ?? Math.min(w, d) * 0.2 + 0.45;
+  roofEndHips(b, { x, y, z, ry, sx: w * 0.905 * 1.02, rise: h * 1.06, sz: d * 0.905 * 1.02, hex: tileC });
+}
+
+/**
+ * 里坊平民屋顶两端封山：commonerRoof 的 tier1 自带两级山花露头，tier3 只有脊线与檐口暗边
+ * （没有坡面就没有腔），**只有 tier2 是两片平坡 + 全敞口**。这里给 tier2 补山墙三角。
+ */
+function capCommonerGables(b: Baker, o: { x: number; z: number; y: number; w: number; d: number; ry: number; hex: number }): void {
+  if (roofTierAt(o.x, o.z) !== 2) return;
+  const W = o.w + 0.68;                       // 与 commonerRoof 的 W = w + overW*2 同值
+  const L = o.d / 2 + 0.46;                   // 单坡坡长（skirt 到脊）
+  const H = Math.max(0.9, Math.min(o.w, o.d) * 0.2 + 0.42);
+  const c = Math.cos(o.ry), s = Math.sin(o.ry);
+  for (const sx of [-1, 1] as const) {
+    // 山墙平面垂直于脊向：把 gableEnd 的局部 X（底边）转到局部 Z
+    gableEnd(b, 'wall', o.x + sx * (W / 2) * c, o.y, o.z - sx * (W / 2) * s, o.ry + Math.PI / 2, L, H, o.hex);
+  }
+}
 
 /** 坐标 hash（0–1）：与 infill.ts 的 h01 同式。坊格抖动与街段走向全走它，不消耗共享 RNG */
 function wardHash(a: number, b: number, c: number): number {
@@ -349,7 +397,7 @@ function cityQue(b: Baker, x: number, z: number): void {
     b.box('lacquer', 0.5, 1.7, 0.16, x, 8.9, z + s * 3.72, 0x1e1a18);
     b.box('lacquer', 0.16, 1.7, 0.5, x + s * 3.72, 8.9, z, 0x1e1a18);
   }
-  roofOn(b, 8.4, 8.4, 12.5, x, z, 0, shade(0x35594c, 1.02), undefined, 1.9);
+  roofOnCapped(b, 8.4, 8.4, 12.5, x, z, 0, shade(0x35594c, 1.02), undefined, 1.9);
   b.cyl('metal', 0.16, 0.24, 0.5, 8, x, 14.85, z, 0xd8b028);
   b.cyl('metal', 0.3, 0.12, 0.35, 8, x, 15.2, z, 0xd8b028);
 }
@@ -433,14 +481,14 @@ function cityGate(b: Baker, gx: number, gz: number, ry: number, along: boolean, 
     put('wood', 1.7, 2.4, 0.22, t * GW * 0.31, s * (GD / 2 + 0.02), Y0 + 3.5, 0x2a1c12);
     put('glow', 1.4, 2.0, 0.1, t * GW * 0.31, s * (GD / 2 + 0.14), Y0 + 3.5, C.winGlow);
   }
-  roofOn(b, GW + 3.2, GD + 3.2, Y0 + 6.9, gx, gz, ry, shade(0x5c6878, 1.02), undefined, 1.2);
+  roofOnCapped(b, GW + 3.2, GD + 3.2, Y0 + 6.9, gx, gz, ry, shade(0x5c6878, 1.02), undefined, 1.2);
   // 中层议事：28.3 → 34.9
   put('wood', L2W, 6.6, L2D, 0, 0, 31.6, 0x9d3327);
   for (const s of [-1, 1]) for (const k of [-0.7, 0, 0.7]) {
     put('wood', 1.8, 2.6, 0.2, k * L2W * 0.5, s * (L2D / 2 + 0.02), 31.6, 0x2a1c12);
     put('glow', 1.5, 2.2, 0.1, k * L2W * 0.5, s * (L2D / 2 + 0.14), 31.6, C.winGlow);
   }
-  roofOn(b, L2W + 2.6, L2D + 2.8, 34.9, gx, gz, ry, shade(0x5c6878, 1.06), undefined, 1.05);
+  roofOnCapped(b, L2W + 2.6, L2D + 2.8, 34.9, gx, gz, ry, shade(0x5c6878, 1.06), undefined, 1.05);
   // 上层瞭望：34.8 → 41.45，四面开窗（点状窗光，不做通长灯带）
   put('wood', L3W, 6.65, L3D, 0, 0, 38.12, 0x8e2f24);
   for (const s of [-1, 1]) {
@@ -455,7 +503,7 @@ function cityGate(b: Baker, gx: number, gz: number, ry: number, along: boolean, 
   }
   // 重檐歇山：下檐 22×10、上檐 16×8（侧门按比例缩小）
   const RW = mid ? 22 : 17, RD = mid ? 10 : 8.5;
-  roofOn(b, RW, RD, 41.45, gx, gz, ry, shade(0x35594c, 1.04), undefined, 2.2);
+  roofOnCapped(b, RW, RD, 41.45, gx, gz, ry, shade(0x35594c, 1.04), undefined, 2.2);
   // 重檐之间的上层檐墙：旧版上檐直接落在下檐上方 2.15m，四周没有任何墙体承托，
   // 侧看是一条透空通缝（上檐像一块浮板）。补一圈 0.9m 内收的檐墙 + 围脊压顶。
   {
@@ -468,7 +516,7 @@ function cityGate(b: Baker, gx: number, gz: number, ry: number, along: boolean, 
       put('roof', 0.62, 0.22, UD + 0.5, s * (UW / 2), 0, 43.52, shade(0x35594c, 0.86));
     }
   }
-  roofOn(b, RW - 6, RD - 2, 43.6, gx, gz, ry, shade(0x35594c, 1.1), undefined, 1.9);
+  roofOnCapped(b, RW - 6, RD - 2, 43.6, gx, gz, ry, shade(0x35594c, 1.1), undefined, 1.9);
   b.cyl('metal', 0.3, 0.55, 1.0, 8, gx, 45.85, gz, 0xd8b028);
   b.cyl('metal', 0.5, 0.18, 0.4, 8, gx, 46.45, gz, 0xd8b028);
   for (const s of [-1, 1]) {
@@ -649,6 +697,7 @@ export async function buildImperialCity(b: Baker, sg: SignMesher, atlas: SignAtl
       const roofHex = wardRoofHex(Math.round(cx / 480), Math.round(cz / 480));
       const wallHex = wardHash(gxI, gzI, 443) < 0.5 ? shade(C.plaster, 0.98) : shade(C.plaster2, 0.98);
       commonerRoof(b, { x: hx, z: hz, y: 0.3 + hh * fl, w: w2, d: d2, ry: yaw, hex: roofHex, wallC: wallHex });
+      capCommonerGables(b, { x: hx, z: hz, y: 0.3 + hh * fl, w: w2, d: d2, ry: yaw, hex: wallHex });
       // 窗光（贴在正房正面，随朝向旋转）
       for (let wn = 0; wn < 3; wn++) {
         const [wx, wz] = at(-w2 / 2 + 2.2 + wn * (w2 - 4.4) / 2, d2 / 2 + 0.05);
@@ -660,6 +709,7 @@ export async function buildImperialCity(b: Baker, sg: SignMesher, atlas: SignAtl
       b.box('wall', w2 * 0.55, hh * 0.8, d2 * 0.5, cx2, hh * 0.4 + 0.3, cz2, shade(C.plaster2, 0.95), yaw);
       // 厢房原来是一块 1.4m 厚的悬空平板（侧视像"压在墙上的水泥板"），改同一套悬山屋顶的低配档
       commonerRoof(b, { x: cx2, z: cz2, y: hh * 0.8 + 0.3, w: w2 * 0.55, d: d2 * 0.5, ry: yaw, hex: shade(roofHex, 0.96), wallC: shade(C.plaster2, 0.95) });
+      capCommonerGables(b, { x: cx2, z: cz2, y: hh * 0.8 + 0.3, w: w2 * 0.55, d: d2 * 0.5, ry: yaw, hex: shade(C.plaster2, 0.95) });
       // 门灯
       const [lx2, lz2] = at(w2 * 0.3, d2 / 2 + 1.8);
       b.box('glow', 0.35, 0.45, 0.35, lx2, 2.5, lz2, C.lantern);
@@ -719,7 +769,7 @@ export async function buildImperialCity(b: Baker, sg: SignMesher, atlas: SignAtl
     }
     // 市楼
     b.box('wood', 12, 8, 9, mx, 4, mz2, shade(C.woodRed, 1));
-    roofOn(b, 16, 12, 8.4, mx, mz2, 0, shade(C.tile, 1.08), nc);
+    roofOnCapped(b, 16, 12, 8.4, mx, mz2, 0, shade(C.tile, 1.08), nc);
     sg.quad(atlas.text('market' + nm, nm, 300, 84, { color: '#ffe9c8', glow: '#' + nc.toString(16).padStart(6, '0'), bg: 'rgba(12,10,18,0.9)', border: 'rgba(255,179,0,.8)', fontPx: 60 }), 6.4, 1.8, mx, 9.8, mz2 + 4.6, 0);
   }
 }
@@ -992,6 +1042,16 @@ function palaceWing(b: Baker, x: number, zS: number, zN: number, depth: number, 
     b.box('roof', depth / 2 + 0.9, 0.24, L + 1.2, x + s2 * (depth / 4 + 0.25), 0.6 + h + rh * 0.5, cz, roofC, 0, 0, -s2 * 0.34);
   }
   b.box('roof', 0.55, 0.3, L + 1.3, x, 0.6 + h + rh, cz, shade(roofC, 1.25));
+  // 两端山花：两块斜板在 ±z 端头之间是一条三角空腔，不封就是「能从侧面看进屋架」
+  {
+    const hw = depth / 2 + 0.9;
+    const cy = 0.6 + h + rh * 0.5;
+    const dy = Math.sin(0.34) * hw * 0.5;
+    const halfSpan = (hw / 2 - 0.2) + (hw / 2) * Math.cos(0.34);
+    for (const e of [-1, 1] as const) {
+      gableEnd(b, 'wall', x, cy - dy, cz + e * (L / 2 + 0.45), 0, halfSpan, dy * 2, shade(PAL_RED, 0.88));
+    }
+  }
   b.kit('palace.wing', 1, 0.6 + h);
 }
 
@@ -1016,19 +1076,19 @@ function palaceCompound(b: Baker, cx: number, cz: number, w: number, d: number, 
   b.box('wall', mainW, 7.2, mainD, cx, 1.18 + 3.6, hz, shade(PAL_RED, 0.96));
   for (let i = 0; i <= 6; i++) b.box('wood', 0.9, 7.2, 0.9, cx - mainW / 2 + i * mainW / 6, 4.78, hz + mainD / 2 - 0.8, 0xb8892a);
   for (let i = 0; i < 5; i++) litBay(b, cx - mainW / 2 + mainW / 6 * (i + 0.5), 2.7, mainW / 6 * 0.5, 3.4, hz + mainD / 2 + 0.02, 0, 0xff9a3c);
-  roofOn(b, mainW + 14, mainD + 10, 8.4, cx, hz, 0, PAL_GOLD, undefined, mainD * 0.35 + 1.5);
+  roofOnCapped(b, mainW + 14, mainD + 10, 8.4, cx, hz, 0, PAL_GOLD, undefined, mainD * 0.35 + 1.5);
   b.box('roof', mainW * 0.6, 0.7, 1.0, cx, 8.4 + mainD * 0.35 + 1.5, hz, 0xe8c040);
   // 后殿（矮一档、青瓦）
   const bz = cz + d * 0.28;
   b.box('wall', mainW * 0.7, 1.0, mainD * 0.8, cx, 0.5, bz, shade(PAL_MARBLE, 0.88));
   b.box('wall', mainW * 0.66, 6.0, mainD * 0.74, cx, 4.0, bz, shade(PAL_RED, 0.92));
-  roofOn(b, mainW * 0.72, mainD * 0.8, 7.0, cx, bz, 0, PAL_TILE, undefined, mainD * 0.3);
+  roofOnCapped(b, mainW * 0.72, mainD * 0.8, 7.0, cx, bz, 0, PAL_TILE, undefined, mainD * 0.3);
   // 东西配殿（沿院墙）
   for (const s of [-1, 1]) {
     const px = cx + s * (w / 2 - 18);
     b.box('ash', 26, 0.7, 64, px, 0.35, cz - d * 0.05, 0x8b8371);
     b.box('wall', 22, 5.4, 60, px, 3.4, cz - d * 0.05, shade(PAL_RED, 0.9));
-    roofOn(b, 26, 64, 6.1, px, cz - d * 0.05, 0, PAL_TILE, undefined, 4.2);
+    roofOnCapped(b, 26, 64, 6.1, px, cz - d * 0.05, 0, PAL_TILE, undefined, 4.2);
   }
   // 院门 + 石灯：门洞暗腔在前、朱扉压在它外面 0.1m（旧版只有一块 7×4.4 的裸暗板 = 一块黑板）
   b.box('wall', 16, 6.2, 2.2, cx, 3.1, cz + d / 2, shade(PAL_RED, 1.04));
@@ -1039,7 +1099,7 @@ function palaceCompound(b: Baker, cx: number, cz: number, w: number, d: number, 
       b.box('metal', 0.15, 0.15, 0.08, cx + s * (0.7 + c * 1.7), 1.1 + r * 0.95, cz + d / 2 + 1.33, 0xd8b028);
     }
   }
-  roofOn(b, 19, 5.2, 6.4, cx, cz + d / 2, 0, PAL_GOLD, undefined, 2.2);
+  roofOnCapped(b, 19, 5.2, 6.4, cx, cz + d / 2, 0, PAL_GOLD, undefined, 2.2);
   for (const s of [-1, 1]) {
     b.box('ash', 0.7, 0.3, 0.7, cx + s * 12, 0.15, cz + d / 2 - 4, PAL_MARBLE);
     b.box('ash', 0.24, 3.0, 0.24, cx + s * 12, 1.8, cz + d / 2 - 4, PAL_MARBLE);
@@ -1110,8 +1170,8 @@ function buildMeridianGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   }
   for (const sx of [-1, 1]) for (let i = 0; i <= 6; i++) b.box('wood', 1.2, 11, 1.2, sx * 65, hallY + 5.5, gz - 15 + i * 5, 0xd8b028);
   dougongBand(b, 0, hallY + 10.6, gz + 15.2, 128, 0, 0xd8b028);
-  roofOn(b, 152, 46, hallY + 11, 0, gz, 0, shade(PAL_GOLD, 1.0), undefined, 12);
-  roofOn(b, 96, 26, hallY + 20, 0, gz, 0, shade(PAL_GOLD, 1.08), undefined, 8);
+  roofOnCapped(b, 152, 46, hallY + 11, 0, gz, 0, shade(PAL_GOLD, 1.0), undefined, 12);
+  roofOnCapped(b, 96, 26, hallY + 20, 0, gz, 0, shade(PAL_GOLD, 1.08), undefined, 8);
   b.box('roof', 58, 0.9, 1.3, 0, hallY + 31.4, gz, 0xd8b028);
   b.cyl('metal', 0.4, 0.6, 1.3, 8, 0, hallY + 32.6, gz, 0xd8b028);
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
@@ -1134,14 +1194,14 @@ function buildMeridianGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
     b.box('ash', 28.6, 0.4, 32.6, qx, 11.6, gz + 6, 0x9c9a90);
     for (const s2 of [-1, 1]) for (const t2 of [-1, 1]) b.cyl('wood', 0.2, 0.24, 3.2, 8, qx + s2 * 6.4, 13.4, gz + 6 + t2 * 7.2, shade(PAL_RED, 1.02));
     b.box('wood', 15, 0.5, 17, qx, 15.2, gz + 6, shade(C.woodDark, 1.05));
-    roofOn(b, 20, 22, 15.45, qx, gz + 6, 0, shade(PAL_GOLD_D, 1.0), undefined, 4.2);
+    roofOnCapped(b, 20, 22, 15.45, qx, gz + 6, 0, shade(PAL_GOLD_D, 1.0), undefined, 4.2);
     b.cyl('metal', 0.2, 0.3, 0.6, 8, qx, 20.2, gz + 6, 0xd8b028);
     // 雁翅楼：自阙台向南折出 64m
     b.box('wall', 16, 9.5, 64, qx, 4.75, gz + 54, shade(PAL_RED, 0.92));
     // 旧版 5 块窗光 x 恒为 qx（16m 厚墙的中心），整块埋在墙体里、一块都看不见；
     // 移到院内立面（qx − sx·8）并补框棂，朝院一侧才有窗
     for (let i = 0; i < 5; i++) litBay(b, qx - sx * 8.0, 3.0, 3.2, 4.4, gz + 26 + i * 12, Math.PI / 2);
-    roofOn(b, 20, 68, 9.6, qx, gz + 54, 0, shade(PAL_TILE, 1.04), undefined, 5.2);
+    roofOnCapped(b, 20, 68, 9.6, qx, gz + 54, 0, shade(PAL_TILE, 1.04), undefined, 5.2);
     b.kit('gate.quePier', 1, 5.6);
     b.kit('gate.queTower', 1, 12.4);
   }
@@ -1271,8 +1331,8 @@ function buildTaiheGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   openGateLeaf(b, 1, OPEN, 2.9, 4.6, 5.0, 0.98, z + 7.9);
   dougongBand(b, 0, 12.2, z + 7.6, 74, 0, 0xd8b028);
   dougongBand(b, 0, 12.2, z - 7.6, 74, Math.PI, 0xd8b028);   // 北檐同制：旧版只有南面一道，回看时檐口直接压在素墙上
-  roofOn(b, 92, 26, 12.4, 0, z, 0, shade(PAL_GOLD, 1.0), undefined, 8);
-  roofOn(b, 58, 18, 18.6, 0, z, 0, shade(PAL_GOLD, 1.08), undefined, 5.6);
+  roofOnCapped(b, 92, 26, 12.4, 0, z, 0, shade(PAL_GOLD, 1.0), undefined, 8);
+  roofOnCapped(b, 58, 18, 18.6, 0, z, 0, shade(PAL_GOLD, 1.08), undefined, 5.6);
   b.box('roof', 34, 0.8, 1.2, 0, 24.0, z, 0xd8b028);
   b.cyl('metal', 0.28, 0.4, 0.9, 8, 0, 24.8, z, 0xd8b028);
   // 铜狮一对 + 门戟架两对
@@ -1304,7 +1364,7 @@ function buildTaiheGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
     for (const t of [-3.2, 3.2]) b.box('wood', 0.24, 3.6, 0.24, gx + t, 2.22, gz2 + 4.3, shade(C.woodRed, 0.9));
     // 值房门：旧版一块 1.8×2.3 的裸 glow 直接贴在门洞上（夜里是一块悬空黄板）；补框棂
     litBay(b, gx, 0.42, 1.8, 2.3, gz2 + 4.3);
-    roofOn(b, 18.5, 12.5, 4.42, gx, gz2, 0, shade(PAL_TILE, 1.02), C.neonGold);
+    roofOnCapped(b, 18.5, 12.5, 4.42, gx, gz2, 0, shade(PAL_TILE, 1.02), C.neonGold);
     for (const t of [-5.6, 5.6]) b.box('glow', 0.4, 0.5, 0.4, gx + t, 4.1, gz2 + 5.4, C.lantern);
   }
   sg.quad(atlas.text('pal_taihemen', '太和門', 420, 110, { color: '#ffe9c8', glow: '#ffd25e', bg: 'rgba(20,8,8,0.92)', border: 'rgba(255,210,94,.9)', fontPx: 66 }),
@@ -1633,7 +1693,7 @@ function palaceCourtWall(b: Baker, sx: number): void {
     b.box('wall', 1.0, 7.2, 3.4, gx + t * 7, 3.6, z, shade(PAL_RED, 0.96));
     b.box('ash', 1.4, 0.3, 3.8, gx + t * 7, 7.35, z, PAL_MARBLE);
   }
-  roofOn(b, 22, 8.0, 7.5, gx, z, 0, shade(PAL_GOLD_D, 1.12), undefined, 3.4);
+  roofOnCapped(b, 22, 8.0, 7.5, gx, z, 0, shade(PAL_GOLD_D, 1.12), undefined, 3.4);
   b.box('metal', 0.34, 0.44, 0.34, gx, 9.6, z, 0xd8b028);
   for (const t of [-1, 1]) b.box('glow', 0.4, 0.5, 0.4, gx + t * 8.6, 6.0, z + 2.0, C.lantern);
   b.kit('palace.court.wall', 1, 7.2);
@@ -1681,7 +1741,7 @@ function buildSixPalaces(b: Baker): void {
         for (let r = 0; r < 4; r++) for (const s of [-1, 1]) {
           for (let c = 0; c < 2; c++) b.box('metal', 0.14, 0.14, 0.08, cx + s * (0.45 + c * 1.35), 1.1 + r * 0.95, cz + D / 2 + 0.9, 0xd8b028);
         }
-        roofOn(b, 13, 5.0, 6.5, cx, cz + D / 2, 0, shade(PAL_GOLD, 1.02), undefined, 2.2);
+        roofOnCapped(b, 13, 5.0, 6.5, cx, cz + D / 2, 0, shade(PAL_GOLD, 1.02), undefined, 2.2);
         // 正殿：42×22，单檐歇山，前檐开敞
         const hz = cz - 14;
         b.box('wall', 50, 1.0, 30, cx, 0.5, hz, shade(PAL_MARBLE, 0.9));
@@ -1702,7 +1762,7 @@ function buildSixPalaces(b: Baker): void {
           } else litBay(b, lx, 1.9, 4.6, 4.0, hz + 10.0);
         }
         dougongBand(b, cx, 7.9, hz + 10.2, 41, 0, 0xd8b028);
-        roofOn(b, 52, 30, 8.0, cx, hz, 0, shade(PAL_GOLD, 0.94), undefined, 5.4);
+        roofOnCapped(b, 52, 30, 8.0, cx, hz, 0, shade(PAL_GOLD, 0.94), undefined, 5.4);
         b.box('roof', 26, 0.6, 1.0, cx, 13.2, hz, 0xd8b028);
         // 东西配殿：14×30
         for (const s of [-1, 1]) {
@@ -1710,7 +1770,7 @@ function buildSixPalaces(b: Baker): void {
           b.box('wall', 15, 0.8, 32, px, 0.4, cz - 6, shade(PAL_MARBLE, 0.88));
           b.box('wall', 13, 4.6, 30, px, 2.7, cz - 6, shade(PAL_RED, 0.9));
           for (let i = 0; i < 3; i++) litBay(b, px - s * 6.5, 1.6, 4.0, 2.6, cz - 18 + i * 12, Math.PI / 2);
-          roofOn(b, 17, 34, 5.0, px, cz - 6, 0, shade(PAL_GOLD_D, 0.98), undefined, 3.4);
+          roofOnCapped(b, 17, 34, 5.0, px, cz - 6, 0, shade(PAL_GOLD_D, 0.98), undefined, 3.4);
         }
         // 院内：石灯一对 + 陈设（由 architecture 的 furnishCourt 落宝座/屏风/香炉/宫灯/地毯/案几）
         for (const s of [-1, 1]) {
@@ -1738,7 +1798,7 @@ function buildPalaceCorner(b: Baker, x: number, z: number): void {
     b.box('glow', 0.2, 3.0, 3.0, x + s * 7.1, 6.4, z, C.winGlow);
   }
   b.box('ash', 15.6, 0.4, 15.6, x, 9.8, z, 0x9c9a90);
-  roofOn(b, 19, 19, 10.0, x, z, 0, shade(PAL_GOLD, 0.98), undefined, 4.4);
+  roofOnCapped(b, 19, 19, 10.0, x, z, 0, shade(PAL_GOLD, 0.98), undefined, 4.4);
   b.box('wall', 8.4, 4.6, 8.4, x, 14.2, z, shade(PAL_RED, 1.0));
   for (let i = 0; i < 4; i++) {
     const a = (i / 4) * Math.PI * 2 + Math.PI / 4;
@@ -1861,6 +1921,16 @@ function palaceShop(b: Baker, sgn: number, xFace: number, z0: number, w: number,
     b.box('roof', half * 1.06, 0.2, w + 1.0, xc + sx * half * 0.5, 0.6 + h + rh * 0.5, zc, roofC, 0, 0, -sx * 0.30);
   }
   b.box('roof', 0.5, 0.26, w + 1.05, xc, 0.6 + h + rh, zc, shade(roofC, 1.3));
+  // 两端山花：两块斜板之间在 ±z 端头是敞口三角腔
+  {
+    const hw = half * 1.06;
+    const cy = 0.6 + h + rh * 0.5;
+    const dy = Math.sin(0.30) * hw * 0.5;
+    const halfSpan = (half / 2 - 0.2) + (half / 2) * Math.cos(0.30);
+    for (const e of [-1, 1] as const) {
+      gableEnd(b, 'wall', xc, cy - dy, zc + e * (w / 2 + 0.42), 0, halfSpan, dy * 2, shade(wallC, 0.96));
+    }
+  }
   // 二层挑台
   if (floors === 2) {
     b.box('wood', 1.1, 0.18, w * 0.92, sgn * (xFace - 0.45), 4.1, zc, shade(0x6b4a2b, 1.05));
@@ -1952,7 +2022,7 @@ function buildShenwuGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   for (let i = 0; i <= 4; i++) b.box('wood', 0.8, 5.6, 0.8, -10 + i * 5, 14.6, gz + 6.1, 0xd8b028);
   for (let i = 0; i < 3; i++) litBay(b, -7 + i * 7, 12.6, 4.0, 3.0, gz + 6.0);
   dougongBand(b, 0, 17.3, gz + 6.2, 20, 0, 0xd8b028);
-  roofOn(b, 30, 20, 17.5, 0, gz, 0, shade(PAL_GOLD, 1.02), undefined, 5.0);
+  roofOnCapped(b, 30, 20, 17.5, 0, gz, 0, shade(PAL_GOLD, 1.02), undefined, 5.0);
   b.cyl('metal', 0.22, 0.32, 0.7, 8, 0, 22.2, gz, 0xd8b028);
   sg.quad(atlas.text('pal_shenwu', '神武門', 360, 100, { color: '#ffe9c8', glow: '#00e5ff', bg: 'rgba(10,14,22,0.9)', border: 'rgba(0,229,255,.7)', fontPx: 60 }),
     8, 2.4, 0, 12.9, gz + 12.6, 0);

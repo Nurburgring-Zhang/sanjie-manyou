@@ -11,6 +11,9 @@ import {
 } from './behaviors';
 import { SignAtlas } from '../city/bake';
 import { wardCells, PALACE } from '../city/imperial';
+import { beltRoomSpecs } from '../city/centralbelt';
+import { riverRoomSpecs } from '../city/riverbank';
+import { STREET_HOUSE_SLOTS } from '../city/interiors';
 import { inRiverFootprint, riverCenterZ, riverHalfWidth, RIVER_WATER_Y } from '../city/riverGeom';
 // R12-D：地府地面高程只从 sky/underworld.ts 只读导入（该文件不做任何修改）
 import { UNDER } from '../sky/underworld';
@@ -84,8 +87,97 @@ function keepOnBridgeDeck(a: Actor): void {
   a.pos.y = bridgeDeckY(THREE.MathUtils.clamp(a.pos.z, -BRIDGE_HALF, BRIDGE_HALF));
 }
 
-const DARK = new THREE.Color(0x241f1a);
-const STRAW = new THREE.Color(0xa8905a);
+/**
+ * 建筑足迹守卫（用户判词：「人物可以穿墙的问题你他妈解决了吗？？？」）。
+ *
+ * 现场：`terrainHeight()` 在城内恒返回 0，而铺面地坪是 0.30 / 0.34 / 0.36、9 座手工街屋是
+ * 0.6–0.86；`behaviors.ts` 的移动积分只改 x/z，也没有任何墙体碰撞——于是行人直接穿过
+ * 铺面薄壁，站在台基里只剩上半身露在地板上（用户截图里那截裙摆和手臂）。
+ *
+ * 这里按**建造时同一份室内参数**（`beltRoomSpecs` / `riverRoomSpecs` / `STREET_HOUSE_SLOTS`）
+ * 生成 2903 个铺面足迹，做 16m 网格 + 逐帧推出。台基比墙宽 0.7–0.9m，所以足迹比室内净空
+ * 再外扩 0.42m，把人挡在台阶之外，连"站在台基边缘陷进 0.36m"也一并消掉。
+ */
+interface Foot { x0: number; x1: number; z0: number; z1: number; y: number }
+
+const FOOT_PAD = 0.42;
+const FOOT_CELL = 16;
+const FOOT_R = 0.34;      // 行人身体半径
+let FOOT_GRID: Map<number, Foot[]> | null = null;
+/** 守卫累计推移次数（探针用：这个数就是「没有守卫时会发生穿墙/陷地」的人次） */
+let GUARD_MOVES = 0;
+
+const footKey = (ix: number, iz: number): number => ix * 65536 + iz;
+
+function addFoot(g: Map<number, Foot[]>, x0: number, x1: number, z0: number, z1: number, y: number): void {
+  const f: Foot = { x0, x1, z0, z1, y };
+  const i0 = Math.floor(x0 / FOOT_CELL), i1 = Math.floor(x1 / FOOT_CELL);
+  const j0 = Math.floor(z0 / FOOT_CELL), j1 = Math.floor(z1 / FOOT_CELL);
+  for (let i = i0; i <= i1; i++) {
+    for (let j = j0; j <= j1; j++) {
+      const k = footKey(i, j);
+      const arr = g.get(k);
+      if (arr) arr.push(f); else g.set(k, [f]);
+    }
+  }
+}
+
+function buildFootGrid(): Map<number, Foot[]> {
+  const g = new Map<number, Foot[]>();
+  for (const s of beltRoomSpecs()) {
+    const hx = (s.w * Math.abs(s.ux) + s.d * Math.abs(s.vx)) / 2 + FOOT_PAD;
+    const hz = (s.w * Math.abs(s.uz) + s.d * Math.abs(s.vz)) / 2 + FOOT_PAD;
+    addFoot(g, s.cx - hx, s.cx + hx, s.cz - hz, s.cz + hz, s.y0);
+  }
+  for (const s of riverRoomSpecs()) {
+    const hx = (s.w * Math.abs(s.ux) + s.d * Math.abs(s.vx)) / 2 + FOOT_PAD;
+    const hz = (s.w * Math.abs(s.uz) + s.d * Math.abs(s.vz)) / 2 + FOOT_PAD;
+    addFoot(g, s.cx - hx, s.cx + hx, s.cz - hz, s.cz + hz, s.y0);
+  }
+  for (const h of STREET_HOUSE_SLOTS) {
+    const hx = h.w / 2 + FOOT_PAD, hz = h.d / 2 + FOOT_PAD;
+    addFoot(g, h.x - hx, h.x + hx, h.z - hz, h.z + hz, h.y0 ?? 0.6);
+  }
+  return g;
+}
+
+/**
+ * 把压进铺面的行人推到最近的外墙面；推不出去（夹在两间之间）就抬到室内地坪。
+ * 原地修改（出生点与逐帧都用这一份），返回是否发生过推移。
+ */
+function pushOutOfBuildings(pos: THREE.Vector3): boolean {
+  const g = (FOOT_GRID ??= buildFootGrid());
+  const arr = g.get(footKey(Math.floor(pos.x / FOOT_CELL), Math.floor(pos.z / FOOT_CELL)));
+  if (!arr) return false;
+  let moved = false;  for (let pass = 0; pass < 2; pass++) {
+    let hit = false;
+    for (const f of arr) {
+      if (pos.x < f.x0 - FOOT_R || pos.x > f.x1 + FOOT_R) continue;
+      if (pos.z < f.z0 - FOOT_R || pos.z > f.z1 + FOOT_R) continue;
+      const dl = pos.x - (f.x0 - FOOT_R), dr = (f.x1 + FOOT_R) - pos.x;
+      const db = pos.z - (f.z0 - FOOT_R), df = (f.z1 + FOOT_R) - pos.z;
+      const m = Math.min(dl, dr, db, df);
+      if (m <= 0.002) continue;
+      if (m === dl) pos.x = f.x0 - FOOT_R;
+      else if (m === dr) pos.x = f.x1 + FOOT_R;
+      else if (m === db) pos.z = f.z0 - FOOT_R;
+      else pos.z = f.z1 + FOOT_R;
+      hit = true;
+      GUARD_MOVES++;
+    }
+    if (!hit) return moved;
+    moved = true;
+  }
+  // 两次都推不出去：至少别陷在地板下
+  for (const f of arr) {
+    if (pos.x <= f.x0 - FOOT_R || pos.x >= f.x1 + FOOT_R) continue;
+    if (pos.z <= f.z0 - FOOT_R || pos.z >= f.z1 + FOOT_R) continue;
+    if (pos.y < f.y) pos.y = f.y;
+  }
+  return moved;
+}
+
+const DARK = new THREE.Color(0x241f1a);const STRAW = new THREE.Color(0xa8905a);
 const HORN = new THREE.Color(0x3a3028);
 const IRON = new THREE.Color(0x767a84);   // 甲胄铁色（W6：兵与更夫）
 const CANVAS = new THREE.Color(0xa89570); // 围裙麻布（W6：庖厨与摊贩）
@@ -1015,7 +1107,24 @@ export class Crowd {
     this.wardrobe = new Wardrobe(scene);
     WARDROBES.set(this.ps, this.wardrobe);
   }
+  /** 守卫累计推移人次（= 没有守卫时会穿墙/陷地的人次） */
+  guardMoves(): number { return GUARD_MOVES; }
+
   poolSet(): PoolSet { return this.ps; }
+
+  /**
+   * 读只：该点是否落在铺面足迹内，落在里面时返回室内地坪高度（否则 null）。
+   * 探针用它量「陷地」：角色 y 低于地坪 = 陷进地板；同时是 admin/调试的入口。
+   */
+  shopFloorAt(x: number, z: number): number | null {
+    const g = (FOOT_GRID ??= buildFootGrid());
+    const arr = g.get(footKey(Math.floor(x / FOOT_CELL), Math.floor(z / FOOT_CELL)));
+    if (!arr) return null;
+    for (const f of arr) {
+      if (x > f.x0 && x < f.x1 && z > f.z0 && z < f.z1) return f.y;
+    }
+    return null;
+  }
 
   spawnActor(o: {
     occ: string; pos: THREE.Vector3; yaw?: number; scale?: number;
@@ -1069,6 +1178,9 @@ export class Crowd {
       const hw = riverHalfWidth(a.pos.x);
       a.pos.z = cz + (a.pos.z >= cz ? 1 : -1) * (hw + 4.2);
     }
+    // 出生建筑守卫：摊主/名将这类给定坐标的角色若正好落在铺面里（实测茶博士的 (-36,58)
+    // 就在 9 座手工街屋「茶坊」(-36,62,11×9) 的台基内），出生即推到街面，否则整场都陷在地板下。
+    if (a.pos.y > -0.4 && a.pos.y < 12 && !a.sky) pushOutOfBuildings(a.pos);
     if (a.hat === 0 && (card ? cardStraw(a.occ, card.s) : Math.random() < (STRAW_HAT[a.occ] ?? 0))) a.hat = 2;
     // W6 冠分型：按职业换冠（僧/道/童/女/兵必戴，官/士高档，其余七至九成）；显式传入的 hat 不覆盖
     const hatId = OCC_HAT[a.occ];
@@ -1798,6 +1910,8 @@ export class Crowd {
       keepOnBridgeDeck(a);
       // R20 河道不变量：行为层的横向穿行不许把人带进水面（attach 演员由各自系统定位，不在此列）
       if (!a.freeze && !a.attach && !a.sky && !a.hidden) keepOffRiver(a.pos);
+      // 建筑足迹不变量：铺面墙体不做碰撞体，靠这一道守卫把人推出墙面（见 pushOutOfBuildings）
+      if (a.pos.y > -5 && a.pos.y < 12 && !a.freeze && !a.attach && !a.sky && !a.hidden) pushOutOfBuildings(a.pos);
 
       // ---- 角色 LOD：四档 + 25% 滞回 ----
       const d2 = a.pos.distanceToSquared(camPos);

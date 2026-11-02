@@ -508,10 +508,81 @@ interface Shell {
   eaveY: number; tileC: number;
 }
 
+/**
+ * 补齐曲面屋顶 ±X 两端的山面（庑殿的两片端坡）。
+ *
+ * 根因在 bake.ts 的 buildCurvedUnit：`sides` 循环只有 [1, -1] 两片 ±Z 坡，
+ * ±X 两端从脊端（±0.16·sx, 脊高）到檐角（±0.5·sx, 檐口）是一条**敞口**。
+ * 斜上方看进去，看到的是对面瓦背 + 檐口内壁，整顶读作"开盖的盒子"——
+ * 用户第 N 次投诉的"前后面有贴图、侧面是空的"就是这个。
+ *
+ * 修法不是挂一块端板：端板在檐口外会从瓦面里穿出来。这里按 ring() 的同一套参数逐环取
+ * 环半宽 h(t) 与举高 y(t)，把每环的左右檐角连成一条横带——生成的是真正的端坡面，
+ * 外缘正好落在两条戗脊线下，既不露缝也不穿瓦。UV 按 3.2m 一张展开，瓦垄用世界 0.34m 顶点色，
+ * 端面因此与前后坡同材质、同瓦纹（不是一块纯色板）。
+ *
+ * 面数：12 环 × 2 三角 × 2 端 = 48 面/顶（当前全城 326 顶 ≈ +15.6k 面，占 17.3M 的 0.09%）。
+ */
+export function roofEndHips(b: Baker, o: {
+  x: number; y: number; z: number; ry: number;
+  sx: number; sz: number; rise: number; hex: number;
+}): number {
+  const { x, y, z, ry, sx, sz, rise, hex } = o;
+  const N = 12;
+  const UV_T = 3.2;
+  const RIB_MID = 1.01, RIB_AMP = 0.23;   // = bake.ts 的 (RIB_HI+RIB_LO)/2、(RIB_HI−RIB_LO)/2
+  /** 环点：局部 x=su·h·sx，z=side·h·sz，y=(反宇剖面+起翘)·rise */
+  const P = (su: number, i: number, side: number): [number, number, number, number] => {
+    const t = i / N;
+    const h = RIDGE_HALF + (0.5 - RIDGE_HALF) * Math.pow(t, 1.6);
+    const yy = (roofProfile(t) + ROOF_KICK * t * t * t + ROOF_CORNER * t * t) * rise;
+    const lz = side * h * sz;
+    return [su * h * sx, yy, lz, RIB_MID + RIB_AMP * Math.cos((lz / ROOF_RIB_PITCH) * Math.PI * 2)];
+  };
+  let tris = 0;
+  for (const su of [-1, 1] as const) {
+    // 沿环点的弧长做 v 方向 UV（脊→檐）
+    const arc = new Float64Array(N + 1);
+    for (let i = 1; i <= N; i++) {
+      const a = P(su, i - 1, 1), c = P(su, i, 1);
+      arc[i] = arc[i - 1] + Math.hypot(c[0] - a[0], c[1] - a[1]);
+    }
+    const pos: number[] = [], uv: number[] = [], col: number[] = [];
+    /** 落一个环点（su 固定）：i 环、side=±1 决定左右檐角 */
+    const put = (i: number, side: 1 | -1): void => {
+      const p = P(su, i, side);
+      pos.push(p[0], p[1], p[2]);
+      uv.push(p[2] / UV_T, arc[i] / UV_T);
+      col.push(p[3], p[3], p[3]);
+    };
+    for (let i = 0; i < N; i++) {
+      // 绕序：端坡外法线 = ±X + Y，su<0 时把整串顶点反着发
+      if (su > 0) {
+        put(i, -1); put(i, 1); put(i + 1, 1);
+        put(i, -1); put(i + 1, 1); put(i + 1, -1);
+      } else {
+        put(i + 1, -1); put(i + 1, 1); put(i, 1);
+        put(i + 1, -1); put(i, 1); put(i, -1);
+      }
+      tris += 2;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    geo.computeVertexNormals();
+    b.addGeo('roof', geo, x, y, z, hex, ry, 0, 0);
+  }
+  b.kit('roof.endHip', 2, y + rise);
+  return tris;
+}
+
 /** 屋面本体：曲线瓦面 + 瓦垄顶点色 + 檐口瓦当/滴水（都由 roofC 的共享实现给出）。 */
 function roofShell(b: Baker, s: Shell): number {
   const baseY = s.eaveY - ROOF_KICK * s.rise;
   b.roofC('roof', s.x, baseY, s.z, s.tileC, s.ry, s.sx, s.rise, s.sz, 0, 0, true);
+  // 两端山面：roofC 只造 ±Z 两坡，不补这一手就是"开盖盒子"
+  roofEndHips(b, { x: s.x, y: baseY, z: s.z, ry: s.ry, sx: s.sx, sz: s.sz, rise: s.rise, hex: s.tileC });
   const cols = roofRibCols(s.sx);
   b.kit('palace.rib', cols / 2, s.eaveY);
   b.kit('palace.ribCol', cols, s.eaveY);

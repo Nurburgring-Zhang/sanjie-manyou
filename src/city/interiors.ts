@@ -2778,6 +2778,32 @@ const ITEM: Record<string, ItemDef> = {
   fishBarrel: { n: '鱼盆', g: 'ceramic', a: 'cyl', w: 0.72, h: 0.42, d: 0.72, hex: 0x3a5a6a },
 };
 
+/**
+ * 器物在房间里的**职能**：舱位布局按职能取件，不按清单顺序取件。
+ * （旧版按清单顺序摆，第 5 件之后就被 maxItems 截断，永远只出现前 5 件。）
+ */
+type ItemRole = 'back' | 'mid' | 'seat' | 'small' | 'front' | 'wall';
+
+const ITEM_ROLE: Record<string, ItemRole> = {
+  counter: 'front', waterVat: 'front', fishBarrel: 'front', wineSea: 'front',
+  shelf: 'back', rack: 'back', cabinet: 'back', drawerCabinet: 'back', screen: 'back',
+  altar: 'back', ledgerStand: 'back', noodleRack: 'back', meatHook: 'back',
+  // 幌子 / 水牌 / 酒牌是**挂**在门楣与墙上的，不是立在地上的板；按 small 摆会立在屋子中间挡路
+  banner: 'wall', teaBoard: 'wall', wineBoard: 'wall',
+  table: 'mid', longTable: 'mid', stove: 'mid', teaMill: 'mid', doughBoard: 'mid',
+  mortar: 'mid', cauldron: 'mid', dyeVat: 'mid', brazier: 'mid',
+  stool: 'seat', bench: 'seat', cushion: 'seat', mat: 'seat',
+};
+
+/** 需要配座具的中部主件 */
+const SEATS_WITH = new Set(['table', 'longTable', 'altar', 'doughBoard']);
+
+function roleOf(key: string): ItemRole {
+  const def = ITEM[key];
+  if (def?.wall) return 'wall';
+  return ITEM_ROLE[key] ?? 'small';
+}
+
 /** 一行器物：id / 面阔向比例 / 进深向比例 / 形态掩码（0=全形态，1<<v）/ 缩放 */
 type KitRow = readonly [string, number, number, number, number?];
 
@@ -2969,8 +2995,10 @@ export interface TradeRoomSpec {
   vx: number; vz: number;
   /** 是否铺吊顶：roofC 屋盖下方必须铺，双坡板顶的下皮本身可见 */
   ceiling?: boolean;
-  /** 简装：桌/架/摞这类多构件形制塌成单盒（外围铺面用，省 60% 面数） */
+  // 简装：桌/架/摞这类多构件形制塌成单盒（外围铺面用，省 60% 面数）
   compact?: boolean;
+  /** 室内地坪面层：木 / 方砖 / 石板（缺省按业态取） */
+  floor?: 'wood' | 'brick' | 'stone';
   /** 只落前 N 件（缺省全落） */
   maxItems?: number;
 }
@@ -2978,6 +3006,44 @@ export interface TradeRoomSpec {
 interface Put {
   box: (g: BGroup, w: number, h: number, d: number, u: number, y: number, v: number, hex: number) => void;
   cyl: (g: BGroup, rt: number, rb: number, h: number, seg: number, u: number, y: number, v: number, hex: number) => void;
+}
+
+// ---------- 室内陈设审计（纯记账，不产生几何） ----------
+// 判据「每间 ≥12 件、同类店差异 ≥20%、最大空白地面矩形 < 房间短边 45%」不能靠肉眼数，
+// 这里把每件器物的**平面脚印**记下来，测试与探针直接读。默认关闭，只在审计时开，
+// 2900 间全量跑一次约 24k 条记录，正常游玩零开销。
+export interface TradeItemAudit {
+  key: string; name: string;
+  x: number; z: number;
+  /** 器物顶面世界高度（挂件记挂点） */
+  top: number;
+  /** 平面半宽（x / z） */
+  hx: number; hz: number;
+  /** 贴墙挂件（不占地） */
+  wall: boolean;
+}
+
+export interface TradeRoomAudit {
+  cx: number; cz: number;
+  /** 室内净空 */
+  w: number; d: number;
+  y0: number; h: number;
+  trade: ShopTrade; variant: number; compact: boolean;
+  items: TradeItemAudit[];
+  /** 几何片数（一件桌 = 面 + 腿 = 2 片）：用来估面数预算 */
+  pieces: number;
+}
+
+let TRADE_AUDIT: TradeRoomAudit[] | null = null;
+
+/** 开始记录后续每一次 buildTradeInterior 的落位 */
+export function beginTradeInteriorAudit(): void { TRADE_AUDIT = []; }
+
+/** 结束记录并取走结果 */
+export function endTradeInteriorAudit(): TradeRoomAudit[] {
+  const out = TRADE_AUDIT ?? [];
+  TRADE_AUDIT = null;
+  return out;
 }
 
 /**
@@ -3006,15 +3072,45 @@ export function buildTradeInterior(b: Baker, s: TradeRoomSpec): number {
     put.box('wood', s.w, 0.18, 0.2, 0, F + s.h - 0.18, 0, 0x5a3f26);
   }
 
-  let n = 0;
-  const cap = s.maxItems ?? Infinity;
-  for (const row of TRADE_KIT[s.trade]) {
-    if (n >= cap) break;
-    const mask = row[3];
-    if (mask !== 0 && (mask & (1 << (s.variant & 3))) === 0) continue;
-    const def = ITEM[row[0]];
-    if (!def) continue;
-    const sc = row[4] ?? 1;
+  // 地坪面层：台基顶面是灰扑扑一整片「土」，铺一层木/砖/石面才有室内的读感。
+  // 木楼板用 wood 组（自带板纹贴图），砖石才走 ash；再压几道缝，别让 12m 通间读成一整片泥地。
+  const floor = s.floor ?? (s.trade === 'teahouse' || s.trade === 'tavern' || s.trade === 'noodle' ? 'wood'
+    : s.trade === 'cloth' || s.trade === 'general' ? 'stone' : 'brick');
+  if (floor === 'wood') {
+    put.box('wood', s.w - 0.02, 0.05, s.d - 0.02, 0, F - 0.018, 0, 0x8a6440);
+    for (let i = 1; i <= 4; i++) {
+      put.box('wood', s.w - 0.08, 0.012, 0.035, 0, F + 0.009, -halfV + (s.d * i) / 5, 0x5a3f26);
+    }
+  } else {
+    put.box('ash', s.w - 0.02, 0.036, s.d - 0.02, 0, F - 0.012, 0, floor === 'brick' ? 0x6b7076 : 0x8d8a80);
+    for (let i = 1; i <= 3; i++) {
+      put.box('ash', s.w - 0.08, 0.01, 0.03, 0, F + 0.006, -halfV + (s.d * i) / 4, 0x4a4f55);
+      put.box('ash', 0.03, 0.01, s.d - 0.08, -halfU + (s.w * i) / 4, F + 0.006, 0, 0x4a4f55);
+    }
+  }
+  // 踢脚：背墙与两山墙各一道（纯色木，压住墙根与地面的接缝）
+  put.box('wood', s.w - 0.04, 0.3, 0.05, 0, F + 0.15, halfV - 0.03, 0x3a2c22);
+  for (const su of [-1, 1]) put.box('wood', 0.05, 0.3, s.d - 0.04, su * (halfU - 0.03), F + 0.15, 0, 0x3a2c22);
+
+  const room: TradeRoomAudit | null = TRADE_AUDIT
+    ? { cx: s.cx, cz: s.cz, w: s.w, d: s.d, y0: s.y0, h: s.h, trade: s.trade, variant: s.variant, compact: s.compact === true, items: [], pieces: 0 }
+    : null;
+  if (room && TRADE_AUDIT) TRADE_AUDIT.push(room);
+  const rec = (key: string, name: string, u: number, v: number, wu: number, dv: number, top: number, wall: boolean): void => {
+    if (!room) return;
+    room.items.push({
+      key, name, wall, top,
+      x: s.cx + s.ux * u + s.vx * v,
+      z: s.cz + s.uz * u + s.vz * v,
+      hx: (wu * ax + dv * bx) / 2,
+      hz: (wu * az + dv * bz) / 2,
+    });
+  };
+
+  /** 落一件器物：贴墙件自动贴墙、随面阔拉伸、按形制拆件。返回几何片数。 */
+  const placeItem = (key: string, u: number, v: number, sc = 1): number => {
+    const def = ITEM[key];
+    if (!def) return 0;
     // 墙面家具随房间尺度拉伸：12m 通间里 2.4m 的柜台只占 1/5，读不成柜台
     const stretch = def.w >= 1.4 ? Math.min(2.0, Math.max(1, halfU / 4.6)) : 1;
     const w = def.w * sc * stretch, h = def.h * sc, d = def.d * sc;
@@ -3024,52 +3120,146 @@ export function buildTradeInterior(b: Baker, s: TradeRoomSpec): number {
     const dv = along ? w : d;
     const limU = Math.max(0.2, halfU - wu / 2 - 0.16);
     const limV = Math.max(0.2, halfV - dv / 2 - 0.16);
-    const u = Math.max(-limU, Math.min(limU, row[1] * halfU));
-    // 靠墙的（|fv| > 0.45）一律推到墙上，别浮在屋子中间
-    const v = Math.abs(row[2]) > 0.45 ? Math.sign(row[2]) * limV : Math.max(-limV, Math.min(limV, row[2] * halfV));
+    const pu = Math.max(-limU, Math.min(limU, u));
+    const pv = Math.max(-limV, Math.min(limV, v));
     if (def.wall) {
-      put.box(def.g, w, h, 0.05, u, F + s.h * 0.52, v, def.hex);
-      n++;
-      continue;
+      put.box(def.g, w, h, 0.05, pu, F + s.h * 0.52, pv, def.hex);
+      rec(key, def.n, pu, pv, w, 0.05, F + s.h * 0.52 + h / 2, true);
+      return 1;
     }
+    let pieces = 1;
     switch (def.a) {
       case 'box':
-        put.box(def.g, wu, h, dv, u, F + h / 2, v, def.hex);
+        put.box(def.g, wu, h, dv, pu, F + h / 2, pv, def.hex);
         break;
       case 'cyl':
-        put.cyl(def.g, w / 2, (w / 2) * 0.92, h, 5, u, F + h / 2, v, def.hex);
+        put.cyl(def.g, w / 2, (w / 2) * 0.92, h, 5, pu, F + h / 2, pv, def.hex);
         break;
       case 'table':
-        if (s.compact) { put.box(def.g, wu, h, dv, u, F + h / 2, v, def.hex); break; }
-        put.box(def.g, wu, 0.08, dv, u, F + h - 0.04, v, def.hex2 ?? shade(def.hex, 1.12));
-        put.box(def.g, wu * 0.82, h - 0.08, dv * 0.24, u, F + (h - 0.08) / 2, v, def.hex);
-        n += 2;
+        if (s.compact) { put.box(def.g, wu, h, dv, pu, F + h / 2, pv, def.hex); break; }
+        put.box(def.g, wu, 0.08, dv, pu, F + h - 0.04, pv, def.hex2 ?? shade(def.hex, 1.12));
+        put.box(def.g, wu * 0.82, h - 0.08, dv * 0.24, pu, F + (h - 0.08) / 2, pv, def.hex);
+        pieces = 2;
         break;
       case 'shelf':
-        if (s.compact) { put.box(def.g, wu, h, dv * 0.9, u, F + h / 2, v, def.hex); break; }
-        put.box(def.g, wu, h, dv * 0.9, u, F + h / 2, v, def.hex);
-        put.box(def.g, wu * 0.94, 0.06, dv, u, F + h * 0.52, v, def.hex2 ?? shade(def.hex, 1.2));
-        n += 2;
+        if (s.compact) { put.box(def.g, wu, h, dv * 0.9, pu, F + h / 2, pv, def.hex); break; }
+        put.box(def.g, wu, h, dv * 0.9, pu, F + h / 2, pv, def.hex);
+        put.box(def.g, wu * 0.94, 0.06, dv, pu, F + h * 0.52, pv, def.hex2 ?? shade(def.hex, 1.2));
+        pieces = 2;
         break;
       case 'frame':
-        if (s.compact) { put.box(def.g, wu, h, Math.max(0.12, dv), u, F + h / 2, v, def.hex); break; }
-        put.box(def.g, 0.09, h, 0.09, u - wu / 2 + 0.05, F + h / 2, v, def.hex);
-        put.box(def.g, 0.09, h, 0.09, u + wu / 2 - 0.05, F + h / 2, v, def.hex);
-        put.box(def.g, wu, 0.09, 0.09, u, F + h - 0.05, v, def.hex);
-        n += 3;
+        if (s.compact) { put.box(def.g, wu, h, Math.max(0.12, dv), pu, F + h / 2, pv, def.hex); break; }
+        put.box(def.g, 0.09, h, 0.09, pu - wu / 2 + 0.05, F + h / 2, pv, def.hex);
+        put.box(def.g, 0.09, h, 0.09, pu + wu / 2 - 0.05, F + h / 2, pv, def.hex);
+        put.box(def.g, wu, 0.09, 0.09, pu, F + h - 0.05, pv, def.hex);
+        pieces = 3;
         break;
       case 'stack':
-        if (s.compact) { put.box(def.g, wu, h, dv, u, F + h / 2, v, def.hex); break; }
-        put.box(def.g, wu * 0.4, h, dv, u - wu * 0.28, F + h / 2, v, def.hex);
-        put.box(def.g, wu * 0.4, h * 0.86, dv, u, F + h * 0.43, v, def.hex2 ?? shade(def.hex, 0.9));
-        put.box(def.g, wu * 0.4, h * 0.7, dv, u + wu * 0.28, F + h * 0.35, v, def.hex);
-        n += 3;
+        if (s.compact) { put.box(def.g, wu, h, dv, pu, F + h / 2, pv, def.hex); break; }
+        put.box(def.g, wu * 0.4, h, dv, pu - wu * 0.28, F + h / 2, pv, def.hex);
+        put.box(def.g, wu * 0.4, h * 0.86, dv, pu, F + h * 0.43, pv, def.hex2 ?? shade(def.hex, 0.9));
+        put.box(def.g, wu * 0.4, h * 0.7, dv, pu + wu * 0.28, F + h * 0.35, pv, def.hex);
+        pieces = 3;
         break;
     }
-    n++;
+    rec(key, def.n, pu, pv, wu, dv, F + h, false);
+    return pieces;
+  };
+
+  // —— 舱位陈设：面阔分舱 × 进深分行 ——
+  // 旧版把固定坐标的 16 行压在一间屋里，且 maxItems 数的是**几何片数**（一件桌 = 2 片），
+  // 于是「16 件」实际只落 5–9 件，14m 通间也只在中间摆一套桌椅——这正是用户截图里的「空」。
+  // 新版先铺骨架（后墙高柜 / 中部桌案 / 近门柜台），再补座具与小件，最后挂墙面装饰。
+  const live = TRADE_KIT[s.trade].filter((r) => r[3] === 0 || (r[3] & (1 << (s.variant & 3))) !== 0);
+  const pool = (role: ItemRole): string[] => {
+    const out: string[] = [];
+    for (const r of live) if (roleOf(r[0]) === role && !out.includes(r[0])) out.push(r[0]);
+    return out;
+  };
+  const backP = pool('back'), midP = pool('mid'), seatP = pool('seat');
+  const smallP = pool('small'), frontP = pool('front'), wallP = pool('wall');
+  const take = (arr: string[], i: number): string | null => (arr.length ? arr[((i % arr.length) + arr.length) % arr.length] : null);
+  const dining = s.trade === 'teahouse' || s.trade === 'tavern' || s.trade === 'noodle';
+
+  const bays = Math.max(3, Math.min(5, Math.round(s.w / 3.4)));
+  const bayW = s.w / bays;
+  const vBack = halfV - 0.5;
+  const vFront = -halfV + 0.95;
+  const midRows = (() => {
+    const half = s.d / 2;
+    const span = Math.max(1.2, (half - 1.15) - (-half + 1.25));
+    const gapMax = Math.max(2.2, Math.min(s.w, s.d) * 0.45);
+    return Math.max(1, Math.min(5, Math.min(Math.ceil(span / gapMax) + 1, Math.floor(span / 2.6) + 1)));
+  })();
+  const midV = (r: number): number => {
+    if (midRows === 1) return 0;
+    const lo = vFront + 1.25, hi = vBack - 1.15;
+    return lo + (hi - lo) * (r / (midRows - 1));
+  };
+  let count = 0;
+  let pieces = 0;
+
+  // ① 后墙整排高柜（货架 / 药柜 / 立柜 / 布架 / 屏风）
+  for (let k = 0; k < bays; k++) {
+    const backK = take(backP, k * 2 + (s.variant & 1));
+    if (backK) { pieces += placeItem(backK, -halfU + (k + 0.5) * bayW, vBack); count++; }
   }
+  // ② 中部骨架：餐茶酒按桌；其余隔舱一件桌案、一舱一件货
+  const tables: { u: number; v: number }[] = [];
+  for (let r = 0; r < midRows; r++) {
+    const v = midV(r);
+    for (let k = 0; k < bays; k++) {
+      const u = -halfU + (k + 0.5) * bayW;
+      // 门在 u=0：最靠门的那一排让出 1.3m 进门通道，别一开门就撞在桌角上
+      if (r === 0 && Math.abs(u) < 1.3) continue;
+      // 逐舱微差：尺寸 ±8%、进深 ±0.12m，避免整间读成一张等距网格
+      const jit = 0.92 + ((k * 7 + r * 11) % 5) * 0.04;
+      const vj = v + ((k % 3) - 1) * 0.12;
+      if (dining) {
+        const midK = take(midP, k + r * 2);
+        if (!midK) continue;
+        pieces += placeItem(midK, u, vj, jit); count++;
+        if (SEATS_WITH.has(midK)) tables.push({ u, v: vj });
+      } else if ((k + r) % 2 === 0) {
+        const midK = take(midP, k + r);
+        if (midK) { pieces += placeItem(midK, u, vj, jit); count++; }
+      } else {
+        const smallK = take(smallP, k * 3 + r);
+        if (smallK) { pieces += placeItem(smallK, u, vj, jit); count++; }
+      }
+    }
+  }
+  // ③ 座具：每张桌两侧各一（有座具池才配）
+  if (seatP.length) {
+    for (let i = 0; i < tables.length; i++) {
+      const seatK = take(seatP, i);
+      if (!seatK) break;
+      pieces += placeItem(seatK, tables[i].u - 0.74, tables[i].v + 0.04); count++;
+      pieces += placeItem(seatK, tables[i].u + 0.74, tables[i].v + 0.04); count++;
+    }
+  }
+  // ④ 近门柜台（门在 u=0，让开门板位置）
+  for (let k = 0; k < bays; k += 2) {
+    const u = -halfU + (k + 0.5) * bayW;
+    if (Math.abs(u) < 1.1) continue;
+    const frontK = take(frontP, k);
+    if (frontK) { pieces += placeItem(frontK, u, vFront); count++; }
+  }
+  // ⑤ 小件补空：两侧山墙各一摞货
+  for (let k = 0; k < bays; k++) {
+    const smallK = take(smallP, k * 2 + 1);
+    if (!smallK) break;
+    const u = -halfU + (k + 0.5) * bayW;
+    pieces += placeItem(smallK, u + bayW * 0.22, vBack - 0.75); count++;
+  }
+  // 墙面：背墙挂画两幅 + 门内一盏灯（不占地）
+  const wallK = wallP.length ? wallP[0] : 'scroll';
+  if (halfU > 2.2) { pieces += placeItem(wallK, -halfU * 0.55, vBack); count++; }
+  if (halfU > 3.4) { pieces += placeItem(wallK, halfU * 0.55, vBack); count++; }
+  pieces += placeItem('lantern', 0, -halfV + 1.9, 1); count++;
+  if (room) room.pieces = pieces;
   b.kit(`shopint.${s.trade}.shop`, 1);
-  b.kit(`shopint.${s.trade}.items`, n);
+  b.kit(`shopint.${s.trade}.items`, count);
   b.kit(`shopint.variant${s.variant}`, 1);
-  return n;
+  return count;
 }

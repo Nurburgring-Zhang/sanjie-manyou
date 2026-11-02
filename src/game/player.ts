@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import type { Crowd } from '../actors/crowd';
 import type { Actor } from '../actors/types';
 import { PITCH_LIMIT, type Engine } from '../core/engine';
-import { bridgeDeckY, BRIDGE_HALF } from '../city/layout';
+import { bridgeDeckY, bridgeDeckYAt, BRIDGE_HALF } from '../city/layout';
 import { terrainHeight, waterAt } from '../world/terrain';
 import { bus } from '../core/rng';
 
@@ -189,6 +189,9 @@ export class PlayerController {
     // 城区
     if (Math.hypot(x, z) < 5150) {
       if (Math.abs(x) < 6.5 && Math.abs(z) < BRIDGE_HALF - 1) return bridgeDeckY(z);
+      // 主河段其余 7 座桥（石拱/叠梁拱/廊桥/浮桥/木梁）：桥面高程与建桥共用 layout 的同一份真源
+      const onBridge = bridgeDeckYAt(x, z);
+      if (onBridge !== null) return onBridge;
       for (const d of DOCKS) {
         if (Math.abs(x - d[0]) < d[2] / 2 && Math.abs(z - d[1]) < d[3] / 2) return 0.95;
       }

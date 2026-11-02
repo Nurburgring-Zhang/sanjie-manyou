@@ -1,0 +1,129 @@
+{
+ "bootMs": 28748,
+ "modes": {
+  "fly": {
+   "pixels": {
+    "x": 120,
+    "y": 20
+   },
+   "lockedAfterDown": false,
+   "before": {
+    "yaw": -1.25214,
+    "pitch": -0.05652
+   },
+   "after": {
+    "yaw": -1.63614,
+    "pitch": -0.11252
+   },
+   "dYawDeg": -22.002,
+   "dPitchDeg": -3.209,
+   "degPer100pxYaw": -18.335,
+   "maxStepYawDeg": 2.2002
+  },
+  "walk": {
+   "pixels": {
+    "x": 120,
+    "y": 20
+   },
+   "lockedAfterDown": false,
+   "before": {
+    "yaw": -1.63614,
+    "pitch": -0.11252
+   },
+   "after": {
+    "yaw": -2.02014,
+    "pitch": -0.16852
+   },
+   "dYawDeg": -22.002,
+   "dPitchDeg": -3.209,
+   "degPer100pxYaw": -18.335,
+   "maxStepYawDeg": 2.2002
+  },
+  "avatar": {
+   "pixels": {
+    "x": 120,
+    "y": 20
+   },
+   "lockedAfterDown": false,
+   "before": {
+    "yaw": 4.61171,
+    "pitch": -0.18
+   },
+   "after": {
+    "yaw": 4.10771,
+    "pitch": -0.24
+   },
+   "dYawDeg": -28.877,
+   "dPitchDeg": -3.438,
+   "degPer100pxYaw": -24.064,
+   "maxStepYawDeg": 2.8877
+  }
+ },
+ "hover": {
+  "before": {
+   "camMode": "fly",
+   "avatar": false,
+   "yaw": -2.40414,
+   "pitch": -0.22452,
+   "locked": false
+  },
+  "after": {
+   "camMode": "fly",
+   "avatar": false,
+   "yaw": -2.40414,
+   "pitch": -0.22452,
+   "locked": false
+  },
+  "dYawDeg": 0
+ },
+ "pointerLock": {
+  "lockedOnClick": true,
+  "lockedAfterMove": true,
+  "dYawDeg": -24.752,
+  "before": {
+   "yaw": -2.40414
+  },
+  "after": {
+   "yaw": -2.83614
+  }
+ },
+ "moveFollow": {
+  "first": {
+   "camYaw": 0.4,
+   "moved": 2.58,
+   "headingDeg": -157.08,
+   "camYawDeg": 22.92,
+   "expectHeadingDeg": -157.08,
+   "deltaDeg": 0
+  },
+  "second": {
+   "camYaw": -0.44,
+   "moved": 2.61,
+   "headingDeg": 154.79,
+   "camYawDeg": -25.21,
+   "expectHeadingDeg": 154.79,
+   "deltaDeg": 0
+  },
+  "yawDeltaDeg": -48.13,
+  "headingDeltaDeg": 311.87
+ },
+ "rightDrag": {
+  "pixels": {
+   "x": 120,
+   "y": 20
+  },
+  "lockedAfterDown": false,
+  "before": {
+   "yaw": -2.02014,
+   "pitch": -0.16852
+  },
+  "after": {
+   "yaw": -2.40414,
+   "pitch": -0.22452
+  },
+  "dYawDeg": -22.002,
+  "dPitchDeg": -3.209,
+  "degPer100pxYaw": -18.335,
+  "maxStepYawDeg": 2.2002
+ }
+}

@@ -1,7 +1,8 @@
 import { Baker, SignAtlas, SignMesher, shade } from './bake';
 import { roadBlocked } from './imperial';
 import type { RNG } from '../core/rng';
-import { buildTradeInterior, flowerBush, gableTriangle, pickTrade, type ShopTrade } from './interiors';
+import { buildTradeInterior, flowerBush, gableTriangle, pickTrade, type ShopTrade, type TradeRoomSpec } from './interiors';
+import { eaveRingOn, gableSlopeRibbed } from './buildings';
 
 /**
  * R16 · 中央保留带填实（御街两厢商业带）
@@ -346,6 +347,81 @@ function shopDoor(b: Baker, m: Shop, dw: number, zc: number, gy: number): void {
   }
 }
 
+// ============ 铺面断面的单一真相源 ============
+// 檐高与室内参数既被 build 用、也被 tests/shopInterior.test.ts 的审计用。
+// 两处各写一份就会漂移（测试报 14 件、现场落 8 件这种事故查不出来），所以只留这一份。
+const FRONT_GY = 0.36;   // 临街排室内地坪
+const FRONT_TW = 0.28;   // 临街排墙厚
+const BACK_GY = 0.34;    // 后巷排室内地坪
+const BACK_TW = 0.26;    // 后巷排墙厚
+
+/** 临街排檐高（含层数） */
+function frontShopH(m: Shop): number {
+  const t = H(m.z0 * 0.0071, m.salt);
+  const storeyH = 3.5 + t * 0.45;
+  return m.floors === 1 ? 3.7 + t * 1.0
+    : m.floors === 2 ? storeyH * 2 + 0.15
+      : storeyH * 3 + 0.3;
+}
+
+/** 后巷排檐高（含层数） */
+function backShopH(m: Shop): number {
+  const t = H(m.z0 * 0.0081, m.salt);
+  return m.floors === 2 ? 5.8 + t * 1.2 : 3.4 + t * 1.2;
+}
+
+/**
+ * 临街排的室内参数（面阔 / 进深 / 地坪 / 净高 / 业态 / 器物上限）。
+ * `buildCentralBelt` 与审计共用：调用点只负责盖壳，陈设密度只在这里改。
+ */
+export function frontRoomSpec(m: Shop): TradeRoomSpec {
+  const { sx, face, depth: d, w } = m;
+  const zc = (m.z0 + m.z1) / 2;
+  const h = frontShopH(m);
+  return {
+    cx: sx * (face + d / 2), cz: zc,
+    w: w - FRONT_TW * 2 - 0.1, d: d - FRONT_TW * 2 - 0.1,
+    y0: FRONT_GY, h: h - 0.12,
+    trade: m.trade, variant: m.variant,
+    ux: 0, uz: 1, vx: sx, vz: 0,
+    ceiling: true,
+    maxItems: d >= 9 ? 14 : 11,
+  };
+}
+
+/** 后巷排的室内参数（院落带，简装档） */
+export function backRoomSpec(m: Shop): TradeRoomSpec {
+  const { sx, face, depth: d, w } = m;
+  const zc = (m.z0 + m.z1) / 2;
+  const h = backShopH(m);
+  return {
+    cx: sx * (face + d / 2), cz: zc,
+    w: w - BACK_TW * 2 - 0.1, d: d - BACK_TW * 2 - 0.1,
+    y0: BACK_GY, h: h - 0.12,
+    trade: m.trade, variant: m.variant,
+    ux: 0, uz: 1, vx: sx, vz: 0,
+    ceiling: false, compact: true, maxItems: 9,
+  };
+}
+
+/**
+ * 审计入口：中央商业带**实际会建出来**的全部室内参数（临街排 + 后巷排）。
+ * 与 `buildCentralBelt` 同一套过滤（R5 段临街排已由宫前商业街建好，这里不重复）。
+ * 纯计算，不碰几何——测试与探针直接按这个列表抽样。
+ */
+export function beltRoomSpecs(): TradeRoomSpec[] {
+  const plan = planBelt();
+  const out: TradeRoomSpec[] = [];
+  for (const rp of plan.row1) {
+    if (rp.run.kind === KIND_R5) continue;
+    for (const m of rp.mods) out.push(frontRoomSpec(m));
+  }
+  for (const rp of plan.row2) {
+    for (const m of rp.mods) out.push(backRoomSpec(m));
+  }
+  return out;
+}
+
 // ============ 临街铺面 ============
 function frontShop(b: Baker, sg: SignMesher, atlas: SignAtlas, m: Shop, kit: string): void {
   const { sx, face, depth: d, w } = m;
@@ -357,11 +433,9 @@ function frontShop(b: Baker, sg: SignMesher, atlas: SignAtlas, m: Shop, kit: str
   const roofC = pick(ROOF_TONES, H(m.z0 * 0.0111, m.salt + 9));
   const flagC = pick(FLAG_TONES, H(m.z0 * 0.0137, m.salt + 11));
   const storeyH = 3.5 + t * 0.45;
-  const h = m.floors === 1 ? 3.7 + t * 1.0
-    : m.floors === 2 ? storeyH * 2 + 0.15
-      : storeyH * 3 + 0.3;
-  const gy = 0.36;                 // 地坪上皮
-  const TW = 0.28;                 // 墙厚
+  const h = frontShopH(m);
+  const gy = FRONT_GY;             // 地坪上皮
+  const TW = FRONT_TW;             // 墙厚
 
   // 台基（顶面即室内地坪，另铺一层薄砖只是色差，12 面/间不值得）
   b.box('ash', d + 0.9, 0.36, w + 0.7, cx, 0.18, zc, shade(wallC, 0.82));
@@ -435,18 +509,15 @@ function frontShop(b: Baker, sg: SignMesher, atlas: SignAtlas, m: Shop, kit: str
   }
   // 曲面反宇顶 + 两端山墙（判据 ③）
   const rh = (d < 7 ? 0.8 + w * 0.03 : 1.1 + w * 0.05);
-  b.roofC('roof', cx, gy + h, zc, roofC, Math.PI / 2, (w + 0.5) * 1.02, rh, d * 1.04);
+  const swC = (w + 0.5) * 1.02, sdC = d * 1.04;
+  b.roofC('roof', cx, gy + h, zc, roofC, Math.PI / 2, swC, rh, sdC);
+  // 旧版这里只有一榀裸曲面壳：没有连檐、没有滴水、没有正脊 —— 街面看是一段没有收头的灰壳。
+  // 补一圈连续檐口环（沿反宇折线，四边不断开）+ 一条正脊（脊沿 z，与 ry=π/2 一致）。
+  eaveRingOn(b, cx, gy + h, zc, Math.PI / 2, swC, sdC, rh, roofC);
+  b.box('roof', 0.42, 0.2, 0.32 * swC, cx, gy + h + rh + 0.05, zc, shade(roofC, 1.22));
   capGables(b, cx, zc, gy + h - 0.02, (w + 0.5) * 1.02, d * 0.54, rh * 1.03, st.hex);
   // 室内（判据 ①）
-  const room = {
-    cx, cz: zc, w: w - TW * 2 - 0.1, d: d - TW * 2 - 0.1,
-    y0: gy, h: h - 0.12,
-    trade: m.trade, variant: m.variant,
-    ux: 0, uz: 1, vx: sx, vz: 0,
-    ceiling: true,
-    maxItems: d >= 9 ? 14 : 11,
-  };
-  buildTradeInterior(b, room);
+  buildTradeInterior(b, frontRoomSpec(m));
   b.kit(kit, 1, h);
   b.kit(`belt.wall.${st.id}`, 1, h);
   b.kit(`belt.door.${DOOR_STYLES[m.door]}`, 1, h);
@@ -458,13 +529,12 @@ function backShop(b: Baker, m: Shop, kit: string): void {
   const { sx, face, depth: d, w } = m;
   const zc = (m.z0 + m.z1) / 2;
   const cx = sx * (face + d / 2);
-  const t = H(m.z0 * 0.0081, m.salt);
   const st = WALL_STYLES[m.style];
   const wallC = shade(pick(WALL_TONES, H(m.z0 * 0.0083, m.salt + 13)), 0.84 + m.style * 0.05);
   const roofC = pick(ROOF_TONES, H(m.z0 * 0.0097, m.salt + 17));
-  const h = m.floors === 2 ? 5.8 + t * 1.2 : 3.4 + t * 1.2;
-  const gy = 0.34;
-  const TW = 0.26;
+  const h = backShopH(m);
+  const gy = BACK_GY;
+  const TW = BACK_TW;
   b.box('ash', d + 0.8, 0.34, w + 0.6, cx, 0.17, zc, shade(wallC, 0.8));
   b.box('ash', d - TW * 2, 0.05, w - TW * 2, cx, gy - 0.025, zc, 0x6b7076);
   // 薄壁壳 + 后门洞（判据 ①）
@@ -475,12 +545,21 @@ function backShop(b: Baker, m: Shop, kit: string): void {
   for (const s of [-1, 1] as const) b.box(st.g, TW, h, seg, sx * (face + TW / 2), gy + h / 2, zc + s * (dw / 2 + seg / 2), st.hex);
   b.box(st.g, TW, h - 2.4, dw, sx * (face + TW / 2), gy + 2.4 + (h - 2.4) / 2, zc, st.hex);
   b.box('wood', 0.14, 2.2, dw * 0.8, sx * (face + 0.06), gy + 1.1, zc, 0x3a2418);
-  // 双坡顶（脊沿 z）：两块斜板绕 z 倾 + 正脊 + 两端山墙
+  // 双坡顶（脊沿 z）：两块斜板绕 z 倾 + 正脊 + 两端山墙。
+  // 近景段改成带 0.34m 瓦垄顶点色的坡面（旧版是两块素板，俯视就是一整块灰板），
+  // 并补连续连檐 + 滴水；|z0|≥1200 的远段仍用板，面数只花在能看清的街段上。
   const rh = 1.0 + w * 0.045;
   const L = Math.hypot(d / 2, rh);
   const th = Math.atan2(rh, d / 2);
+  const nearB = Math.abs(zc) < 1200;
   for (const rs of [-1, 1] as const) {
-    b.box('roof', L * 1.02, 0.18, w + 0.8, cx + (rs * d) / 4, gy + h + rh / 2, zc, roofC, 0, 0, -rs * th);
+    if (nearB) {
+      gableSlopeRibbed(b, cx, gy + h, zc, Math.PI / 2, (w + 0.8) / 2, d / 2, rh, rs, roofC);
+    } else {
+      b.box('roof', L * 1.02, 0.18, w + 0.8, cx + (rs * d) / 4, gy + h + rh / 2, zc, roofC, 0, 0, -rs * th);
+    }
+    b.box('roof', 0.34, 0.16, w + 0.8, cx + rs * (d / 2), gy + h - 0.05, zc, shade(roofC, 0.7));
+    b.box('roof', 0.16, 0.1, w + 0.8, cx + rs * (d / 2 + 0.06), gy + h - 0.16, zc, shade(roofC, 0.55));
   }
   b.box('roof', 0.4, 0.22, w + 0.9, cx, gy + h + rh, zc, shade(roofC, 1.26));
   capGables(b, cx, zc, gy + h, w + 0.8, d * 0.54, rh * 1.02, st.hex);
@@ -500,14 +579,8 @@ function backShop(b: Baker, m: Shop, kit: string): void {
   // 院内花木（判据 ⑤）
   const laneX = sx * (face - 1.9);
   flowerBush(b, laneX, zc - w * 0.34, 0.9, (m.salt * 7) % 5);
-  // 室内（院落带的后巷排走简装：8 件单盒形制，一间 ≈110 面）
-  buildTradeInterior(b, {
-    cx, cz: zc, w: w - TW * 2 - 0.1, d: d - TW * 2 - 0.1,
-    y0: gy, h: h - 0.12,
-    trade: m.trade, variant: m.variant,
-    ux: 0, uz: 1, vx: sx, vz: 0,
-    ceiling: false, compact: true, maxItems: 9,
-  });
+  // 室内（院落带的后巷排走简装档，见 backRoomSpec）
+  buildTradeInterior(b, backRoomSpec(m));
   b.kit(kit, 1, h);
   b.kit(`belt.wall.${st.id}`, 1, h);
 }

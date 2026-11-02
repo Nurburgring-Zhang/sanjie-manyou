@@ -4,7 +4,7 @@ import { roofOn, C } from '../city/buildings';
 import { PoolSet, MAX_CLOUDS } from '../actors/pools';
 import { buildWindFlora } from './flora';
 import { RNG } from '../core/rng';
-import { LINGXIAO_WIN, buildCloudTerrace, buildIslandSkirt, islandFallAngle, skyJitter, skyRoofOn, skyStackedRoof, skyDougongRing, skyCaihuaBand, CS_BASE, CS_DEEP, CS_TOP, GOLD_LINE, GOLD_ROOF, GOLD_TRIM } from './palace';
+import { LINGXIAO_WIN, buildCloudTerrace, buildIslandSkirt, islandFallAngle, skyJitter, skyRoofOn, skyStackedRoof, skyDougongRing, skyCaihuaBand, cloudBall, CS_BASE, CS_DEEP, CS_TOP, GOLD_LINE, GOLD_ROOF, GOLD_TRIM } from './palace';
 import { buildIslandKeel } from './expansion';
 
 // ============ 天宫：云海/南天门/凌霄殿/蟠桃园/丹房/莲台/广寒/星河 ============
@@ -133,8 +133,11 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
   const CXS = [-20, -13.25, -6.5, 6.5, 13.25, 20]; // 5 开间：明间 13 + 4×6.75 = 面阔 40
   const CZ = 11;                                    // 檐柱进深半宽 11 → 进深 22
 
-  // ① 台基三层须弥座：每层 2m（下枋 0.5 / 下枭 0.3 / 束腰 0.6 / 上枭 0.3 / 上枋 0.3），逐层收 3m
-  const TIERS: [number, number][] = [[48, 32], [45, 29], [42, 26]];
+  // ① 台基三层须弥座：每层 2m（下枋 0.5 / 下枭 0.3 / 束腰 0.6 / 上枭 0.3 / 上枋 0.3）。
+  // W48：面阔按 2.7273× 放大到 240m 后，台基若保持 32m 进深会伸到 z=113（世界），
+  //   把东西朝房（北缘 z=136.4）压在台基下面；故进深收窄到 24.2（世界 145.2，南缘 136.4），
+  //   宽度保持 48（世界 288）。三叠逐层收 2m（宽）/ 0.8m（深），顶叠 44×22.6 仍包住 40×22 的殿身。
+  const TIERS: [number, number][] = [[48, 24.2], [46, 23.4], [44, 22.6]];
   for (let i = 0; i < 3; i++) {
     const [tw, td] = TIERS[i];
     const y0 = FLR - 6 + i * 2;
@@ -144,29 +147,12 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
     b.box('ash', tw - 0.44, 0.3, td - 0.44, palace.x, y0 + 1.55, palace.z, shade(MB, 1.02));
     b.box('ash', tw, 0.3, td, palace.x, y0 + 1.85, palace.z, shade(MB, 1.06));             // 上枋
   }
-  // ② 正面丹陛御路：宽 6m（御路石 2.4 + 两侧阶条各 1.8），24 级 0.195m 踢面 / 0.3m 踏面 → 4.68m 升 7.2m
-  const SZ0 = palace.z + 13;                       // 顶层台明前缘（42×26 → z=108）
-  const RISE = 0.195, TREAD = 0.3, NSTEP = 24;
-  for (let i = 0; i < NSTEP; i++) {
-    const h = FLR - i * RISE - DECK;
-    b.box('ash', 6, h, TREAD, palace.x, DECK + h / 2, SZ0 + i * TREAD + TREAD / 2, shade(MB, i % 2 ? 0.98 : 1.03));
-  }
-  const RUN = NSTEP * TREAD, LIFT = NSTEP * RISE;
-  const SANG = Math.atan2(LIFT, RUN);              // 御路坡度 33°
-  const ZMID = SZ0 + RUN / 2, YMID = (FLR + DECK) / 2;
-  const SLOPE = Math.hypot(RUN, LIFT) + 0.6;
-  b.box('ash', 2.4, 0.34, SLOPE, palace.x, YMID, ZMID, shade(MB, 1.04), 0, SANG, 0); // 御路石（整块斜板）
-  for (let k = 0; k < 6; k++) {                    // 云龙浮雕：深色薄片，六段，非灯带
-    const s = (k - 2.5) * 1.15;
-    b.box('ash', 1.55, 0.06, 1.0,
-      palace.x, YMID - s * Math.sin(SANG) + 0.19 * Math.cos(SANG), ZMID + s * Math.cos(SANG) - 0.19 * Math.sin(SANG),
-      shade(MB, 0.72), 0, SANG, 0);
-  }
-  for (const sx of [-1, 1]) {                      // 垂带石（御路两侧斜栏）
-    b.box('ash', 0.24, 0.5, SLOPE, palace.x + sx * 3.12, YMID + 0.28, ZMID, shade(MB, 1.08), 0, SANG, 0);
-  }
-  // ③ 台基石栏杆：望柱间距 2.4m、通高 1.2m（柱身 1.04 + 柱头 0.16），两道寻杖，正面让开丹陛
-  const RL = 21, RD = 13;                          // 顶层台明 42×26 的半宽
+  // ② 正面丹陛御路（W48：由本段预缩放坐标系迁到文件末尾「世界坐标」段重建）
+  //   旧版 24 级 0.195×0.3（4.68m 升 / 7.2m 跑）在 2.7273× 后升 28.1m、跑 43.2m，
+  //   起点在台基南缘（世界 z≈138），落在前庭平台上；级别加到 36 级，踏面 1.14、踢面 0.92。
+  //   本段不再出任何踏步——预缩放坐标里的踏步会被二次缩放拉长到台基体内。
+  // ③ 台基石栏杆：望柱间距 2.4m、通高 1.2m（柱身 1.04 + 柱头 0.16），两道寻杖，正面（−z）让开丹陛
+  const RL = 22, RD = 11.3;                        // 顶层台明 44×22.6 的半宽
   const post = (px: number, pz: number): void => {
     b.box('ash', 0.22, 1.04, 0.22, px, FLR + 0.52, pz, shade(MB, 1.02));
     b.box('ash', 0.32, 0.16, 0.32, px, FLR + 1.12, pz, shade(MB, 1.12));
@@ -181,36 +167,41 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
     }
   };
   const FX = palace.x, FZ = palace.z;
-  rail(FX - RL, FZ + RD, FX - 3.3, FZ + RD);
-  rail(FX + 3.3, FZ + RD, FX + RL, FZ + RD);
-  rail(FX - RL, FZ - RD, FX + RL, FZ - RD);
+  // 正面（−z，朝南天门）留 6.6m 丹陛口，其余三面连续
+  rail(FX - RL, FZ - RD, FX - 3.3, FZ - RD);
+  rail(FX + 3.3, FZ - RD, FX + RL, FZ - RD);
+  rail(FX - RL, FZ + RD, FX + RL, FZ + RD);
   rail(FX - RL, FZ - RD, FX - RL, FZ + RD);
   rail(FX + RL, FZ - RD, FX + RL, FZ + RD);
   // 墙身（厚实红色，金色液金纹饰）——WS-11 掏空为殿身壳：外轮廓与旧实心块逐面一致
-  // （x ±20 / z 84·106 / y 218.5–230.8），仅开南面明间门 + 东西两面各 4 樘支摘窗洞
+  // （x ±20 / z 84·106 / y 218.5–230.8），仅开**南面（−z，朝南天门）**明间门 + 东西两面各 4 樘支摘窗洞
   // W24：墙顶 229.2 → 230.8（殿身 10.4 → 12.0m），檐柱/额枋/斗拱同步抬 1.6m，下檐基准 230.91
+  // W48：门洞由 +z 面翻到 −z 面——南天门在 −z，殿门必须正对它；背面（+z）改为整面朱墙。
   {
     const HY0 = palace.y + 4.5, HY1 = palace.y + 16.8;
-    const WC = shade(0xa02818, 1.0), HWIN = LINGXIAO_WIN;
+    const WC = shade(0xd2381f, 1.0), HWIN = LINGXIAO_WIN;
+    // W48：墙身由 'wall' 改 'wood'。wall 组是 MeshLambertMaterial + emissive 0x3a3d48（冷灰自发光），
+    //   天宫主殿朝南的立面常年背光，冷灰 emissive 把朱红拉成紫褐；wood 组无 emissive，红能站住。
+    const WG = 'wood' as const;
     const ySill = (HY0 + HWIN.sill) / 2, yHead = (HWIN.head + HY1) / 2, yMid = (HWIN.sill + HWIN.head) / 2;
     for (const sx of [-1, 1]) {
       const wx = palace.x + sx * 19.7;
-      b.box('wall', 0.6, HWIN.sill - HY0, 20.8, wx, ySill, palace.z, WC);
-      b.box('wall', 0.6, HY1 - HWIN.head, 20.8, wx, yHead, palace.z, WC);
+      b.box(WG, 0.6, HWIN.sill - HY0, 20.8, wx, ySill, palace.z, WC);
+      b.box(WG, 0.6, HY1 - HWIN.head, 20.8, wx, yHead, palace.z, WC);
       let zp = palace.z - 10.4;
       for (const zc of HWIN.zs) {
         const z0 = zc - HWIN.half, z1 = zc + HWIN.half;
-        if (z0 - zp > 0.06) b.box('wall', 0.6, HWIN.head - HWIN.sill, z0 - zp, wx, yMid, (zp + z0) / 2, WC);
+        if (z0 - zp > 0.06) b.box(WG, 0.6, HWIN.head - HWIN.sill, z0 - zp, wx, yMid, (zp + z0) / 2, WC);
         zp = z1;
       }
-      if (palace.z + 10.4 - zp > 0.06) b.box('wall', 0.6, HWIN.head - HWIN.sill, palace.z + 10.4 - zp, wx, yMid, (zp + palace.z + 10.4) / 2, WC);
+      if (palace.z + 10.4 - zp > 0.06) b.box(WG, 0.6, HWIN.head - HWIN.sill, palace.z + 10.4 - zp, wx, yMid, (zp + palace.z + 10.4) / 2, WC);
     }
-    b.box('wall', 40, HY1 - HY0, 0.6, palace.x, (HY0 + HY1) / 2, palace.z - 10.7, WC);
-    for (const sx of [-1, 1]) b.box('wall', 14, HY1 - HY0, 0.6, palace.x + sx * 13, (HY0 + HY1) / 2, palace.z + 10.7, WC);
-    b.box('wall', 12, HY1 - 221.7, 0.6, palace.x, (221.7 + HY1) / 2, palace.z + 10.7, WC);
+    b.box(WG, 40, HY1 - HY0, 0.6, palace.x, (HY0 + HY1) / 2, palace.z + 10.7, WC);
+    for (const sx of [-1, 1]) b.box(WG, 14, HY1 - HY0, 0.6, palace.x + sx * 13, (HY0 + HY1) / 2, palace.z - 10.7, WC);
+    b.box(WG, 12, HY1 - 221.7, 0.6, palace.x, (221.7 + HY1) / 2, palace.z - 10.7, WC);
   }
   // 墙面金色装饰线（走马板下沿；上沿那条由匾额压住，已删）
-  b.box('wood', 40, 0.5, 0.3, palace.x, palace.y + 8, palace.z + 11.2, GOLD_TRIM);
+  b.box('wood', 40, 0.5, 0.3, palace.x, palace.y + 8, palace.z - 11.2, GOLD_TRIM);
   // ④ 柱网 14 根蟠龙金柱：前后檐各 6（5 开间）+ 东西山面各 1（中柱），φ0.95、高 10.6m。
   //   柱心落在 40×22 的殿身线上（与文档通面阔/进深同数），故前后檐柱半嵌墙身、明间两根立于门洞中。
   //   W24：柱高 9 → 10.6（柱顶 229.40 = 额枋底），缠龙环间距同步由 1.7 放到 1.95，五道仍匀布柱身。
@@ -253,7 +244,7 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
   // ⑧ 上层殿身：34×20 朱红围脊墙（231.55–235.41），盖住下檐正脊（234.15）与两端鸱吻，再由上檐压住——
   //   「重檐」的重在这一层；上檐檐口 36.9×23.3，比墙身出挑 1.44/1.63m；
   //   层间短柱（18.2×11.4，12 根）落在墙外 1.2m 的下檐屋面上，柱头与上檐栌斗对位
-  b.box('wall', 34, 3.86, 20, palace.x, 233.48, palace.z, shade(0xa02818, 1.0));
+  b.box('wood', 34, 3.86, 20, palace.x, 233.48, palace.z, shade(0xd2381f, 1.0));
   b.box('wood', 34.5, 0.34, 20.5, palace.x, 235.75, palace.z, PAINT);              // 上层额枋
   b.box('wood', 34.6, 0.14, 20.6, palace.x, 235.97, palace.z, GOLD_TRIM);          // 上金线
   for (let i = 0; i < 7; i++) {                                                     // 上层支摘窗
@@ -288,117 +279,224 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
     }
   }
   // ⑪ 匾额：13m×2.6m「凌霄寶殿」，悬明间额枋之下、门洞上方（明间净宽 13m，两侧金柱正好夹住）
-  sg.quad(atlas.text('lingxiao', '凌霄寶殿', 640, 152, { color: '#ffe9b8', glow: '#ffd25e', bg: 'rgba(12,8,4,0.92)', border: 'rgba(255,210,94,.95)', fontPx: 104 }), 13, 2.6, palace.x, FLR + 7.8, palace.z + 11.32, 0);
-  b.box('wood', 13.5, 0.24, 0.16, palace.x, FLR + 9.18, palace.z + 11.36, GOLD_TRIM);
-  b.box('wood', 13.5, 0.24, 0.16, palace.x, FLR + 6.42, palace.z + 11.36, GOLD_TRIM);
-  for (const sx of [-1, 1]) b.box('wood', 0.26, 2.76, 0.16, palace.x + sx * 6.62, FLR + 7.8, palace.z + 11.36, GOLD_TRIM);
-  // 丹墀（玉帝早朝班位）
-  for (let i = 0; i < 6; i++) {
-    b.cyl('wall', 0.9, 1.1, 0.24, 8, court.x + (i % 2 ? 3 : -3), court.y + 0.12, court.z + 2 + Math.floor(i / 2) * 3.4, shade(0x9a8050, 1));
-  }
-  for (let s2 = 0; s2 < 5; s2++) {
-    b.box('wall', 20 - s2 * 1.6, 0.8, 2.6, palace.x, palace.y + 0.4 - s2 * 0.55, palace.z - 13 - s2 * 2.2, shade(0x8a8298, 1 - s2 * 0.04));
-  }
+  // W48：随殿门翻到 −z 面，招牌转 180°（SignMesher 的 ry=π 让正面朝南天门）
+  sg.quad(atlas.text('lingxiao', '凌霄寶殿', 640, 152, { color: '#ffe9b8', glow: '#ffd25e', bg: 'rgba(12,8,4,0.92)', border: 'rgba(255,210,94,.95)', fontPx: 104 }), 13, 2.6, palace.x, FLR + 7.8, palace.z - 11.32, Math.PI);
+  b.box('wood', 13.5, 0.24, 0.16, palace.x, FLR + 9.18, palace.z - 11.36, GOLD_TRIM);
+  b.box('wood', 13.5, 0.24, 0.16, palace.x, FLR + 6.42, palace.z - 11.36, GOLD_TRIM);
+  for (const sx of [-1, 1]) b.box('wood', 0.26, 2.76, 0.16, palace.x + sx * 6.62, FLR + 7.8, palace.z - 11.36, GOLD_TRIM);
+  // 丹墀（玉帝早朝班位）——W48 迁到世界坐标前庭段（原预缩放坐标会被 2.7273× 拉成 54m 长条）
 
-  // ---- 灵霄殿前庭陈设（旧版殿前是一整片空玉台：仪仗/陈设/玉阶栏杆/铺装分缝一次补齐） ----
-  // 台面砖顶 = palace.y + 0.12（platform() 台面铺砖厚 0.12）；殿前正中 |x| ≤ 10 恒留视线通道
-  const fy = palace.y + 0.12;
-  const JADE = 0xd8d0c0, GOLDV = GOLD_TRIM;
-  // 前庭玉墁地：半径 34 压在深色台面砖上（不越出台基圆边），给俯视一个明确的轴向地面
-  b.cyl('ash', 34, 34, 0.05, 36, palace.x, fy + 0.02, palace.z, shade(0xd0c8b8, 1));
-  b.kit('palace.paving', 1, fy);
-  // 铺装分缝：0.03 高的色差细线，只做尺度不做厚度
-  const JR = 45.2;
-  for (let xl = -36; xl <= 36; xl += 9) {
-    const hw = Math.sqrt(Math.max(0, JR * JR - xl * xl));
-    const z0 = palace.z + 15.8, z1 = palace.z + hw - 0.6;
-    if (z1 - z0 < 2) continue;
-    b.box('ground', 0.13, 0.03, z1 - z0, palace.x + xl, fy + 0.06, (z0 + z1) / 2, shade(0x6e5e40, 0.5));
-  }
-  for (let zt = 112; zt <= 138; zt += 6.5) {
-    const hw = Math.sqrt(Math.max(0, JR * JR - (zt - palace.z) * (zt - palace.z))) - 0.6;
-    if (hw < 4) continue;
-    b.box('ground', hw * 2, 0.03, 0.13, palace.x, fy + 0.06, zt, shade(0x6e5e40, 0.5));
-  }
-  b.kit('palace.pavingJoint', 19, fy + 0.06);
-  // 御路两侧金线：夹出正中 10.8m 宽的朝觐通道（glow 细线，按 GOLD_LINE 档，不再按受光面压）
-  for (const s2 of [-1, 1]) b.box('glow', 0.16, 0.04, 19, palace.x + s2 * 5.4, fy + 0.07, palace.z + 25.5, GOLD_LINE);
-  b.kit('palace.royalLine', 2, fy + 0.07);
-  // 旌旗：石座 + 旗杆 + 旗面 + 飘带 + 顶饰（连顶饰 3.55，压在台面 +4m 内，不遮立面上半）
-  const banner = (bx: number, bz: number, sd: number, cloth: number, kit: string): void => {
-    b.box('ash', 0.9, 0.3, 0.9, bx, fy + 0.15, bz, shade(0x8a8298, 1.06));
-    b.cyl('wood', 0.1, 0.15, 3.0, 6, bx, fy + 1.8, bz, shade(0x5a3a24, 1.05));
-    b.box('fabric', 1.15, 1.42, 0.06, bx + 0.58 * sd, fy + 2.6, bz, cloth);
-    b.box('fabric', 0.34, 0.6, 0.05, bx + 1.0 * sd, fy + 1.86, bz, shade(cloth, 0.78));
-    b.cyl('metal', 0.11, 0.15, 0.16, 6, bx, fy + 3.34, bz, shade(GOLDV, 1.05));
-    b.box('glow', 0.14, 0.14, 0.14, bx, fy + 3.48, bz, 0xffd25e, 0, 0, Math.PI / 4);
-    b.kit(kit, 1, fy + 2.6);
+  // ================= W48：凌霄宫殿前区（宫台 / 大台阶 / 前庭）—— 世界坐标直写 =================
+  // 本段之外的凌霄殿几何走「预缩放坐标 → 2.2× → 2.7273×」；宫台/台阶/前庭是承托放大后
+  // 288×145.2m 台基的新构件，必须按**最终世界尺寸**落位。若也写预缩放坐标，它们会被
+  // 2.7273× 再拉一遍（旧前庭铺装/旌旗/香炉正是这样被撕成 50m 长条的）。
+  // HW 逆变换把世界坐标换回烘焙坐标：这些点全在 k 选区之外，只吃 2.2×。
+  const HW = 2.2;
+  const wx = (v: number): number => v / HW;
+  const wy = (v: number): number => 196 + (v - 196) / HW;
+  const wz = (v: number): number => v / HW;
+  /** 世界坐标盒（尺寸按世界口径给，内部折回烘焙坐标） */
+  const WB = (g: BGroup, w: number, h: number, d: number, x: number, y: number, z: number, hex: number, ry = 0, rx = 0, rz = 0): void => {
+    b.box(g, w / HW, h / HW, d / HW, wx(x), wy(y), wz(z), hex, ry, rx, rz);
   };
-  // 戟架：石脚 + 双柱 + 上下横枋 + n 杆戟（横刃 + 戟尖 + 红缨）
-  const halberdRack = (hx: number, hz: number, n: number, kit: string): void => {
-    const w = 0.6 + n * 0.42;
-    b.box('ash', w + 0.5, 0.22, 0.9, hx, fy + 0.11, hz, shade(0x8a8298, 1.05));
-    for (const s2 of [-1, 1]) b.box('wood', 0.18, 2.1, 0.18, hx + s2 * (w / 2), fy + 1.05, hz, shade(0x5a3a24, 1.02));
-    b.box('wood', w + 0.2, 0.14, 0.14, hx, fy + 2.0, hz, shade(0x5a3a24, 1.12));
-    b.box('wood', w + 0.2, 0.12, 0.12, hx, fy + 0.5, hz, shade(0x4a2e1c, 1));
+  const WC = (g: BGroup, rt: number, rb: number, h: number, seg: number, x: number, y: number, z: number, hex: number, ry = 0, rx = 0, rz = 0): void => {
+    b.cyl(g, rt / HW, rb / HW, h / HW, seg, wx(x), wy(y), wz(z), hex, ry, rx, rz);
+  };
+  const LXK = 2.7273;
+  const W_DECK = 196 + (palace.y + 0.12 - 196) * HW;                    // 235.86 宫台面（= 2.2× 云台面）
+  const W_TOP = 233 + (196 + (palace.y + 4.8 - 196) * HW - 233) * LXK;  // 268.89 台明顶（= 放大后台基顶）
+  const W_BASE_FRONT = 209 + ((palace.z - 12.1) * HW - 209) * LXK;      // 136.44 台基南缘（顶层台明前缘）
+  const GS = 6.0;                                                       // 设计尺寸 → 世界（2.2 × 2.7273）
+  const JADE = 0xd8d0c0, GOLDV = GOLD_TRIM;
+
+  // ① 宫台：300×153.6 矩形浮台，承住放大后 288×145.2 的台基（南缘与台基南缘齐平）
+  WB('ash', 300, 1.4, 153.6, 0, W_DECK - 0.7, 213.4, shade(0x8f8a80, 1.04));  // 台面
+  WB('ash', 304, 1.6, 157.6, 0, W_DECK - 2.2, 213.4, shade(0x827d76, 0.98));  // 上枭
+  WB('ash', 308, 2.4, 161.6, 0, W_DECK - 4.2, 213.4, shade(0x6f6b66, 0.96));  // 束腰
+  WB('ash', 312, 2.8, 165.6, 0, W_DECK - 6.8, 213.4, shade(0x77726c, 0.94));  // 下枋
+  // 岩体三级收口，沉进云海面（197）以下——读作浮岛而不是薄盘
+  WB('ash', 296, 7, 152, 0, W_DECK - 11.7, 213.4, shade(0x6a6660, 0.98));
+  WB('ash', 274, 9, 140, 0, W_DECK - 19.7, 213.4, shade(0x605c57, 0.96));
+  WB('ash', 248, 11, 124, 0, W_DECK - 30.2, 213.4, shade(0x57534f, 0.98));
+  WB('ash', 206, 15, 102, 0, W_DECK - 43.2, 213.4, shade(0x4f4c48, 0.96));
+  // 宫台缘云团：把矩形岩台接进云海（cloudBall 是攒批云的公共入口，与本岛既有云团同源）
+  for (let i = 0; i < 9; i++) {
+    const t = i / 8;
+    const cx2 = -150 + 300 * t;
+    cloudBall(b, cx2, W_DECK - 20 - (i % 3) * 3, 137.5, 15 + (i % 4) * 3, 700 + i);
+    cloudBall(b, cx2, W_DECK - 22 - (i % 3) * 3, 289.5, 15 + ((i + 2) % 4) * 3, 730 + i);
+  }
+  b.kit('palace.podium', 8, W_DECK);
+
+  // ② 前庭平台：112×46，南缘 95.6（让开斗法云台北缘 96.8），北接宫台
+  WB('ash', 112, 1.2, 46, 0, W_DECK - 0.6, 118.6, shade(0x9a948a, 1.04));
+  WB('ash', 116, 1.4, 50, 0, W_DECK - 1.9, 118.6, shade(0x86817a, 0.99));
+  WB('ash', 120, 2.4, 54, 0, W_DECK - 3.8, 118.6, shade(0x726e69, 0.96));
+  WB('ash', 112, 6, 46, 0, W_DECK - 8, 118.6, shade(0x64605b, 0.98));
+  WB('ash', 96, 8, 38, 0, W_DECK - 15, 118.6, shade(0x5a5753, 0.96));
+  WB('ash', 76, 10, 30, 0, W_DECK - 24, 118.6, shade(0x524f4c, 0.98));
+  for (let i = 0; i < 7; i++) {
+    const t = i / 6;
+    cloudBall(b, -50 + 100 * t, W_DECK - 19 - (i % 3) * 2, 96.5, 12 + (i % 3) * 3, 760 + i);
+  }
+  b.kit('palace.forecourt', 6, W_DECK);
+
+  // ③ 前庭栏杆：望柱 + 两道寻杖（世界尺度 6m 高，与台基栏杆同档）；南缘中段让开 40m 台阶口
+  const gpost = (px: number, pz: number, y0: number): void => {
+    WB('ash', 0.9, 5.6, 0.9, px, y0 + 2.8, pz, shade(0xcfc8b8, 1.04));
+    WB('ash', 1.3, 0.6, 1.3, px, y0 + 5.9, pz, shade(0xded6c4, 1.1));
+  };
+  const grail = (ax: number, az: number, bx: number, bz: number, y0: number): void => {
+    const dx = bx - ax, dz = bz - az, len = Math.hypot(dx, dz);
+    const ry = Math.atan2(-dz, dx);
+    const n = Math.max(1, Math.round(len / 9));
+    for (let i = 0; i <= n; i++) gpost(ax + (dx * i) / n, az + (dz * i) / n, y0);
+    WB('ash', len, 0.5, 0.34, (ax + bx) / 2, y0 + 4.9, (az + bz) / 2, shade(0xd6cfbe, 1.02), ry);
+    WB('ash', len, 0.4, 0.28, (ax + bx) / 2, y0 + 2.6, (az + bz) / 2, shade(0xc8c1b0, 0.98), ry);
+  };
+  grail(-56, 95.9, -21, 95.9, W_DECK);
+  grail(21, 95.9, 56, 95.9, W_DECK);
+  grail(-56, 95.9, -56, 136.2, W_DECK);
+  grail(56, 95.9, 56, 136.2, W_DECK);
+  b.kit('palace.forecourtRail', 4);
+
+  // ④ 大台阶 36 级：台明顶 268.89 → 宫台面 235.86，跑 39.8m（37°），踏面 1.10 / 踢面 0.92
+  const NSTEP = 36;
+  const zTop = W_BASE_FRONT, zBot = 96.6;
+  const RUN = (zTop - zBot) / NSTEP, RISE = (W_TOP - W_DECK) / NSTEP;
+  for (let i = 0; i < NSTEP; i++) {
+    const yTop = W_TOP - i * RISE;
+    WB('ash', 40, yTop - W_DECK, RUN, 0, (W_DECK + yTop) / 2, zTop - (i + 0.5) * RUN,
+      shade(0xcfc8b8, i % 2 ? 1.0 : 1.05));
+  }
+  b.kit('palace.grandStair', NSTEP, W_DECK);
+  // 御路石 + 云龙浮雕 8 段（整块斜板，坡度与踏步一致）
+  const SANG = Math.atan2(W_TOP - W_DECK, zTop - zBot);
+  const SLOPE = Math.hypot(zTop - zBot, W_TOP - W_DECK) + 1.2;
+  WB('ash', 7, 1.0, SLOPE, 0, (W_TOP + W_DECK) / 2 + 1.0, (zTop + zBot) / 2, shade(0xded6c4, 1.08), 0, -SANG, 0);
+  for (let k = 0; k < 8; k++) {
+    const t = (k + 0.5) / 8;
+    WB('ash', 5.0, 0.28, 2.6, 0, W_DECK + (W_TOP - W_DECK) * t + 1.55, zBot + (zTop - zBot) * t,
+      shade(0xb8b09e, 0.9), 0, -SANG, 0);
+  }
+  for (const s2 of [-1, 1]) {
+    WB('ash', 2.4, 1.2, SLOPE, s2 * 21.2, (W_TOP + W_DECK) / 2 + 1.6, (zTop + zBot) / 2, shade(0xe6dece, 1.1), 0, -SANG, 0);
+  }
+  // 台阶两侧望柱（10 对）+ 斜寻杖两道
+  for (let i = 0; i <= 9; i++) {
+    const t = i / 9;
+    const pz = zBot + (zTop - zBot) * t, py = W_DECK + (W_TOP - W_DECK) * t;
+    for (const s2 of [-1, 1]) {
+      WB('ash', 1.0, 6.2, 1.0, s2 * 23.4, py + 3.1, pz, shade(0xd6cfbe, 1.06));
+      WB('ash', 1.4, 0.6, 1.4, s2 * 23.4, py + 6.5, pz, shade(0xe6dece, 1.12));
+    }
+  }
+  for (const s2 of [-1, 1]) {
+    WB('ash', 0.7, 0.7, SLOPE, s2 * 23.4, (W_TOP + W_DECK) / 2 + 5.2, (zTop + zBot) / 2, shade(0xded6c4, 1.04), 0, -SANG, 0);
+    WB('ash', 0.6, 0.6, SLOPE, s2 * 23.4, (W_TOP + W_DECK) / 2 + 3.4, (zTop + zBot) / 2, shade(0xd2cbb9, 1.0), 0, -SANG, 0);
+  }
+  b.kit('palace.stairRail', 20, W_DECK);
+
+  // ⑤ 前庭铺装：104×40 玉墁地 + 分缝 + 御路金线（夹出 21.6m 中央朝觐通道）
+  WB('ash', 104, 0.14, 40, 0, W_DECK + 0.07, 118, shade(0xd0c8b8, 1.0));
+  for (let xl = -48; xl <= 48; xl += 8) WB('ground', 0.5, 0.06, 40, xl, W_DECK + 0.15, 118, shade(0x6e5e40, 0.5));
+  for (let zl = 100; zl <= 136; zl += 8) WB('ground', 104, 0.06, 0.5, 0, W_DECK + 0.15, zl, shade(0x6e5e40, 0.5));
+  b.kit('palace.paving', 1, W_DECK);
+  b.kit('palace.pavingJoint', 19, W_DECK + 0.15);
+  for (const s2 of [-1, 1]) WB('glow', 0.6, 0.1, 40, s2 * 10.8, W_DECK + 0.19, 118, GOLD_LINE);
+  b.kit('palace.royalLine', 2, W_DECK + 0.19);
+
+  // ⑥ 品级山：8 对石标（当朝班位），沿御路两侧错列
+  for (let i = 0; i < 8; i++) {
+    const pz = 102 + i * 4.5;
+    for (const s2 of [-1, 1]) {
+      const px = s2 * (27 + (i % 2) * 13);
+      WB('ash', 2.0, 1.0, 2.0, px, W_DECK + 0.5, pz, shade(0xa8a190, 1.02));
+      WB('ash', 1.4, 2.8, 1.4, px, W_DECK + 2.4, pz, shade(0xbdb6a4, 1.06));
+      WB('ash', 1.7, 0.34, 1.7, px, W_DECK + 3.9, pz, shade(0xd0c8b8, 1.1));
+    }
+  }
+  b.kit('palace.rankStone', 16, W_DECK);
+
+  // ⑦ 旌旗：石座 + 旗杆 + 旗面 + 飘带 + 顶饰（按 GS 放大到世界尺度，顶饰 ≤ 台明顶）
+  const wBanner = (bx: number, bz: number, sd: number, cloth: number, kit: string): void => {
+    WB('ash', 0.9 * GS, 0.3 * GS, 0.9 * GS, bx, W_DECK + 0.15 * GS, bz, shade(0x8a8298, 1.06));
+    WC('wood', 0.1 * GS, 0.15 * GS, 3.0 * GS, 6, bx, W_DECK + 1.8 * GS, bz, shade(0x5a3a24, 1.05));
+    WB('fabric', 1.15 * GS, 1.42 * GS, 0.06 * GS, bx + 0.58 * GS * sd, W_DECK + 2.6 * GS, bz, cloth);
+    WB('fabric', 0.34 * GS, 0.6 * GS, 0.05 * GS, bx + 1.0 * GS * sd, W_DECK + 1.86 * GS, bz, shade(cloth, 0.78));
+    WC('metal', 0.11 * GS, 0.15 * GS, 0.16 * GS, 6, bx, W_DECK + 3.34 * GS, bz, shade(GOLDV, 1.05));
+    WB('glow', 0.14 * GS, 0.14 * GS, 0.14 * GS, bx, W_DECK + 3.48 * GS, bz, 0xffd25e, 0, 0, Math.PI / 4);
+    b.kit(kit, 1, W_DECK + 2.6 * GS);
+  };
+  // ⑧ 戟架：石脚 + 双柱 + 上下横枋 + n 杆戟（横刃 + 戟尖 + 红缨）
+  const wHalberdRack = (hx: number, hz: number, n: number, kit: string): void => {
+    const w = (0.6 + n * 0.42) * GS;
+    WB('ash', w + 0.5 * GS, 0.22 * GS, 0.9 * GS, hx, W_DECK + 0.11 * GS, hz, shade(0x8a8298, 1.05));
+    for (const s2 of [-1, 1]) WB('wood', 0.18 * GS, 2.1 * GS, 0.18 * GS, hx + s2 * (w / 2), W_DECK + 1.05 * GS, hz, shade(0x5a3a24, 1.02));
+    WB('wood', w + 0.2 * GS, 0.14 * GS, 0.14 * GS, hx, W_DECK + 2.0 * GS, hz, shade(0x5a3a24, 1.12));
+    WB('wood', w + 0.2 * GS, 0.12 * GS, 0.12 * GS, hx, W_DECK + 0.5 * GS, hz, shade(0x4a2e1c, 1));
     for (let k = 0; k < n; k++) {
       const ax = hx - w / 2 + (k + 0.5) * (w / n);
-      b.box('wood', 0.07, 2.5, 0.07, ax, fy + 1.25, hz, shade(0x6b4a2b, 1.06));
-      b.box('metal', 0.34, 0.26, 0.06, ax + 0.16, fy + 2.36, hz, 0x9aa6b8, 0, 0, -0.25);
-      b.box('metal', 0.06, 0.34, 0.06, ax, fy + 2.5, hz, 0xb8c0c8);
-      b.box('fabric', 0.16, 0.3, 0.04, ax, fy + 2.0, hz + 0.06, 0xa02818);
+      WB('wood', 0.07 * GS, 2.5 * GS, 0.07 * GS, ax, W_DECK + 1.25 * GS, hz, shade(0x6b4a2b, 1.06));
+      WB('metal', 0.34 * GS, 0.26 * GS, 0.06 * GS, ax + 0.16 * GS, W_DECK + 2.36 * GS, hz, 0x9aa6b8, 0, 0, -0.25);
+      WB('metal', 0.06 * GS, 0.34 * GS, 0.06 * GS, ax, W_DECK + 2.5 * GS, hz, 0xb8c0c8);
+      WB('fabric', 0.16 * GS, 0.3 * GS, 0.04 * GS, ax, W_DECK + 2.0 * GS, hz + 0.06 * GS, 0xa02818);
     }
-    b.kit(kit, 1, fy + 1.1);
+    b.kit(kit, 1, W_DECK + 1.1 * GS);
   };
-  // 大鼓（庙鼓尺度）：双立柱鼓架 + 抱鼓墩 + 朱漆鼓身 + 牛皮双面 + 两圈鼓钉 + 鼓槌
-  // 反光（用户点名）：鼓身旧版走 lacquer 组（clearcoat 0.85 / clearcoatRoughness 0.14，接近车漆），
-  // 在天宫强光下会沿鼓身拉出一条镜面高光带，读成玻璃/塑料而不是「朱漆木鼓」。
-  // 调用侧改走 wood 组（roughness 0.82 / metalness 0.03 / 无清漆）：漆面仍有柔光，但没有镜面高光。
-  // 鼓面继续走 fabric（roughness 0.92 + sheen 0.25），色压到暗牛皮，避免再烧成白团。
-  // 尺度：鼓径 1.1 / 鼓身长 0.86 / 鼓轴 1.0m → 鼓顶 1.55m，庙鼓体量，不高过人。
-  const DRUM_AXLE = 1.0;        // 鼓轴高 1.0m：鼓顶 1.55m，庙鼓体量，不高过人
-  const drum = (dx: number, dz: number, kit: string): void => {
-    buildTempleDrum(b, dx, fy, dz);
-    b.kit(kit, 1, fy + DRUM_AXLE);
+  // ⑨ 大鼓（庙鼓尺度 × GS）：双立柱鼓架 + 抱鼓墩 + 朱漆鼓身 + 牛皮双面 + 两圈鼓钉 + 鼓槌
+  // 反光（用户点名）：鼓身走 wood 组（roughness 0.82 / metalness 0.03 / 无清漆），
+  // 天宫强光下不会沿鼓身拉出镜面高光带；鼓面走 fabric（roughness 0.92 + sheen 0.25）。
+  const wDrum = (dx2: number, dz2: number, kit: string): void => {
+    const R = 0.55 * GS, HALF = 0.43 * GS, AXLE = 1.0 * GS;
+    for (const s2 of [-1, 1]) {
+      WB('wood', 0.3 * GS, 0.16 * GS, 0.94 * GS, dx2 + s2 * 0.76 * GS, W_DECK + 0.08 * GS, dz2, shade(0x4a2e1c, 1.0));
+      WB('wood', 0.18 * GS, AXLE, 0.2 * GS, dx2 + s2 * 0.76 * GS, W_DECK + AXLE / 2 + 0.08 * GS, dz2, shade(0x5a3a24, 1.06));
+      WB('metal', 0.24 * GS, 0.1 * GS, 0.26 * GS, dx2 + s2 * 0.76 * GS, W_DECK + AXLE + 0.13 * GS, dz2, shade(GOLDV, 0.9));
+    }
+    WB('wood', 1.6 * GS, 0.12 * GS, 0.14 * GS, dx2, W_DECK + 0.2 * GS, dz2, shade(0x4a2e1c, 1.02));
+    WC('wood', R, R, HALF * 2, 16, dx2, W_DECK + AXLE, dz2, 0xa8321f, 0, 0, Math.PI / 2);
+    for (const s2 of [-1, 1]) {
+      WC('fabric', R * 0.94, R * 0.94, 0.08 * GS, 16, dx2 + s2 * (HALF - 0.04 * GS), W_DECK + AXLE, dz2, 0x7a6349, 0, 0, Math.PI / 2);
+      WC('wood', R * 1.04, R * 1.04, 0.12 * GS, 16, dx2 + s2 * (HALF * 0.72), W_DECK + AXLE, dz2, shade(0x5e1a12, 1.0), 0, 0, Math.PI / 2);
+    }
+    for (let k = 0; k < 12; k++) {
+      const a = (k / 12) * Math.PI * 2;
+      for (const s2 of [-1, 1]) {
+        WB('metal', 0.1 * GS, 0.1 * GS, 0.06 * GS, dx2 + Math.cos(a) * R * 0.72, W_DECK + AXLE + Math.sin(a) * R * 0.72, dz2 + s2 * (HALF + 0.03 * GS), 0xb08a3c);
+      }
+    }
+    b.kit(kit, 1, W_DECK + AXLE);
   };
-  // 铜香炉：石座 + 三足 + 炉身 + 炉口 + 炉盖 + 双耳 + 香火
-  const censer = (cx2: number, cz2: number, kit: string): void => {
-    b.cyl('ash', 0.62, 0.72, 0.3, 8, cx2, fy + 0.15, cz2, shade(JADE, 0.94));
+  // ⑩ 铜香炉：石座 + 三足 + 炉身 + 炉口 + 炉盖 + 双耳 + 香火
+  const wCenser = (cx2: number, cz2: number, kit: string): void => {
+    WC('ash', 0.62 * GS, 0.72 * GS, 0.3 * GS, 8, cx2, W_DECK + 0.15 * GS, cz2, shade(JADE, 0.94));
     for (let k = 0; k < 3; k++) {
       const a = k * 2.094 + 0.5;
-      b.cyl('metal', 0.09, 0.11, 0.5, 6, cx2 + Math.cos(a) * 0.32, fy + 0.5, cz2 + Math.sin(a) * 0.32, 0x7a6230);
+      WC('metal', 0.09 * GS, 0.11 * GS, 0.5 * GS, 6, cx2 + Math.cos(a) * 0.32 * GS, W_DECK + 0.5 * GS, cz2 + Math.sin(a) * 0.32 * GS, 0x7a6230);
     }
-    b.cyl('metal', 0.46, 0.38, 0.62, 12, cx2, fy + 1.05, cz2, 0x8a6a2e);
-    b.cyl('metal', 0.5, 0.5, 0.08, 12, cx2, fy + 1.4, cz2, 0xb08a3c);
-    b.cyl('metal', 0.34, 0.46, 0.34, 12, cx2, fy + 1.6, cz2, 0x8a6a2e);
-    for (const s2 of [-1, 1]) b.box('metal', 0.12, 0.3, 0.08, cx2 + s2 * 0.4, fy + 1.42, cz2, 0xb08a3c, 0, 0, s2 * 0.35);
-    b.cyl('glow', 0.16, 0.1, 0.34, 6, cx2, fy + 1.9, cz2, GOLD_LINE, 0, 0, 0, true);
-    b.kit(kit, 1, fy + 1.05);
+    WC('metal', 0.46 * GS, 0.38 * GS, 0.62 * GS, 12, cx2, W_DECK + 1.05 * GS, cz2, 0x8a6a2e);
+    WC('metal', 0.5 * GS, 0.5 * GS, 0.08 * GS, 12, cx2, W_DECK + 1.4 * GS, cz2, 0xb08a3c);
+    WC('metal', 0.34 * GS, 0.46 * GS, 0.34 * GS, 12, cx2, W_DECK + 1.6 * GS, cz2, 0x8a6a2e);
+    for (const s2 of [-1, 1]) WB('metal', 0.12 * GS, 0.3 * GS, 0.08 * GS, cx2 + s2 * 0.4 * GS, W_DECK + 1.42 * GS, cz2, 0xb08a3c, 0, 0, s2 * 0.35);
+    WC('glow', 0.16 * GS, 0.1 * GS, 0.34 * GS, 6, cx2, W_DECK + 1.9 * GS, cz2, GOLD_LINE);
+    b.kit(kit, 1, W_DECK + 1.05 * GS);
   };
-  // 玉阶栏杆段：望柱 + 柱头 + 寻杖 + 地栿（贴台面 1.25 高，纯陪衬）
-  const stairRail = (rx0: number, rz0: number, rz1: number, kit: string): void => {
-    const n = 4, dzr = rz1 - rz0;
-    for (let k = 0; k <= n; k++) {
-      const pz = rz0 + dzr * (k / n);
-      b.box('ash', 0.3, 1.16, 0.3, rx0, fy + 0.58, pz, shade(JADE, 1.02));
-      b.box('ash', 0.4, 0.12, 0.4, rx0, fy + 1.2, pz, shade(JADE, 1.12));
-    }
-    b.box('ash', 0.2, 0.18, Math.abs(dzr), rx0, fy + 1.02, (rz0 + rz1) / 2, shade(JADE, 1.06));
-    b.box('ash', 0.14, 0.14, Math.abs(dzr), rx0, fy + 0.5, (rz0 + rz1) / 2, shade(JADE, 0.9));
-    b.kit(kit, n + 1, fy + 0.6);
-  };
-  // 布点：栏杆夹通道 → 通道边三件一列（香炉/鼓/戟架）→ 两排旌旗向外铺开
-  // W19：起点由 +15.5 改 +17——台基前缘已到 z=111（48×32 底层），旧起点会埋进台基 0.5m
-  for (const s2 of [-1, 1]) stairRail(s2 * 10.8, palace.z + 17, palace.z + 31, 'palace.stairRail');
+  // 布点：御路两侧三件一列（香炉 / 大鼓 / 戟架），旌旗向外两排
   for (const s2 of [-1, 1]) {
-    censer(s2 * 12.6, palace.z + 17.2, 'palace.censer');
-    drum(s2 * 12.6, palace.z + 21.4, 'palace.drum');
-    halberdRack(s2 * 12.6, palace.z + 25.6, 3, 'palace.halberdRack');
+    wCenser(s2 * 32, 103, 'palace.censer');
+    wDrum(s2 * 32, 113, 'palace.drum');
+    wHalberdRack(s2 * 32, 124, 3, 'palace.halberdRack');
   }
-  for (const [ax, az] of [[18, 114], [27, 114], [36, 114], [17, 126], [26, 126], [14, 134]] as const) {
-    banner(ax, az, 1, 0xa02818, 'palace.banner');
-    banner(-ax, az, -1, 0x2a4a7a, 'palace.banner');
+  for (const [ax2, az2] of [[40, 100], [49, 112], [40, 124], [49, 134]] as const) {
+    wBanner(ax2, az2, 1, 0xa02818, 'palace.banner');
+    wBanner(-ax2, az2, -1, 0x2a4a7a, 'palace.banner');
   }
+  // 丹墀：5 级石阶（玉帝早朝班位），压在台阶南端与御路之间
+  for (let s2 = 0; s2 < 5; s2++) {
+    WB('wall', 60 - s2 * 3.2, 1.2, 4.6, 0, W_DECK + 0.6 - s2 * 0.24, 99.4 - s2 * 1.6, shade(0x8a8298, 1 - s2 * 0.04));
+  }
+  b.kit('palace.danchi', 5, W_DECK);
   // 蟠桃园
   platform(pantao.x, pantao.y, pantao.z, 27);
   // 蟠桃树（重做）：旧版是「木棍 + 一个粉圆锥 + 三个发光方块」，那就是一只路灯罩。
@@ -581,6 +679,50 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
   skyStackedRoof(b, 0, 214 + 9.8, 20, 10, 6, 2, 1.9, 0, 'zanjian', shade(0x3a6b8c, 1.05), GOLD_TRIM);
   sg.quad(atlas.text('jiangtai', '將臺', 180, 56, { color: '#ffe9b8', glow: '#ff2e88', bg: 'rgba(12,8,10,0.85)', border: 'rgba(255,46,136,.8)', fontPx: 44 }), 3.4, 1.05, 0, 214 + 11.2, 23.2, 0);
   // 将台陈设：四角旗门、战鼓、兵器架、帅案令旗（台面原本空无一物）
+  // W48：凌霄前庭的陈设已迁到「世界坐标」段（wBanner/wDrum/wCenser/wHalberdRack），
+  //   这里恢复预缩放坐标版给将台用（台面 214.12，尺寸不走 6× 世界放大）。
+  const fy = 214.12;
+  const banner = (bx: number, bz: number, sd: number, cloth: number, kit: string): void => {
+    b.box('ash', 0.9, 0.3, 0.9, bx, fy + 0.15, bz, shade(0x8a8298, 1.06));
+    b.cyl('wood', 0.1, 0.15, 3.0, 6, bx, fy + 1.8, bz, shade(0x5a3a24, 1.05));
+    b.box('fabric', 1.15, 1.42, 0.06, bx + 0.58 * sd, fy + 2.6, bz, cloth);
+    b.box('fabric', 0.34, 0.6, 0.05, bx + 1.0 * sd, fy + 1.86, bz, shade(cloth, 0.78));
+    b.cyl('metal', 0.11, 0.15, 0.16, 6, bx, fy + 3.34, bz, shade(GOLD_TRIM, 1.05));
+    b.box('glow', 0.14, 0.14, 0.14, bx, fy + 3.48, bz, 0xffd25e, 0, 0, Math.PI / 4);
+    b.kit(kit, 1, fy + 2.6);
+  };
+  const halberdRack = (hx: number, hz: number, n: number, kit: string): void => {
+    const w = 0.6 + n * 0.42;
+    b.box('ash', w + 0.5, 0.22, 0.9, hx, fy + 0.11, hz, shade(0x8a8298, 1.05));
+    for (const s2 of [-1, 1]) b.box('wood', 0.18, 2.1, 0.18, hx + s2 * (w / 2), fy + 1.05, hz, shade(0x5a3a24, 1.02));
+    b.box('wood', w + 0.2, 0.14, 0.14, hx, fy + 2.0, hz, shade(0x5a3a24, 1.12));
+    b.box('wood', w + 0.2, 0.12, 0.12, hx, fy + 0.5, hz, shade(0x4a2e1c, 1));
+    for (let k = 0; k < n; k++) {
+      const ax = hx - w / 2 + (k + 0.5) * (w / n);
+      b.box('wood', 0.07, 2.5, 0.07, ax, fy + 1.25, hz, shade(0x6b4a2b, 1.06));
+      b.box('metal', 0.34, 0.26, 0.06, ax + 0.16, fy + 2.36, hz, 0x9aa6b8, 0, 0, -0.25);
+      b.box('metal', 0.06, 0.34, 0.06, ax, fy + 2.5, hz, 0xb8c0c8);
+      b.box('fabric', 0.16, 0.3, 0.04, ax, fy + 2.0, hz + 0.06, 0xa02818);
+    }
+    b.kit(kit, 1, fy + 1.1);
+  };
+  const drum = (dx2: number, dz2: number, kit: string): void => {
+    buildTempleDrum(b, dx2, fy, dz2);
+    b.kit(kit, 1, fy + 1.0);
+  };
+  const censer = (cx2: number, cz2: number, kit: string): void => {
+    b.cyl('ash', 0.62, 0.72, 0.3, 8, cx2, fy + 0.15, cz2, shade(0xd8d0c0, 0.94));
+    for (let k = 0; k < 3; k++) {
+      const a = k * 2.094 + 0.5;
+      b.cyl('metal', 0.09, 0.11, 0.5, 6, cx2 + Math.cos(a) * 0.32, fy + 0.5, cz2 + Math.sin(a) * 0.32, 0x7a6230);
+    }
+    b.cyl('metal', 0.46, 0.38, 0.62, 12, cx2, fy + 1.05, cz2, 0x8a6a2e);
+    b.cyl('metal', 0.5, 0.5, 0.08, 12, cx2, fy + 1.4, cz2, 0xb08a3c);
+    b.cyl('metal', 0.34, 0.46, 0.34, 12, cx2, fy + 1.6, cz2, 0x8a6a2e);
+    for (const s2 of [-1, 1]) b.box('metal', 0.12, 0.3, 0.08, cx2 + s2 * 0.4, fy + 1.42, cz2, 0xb08a3c, 0, 0, s2 * 0.35);
+    b.cyl('glow', 0.16, 0.1, 0.34, 6, cx2, fy + 1.9, cz2, GOLD_LINE, 0, 0, 0, true);
+    b.kit(kit, 1, fy + 1.05);
+  };
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
       b.box('wall', 0.5, 0.4, 0.5, sx * 7.4, 214 + 0.4, 20 + sz * 6.6, shade(0xa63a2b, 1));

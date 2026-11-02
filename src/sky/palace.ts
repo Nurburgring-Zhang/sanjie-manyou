@@ -768,158 +768,261 @@ function moonAltar(b: Baker, x: number, y: number, z: number, hw: number, hd: nu
 
 export function buildLingxiaoInterior(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   buildSkyInteriorShells(b, sg, atlas);
+  // ============ W48：凌霄宝殿明间（殿门朝南 −z，宝座在北 +z） ============
+  // 判词（用户原话）：「内部更华贵高雅、更精致、更瑰丽！！！更有格局、更有优美的装饰家具物品等！！！！」
+  // 口径：明间 17.2 × 20.8 = 358 ㎡（预缩放设计单位；世界口径 ×(2.2×2.7273)² = ×36.07）。
+  //   旧版 33 件 = 10.8 ㎡/件（皇宫三殿 ≈9.7）；本版 74 件 = 4.84 ㎡/件。
+  // 配色三分：金（贴金构件）× 朱（柱/屏/案/御座）× 玉（玉白台座/青玉灯罩/玉璧）——
+  //   旧版「一片红 / 一片金」被拆成三层，任一色不超过画面六成。
   const x = 0, z = 95;
-  const fy = 214 + 5.6; // 顶层台基顶（殿内地面）
-  // 金砖地面高光映像带（R02：对缝≤1mm 沥青描黑+桐油映像 80%——Baker 无镜面，用玉白高光片表意）
-  // W47：原是一块 glow（unlit）0x2b2b2b×1.6 的 17×14 大板，压在 lingxiaoNave 的金砖地（含对缝线）上方 4cm。
-  //      unlit 不吃光，所以殿内点光修好之后它仍然是一整块死黑；改受光色又会盖掉对缝、读成水泥地。
-  //      结论是这块板本身多余——金砖地与其对缝已由 lingxiaoNave 铺好，这里直接让位。
-  // （保留注释与编号 R02 锚点，避免上游台账的锚点检索断链）
-  // 九龙金漆背屏（R02/T-ITM-0002：北正位高 5m 五联扇）+ 明黄云锦帷六幅两侧
+  const FT = 219.58;   // 明间台明顶（lingxiaoNave: fy+0.62）
+  const CY = 226.2;    // 天花底
+  const GLD = GOLD;    // 细金
+  const GLD2 = GOLD2;  // 受光金
+  const RED = 0xb03024, REDD = 0x7c1d15;
+  const WHT = 0x8a8478;             // 汉白玉座
+  const JADEW = 0xe9e3d2, JADE = 0x6f9a86;
+  const LAC = 0x3a2018, BRZ = 0x8a6a2e;
+
+  // ① 九龙金漆背屏（R02/T-ITM-0002）：五联扇，明间正中，面向殿门（−z）
   for (let i = 0; i < 5; i++) {
     const h = i === 2 ? 5.0 : 4.2;
-    b.box('wood', 1.9, h, 0.22, x - 4.0 + i * 2.0, fy + h / 2, z - 9.8, 0xc3272b);
-    b.box('glow', 1.7, h - 0.5, 0.06, x - 4.0 + i * 2.0, fy + h / 2, z - 9.66, shade(GOLD, 0.75));
+    b.box('wood', 1.9, h, 0.24, x - 4.0 + i * 2.0, FT + h / 2, z + 8.4, RED);
+    b.box('glow', 1.66, h - 0.55, 0.06, x - 4.0 + i * 2.0, FT + h / 2, z + 8.26, shade(GLD, 0.78));
+    b.box('wood', 1.98, 0.16, 0.3, x - 4.0 + i * 2.0, FT + h - 0.08, z + 8.4, shade(GLD2, 0.95));
   }
+  // 明黄云锦帷六幅（背屏两侧，自天花垂到 2.2m）
   for (const s of [-1, 1]) for (let k = 0; k < 3; k++) {
-    b.box('glow', 0.8, 6.0, 0.1, x + s * (6.6 + k * 0.8), fy + 3.4, z - 9.5, shade(GOLD2, 0.55 - k * 0.08));
+    b.box('fabric', 0.82, 5.6, 0.12, x + s * (5.4 + k * 1.0), CY - 3.0, z + 8.3, shade(0xd9a63a, 0.62 + k * 0.05));
+    b.box('glow', 0.86, 0.12, 0.16, x + s * (5.4 + k * 1.0), CY - 0.28, z + 8.3, shade(GLD2, 0.9));
   }
-  // 蟠龙金柱贴金环带（既有 8 柱 x±?, 沿柱高 3 道金环——查 realm 柱距 12 间隔）
-  for (const px of [-12, -4, 4, 12]) for (const pz of [-6, 6]) {
-    b.cyl('glow', 0.62, 0.62, 0.16, 10, x + px, fy + 3.2 + (pz > 0 ? 0 : 4), z + pz, shade(GOLD, 0.8));
-    b.cyl('glow', 0.62, 0.62, 0.16, 10, x + px, fy + 1.4 + (pz > 0 ? 0 : 4), z + pz, shade(GOLD, 0.65));
-  }
-  // 斗八藻井三层（R03：方井 6.4→八角 4.8→圆井顶心明镜 2.4，蟠龙衔珠贴金凸 3mm）
-  const ay = 214 + 14.2;
-  b.box('glow', 6.4, 0.4, 6.4, x, ay, z, shade(0x1e3a5f, 1.1));
-  b.cyl('glow', 2.4, 2.4, 0.35, 8, x, ay + 0.25, z, shade(0x1e3a5f, 1.25), 0, 0, Math.PI / 8);
-  b.cyl('glow', 1.2, 1.2, 0.3, 12, x, ay + 0.5, z, GOLD);
-  b.cyl('glow', 0.4, 0.4, 0.45, 8, x, ay + 0.75, z, JADE_L); // 顶心明镜（接天光光柱）
-  // 璎珞垂珠一圈（井沿：珠金穗粉）
+  // ② 蟠龙金柱 ×12：柱础 + 贴金柱身 + 4 道缠龙环 + 柱头箍 + 三向龙首
+  const goldCol = (cx: number, cz: number): void => {
+    b.cyl('ash', 0.62, 0.68, 0.34, 10, cx, FT + 0.17, cz, shade(JADEW, 0.94));
+    b.cyl('metal', 0.44, 0.46, 6.1, 10, cx, FT + 3.22, cz, 0xb08a30);                // 贴金柱身（metal 组才吃得出鎏金）
+    for (let k = 0; k < 4; k++) b.cyl('metal', 0.49, 0.49, 0.2, 10, cx, FT + 1.3 + k * 1.55, cz, shade(0x6a4a12, 1.0));
+    b.cyl('metal', 0.54, 0.54, 0.34, 10, cx, FT + 6.1, cz, shade(0xc09a3a, 0.94));
+    for (const a of [0.5, 2.6, 4.7]) {
+      b.box('metal', 0.26, 0.24, 0.46, cx + Math.cos(a) * 0.46, FT + 4.4, cz + Math.sin(a) * 0.46, shade(0xd0aa48, 1.0), -a);
+    }
+  };
+  for (const sx of [-1, 1]) for (const px of [3.9, 7.9]) for (const pz of [89.2, 95, 100.8]) goldCol(sx * px, pz);
+  // ③ 斗八藻井三层（R03，主井 7.2）：井口 6.0 → 4.6 → 3.2 逐层收进 1.5m 深的井壁，
+  //    顶心明镜 + 蟠龙衔珠一圈 + 井沿璎珞 12 串。井壁四边各由 4 段板围成，从殿内仰视能看进井内。
+  const well = (y0: number, y1: number, outer: number, inner: number, g: 'wood' | 'glow'): void => {
+    const t = (outer - inner) / 2;
+    for (const [w, d, ox, oz] of [[outer, t, 0, -(inner + t) / 2], [outer, t, 0, (inner + t) / 2],
+      [t, inner, -(inner + t) / 2, 0], [t, inner, (inner + t) / 2, 0]] as const) {
+      b.box(g, w, y1 - y0, d, x + ox, (y0 + y1) / 2, z + oz, shade(0x2b5480, 1.12));
+    }
+  };
+  well(CY, CY + 0.8, 7.2, 6.0, 'wood');
+  well(CY + 0.8, CY + 1.5, 6.0, 4.6, 'glow');
+  well(CY + 1.5, CY + 2.1, 4.6, 3.2, 'glow');
+  b.box('glow', 6.3, 0.08, 0.16, x, CY - 0.02, z - 3.1, shade(GLD, 0.9));    // 井口金线（四边）
+  b.box('glow', 6.3, 0.08, 0.16, x, CY - 0.02, z + 3.1, shade(GLD, 0.9));
+  b.box('glow', 0.16, 0.08, 6.3, x - 3.1, CY - 0.02, z, shade(GLD, 0.9));
+  b.box('glow', 0.16, 0.08, 6.3, x + 3.1, CY - 0.02, z, shade(GLD, 0.9));
+  b.box('wood', 3.4, 0.2, 3.4, x, CY + 2.2, z, shade(0x1e3a5f, 1.2));        // 井顶盖
+  b.cyl('glow', 1.5, 1.5, 0.16, 8, x, CY + 2.0, z, shade(GLD, 0.95), 0, 0, Math.PI / 8); // 金环
+  b.cyl('glow', 0.62, 0.62, 0.12, 12, x, CY + 1.94, z, shade(0x2b5480, 1.2));
+  b.cyl('glow', 0.4, 0.4, 0.3, 8, x, CY + 1.82, z, JADE_L);                  // 顶心明镜
+  // 蟠龙衔珠：沿金环盘一圈（12 段龙身连续 + 龙首 + 龙珠）
   for (let k = 0; k < 12; k++) {
-    const a = k * 0.5236;
-    b.box('glow', 0.06, 0.55, 0.06, x + Math.cos(a) * 2.3, ay - 0.35, z + Math.sin(a) * 2.3, k % 2 ? GOLD : 0xffb7c5);
+    const a0 = (k / 12) * Math.PI * 2, a1 = ((k + 1) / 12) * Math.PI * 2;
+    const mx2 = (Math.cos(a0) + Math.cos(a1)) * 0.5 * 2.0, mz2 = (Math.sin(a0) + Math.sin(a1)) * 0.5 * 2.0;
+    b.box('glow', 0.34, 0.16, 1.12, x + mx2, CY + 1.66, z + mz2, shade(GLD, 0.86), -Math.atan2(Math.sin(a1) - Math.sin(a0), Math.cos(a1) - Math.cos(a0)));
   }
-  // 蟠龙金烛台 ×2（T-ITM-0005 高 1.4 焰玉白）
+  b.box('glow', 0.5, 0.4, 0.5, x + 2.0, CY + 1.7, z, shade(0xd8b448, 1.05), 0, 0, Math.PI / 4);  // 龙首
+  b.box('glow', 0.14, 0.14, 0.4, x + 2.2, CY + 1.6, z + 0.3, shade(0xffcf5a, 1.0));               // 龙须
+  b.cyl('glow', 0.18, 0.18, 0.22, 8, x, CY + 1.5, z, shade(JADE_L, 0.95));                        // 龙珠（衔于顶心）
+  for (let k = 0; k < 12; k++) {                                            // 井沿璎珞 12 串
+    const a = (k / 12) * Math.PI * 2;
+    b.box('glow', 0.06, 0.5, 0.06, x + Math.cos(a) * 2.95, CY - 0.05, z + Math.sin(a) * 2.95, k % 2 ? GLD : 0xffb7c5);
+  }
+  // 次间天花圆光 ×2（贴天花面的八角金环 + 玉心，不遮挡主井）
+  for (const oz of [-6.6, 6.4]) {
+    b.cyl('wood', 2.3, 2.3, 0.1, 8, x, CY - 0.05, z + oz, shade(GLD2, 0.86), 0, 0, Math.PI / 8);
+    b.cyl('glow', 1.5, 1.5, 0.08, 8, x, CY - 0.12, z + oz, shade(0x1e3a5f, 1.2), 0, 0, Math.PI / 8);
+    b.cyl('glow', 0.62, 0.62, 0.1, 12, x, CY - 0.16, z + oz, shade(GLD, 0.9));
+    for (let k = 0; k < 8; k++) {
+      const a = (k / 8) * Math.PI * 2 + Math.PI / 8;
+      b.box('glow', 0.1, 0.1, 0.42, x + Math.cos(a) * 1.95, CY - 0.1, z + oz + Math.sin(a) * 1.95, GLD, -a);
+    }
+  }
+  // ④ 蟠龙金烛台 ×2（T-ITM-0005 高 1.4 焰玉白）——御案两侧
   for (const s of [-1, 1]) {
-    b.cyl('wood', 0.12, 0.3, 1.4, 8, x + s * 5.5, fy + 0.7, z + 2, GOLD2);
-    b.box('glow', 0.16, 0.4, 0.16, x + s * 5.5, fy + 1.6, z + 2, JADE_L);
+    b.cyl('wood', 0.12, 0.3, 1.4, 8, x + s * 3.4, FT + 0.7, z + 3.0, GLD2);
+    b.box('glow', 0.16, 0.4, 0.16, x + s * 3.4, FT + 1.6, z + 3.0, JADE_L);
   }
 
-  // ============ W47：明间陈设列（宝座 / 御案 / 香亭 / 仙鹤 / 麒麟 / 宫灯 / 垂幔 / 陈设） ============
-  // 台账：原明间 17.2×20.8 = 358 ㎡ 只摆了背屏 + 2 烛台（≈120 ㎡/件），
-  // 皇宫三殿约 9.7 ㎡/件。这里补 33 件，落在 ≈10.8 ㎡/件，与人间正殿同档；
-  // 尺寸一律按 pre-scale 写（本段几何随后被 2.2× × 1.75× 等比放大，与既有构件同一口径）。
-  const WH = 0x8a8478;   // 汉白玉座
-  const INK = 0x2a2f38;  // 玄铁 / 墨
-  // ① 宝座台座：三层须弥座 5.6→4.8→4.0，正面三级踏跺（踏跺朝南 = +z）
+  // ============ W48：明间陈设列（74 件 / 358 ㎡ = 4.84 ㎡/件） ============
+  // 尺寸一律按 pre-scale 写（本段几何随后被 2.2× × 2.7273× 等比放大，与殿身同一口径）。
+  const WH = WHT;   // 汉白玉座
+  // ① 宝座台座：三层须弥座 5.6→4.8→4.0，正面三级踏跺朝南（−z）
   for (let i = 0; i < 3; i++) {
     const w = 5.6 - i * 0.8;
-    b.box('ash', w, 0.32, w, x, fy + 0.16 + i * 0.32, 87.6 - i * 0.1, shade(WH, 1.04 - i * 0.03));
+    b.box('ash', w, 0.32, w, x, FT + 0.16 + i * 0.32, z + 6.6 - i * 0.08, shade(WH, 1.04 - i * 0.03));
   }
   for (let k = 0; k < 3; k++) {
-    b.box('ash', 2.2, 0.32, 0.36, x, fy + 0.16 + k * 0.32, 90.6 - k * 0.34 + 0.18, shade(WH, 1.0));
+    b.box('ash', 2.2, 0.32, 0.4, x, FT + 0.16 + k * 0.32, z + 3.8 - k * 0.36 + 0.2, shade(WH, 1.0));
   }
   // ② 九龙宝座：座面 + 束腰 + 靠背 + 双扶手 + 御座金漆
-  const BY = fy + 0.96;
-  b.box('wood', 2.02, 0.22, 1.42, x, BY, z - 7.4, 0xc3272b);          // 座面
-  b.box('wood', 1.86, 0.34, 1.26, x, BY - 0.28, z - 7.4, 0x8a1c14);    // 束腰
-  b.box('glow', 1.6, 0.06, 1.1, x, BY + 0.14, z - 7.4, shade(GOLD2, 0.9));
-  b.box('wood', 2.02, 1.22, 0.18, x, BY + 0.7, z - 8.08, 0xc3272b);     // 靠背
-  b.box('glow', 1.7, 1.0, 0.06, x, BY + 0.72, z - 8.16, shade(GOLD, 0.72));
+  const BY = FT + 0.96;
+  b.box('wood', 2.02, 0.22, 1.42, x, BY, z + 6.4, RED);                 // 座面
+  b.box('wood', 1.86, 0.34, 1.26, x, BY - 0.28, z + 6.4, REDD);          // 束腰
+  b.box('glow', 1.6, 0.06, 1.1, x, BY + 0.14, z + 6.4, shade(GLD2, 0.9));
+  b.box('wood', 2.02, 1.22, 0.18, x, BY + 0.7, z + 7.2, RED);            // 靠背
+  b.box('wood', 1.7, 1.0, 0.06, x, BY + 0.72, z + 7.28, shade(0x8a1c14, 1.0));
   for (let k = 0; k < 4; k++) {                                          // 靠背四道金线（九龙意向）
-    b.box('glow', 0.06, 1.0, 0.04, x - 0.66 + k * 0.44, BY + 0.72, z - 8.2, shade(GOLD2, 0.85));
+    b.box('glow', 0.06, 1.0, 0.04, x - 0.66 + k * 0.44, BY + 0.72, z + 7.32, shade(GLD2, 0.85));
   }
   for (const s of [-1, 1]) {
-    b.box('wood', 0.18, 0.34, 1.42, x + s * 0.92, BY + 0.3, z - 7.4, 0xc3272b);  // 扶手
-    b.box('glow', 0.2, 0.06, 1.3, x + s * 0.92, BY + 0.5, z - 7.4, shade(GOLD2, 0.95));
+    b.box('wood', 0.18, 0.34, 1.42, x + s * 0.92, BY + 0.3, z + 6.4, RED);   // 扶手
+    b.box('glow', 0.2, 0.06, 1.3, x + s * 0.92, BY + 0.5, z + 6.4, shade(GLD2, 0.95));
   }
-  // ③ 御案：案面 + 四腿 + 案上宝册 / 朱笔 / 镇纸
-  const DY = fy + 0.98;
-  b.box('lacquer', 3.0, 0.14, 1.1, x, DY, z - 4.6, shade(0x6b2a1e, 1.05));
-  b.box('glow', 2.86, 0.04, 0.98, x, DY + 0.09, z - 4.6, shade(GOLD, 0.55));
+  // ③ 御案：案面 + 四腿 + 宝册 / 朱笔 / 玉镇 / 笔架
+  const DY = FT + 0.98;
+  b.box('wood', 3.0, 0.14, 1.1, x, DY, z + 4.6, shade(0x6b2a1e, 1.05));   // W48：lacquer → wood（清漆在黑漆案面上打出一整片白高光）
+  for (const u of [-1, 1]) {
+    b.box('glow', 2.9, 0.04, 0.06, x, DY + 0.1, z + 4.6 + u * 0.5, shade(GLD, 0.6));
+    b.box('glow', 0.06, 0.04, 1.0, x + u * 1.44, DY + 0.1, z + 4.6, shade(GLD, 0.6));
+  }
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
-    b.box('lacquer', 0.14, 0.98, 0.14, x + sx * 1.34, fy + 0.49, z - 4.6 + sz * 0.44, shade(0x5a2218, 1.0));
+    b.box('wood', 0.14, 0.98, 0.14, x + sx * 1.34, FT + 0.49, z + 4.6 + sz * 0.44, shade(0x5a2218, 1.0));
   }
-  b.box('wood', 0.5, 0.1, 0.7, x - 0.72, DY + 0.12, z - 4.6, 0xc3272b);   // 宝册（朱函）
-  b.box('glow', 0.42, 0.03, 0.6, x - 0.72, DY + 0.18, z - 4.6, shade(JADE_L, 0.85));
-  b.cyl('wood', 0.035, 0.045, 0.34, 6, x + 0.5, DY + 0.24, z - 4.45, 0x7c2a1c, 0, 0, 0.5);  // 朱笔
-  b.box('ceramic', 0.26, 0.16, 0.26, x + 1.05, DY + 0.15, z - 4.7, 0xe8eef6);                  // 玉镇
-  // ④ 香亭 ×2：四柱 + 小歇山 + 亭内香炉（一缕烟由既有 vfx 承担）
+  b.box('wood', 0.5, 0.1, 0.7, x - 0.72, DY + 0.12, z + 4.6, RED);        // 宝册（朱函）
+  b.box('glow', 0.42, 0.03, 0.6, x - 0.72, DY + 0.18, z + 4.6, shade(JADE_L, 0.85));
+  b.cyl('wood', 0.035, 0.045, 0.34, 6, x + 0.5, DY + 0.24, z + 4.75, 0x7c2a1c, 0, 0, 0.5);  // 朱笔
+  b.box('ceramic', 0.26, 0.16, 0.26, x + 1.05, DY + 0.15, z + 4.5, 0xe8eef6);               // 玉镇
+  b.box('ceramic', 0.5, 0.06, 0.2, x + 0.1, DY + 0.1, z + 4.4, 0xe8f0f6);                   // 笔架
+  // ④ 脚踏
+  b.box('wood', 1.7, 0.16, 0.6, x, FT + 0.42, z + 5.3, shade(REDD, 1.05));
+  // ⑤ 香亭 ×2：四柱 + 檐板 + 收分顶 + 宝顶 + 亭内香炉（烟由既有 vfx 承担）
   for (const s of [-1, 1]) {
-    const px = x + s * 4.9, pz = z - 5.4;
+    const px = x + s * 5.7, pz = 87.0 + (s > 0 ? 0 : 0);
     for (const a of [-1, 1]) for (const c of [-1, 1]) {
-      b.box('wood', 0.1, 1.9, 0.1, px + a * 0.62, fy + 0.95, pz + c * 0.62, shade(0x6b4a2b, 1.1));
+      b.box('wood', 0.1, 1.9, 0.1, px + a * 0.62, FT + 0.95, pz + c * 0.62, shade(0x6b4a2b, 1.1));
     }
-    b.box('wood', 1.5, 0.12, 1.5, px, fy + 1.98, pz, shade(0x4a3a26, 1.1));
-    // W47：原是一块 1.9×0.5×1.9 绕 Y 转 45° 的平板 —— 读成「悬空的金色菱形板」而不是亭顶。
-    // 改成「檐板 + 收分顶 + 宝顶」三件，正面才有屋顶的层次。
-    b.box('roof', 2.0, 0.14, 2.0, px, fy + 2.02, pz, shade(0x6a5a2c, 1.2));
-    b.box('roof', 1.5, 0.28, 1.5, px, fy + 2.2, pz, shade(0x7a6630, 1.25), Math.PI / 4);
-    b.box('roof', 0.9, 0.26, 0.9, px, fy + 2.44, pz, shade(0x8a7434, 1.3), Math.PI / 4);
-    b.box('glow', 0.16, 0.16, 0.16, px, fy + 2.66, pz, shade(GOLD_LINE, 0.9), Math.PI / 4);
-    b.cyl('metal', 0.24, 0.3, 0.5, 10, px, fy + 0.25, pz, shade(0x8a6a32, 1.1));
-    b.cyl('glow', 0.2, 0.2, 0.05, 10, px, fy + 0.52, pz, shade(0xffb060, 0.5));
+    b.box('wood', 1.5, 0.12, 1.5, px, FT + 1.98, pz, shade(0x4a3a26, 1.1));
+    b.box('roof', 2.0, 0.14, 2.0, px, FT + 2.02, pz, shade(0x6a5a2c, 1.2));
+    b.box('roof', 1.5, 0.28, 1.5, px, FT + 2.2, pz, shade(0x7a6630, 1.25), Math.PI / 4);
+    b.box('roof', 0.9, 0.26, 0.9, px, FT + 2.44, pz, shade(0x8a7434, 1.3), Math.PI / 4);
+    b.box('glow', 0.16, 0.16, 0.16, px, FT + 2.66, pz, shade(GLD, 0.9), Math.PI / 4);
+    b.cyl('metal', 0.24, 0.3, 0.5, 10, px, FT + 0.25, pz, shade(BRZ, 1.1));
+    b.cyl('glow', 0.2, 0.2, 0.05, 10, px, FT + 0.52, pz, shade(0xffb060, 0.5));
   }
-  // ⑤ 仙鹤 ×2（东侧）/ 麒麟 ×2（西侧）：立像，台座 + 身 + 颈 + 首
+  // ⑥ 仙鹤 / 麒麟 / 甪端 成对（沿中轴两侧，面朝殿门）
   for (const s of [-1, 1]) {
-    // 仙鹤
-    const cx2 = x + s * 6.6, cz2 = z - 1.6;
-    b.box('ash', 0.9, 0.18, 0.9, cx2, fy + 0.09, cz2, shade(WH, 1.02));
-    for (const a of [-1, 1]) b.cyl('metal', 0.035, 0.045, 0.62, 5, cx2 + a * 0.1, fy + 0.5, cz2, shade(0xc8c0a8, 1.1));
-    b.box('ash', 0.34, 0.26, 0.72, cx2, fy + 0.95, cz2, 0xf2efe9);
-    b.box('wood', 0.3, 0.1, 0.3, cx2, fy + 0.86, cz2 + 0.34, 0x1e2228);        // 尾羽
-    b.cyl('ash', 0.07, 0.09, 0.66, 6, cx2, fy + 1.4, cz2 + 0.28, 0xf2efe9, 0.34, 0, 0);
-    b.box('ash', 0.14, 0.14, 0.24, cx2, fy + 1.76, cz2 + 0.42, 0xf6f2ea);      // 首
-    b.box('glow', 0.05, 0.05, 0.16, cx2, fy + 1.74, cz2 + 0.56, 0xd04020);     // 丹顶 / 喙
-    b.box('glow', 0.06, 0.05, 0.06, cx2, fy + 1.84, cz2 + 0.4, 0xc0201c);      // 顶红
-    // 麒麟
-    const kx = x + s * 6.6, kz = z - 8.4;
-    b.box('ash', 1.0, 0.18, 0.9, kx, fy + 0.09, kz, shade(WH, 1.02));
-    for (const a of [-1, 1]) for (const c of [-1, 1]) {
-      b.box('metal', 0.12, 0.4, 0.12, kx + a * 0.24, fy + 0.38, kz + c * 0.3, shade(0x6a5a2a, 1.15));
-    }
-    b.box('metal', 0.5, 0.42, 0.86, kx, fy + 0.78, kz, shade(0x8a6a2c, 1.05));
-    b.box('metal', 0.26, 0.26, 0.3, kx, fy + 1.02, kz + 0.5, shade(0x9a7a30, 1.1));
-    b.box('glow', 0.08, 0.06, 0.06, kx, fy + 1.16, kz + 0.56, 0xffd25e);       // 目
-    b.box('metal', 0.06, 0.22, 0.06, kx, fy + 1.2, kz + 0.4, shade(0x6a5a2a, 1.2)); // 独角
-    b.box('metal', 0.1, 0.1, 0.42, kx, fy + 0.96, kz - 0.6, shade(0x7a6428, 1.1)); // 尾
+    // 仙鹤（南）
+    const cx2 = x + s * 2.5, cz2 = 98.4;
+    b.box('ash', 1.0, 0.2, 1.0, cx2, FT + 0.1, cz2, shade(WH, 1.02));
+    for (const a of [-1, 1]) b.cyl('metal', 0.035, 0.045, 0.66, 5, cx2 + a * 0.1, FT + 0.53, cz2, shade(0xc8c0a8, 1.1));
+    b.box('ash', 0.36, 0.28, 0.76, cx2, FT + 1.0, cz2, 0xf2efe9);
+    b.box('wood', 0.32, 0.1, 0.32, cx2, FT + 0.9, cz2 - 0.36, 0x1e2228);       // 尾羽
+    b.cyl('ash', 0.07, 0.09, 0.7, 6, cx2, FT + 1.46, cz2 - 0.3, 0xf2efe9, 0.34, 0, 0);
+    b.box('ash', 0.15, 0.15, 0.26, cx2, FT + 1.84, cz2 - 0.44, 0xf6f2ea);      // 首
+    b.box('glow', 0.05, 0.05, 0.17, cx2, FT + 1.82, cz2 - 0.58, 0xd04020);     // 喙 / 丹顶
+    b.box('glow', 0.06, 0.05, 0.06, cx2, FT + 1.92, cz2 - 0.42, 0xc0201c);
+    // 甪端（中）：单角、狮身、四足
+    const ux = x + s * 2.5, uz = 95.0;
+    b.box('ash', 1.0, 0.2, 1.1, ux, FT + 0.1, uz, shade(WH, 1.02));
+    for (const a of [-1, 1]) for (const c of [-1, 1]) b.box('metal', 0.13, 0.42, 0.13, ux + a * 0.26, FT + 0.4, uz + c * 0.32, shade(BRZ, 1.15));
+    b.box('metal', 0.54, 0.46, 0.9, ux, FT + 0.82, uz, shade(0x8a6a2c, 1.05));
+    b.box('metal', 0.3, 0.3, 0.34, ux, FT + 1.1, uz - 0.52, shade(0x9a7a30, 1.1));
+    b.box('glow', 0.08, 0.06, 0.06, ux + s * 0.12, FT + 1.16, uz - 0.66, 0xffd25e);
+    b.box('metal', 0.08, 0.26, 0.08, ux, FT + 1.34, uz - 0.5, shade(0x6a5a2a, 1.2));   // 独角
+    b.box('metal', 0.12, 0.12, 0.46, ux, FT + 1.0, uz + 0.52, shade(0x7a6428, 1.1));   // 尾
+    // 麒麟（北）：双角、鳞身
+    const kx = x + s * 2.5, kz = 91.6;
+    b.box('ash', 1.05, 0.2, 1.0, kx, FT + 0.1, kz, shade(WH, 1.02));
+    for (const a of [-1, 1]) for (const c of [-1, 1]) b.box('metal', 0.13, 0.44, 0.13, kx + a * 0.26, FT + 0.42, kz + c * 0.3, shade(0x6a5a2a, 1.15));
+    b.box('metal', 0.54, 0.44, 0.9, kx, FT + 0.86, kz, shade(0x8a6a2c, 1.05));
+    b.box('metal', 0.28, 0.28, 0.32, kx, FT + 1.12, kz + 0.52, shade(0x9a7a30, 1.1));
+    b.box('glow', 0.08, 0.06, 0.06, kx + s * 0.1, FT + 1.2, kz + 0.66, 0xffd25e);
+    for (const a of [-1, 1]) b.box('metal', 0.05, 0.2, 0.05, kx + a * 0.1, FT + 1.34, kz + 0.5, shade(0x6a5a2a, 1.2));
+    b.box('metal', 0.12, 0.12, 0.46, kx, FT + 1.0, kz - 0.54, shade(0x7a6428, 1.1));
   }
-  // ⑥ 成列宫灯：东西各 5 盏，柱式灯杆 + 六角灯罩 + 顶金珠
+  // ⑦ 成列宫灯 ×10（东西各 5，等高、等距）：灯杆 + 六角灯罩 + 宝珠
   for (const s of [-1, 1]) for (let i = 0; i < 5; i++) {
-    const lx2 = x + s * 7.7, lz2 = z - 9.0 + i * 3.4;
-    b.cyl('wood', 0.07, 0.11, 2.3, 6, lx2, fy + 1.15, lz2, shade(0x4a2e1c, 1.1));
-    b.cyl('metal', 0.22, 0.22, 0.06, 6, lx2, fy + 0.03, lz2, shade(GOLD_TRIM, 1.1));
-    b.box('glow', 0.36, 0.5, 0.36, lx2, fy + 2.5, lz2, shade(0xffe3a8, 0.62), Math.PI / 6);
-    b.cyl('wood', 0.02, 0.24, 0.12, 6, lx2, fy + 2.81, lz2, shade(0x3a2418, 1.1));
-    b.box('glow', 0.05, 0.05, 0.05, lx2, fy + 2.9, lz2, shade(GOLD_LINE, 0.9));
+    const lx2 = x + s * 7.0, lz2 = 87.2 + i * 3.2;
+    b.cyl('wood', 0.07, 0.11, 2.3, 6, lx2, FT + 1.15, lz2, shade(0x4a2e1c, 1.1));
+    b.cyl('metal', 0.22, 0.22, 0.06, 6, lx2, FT + 0.03, lz2, shade(GLD2, 1.1));
+    b.box('glow', 0.36, 0.5, 0.36, lx2, FT + 2.5, lz2, shade(0xffe3a8, 0.62), Math.PI / 6);
+    b.cyl('wood', 0.02, 0.24, 0.12, 6, lx2, FT + 2.81, lz2, shade(0x3a2418, 1.1));
+    b.box('glow', 0.05, 0.05, 0.05, lx2, FT + 2.9, lz2, shade(GLD, 0.9));
   }
-  // ⑦ 垂幔：背屏两侧各 4 幅，自天花垂到 2.2m，明黄云锦
-  for (const s of [-1, 1]) for (let i = 0; i < 4; i++) {
-    const mx2 = x + s * (3.0 + i * 1.05);
-    b.box('fabric', 0.62, 3.4, 0.06, mx2, fy + 2.4, z - 9.2, shade(0xd9a63a, 0.58 + 0.06 * (i % 2)));
-    b.box('glow', 0.66, 0.05, 0.08, mx2, fy + 4.12, z - 9.2, shade(GOLD_TRIM, 0.85));
+  // ⑧ 垂幔 ×10（东西墙各 5，自天花垂到 3.2m，明黄云锦 + 金幔钩）
+  for (const s of [-1, 1]) for (let i = 0; i < 5; i++) {
+    const mx2 = x + s * 8.25, mz2 = 87.5 + i * 3.5;
+    b.box('fabric', 0.1, 4.6, 1.1, mx2, CY - 2.6, mz2, shade(0xd9a63a, 0.58 + 0.05 * (i % 2)));
+    b.box('glow', 0.14, 0.1, 1.16, mx2, CY - 0.3, mz2, shade(GLD2, 0.85));
+    b.box('fabric', 0.1, 0.5, 0.7, mx2, CY - 4.95, mz2, shade(0xd9a63a, 0.5));
   }
-  // ⑧ 陈设列：东西山墙各 3 件宝器（玉璧 / 铜鼎 / 瓷瓶），各带须弥座
-  const RELIC: readonly [number, number, number][] = [[0.9, 0x2a4a6a, 0], [1.3, 0x8a6a32, 1], [0.75, 0xdfe6ee, 2]];
-  for (const s of [-1, 1]) for (let i = 0; i < 3; i++) {
-    const [hh, col, kind] = RELIC[i];
-    const rx2 = x + s * 8.0, rz2 = z - 6.0 + i * 4.0;
-    b.box('ash', 0.7, 0.42, 0.7, rx2, fy + 0.21, rz2, shade(WH, 1.0));
+  // ⑨ 云纹地毯 ×3（中央御路毯 + 东西两条列毯，0.02 厚不参与碰撞）
+  b.box('fabric', 4.4, 0.02, 12.6, x, FT + 0.03, z - 1.0, shade(0x8a1e22, 0.92));
+  for (const u of [-1, 1]) b.box('fabric', 0.28, 0.024, 12.6, x + u * 2.1, FT + 0.035, z - 1.0, shade(0xd9a63a, 0.9));
+  for (const s of [-1, 1]) {
+    b.box('fabric', 2.8, 0.02, 11.4, x + s * 5.7, FT + 0.03, z - 1.0, shade(0x24466b, 0.9));
+    for (const u of [-1, 1]) b.box('fabric', 0.2, 0.024, 11.4, x + s * 5.7 + u * 1.3, FT + 0.035, z - 1.0, shade(0xd9a63a, 0.85));
+  }
+  // ⑩ 陈设列 ×16（东西各 4 站 × 2 件）：玉璧 / 铜鼎 / 瓷瓶 / 香炉 / 烛台 / 盆景 / 茶具 / 书案
+  const station = (sx2: number, sz2: number, kind: number): void => {
+    const px = sx2, pz = sz2;
+    b.box('ash', 0.78, 0.44, 0.78, px, FT + 0.22, pz, shade(WH, 1.0));      // 须弥座
     if (kind === 0) {                                    // 玉璧（立环）
-      b.cyl('ash', 0.44, 0.44, 0.09, 16, rx2, fy + 0.42 + hh * 0.5, rz2, shade(col, 1.0), Math.PI / 2);
-      b.cyl('glow', 0.2, 0.2, 0.1, 12, rx2, fy + 0.42 + hh * 0.5, rz2, shade(0x1a2a3a, 1.0), Math.PI / 2);
-    } else if (kind === 1) {                             // 铜鼎
-      b.cyl('metal', 0.3, 0.36, 0.5, 8, rx2, fy + 0.66, rz2, shade(col, 1.05));
-      b.cyl('metal', 0.34, 0.34, 0.08, 8, rx2, fy + 0.94, rz2, shade(col, 1.15));
-      for (const a of [-1, 1]) b.box('metal', 0.06, 0.2, 0.06, rx2 + a * 0.3, fy + 1.02, rz2, shade(col, 1.2));
-    } else {                                             // 瓷瓶
-      b.cyl('ceramic', 0.16, 0.3, 0.62, 10, rx2, fy + 0.72, rz2, shade(col, 0.95));
-      b.cyl('ceramic', 0.09, 0.14, 0.24, 8, rx2, fy + 1.12, rz2, shade(col, 1.0));
-      b.cyl('glow', 0.1, 0.1, 0.03, 8, rx2, fy + 1.24, rz2, shade(0x8a6a32, 0.8));
+      b.cyl('ash', 0.44, 0.44, 0.1, 16, px, FT + 0.98, pz, shade(JADE, 1.0), Math.PI / 2);
+      b.cyl('glow', 0.2, 0.2, 0.11, 12, px, FT + 0.98, pz, shade(0x1a2a3a, 1.0), Math.PI / 2);
+    } else if (kind === 1) {                             // 铜鼎（三足双耳）
+      for (let k = 0; k < 3; k++) {
+        const a = k * 2.094 + 0.4;
+        b.cyl('metal', 0.07, 0.09, 0.4, 6, px + Math.cos(a) * 0.24, FT + 0.64, pz + Math.sin(a) * 0.24, shade(BRZ, 0.95));
+      }
+      b.cyl('metal', 0.32, 0.26, 0.46, 10, px, FT + 1.02, pz, shade(BRZ, 1.06));
+      b.cyl('metal', 0.36, 0.36, 0.08, 10, px, FT + 1.29, pz, shade(BRZ, 1.16));
+      for (const a of [-1, 1]) b.box('metal', 0.06, 0.2, 0.06, px + a * 0.34, FT + 1.36, pz, shade(BRZ, 1.2));
+    } else if (kind === 2) {                             // 瓷瓶（青瓷长颈）
+      b.cyl('ceramic', 0.17, 0.3, 0.62, 10, px, FT + 0.75, pz, shade(0x9fc4b0, 0.98));
+      b.cyl('ceramic', 0.09, 0.14, 0.26, 8, px, FT + 1.16, pz, shade(0x9fc4b0, 1.02));
+      b.cyl('glow', 0.1, 0.1, 0.03, 8, px, FT + 1.3, pz, shade(GLD, 0.8));
+    } else if (kind === 3) {                             // 香炉（三足 + 盖 + 烟）
+      for (let k = 0; k < 3; k++) {
+        const a = k * 2.094 + 0.5;
+        b.cyl('metal', 0.05, 0.06, 0.3, 6, px + Math.cos(a) * 0.2, FT + 0.6, pz + Math.sin(a) * 0.2, shade(BRZ, 0.95));
+      }
+      b.cyl('metal', 0.26, 0.22, 0.34, 10, px, FT + 0.9, pz, shade(BRZ, 1.05));
+      b.cyl('metal', 0.18, 0.26, 0.16, 8, px, FT + 1.14, pz, shade(BRZ, 1.12));
+      b.cyl('glow', 0.05, 0.05, 0.2, 6, px, FT + 1.3, pz, shade(0xffb060, 0.5));
+    } else if (kind === 4) {                             // 烛台（金盘 + 玉焰）
+      b.cyl('wood', 0.08, 0.16, 0.9, 8, px, FT + 0.88, pz, GLD2);
+      b.cyl('metal', 0.16, 0.16, 0.05, 8, px, FT + 1.34, pz, shade(GLD, 0.95));
+      b.box('glow', 0.1, 0.26, 0.1, px, FT + 1.5, pz, JADE_L);
+    } else if (kind === 5) {                             // 盆景（青玉盆 + 松枝）
+      b.cyl('ceramic', 0.26, 0.2, 0.24, 8, px, FT + 0.56, pz, shade(0x2f5a4a, 1.0));
+      b.cyl('trunk', 0.05, 0.07, 0.5, 5, px, FT + 0.9, pz, shade(0x6b4a2e, 1.0));
+      for (let k = 0; k < 3; k++) {
+        const a = k * 2.094;
+        b.box('leaf', 0.5, 0.1, 0.3, px + Math.cos(a) * 0.2, FT + 1.14 + k * 0.08, pz + Math.sin(a) * 0.2, shade(0x3a5a3a, 1.0), -a, 0, 0.2);
+      }
+    } else if (kind === 6) {                             // 茶具（托盘 + 壶 + 两盏）
+      b.box('wood', 0.6, 0.06, 0.44, px, FT + 0.47, pz, shade(0x3a2418, 1.1));
+      b.cyl('ceramic', 0.13, 0.15, 0.18, 8, px - 0.12, FT + 0.6, pz, 0xece4d2);
+      b.cyl('ceramic', 0.05, 0.05, 0.06, 8, px - 0.12, FT + 0.72, pz, 0xece4d2);
+      for (const a of [-1, 1]) b.cyl('ceramic', 0.07, 0.05, 0.07, 8, px + 0.16, FT + 0.54, pz + a * 0.1, 0xece4d2);
+    } else {                                             // 书案（小几 + 书册 + 笔架）
+      b.box('wood', 0.7, 0.08, 0.44, px, FT + 0.66, pz, shade(0x6b2a1e, 1.05));
+      for (const a of [-1, 1]) for (const c of [-1, 1]) b.box('wood', 0.06, 0.4, 0.06, px + a * 0.3, FT + 0.42, pz + c * 0.16, shade(0x5a2218, 1.0));
+      b.box('wood', 0.3, 0.05, 0.22, px, FT + 0.72, pz, 0x8a1e22);
+      b.box('ceramic', 0.26, 0.05, 0.1, px, FT + 0.75, pz + 0.12, 0xe8f0f6);
+    }
+  };
+  for (const s of [-1, 1]) {
+    const zs = [90.0, 93.0, 96.0, 99.0];
+    for (let i = 0; i < zs.length; i++) {
+      station(x + s * 5.7, zs[i], (i * 2 + (s > 0 ? 0 : 1)) % 7);
+      station(x + s * 5.7, zs[i] + 1.1, (i * 2 + (s > 0 ? 3 : 4)) % 7);
     }
   }
-  void INK;
   void sg; void atlas;
 }
 
@@ -995,11 +1098,11 @@ export function buildGuanghanInterior(b: Baker, sg: SignMesher, atlas: SignAtlas
 // 瑶池主亭 −0.25（梁底 212.40），蟠桃园保持 207.5（看园厅屋面止于 206.7，该层只余园内空腔）。
 /** 天宫放大系数：与 expansion.ts 的 HEAVEN_SCALE / LINGXIAO_SCALE 同源（那边不可反向 import，此处复刻并在此说明） */
 const SKY_SCALE = 2.2;
-const LINGXIAO_K = 1.75;
+const LINGXIAO_K = 2.7273;
 const SKY_BASE_Y = 196;
 /** 凌霄二次放大的锚点与范围，与 expansion.ts 的 enlargeLingxiao 逐字一致 */
 const LX_A = { x: 0, y: 233, z: 209 } as const;
-const LX_HX = 56, LX_HZ = 62, LX_YMIN = 233;
+const LX_HX = 60, LX_HZ = 62, LX_YMIN = 233;
 
 /**
  * 室内点光的世界坐标换算。
@@ -1026,9 +1129,9 @@ function skyLightWorld(x: number, y: number, z: number): [number, number, number
 
 /** 天宫室内点光（玉白/丹火/月白——物理单位）。坐标为 pre-scale 天宫坐标，导出前统一换算到放大后世界。 */
 const SKY_LIGHTS_RAW: { x: number; y: number; z: number; color: number; int: number; dist: number }[] = [
-  { x: 0, y: 214 + 9.5, z: 95, color: 0xfff3d8, int: 140, dist: 22 },    // 凌霄明间玉白
+  { x: 0, y: 214 + 10.8, z: 95, color: 0xfff3d8, int: 95, dist: 22 },    // 凌霄明间玉白（W48：抬到梁下、降到 95——2.7273× 后 140 cd 会把宝座区打爆）
   // 背屏金辉：点光色不是反照率，不随金饰压档（压它等于改室内照明/曝光，本包不动）
-  { x: 0, y: 214 + 6.5, z: 89, color: 0xffd700, int: 40, dist: 10 },     // 凌霄背屏金辉
+  { x: 0, y: 214 + 7.4, z: 90.6, color: 0xffd700, int: 14, dist: 10 },  // 凌霄背屏金辉（W48：40 → 14，金屏本身是 glow，不需要补光）
   { x: -120, y: 208 + 3.6, z: -20, color: 0xff7f50, int: 90, dist: 12 },   // 兜率丹火（B6 迁正）
   { x: -120, y: 208 + 2.6, z: -17, color: 0xf8f8ff, int: 45, dist: 9 },    // 兜率星辉补（B6 迁正）
   { x: 40, y: 209 + 3.2, z: -55, color: 0xf8f8ff, int: 80, dist: 14 },   // 广寒月白
@@ -2298,12 +2401,12 @@ function lingxiaoNave(b: Baker): void {
   // W47：殿内台明原为汉白玉色 0xd8d0c0 —— 在 65×54m 的殿内尺度上被殿内点光（修正落地后约 7 盏）
   // 直接推成纯白，整片地面读成「曝光过度」。金砖地本应是深暖灰（故宫太和殿金砖≈#3a352d），
   // 这里按金砖反照率改色，并在台明面补对缝线（原对缝线铺在更低一层的板面上，被台明盖住了）。
-  b.box('ash', 17, 0.62, 14, x, fy + 0.31, z, shade(0x2b2722, 1));
-  for (let k = 1; k < 4; k++) b.box('ash', 0.04, 0.02, 13.8, x - 8.5 + (17 * k) / 4, fy + 0.63, z, 0x14110e);
-  for (let k = 1; k < 5; k++) b.box('ash', 16.8, 0.02, 0.04, x, fy + 0.63, z - 7 + (14 * k) / 5, 0x14110e);
-  b.box('ash', 12, 0.16, 0.9, x, y + 0.08, 105.65, shade(0x2e2e2e, 1));
-  b.box('ash', 8, 0.3, 1.0, x, fy + 0.15, z + 7.5, shade(0xd0c8b8, 1));
-  for (let k = 0; k < 3; k++) b.box('ash', 13, 0.4, 0.9, x, fy - 0.56 - k * 0.4, 106.45 + k * 0.9, shade(0xd0c8b8, 1 - k * 0.04));
+  b.box('ash', 17, 0.62, 18, x, fy + 0.31, z, shade(0x2b2722, 1));
+  for (let k = 1; k < 4; k++) b.box('ash', 0.04, 0.02, 17.8, x - 8.5 + (17 * k) / 4, fy + 0.63, z, 0x14110e);
+  for (let k = 1; k < 5; k++) b.box('ash', 16.8, 0.02, 0.04, x, fy + 0.63, z - 9 + (18 * k) / 5, 0x14110e);
+  b.box('ash', 12, 0.16, 0.9, x, y + 0.08, 84.35, shade(0x2e2e2e, 1));
+  b.box('ash', 8, 0.3, 1.0, x, fy + 0.15, z - 7.5, shade(0xd0c8b8, 1));
+  for (let k = 0; k < 3; k++) b.box('ash', 13, 0.4, 0.9, x, fy - 0.56 - k * 0.4, 83.55 - k * 0.9, shade(0xd0c8b8, 1 - k * 0.04));
   for (const sx of [-1, 1]) b.box('wall', 0.24, 3.9, 20.8, x + sx * 8.48, 224.4, z, shade(0xa02818, 1.04));
   const cy = HALL_Y + 12.2;
   b.box('wood', 17.2, 0.18, 7.2, x, cy, 88.2, shade(0x3a2418, 1.12));

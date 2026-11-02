@@ -1,0 +1,189 @@
+{
+ "bootMs": 29109,
+ "bootOk": true,
+ "camMode": "cinema",
+ "bridges": [
+  {
+   "name": "浮梁",
+   "form": "浮桥",
+   "x": -2480,
+   "cz": -0.11,
+   "halfSpan": 34,
+   "span": 68,
+   "wide": 8.2,
+   "deckCrownY": 4.6,
+   "crownClearance": 3.6,
+   "channelClearance": 2.6
+  },
+  {
+   "name": "永寧橋",
+   "form": "石拱",
+   "x": -1680,
+   "cz": -3.16,
+   "halfSpan": 34,
+   "span": 68,
+   "wide": 9.6,
+   "deckCrownY": 8.4,
+   "crownClearance": 7.4,
+   "channelClearance": 5.48
+  },
+  {
+   "name": "疊梁橋",
+   "form": "叠梁拱",
+   "x": -1200,
+   "cz": -2.03,
+   "halfSpan": 34,
+   "span": 68,
+   "wide": 9,
+   "deckCrownY": 8.4,
+   "crownClearance": 7.4,
+   "channelClearance": 3.86
+  },
+  {
+   "name": "清風橋",
+   "form": "廊桥",
+   "x": -600,
+   "cz": 0,
+   "halfSpan": 34.4,
+   "span": 68.8,
+   "wide": 8.8,
+   "deckCrownY": 8.2,
+   "crownClearance": 7.2,
+   "channelClearance": 2.58
+  },
+  {
+   "name": "虹橋",
+   "form": "贯木拱",
+   "x": 0,
+   "cz": 0,
+   "halfSpan": 48,
+   "span": 96,
+   "wide": 10.4,
+   "deckCrownY": 9.1,
+   "crownClearance": 8.1,
+   "channelClearance": 5.44
+  },
+  {
+   "name": "通津橋",
+   "form": "浮桥",
+   "x": 600,
+   "cz": 0,
+   "halfSpan": 34.4,
+   "span": 68.8,
+   "wide": 8.2,
+   "deckCrownY": 6.2,
+   "crownClearance": 5.2,
+   "channelClearance": 2.6
+  },
+  {
+   "name": "拱辰橋",
+   "form": "石拱",
+   "x": 1200,
+   "cz": 2.03,
+   "halfSpan": 34,
+   "span": 68,
+   "wide": 9.2,
+   "deckCrownY": 8.8,
+   "crownClearance": 7.8,
+   "channelClearance": 4.07
+  },
+  {
+   "name": "通濟橋",
+   "form": "木梁",
+   "x": 1620,
+   "cz": 3.2,
+   "halfSpan": 34,
+   "span": 68,
+   "wide": 6.4,
+   "deckCrownY": 7,
+   "crownClearance": 6,
+   "channelClearance": 4.42
+  }
+ ],
+ "bridgeKit": {
+  "bridge.crossing": 7,
+  "bridge.crownPad": 1,
+  "bridge.imperialApron": 2,
+  "bridge.ledger": 8,
+  "bridge.main.covered": 1,
+  "bridge.main.pontoon": 2,
+  "bridge.main.stackedBeam": 1,
+  "bridge.main.stoneArch": 2,
+  "bridge.main.timber": 1,
+  "bridge.new.covered": 1,
+  "bridge.new.pontoon": 1,
+  "bridge.new.stackedBeam": 1,
+  "bridge.new.stoneArch": 1,
+  "bridge.seaHorseRail": 16,
+  "bridge.stall": 4,
+  "bridge.stoneArchRing": 2,
+  "bridge.wedgeBand": 24
+ },
+ "detailBoundsBridge": {
+  "bridge.crossing": {
+   "minY": 3.6,
+   "maxY": 8.8
+  },
+  "bridge.crownPad": {
+   "minY": 9.28,
+   "maxY": 9.28
+  },
+  "bridge.imperialApron": {
+   "minY": 1.4850221354166666,
+   "maxY": 1.4850221354166666
+  },
+  "bridge.ledger": {
+   "minY": 0,
+   "maxY": 0
+  },
+  "bridge.main.covered": {
+   "minY": 8.2,
+   "maxY": 8.2
+  },
+  "bridge.main.pontoon": {
+   "minY": 3.6,
+   "maxY": 3.6
+  },
+  "bridge.main.stackedBeam": {
+   "minY": 8.4,
+   "maxY": 8.4
+  },
+  "bridge.main.stoneArch": {
+   "minY": 8.4,
+   "maxY": 8.8
+  },
+  "bridge.main.timber": {
+   "minY": 7,
+   "maxY": 7
+  },
+  "bridge.new.covered": {
+   "minY": 3.4,
+   "maxY": 3.4
+  },
+  "bridge.new.pontoon": {
+   "minY": 1.8599999999999999,
+   "maxY": 1.8599999999999999
+  },
+  "bridge.new.stackedBeam": {
+   "minY": 3.4,
+   "maxY": 3.4
+  },
+  "bridge.new.stoneArch": {
+   "minY": 3.6,
+   "maxY": 3.6
+  },
+  "bridge.seaHorseRail": {
+   "minY": 8.561,
+   "maxY": 9.569
+  },
+  "bridge.stoneArchRing": {
+   "minY": 1.3,
+   "maxY": 1.3
+  },
+  "bridge.wedgeBand": {
+   "minY": 1.6187500000000001,
+   "maxY": 7.91875
+  }
+ },
+ "sceneChildren": 574
+}

@@ -54,7 +54,12 @@ function reference(c: BoxCase): { pos: Float32Array; nrm: Float32Array; col: Flo
     new THREE.Vector3(1, 1, 1),
   );
   geo.applyMatrix4(m);                       // 就地更新 position / normal / boundingBox
-  const worldMinY = geo.boundingBox!.min.y;  // push() 的 bbAO 是活引用，变换后即世界系最小值
+  // AO 的分子分母必须同一坐标系：世界 y − 世界包围盒 min，除以**世界**包围盒高度。
+  // 旧参考实现写的是 (世界 y − 世界 min) / 局部高度——倾斜构件（本用例的 roof, rz=−0.2）
+  // 世界高度是局部厚度的十几倍，kAO 被放大到 2 倍以上，把瓦面提亮成一块灰板。
+  const worldMinY = geo.boundingBox!.min.y;  // applyMatrix4 之后 boundingBox 已是世界系
+  const worldMaxY = geo.boundingBox!.max.y;
+  const worldH = Math.max(0.001, worldMaxY - worldMinY);
   const pos = geo.getAttribute('position') as THREE.BufferAttribute;
   const nrm = geo.getAttribute('normal') as THREE.BufferAttribute;
   const base = new THREE.Color(c.hex);
@@ -66,7 +71,7 @@ function reference(c: BoxCase): { pos: Float32Array; nrm: Float32Array; col: Flo
   for (let i = 0; i < pos.count; i++) {
     out.pos[i * 3] = pos.getX(i); out.pos[i * 3 + 1] = pos.getY(i); out.pos[i * 3 + 2] = pos.getZ(i);
     out.nrm[i * 3] = nrm.getX(i); out.nrm[i * 3 + 1] = nrm.getY(i); out.nrm[i * 3 + 2] = nrm.getZ(i);
-    const kAO = 0.82 + 0.18 * ((pos.getY(i) - worldMinY) / localH);
+    const kAO = 0.82 + 0.18 * Math.min(1, Math.max(0, (pos.getY(i) - worldMinY) / worldH));
     out.col[i * 3] = base.r * kAO; out.col[i * 3 + 1] = base.g * kAO; out.col[i * 3 + 2] = base.b * kAO;
   }
   geo.dispose();

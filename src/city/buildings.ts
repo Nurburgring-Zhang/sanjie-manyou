@@ -51,6 +51,124 @@ interface BuildOpt {
   hasInterior?: boolean;
 }
 
+/** 曲面反宇屋檐的檐口点（局部系）：t=1 处 h=0.5、y=H·(0.16+0.15u²)，与 bake 的 ring(1) 同式 */
+function eavePoint(axis: 'z' | 'x', s: number, u: number, sw: number, sd: number, H: number): [number, number, number] {
+  const yy = H * (0.16 + 0.15 * u * u);
+  const lat = u * 0.5;
+  return axis === 'z' ? [lat * sw, yy, s * 0.5 * sd] : [s * 0.5 * sw, yy, lat * sd];
+}
+
+/**
+ * 连续檐口环（连檐 + 滴水唇）：沿曲面 t=1 的檐口折线逐段铺，取代原来 4 条直箱。
+ * 直箱跨在反宇檐口上时两端必然翘起/下陷（剖面 y 从檐中的 0.16H 抬到角上的 0.31H），
+ * 四角两条箱体还各按自己的边长收头，交接处错台——街面看就是「檐口被啃掉几块」。
+ * 每边 SEG 段：连檐 2 面 + 滴水 2 面，四边合计 4·SEG·4 面，与旧 8 箱 + 8 滴基本持平。
+ */
+export function eaveRingOn(b: Baker, x: number, y: number, z: number, ry: number, sw: number, sd: number, H: number, hex: number): void {
+  const SEG = 10;
+  const fh = Math.max(0.16, Math.min(0.34, H * 0.1));
+  const pos: number[] = [];
+  const quad = (a: number[], b2: number[], c: number[], d: number[]): void => {
+    pos.push(a[0], a[1], a[2], b2[0], b2[1], b2[2], c[0], c[1], c[2]);
+    pos.push(a[0], a[1], a[2], c[0], c[1], c[2], d[0], d[1], d[2]);
+  };
+  for (const axis of ['z', 'x'] as const) {
+    for (const s of [1, -1] as const) {
+      for (let i = 0; i < SEG; i++) {
+        const u0 = -1 + (2 * i) / SEG, u1 = -1 + (2 * (i + 1)) / SEG;
+        const a = eavePoint(axis, s, u0, sw, sd, H), b2 = eavePoint(axis, s, u1, sw, sd, H);
+        // ① 连檐：檐口外皮往下 fh 的一道板
+        quad(a, b2, [b2[0], b2[1] - fh, b2[2]], [a[0], a[1] - fh, a[2]]);
+        // ② 滴水唇：再外挑 0.1、下垂 0.2，把檐口收成一条压得住的深色厚边
+        const o = 0.1, drop = 0.2;
+        const oa: [number, number, number] = axis === 'z' ? [a[0], a[1] - fh, a[2] + s * o] : [a[0] + s * o, a[1] - fh, a[2]];
+        const ob: [number, number, number] = axis === 'z' ? [b2[0], b2[1] - fh, b2[2] + s * o] : [b2[0] + s * o, b2[1] - fh, b2[2]];
+        quad([a[0], a[1] - fh, a[2]], [b2[0], b2[1] - fh, b2[2]], ob, oa);
+        quad(oa, ob, [ob[0], ob[1] - drop, ob[2]], [oa[0], oa[1] - drop, oa[2]]);
+      }
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.computeVertexNormals();
+  b.addGeo('roof', geo, x, y, z, shade(hex, 0.7), ry);
+}
+
+/**
+ * 连续垂脊带：沿角线（u=±1）整条铺一段，取代「沿角线摆 steps 个方块」。
+ * 方块之间留缝、每块又按自己的朝向转，街面 20m 处读成一排锯齿；连续带把脊线锁成一条。
+ * 每段 4 面（顶面 2 + 外侧面 2），4 条垂脊 × SEG 段。
+ */
+function hipRibbonOn(b: Baker, x: number, y: number, z: number, ry: number, SW: number, SD: number, H: number, hex: number): void {
+  const SEG = 10, RIDGE_F = 0.16, KICK = 0.16, CORNER = 0.15;
+  const hAt = (t: number): number => RIDGE_F + (0.5 - RIDGE_F) * Math.pow(t, 1.6);
+  const yAt = (t: number): number => H * (roofProfile(t) + KICK * Math.pow(t, 3) + CORNER * t * t);
+  const pos: number[] = [];
+  const quad = (a: number[], b2: number[], c: number[], d: number[]): void => {
+    pos.push(a[0], a[1], a[2], b2[0], b2[1], b2[2], c[0], c[1], c[2]);
+    pos.push(a[0], a[1], a[2], c[0], c[1], c[2], d[0], d[1], d[2]);
+  };
+  for (const sx of [-1, 1] as const) {
+    for (const sz of [-1, 1] as const) {
+      const pt = (t: number): [number, number, number] => {
+        const f = hAt(t);
+        return [sx * f * SW, yAt(t), sz * f * SD];
+      };
+      // 水平面内的法向（垂直于角线的水平切线）
+      const dirAt = (t: number): [number, number] => {
+        const f = hAt(t);
+        const dx = sx * f * SW, dz = sz * f * SD;
+        const L = Math.hypot(dx, dz) || 1;
+        return [-dz / L, dx / L];
+      };
+      for (let k = 0; k < SEG; k++) {
+        const t0 = k / SEG, t1 = (k + 1) / SEG;
+        const p0 = pt(t0), p1 = pt(t1);
+        // 带宽随 t 收细：正脊端 0.34 → 檐角 0.22（宋式垂脊本来就往角上收）
+        const w0 = 0.34 - 0.12 * t0, w1 = 0.34 - 0.12 * t1;
+        const d0 = dirAt(t0), d1 = dirAt(t1);
+        const top = (p: number[], d2: number[], wid: number): [number[], number[]] => {
+          const hw = wid / 2;
+          const l: [number, number, number] = [p[0] + d2[0] * hw, p[1] + 0.20, p[2] + d2[1] * hw];
+          const r: [number, number, number] = [p[0] - d2[0] * hw, p[1] + 0.20, p[2] - d2[1] * hw];
+          return [l, r];
+        };
+        const [l0, r0] = top(p0, d0, w0);
+        const [l1, r1] = top(p1, d1, w1);
+        quad(l0, l1, r1, r0);                                   // 顶面
+        quad(r0, r1, [p1[0], p1[1] - 0.06, p1[2]], [p0[0], p0[1] - 0.06, p0[2]]); // 外侧面
+      }
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.computeVertexNormals();
+  b.addGeo('roof', geo, x, y, z, shade(hex, 0.72), ry);
+}
+
+/**
+ * 瓦垄灯带：把一整条通长发光条切成「灯管 + 暗段」。
+ * 旧实现是 o.w*0.9 一根不断开的条，远看是一条横贯整栋的紫/绿绸带（用户三次投诉的那条）。
+ * 宋式檐灯本来就是逐盏挂的，段长 2.6m、间距 3.2m 才是灯。
+ */
+function lampRun(b: Baker, len: number, at: (lx: number) => [number, number], y: number, color: number, ry: number, axis: 'x' | 'z'): void {
+  const TUBE = 2.6, PITCH = 3.2;
+  const n = Math.max(1, Math.floor(len / PITCH));
+  const span = n * PITCH - (PITCH - TUBE);
+  if (span > len) {
+    const [gx, gz] = at(0);
+    const L = Math.max(0.8, len * 0.86);
+    b.box('glow', axis === 'x' ? L : 0.08, 0.08, axis === 'x' ? 0.08 : L, gx, y, gz, color, ry);
+    return;
+  }
+  const off = (len - span) / 2;
+  for (let i = 0; i < n; i++) {
+    const lx = off + i * PITCH - len / 2 + TUBE / 2;
+    const [gx, gz] = at(lx);
+    b.box('glow', axis === 'x' ? TUBE : 0.08, 0.08, axis === 'x' ? 0.08 : TUBE, gx, y, gz, color, ry);
+  }
+}
+
 /** 歇山/庑殿顶（四棱台近似）+ 霓虹檐边 */
 export function roofOn(b: Baker, w: number, d: number, y: number, x: number, z: number, ry: number, tileC: number, neon?: number, hOverride?: number): void {
   const h = hOverride ?? Math.min(w, d) * 0.2 + 0.45;
@@ -68,21 +186,11 @@ export function roofOn(b: Baker, w: number, d: number, y: number, x: number, z: 
   // 曲面反宇屋顶（单一连续曲面：脊陡坡缓+檐口上挑+角部起翘），替换三层棱台
   // 第 12 个参数 rib=true：让 roofC 按 worldW 烘瓦垄顶点色条纹（贴图在这里必被 mip 抹平）
   b.roofC('roof', x, y, z, tileC, ry, SW, H, SD, 0, 0, true);
-  // 檐口（连檐 + 滴水）：曲面屋顶收到檐边时厚度归零，仰视/侧视整片屋顶会消失成一条线
-  {
-    const fh = Math.max(0.18, Math.min(0.85, h * 0.06));
-    const fy = y - fh * 0.5 + 0.06;
-    const cr0 = Math.cos(ry), sr0 = Math.sin(ry);
-    const ring: [number, number, number, number][] = [
-      [0, sd / 2, sw, 0.3], [0, -sd / 2, sw, 0.3], [sw / 2, 0, 0.3, sd], [-sw / 2, 0, 0.3, sd],
-    ];
-    for (const [ox, oz, bw, bd] of ring) {
-      b.box('roof', bw, fh, bd, x + ox * cr0 + oz * sr0, fy, z - ox * sr0 + oz * cr0, shade(tileC, 0.72), ry);
-      // 滴水：檐口下沿一道更深的薄唇
-      b.box('roof', bw * 0.99, fh * 0.34, bd * 1.35, x + ox * cr0 + oz * sr0, fy - fh * 0.45, z - ox * sr0 + oz * cr0, shade(tileC, 0.55), ry);
-    }
-    b.kit('roof.eaveFascia', 8, y);
-  }
+  // 檐口（连檐 + 滴水）：曲面屋顶收到檐边时厚度归零，仰视/侧视整片屋顶会消失成一条线。
+  // 用**连续檐口环**（沿曲面 t=1 折线逐段）替代 4 条直箱：直箱跨在反宇檐口上必翘/必陷，
+  // 四角还各按自己的边长收头，交接处错台——街面看就是「檐口被啃掉几块」。
+  eaveRingOn(b, x, y, z, ry, SW, SD, H, tileC);
+  b.kit('roof.eaveFascia', 8, y);
   // 粗垄不再铺箱体。真正的瓦垄（0.34m 一垄）已由 roofC 的顶点色条纹按世界尺度烘在曲面上，
   // 这里再铺 3.2m 一根、0.95m 宽的直箱反而读成"压在瓦面上的横梁"：
   // 直箱弦线在上凸曲面上必然抬高，水平顶面正对天光，30m 级屋顶实测是一排白梁（相国寺）。
@@ -94,22 +202,11 @@ export function roofOn(b: Baker, w: number, d: number, y: number, x: number, z: 
   // 四条垂脊：贴住曲面的角线（u=±1），从正脊平顶四角落到檐角。
   // 旧版只给 w>60 的宫殿铺，且参数化用 s 而非 s^1.6，脊点不在角线上——街屋四坡顶因此只有
   // 一条正脊"浮"在瓦面上，没有任何一条脊落在两坡交线。现在所有 roofOn 屋顶统一铺。
+  // 且从「沿角线摆方块」改成**连续脊带**：方块之间的缝在街面 20m 处读成一排锯齿。
+  hipRibbonOn(b, x, y, z, ry, SW, SD, H, tileC);
   {
-    // 段距按角线长度定（≈1.1m 一段、块宽 0.85×段距），大屋顶才不会读成一条虚线
     const hipLen = Math.hypot(0.34 * SW, 0.34 * SD, H);
     const steps = Math.max(4, Math.min(96, Math.round(hipLen / 1.1)));
-    const blk = Math.min(0.75, Math.max(0.42, (hipLen / steps) * 1.15));
-    const cr = Math.cos(ry), sr = Math.sin(ry);
-    for (const sx of [-1, 1] as const) for (const sz of [-1, 1] as const) {
-      for (let k = 0; k < steps; k++) {
-        const t = (k + 0.5) / steps;
-        const f = hAt(t);
-        const lx = sx * f * SW, lz = sz * f * SD;
-        b.box('roof', blk, 0.34, blk,
-          x + lx * cr + lz * sr, y + hipY(t) + 0.10, z - lx * sr + lz * cr,
-          shade(tileC, 0.68), ry + Math.atan2(lx, lz));
-      }
-    }
     b.kit('roof.hipRidge', steps * 4, y + H * 0.5);
   }
   // 正脊 + 两端鸱吻（沿屋脊方向）：长度严格等于曲面单元的正脊平顶（±0.16·SW）
@@ -148,23 +245,31 @@ export function roofOn(b: Baker, w: number, d: number, y: number, x: number, z: 
       return out;
     };
     const capHex = shade(0x3f444b, 0.9);
+    // 灯管必须坐在**檐口曲线上**：反宇檐口 t=1 处 y = H·(0.16 + 0.15u²)，u 为沿边归一化坐标。
+    // 旧版一律放 y+0.05（= 曲面的底面），实测比檐口低 0.16H（2.6m 举高就是 0.37m），
+    // 灯带整条悬在檐下空气里——「檐下一条横贯整栋的紫条」就是这么来的。
+    const eaveY = (u: number): number => H * (0.16 + 0.15 * u * u);
     let tubes = 0;
     for (const s of [-1, 1]) {
       for (const [t0, tl] of runs(sw * 0.99)) { // 两条长边（沿本地 x）
-        const [gx, gz] = at(t0 + tl / 2, s * exF);
-        b.box('glow', tl, ln, ln, gx, y + 0.05, gz, neon, ry);
+        const lx = t0 + tl / 2;
+        const u = lx / Math.max(1e-3, sw * 0.5);
+        const [gx, gz] = at(lx, s * exF);
+        b.box('glow', tl, ln, ln, gx, y + eaveY(u) + 0.02, gz, neon, ry);
         for (const e of [-1, 1]) {
-          const [bx, bz] = at(t0 + tl / 2 + e * (tl / 2 + CAP / 2), s * exF);
-          b.box('metal', CAP, CAP_W, CAP_W, bx, y + 0.05, bz, capHex, ry);
+          const [bx, bz] = at(lx + e * (tl / 2 + CAP / 2), s * exF);
+          b.box('metal', CAP, CAP_W, CAP_W, bx, y + eaveY(u) + 0.02, bz, capHex, ry);
         }
         tubes++;
       }
       for (const [t0, tl] of runs(sd * 0.99)) { // 两条短边（沿本地 z）
-        const [gx, gz] = at(s * exS, t0 + tl / 2);
-        b.box('glow', ln, ln, tl, gx, y + 0.05, gz, neon, ry);
+        const lz = t0 + tl / 2;
+        const u = lz / Math.max(1e-3, sd * 0.5);
+        const [gx, gz] = at(s * exS, lz);
+        b.box('glow', ln, ln, tl, gx, y + eaveY(u) + 0.02, gz, neon, ry);
         for (const e of [-1, 1]) {
-          const [bx, bz] = at(s * exS, t0 + tl / 2 + e * (tl / 2 + CAP / 2));
-          b.box('metal', CAP_W, CAP_W, CAP, bx, y + 0.05, bz, capHex, ry);
+          const [bx, bz] = at(s * exS, lz + e * (tl / 2 + CAP / 2));
+          b.box('metal', CAP_W, CAP_W, CAP, bx, y + eaveY(u) + 0.02, bz, capHex, ry);
         }
         tubes++;
       }
@@ -172,7 +277,11 @@ export function roofOn(b: Baker, w: number, d: number, y: number, x: number, z: 
     b.kit('eave.lampTube', tubes, y);
   }
   buildDetailedEave(b, {
-    x, y, z, w, d, ry, roofC: tileC, neon,
+    x, y, z, w, d, ry, roofC: tileC,
+    // neon 不再传给 detailKit：roofOn 自己已经在四条檐边各铺了「2.6m 灯管 + 0.6m 暗段」，
+    // detailKit 的 neon 是**一条 0.9w 通长不间断的条**，两条叠在同一檐口上，
+    // 结果通长条盖住灯管间隙，整栋读成一条紫/绿绸带。只保留分段灯管这一条真源。
+    neon: undefined,
     tier: w * d >= 150 || neon !== undefined ? 'near' : 'mid',
   });
 }
@@ -225,6 +334,36 @@ function gableFillOn(b: Baker, g: MatG, x: number, z: number, ry: number, lx: nu
 }
 
 /**
+ * 两坡屋面的**瓦垄坡面**：一整片四边形，按 0.34m 垄距把瓦垄明暗烘进顶点色。
+ * 旧版每坡只铺 4 道「通长脊筋」——0.34m 垄距被扔掉，4 根 0.15m 细条在 20m 外读不出来，
+ * 两坡因此退化成两块灰板。列数按世界面阔算，垄距与 roofC 的 RIB_PITCH 同一口径。
+ * 顶点写在屋面局部系里（y 从 0=檐口 到 h=正脊），落位由 addGeo 的 y 参数补。
+ */
+export function gableSlopeRibbed(b: Baker, x: number, y: number, z: number, ry: number,
+  hw: number, hd: number, h: number, s: number, hex: number): void {
+  const K = Math.max(8, Math.round((2 * hw) / 0.34));
+  const pos: number[] = [];
+  const col: number[] = [];
+  const ribAt = (lx: number): number => 1.0 + 0.22 * Math.cos((lx * Math.PI * 2) / 0.34);
+  const vert = (lx: number, ly: number, lz: number, c: number): void => {
+    pos.push(lx, ly, lz);
+    col.push(c, c, c);
+  };
+  for (let i = 0; i < K; i++) {
+    const lx0 = -hw + (2 * hw * i) / K, lx1 = -hw + (2 * hw * (i + 1)) / K;
+    const c0 = ribAt(lx0), c1 = ribAt(lx1);
+    // 脊（lz=0, ly=h）→ 檐（lz=s·hd, ly=0）
+    vert(lx0, h, 0, c0); vert(lx1, h, 0, c1); vert(lx1, 0, s * hd, c1);
+    vert(lx0, h, 0, c0); vert(lx1, 0, s * hd, c1); vert(lx0, 0, s * hd, c0);
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  geo.computeVertexNormals();
+  b.addGeo('roof', geo, x, y, z, hex, ry);
+}
+
+/**
  * 悬山两坡：一条正脊 + 前后两坡。屋面挑出山墙 0.35m（檩头外露，悬山标志），
  * 檐口平直、无四角起翘，两端砌山花把这坡下的三角空腔封住。
  */
@@ -236,15 +375,9 @@ function gableRoofOn(b: Baker, w: number, d: number, y: number, x: number, z: nu
   const cosr = Math.cos(ry), sinr = Math.sin(ry);
   const at = (lx: number, lz: number): [number, number] => [x + cosr * lx + sinr * lz, z - sinr * lx + cosr * lz];
   for (const s of [-1, 1] as const) {
-    // 前后两坡（直坡，不做反宇与起翘）
-    pane(b, 'roof', x, z, ry, 0, y + h / 2, (s * hd) / 2, len, hw * 2, 0.2, Math.PI / 2, s * a,
-      shade(tileC, s > 0 ? 1.04 : 0.94));
-    // 瓦垄：每坡 4 道通长脊筋（0.15 宽，抬 0.11）
-    for (let i = 0; i < 4; i++) {
-      const lx = (-0.7 + 0.4667 * i) * hw;
-      pane(b, 'roof', x, z, ry, lx, y + h / 2 + 0.11, (s * hd) / 2, len * 0.94, 0.15, 0.05, Math.PI / 2, s * a,
-        shade(tileC, 0.8));
-    }
+    // 前后两坡（直坡，不做反宇与起翘）：瓦垄 0.34m 一垄烘进顶点色，
+    // 替代旧版「4 道通长脊筋」——4 根 0.15m 细条在街面距离上读成一整块灰板。
+    gableSlopeRibbed(b, x, y, z, ry, hw, hd, h, s, shade(tileC, s > 0 ? 1.04 : 0.94));
     // 檐口平直：连檐 + 滴水一道通长
     const [ex, ez] = at(0, s * hd);
     b.box('roof', hw * 2, 0.16, 0.36, ex, y - 0.04, ez, shade(tileC, 0.7), ry);
@@ -254,6 +387,13 @@ function gableRoofOn(b: Baker, w: number, d: number, y: number, x: number, z: nu
       const lx = (-0.66 + 0.44 * i) * hw;
       const [rx2, rz2] = at(lx, s * (hd - 0.22));
       b.box('wood', 0.14, 0.15, 0.46, rx2, y - 0.14, rz2, shade(C.woodDark, 1.06), ry);
+    }
+  }
+  // 博风板：两端沿坡边一条压板，把「屋面挑出山墙」的悬山收头交代清楚
+  for (const sx of [-1, 1] as const) {
+    for (const s of [-1, 1] as const) {
+      pane(b, 'wood', x, z, ry, sx * (hw - 0.06), y + h / 2 + 0.09, (s * hd) / 2, len, 0.3, 0.12,
+        Math.PI / 2, s * a, shade(C.woodDark, 1.12));
     }
   }
   // 正脊（一条通长）+ 两端小收头（悬山不做鸱吻）
@@ -278,8 +418,8 @@ function gableRoofOn(b: Baker, w: number, d: number, y: number, x: number, z: nu
       (f) => Math.min(d / 2 - 0.2, hd * (1 - f)), shade(wallC, 0.94));
   }
   if (neon !== undefined) {
-    const [gx, gz] = at(0, hd + 0.02);
-    b.box('glow', w * 0.9, 0.07, 0.07, gx, y - 0.02, gz, neon, ry);
+    // 檐灯分段（旧版 w*0.9 一根通长条，街面看是一条横贯整栋的绸带）
+    lampRun(b, w * 0.94, (lx) => at(lx, hd + 0.02), y + 0.02, neon, ry, 'x');
   }
 }
 
@@ -294,36 +434,15 @@ function hipHallRoofOn(b: Baker, w: number, d: number, y: number, x: number, z: 
   const cosr = Math.cos(ry), sinr = Math.sin(ry);
   const at = (lx: number, lz: number): [number, number] => [x + cosr * lx + sinr * lz, z - sinr * lx + cosr * lz];
   b.roofC('roof', x, y, z, tileC, ry, sw * 1.02, H, sd * 1.02, 0, 0, true);
-  // 连檐 + 滴水一圈（曲面收到檐边时厚度归零，侧视会消失成一条线）
-  {
-    const fh = Math.max(0.18, Math.min(0.85, h * 0.06));
-    const fy = y - fh * 0.5 + 0.06;
-    for (const [ox, oz, bw, bd] of [[0, sd / 2, sw, 0.3], [0, -sd / 2, sw, 0.3], [sw / 2, 0, 0.3, sd], [-sw / 2, 0, 0.3, sd]] as const) {
-      const [px, pz] = at(ox, oz);
-      b.box('roof', bw, fh, bd, px, fy, pz, shade(tileC, 0.72), ry);
-      b.box('roof', bw * 0.99, fh * 0.34, bd * 1.35, px, fy - fh * 0.45, pz, shade(tileC, 0.55), ry);
-    }
-  }
+  // 连檐 + 滴水一圈：同 roofOn，用连续檐口环代替 4 条直箱（直箱在反宇檐口上必错台）
+  eaveRingOn(b, x, y, z, ry, sw * 1.02, sd * 1.02, H, tileC);
   // 四条垂脊：沿曲面的角线（u=±1），t 从正脊平顶端点到檐角，逐段贴面。
   // 旧版参数化用 t 而非 t^1.6，脊点落在瓦面中间；且下面另铺了 8 段"戗脊"，横坐标固定
   // 在 0.2·sw——不在角线上，只是散落在坡面上的方块。庑殿只有"一正脊 + 四垂脊"共五脊，
-  // 故删掉那 8 段错位方块，把四条垂脊改到真实角线。
+  // 故删掉那 8 段错位方块，把四条垂脊改到真实角线。再改成连续脊带（方块间留缝 = 锯齿）。
   const hipLen = Math.hypot(0.34 * sw * 1.02, 0.34 * sd * 1.02, H);
   const steps = Math.max(4, Math.min(96, Math.round(hipLen / 1.1)));
-  const blk = Math.min(0.75, Math.max(0.42, (hipLen / steps) * 1.15));
-  const hipY2 = (t: number): number => H * (roofProfile(t) + 0.16 * Math.pow(t, 3) + 0.15 * t * t);
-  for (const sx of [-1, 1] as const) {
-    for (const sz of [-1, 1] as const) {
-      for (let k = 0; k < steps; k++) {
-        const t = (k + 0.5) / steps;
-        const e = Math.pow(t, 1.6);
-        const f = 0.16 + 0.34 * e;
-        const [px, pz] = at(sx * sw * 1.02 * f, sz * sd * 1.02 * f);
-        b.box('roof', blk, 0.42, blk, px, y + hipY2(t) + 0.16, pz,
-          shade(tileC, 0.7), ry + Math.atan2(sx * sw * f, sz * sd * f));
-      }
-    }
-  }
+  hipRibbonOn(b, x, y, z, ry, sw * 1.02, sd * 1.02, H, tileC);
   b.kit('roof.hipRidge', steps * 4, y + H * 0.5);
   // ±x 山面：3 级山花封口（板壁，避免大面积 wall 组泛蓝灰）
   for (const sx of [-1, 1] as const) {
@@ -347,12 +466,13 @@ function hipHallRoofOn(b: Baker, w: number, d: number, y: number, x: number, z: 
     b.box('roof', 0.5, 0.14, 0.24, px, y + 0.16, pz, C.ridge, ry + dir * 0.39, 0, dir * 0.5);
   }
   if (neon !== undefined) {
+    // 檐灯按段挂（2.6m 灯管 + 0.6m 暗段），旧版是 sw*0.9 一根通长条——远看就是一条绸带。
     for (const s of [-1, 1] as const) {
-      const [gx, gz] = at(0, s * sd * 0.495);
-      b.box('glow', sw * 0.9, 0.09, 0.09, gx, y + 0.05, gz, neon, ry);
+      lampRun(b, sw * 0.94, (lx) => at(lx, s * sd * 0.495), y + H * 0.16 + 0.02, neon, ry, 'x');
     }
   }
-  buildDetailedEave(b, { x, y, z, w, d, ry, roofC: tileC, neon, tier: 'near' });
+  // detailKit 的通长 neon 条不再叠（roofOn/hipHallRoofOn 已有分段灯管，两条叠一起会读成绸带）
+  buildDetailedEave(b, { x, y, z, w, d, ry, roofC: tileC, neon: undefined, tier: 'near' });
 }
 
 /**
@@ -418,13 +538,12 @@ function shopfrontRoofOn(b: Baker, o: BuildOpt, bodyTop: number, roofC: number, 
   const run = z1 - z0;
   const a = Math.atan2(drop, run);
   const [fx, fz] = at(0, (z0 + z1) / 2);
-  // ① 前段单坡：脊侧高、檐口低，压住敞开的铺面
-  pane(b, 'roof', x, z, ry, 0, highY - drop / 2, (z0 + z1) / 2, Math.hypot(run, drop), w + 0.3, 0.2, Math.PI / 2, a,
-    shade(roofC, 1.02));
-  for (let i = 0; i < 3; i++) {
-    const lx = (-0.6 + 0.6 * i) * (w / 2);
-    pane(b, 'roof', x, z, ry, lx, highY - drop / 2 + 0.11, (z0 + z1) / 2, Math.hypot(run, drop) * 0.94, 0.14, 0.05,
-      Math.PI / 2, a, shade(roofC, 0.8));
+  // ① 前段单坡：脊侧高、檐口低，压住敞开的铺面。
+  // 旧版是一整片素板 + 3 道装饰脊筋（0.34m 垄距完全没有），俯视就是一整块灰板；
+  // 这里换成带瓦垄顶点色的坡面（与悬山同一套 0.34m 垄距），坡顶落在接缝、坡脚落在檐口。
+  {
+    const [sx0, sz0] = at(0, z0);
+    gableSlopeRibbed(b, sx0, highY - drop, sz0, ry, (w + 0.3) / 2, run, drop, 1, shade(roofC, 1.02));
   }
   const [ex, ez] = at(0, z1);
   b.box('roof', w + 0.3, 0.16, 0.32, ex, highY - drop - 0.02, ez, shade(roofC, 0.7), ry);
@@ -432,7 +551,7 @@ function shopfrontRoofOn(b: Baker, o: BuildOpt, bodyTop: number, roofC: number, 
     const [rx2, rz2] = at((-0.6 + 0.4 * i) * (w / 2), z1 - 0.24);
     b.box('wood', 0.14, 0.14, 0.44, rx2, highY - drop - 0.08, rz2, shade(C.woodDark, 1.06), ry);
   }
-  if (neon !== undefined) b.box('glow', w * 0.86, 0.07, 0.07, ex, highY - drop + 0.03, ez, neon, ry);
+  if (neon !== undefined) lampRun(b, w * 0.9, (lx) => at(lx, eaveZ), highY - drop + 0.03, neon, ry, 'x');
   // ② 后段升高：三面矮墙（后 + 左右）+ 接缝矮墙，抬到 backTop
   const backTop = bodyTop + 1.05;
   const wallH = backTop - (bodyTop + 0.12);
@@ -494,7 +613,7 @@ function gateFrameOn(b: Baker, sg: SignMesher, atlas: SignAtlas, o: BuildOpt, id
   gableRoofOn(b, w + 1.0, rd, H + 0.02, x, z, ry, roofC, o.wallC ?? C.plaster, o.neon, 1.15);
   if (o.neon !== undefined) {
     const [gx2, gz2] = at(0, rd / 2 + 0.6);
-    b.box('glow', w * 0.8, 0.07, 0.07, gx2, H - 0.02, gz2, o.neon, ry);
+    lampRun(b, w * 0.86, (lx) => at(lx, rd / 2 + 0.6), H - 0.02, o.neon, ry, 'x');
   }
 }
 
@@ -1034,8 +1153,17 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
     }
     for (let k = 0; k < 7; k++) {
       const lx = -gw / 2 + (gw * k) / 6;
-      b.box('glow', 0.5, 0.5, 0.5, gx + Math.cos(ry) * lx, gh + 0.85, gz - Math.sin(ry) * lx, neon ?? C.neonGold, ry, 0, 0.78);
-      if (k > 0 && k < 6) b.box('glow', 0.16, 1.1, 0.16, gx + Math.cos(ry) * lx, gh - 0.05, gz - Math.sin(ry) * lx, neon ?? C.neonGold);
+      const lxx = gx + Math.cos(ry) * lx, lzz = gz - Math.sin(ry) * lx;
+      // 悬挂式檐灯：吊索 + 灯盖 + 灯身 + 灯托 + 灯坠，五件都在一条垂直线上。
+      // 旧版是 `b.box('glow', 0.5,0.5,0.5, …, 0, 0.78)`——一个绕 Z 轴滚转 45° 的发光立方：
+      // 斜置立方体的轮廓就是一枚菱形（远看像被拉长的「卐/文字」），下面只接一根 0.16m 细杆、
+      // 杆顶还差 0.1m 断开，于是读成「一排悬空、朝不同方向斜指的黄片」。
+      // 宋式檐灯本来就是竖着挂的，不该有滚转。
+      b.box('wood', 0.05, 0.5, 0.05, lxx, gh + 0.72, lzz, C.woodDark, ry);
+      b.box('ceramic', 0.3, 0.1, 0.3, lxx, gh + 0.43, lzz, shade(0x6b2c20, 1.0), ry);
+      b.box('glow', 0.26, 0.34, 0.26, lxx, gh + 0.21, lzz, neon ?? C.neonGold, ry);
+      b.box('ceramic', 0.22, 0.06, 0.22, lxx, gh + 0.01, lzz, shade(0x6b2c20, 0.9), ry);
+      b.box('fabric', 0.05, 0.24, 0.05, lxx, gh - 0.16, lzz, 0xb03030, ry);
     }
     for (const s of [-1, 1]) {
       const lx = s * (gw / 2 - 0.6);
@@ -2235,7 +2363,10 @@ const yieldFrameB = (): Promise<void> => new Promise((r) => { if (typeof request
  */
 export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: SignAtlas, rng: RNG): Promise<void> {
   const shopSigns = ['綢緞莊', '香藥鋪', '解當鋪', '紙馬鋪', '明家靴店', '劉家上色沉檀揀香', '王家紙馬', '果子鋪', '飯鋪', '唐家酒店', '久住王員外家', '積善堂', '守拙齋', '萬貨全'];
-  const shopNeon = [C.neonMag, C.neonCyan, C.neonGreen, C.neonPurple, C.neonGold, C.neonOrange];
+  // NH-03 玄霓·电紫（0x8a2be2）按调色板只属于「玄门 / 纸马铺」，不参与街屋随机轮转：
+  // 旧池子里 55% 的普通铺面会随机拿到紫色檐灯，配合 detailKit 的通长条读成「紫色发光横带」。
+  // 紫色仍保留给显式指定的 王家紙馬（见下方的落位表）。
+  const shopNeon = [C.neonMag, C.neonCyan, C.neonGreen, C.neonGold, C.neonOrange];
   let idx = 0;
   const emit = async (plots: Plot[], opt: { floors: [number, number]; ornateChance?: number }): Promise<void> => {
     // 街墙与后院：把"一排孤立房子"补成连续街墙 + 进深院落

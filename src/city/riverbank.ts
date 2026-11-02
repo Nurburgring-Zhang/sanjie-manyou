@@ -2,7 +2,8 @@ import { Baker, shade } from './bake';
 import { roadBlocked } from './imperial';
 import { inLandmarkKeepout } from './layout';
 import { riverCenterZ, riverHalfWidth, RIVER_WATER_Y } from './river';
-import { buildTradeInterior, flowerBush, gableTriangle, pickTrade, type ShopTrade } from './interiors';
+import { buildTradeInterior, flowerBush, gableTriangle, pickTrade, type ShopTrade, type TradeRoomSpec } from './interiors';
+import { gableSlopeRibbed } from './buildings';
 
 /**
  * 河岸商业带（R2/R3 + R16）：沿城内河两岸铺「两排铺面 + 中间一条街」。
@@ -220,6 +221,11 @@ export function riverbandPlan(): RiverbandPlan {
   return { shops, streets, blocks };
 }
 
+/** 审计入口：河岸两条带全部铺面的室内参数（纯计算，与 build 共用 riverRoomSpec） */
+export function riverRoomSpecs(): TradeRoomSpec[] {
+  return riverbandPlan().shops.map(riverRoomSpec);
+}
+
 // ============ 铺面（R16：薄壁壳 + 门洞 + 山墙 + 室内） ============
 /**
  * 两排共用的体块：台基 / 薄壁壳（留门洞）/ 双坡板顶 / 两端山墙 / 多层腰檐 / 室内。
@@ -247,13 +253,24 @@ function shopShell(
   b.box('wall', dw, h - 2.5, TW, cx, GY + 2.5 + (h - 2.5) / 2, zc - dir * (d / 2 - TW / 2), wallC);
   // 板门（半掩）：门洞两侧的墙垛本身就是门框，不再另加两根门套（2021 间 × 24 面 = 48k）
   b.box('wood', dw * 0.46, 2.36, 0.1, cx - dw * 0.24, GY + 1.18, zc - dir * (d / 2 - 0.02), 0x3a2418);
-  // 双坡板顶（脊沿 x）
+  // 双坡瓦顶（脊沿 x）：旧版是两块 0.18m 素板——没有瓦垄、没有连檐、没有滴水，
+  // 俯视就是一整块灰板（用户三次投诉的"灰平板"在河岸带就是这个）。近景区换成
+  // 带 0.34m 瓦垄顶点色的坡面 + 连续连檐/滴水；远景区（|x|≥1200）仍保留两块板，
+  // 每间多 152 面的代价只花在长卷镜头能看清的河段上。
   const rh = 1.0 + w * 0.045;
   const half = d / 2 + 0.5;
   const th = Math.atan2(rh, half);
-  const L = Math.hypot(half, rh);
+  const near = Math.abs(cx) < 1200;
   for (const rs of [-1, 1] as const) {
-    b.box('roof', w + 0.9, 0.18, L * 1.02, cx, GY + h + rh / 2, zc + (rs * d) / 4, roofC, 0, rs * th, 0);
+    if (near) {
+      gableSlopeRibbed(b, cx, GY + h, zc, 0, w / 2 + 0.45, half, rh, rs, roofC);
+    } else {
+      const L = Math.hypot(half, rh);
+      b.box('roof', w + 0.9, 0.18, L * 1.02, cx, GY + h + rh / 2, zc + (rs * d) / 4, roofC, 0, rs * th, 0);
+    }
+    // 连檐 + 滴水：檐口收一条硬边，两坡共用
+    b.box('roof', w + 0.9, 0.16, 0.34, cx, GY + h - 0.05, zc + rs * half, shade(roofC, 0.7));
+    b.box('roof', w + 0.9, 0.1, 0.16, cx, GY + h - 0.16, zc + rs * (half + 0.06), shade(roofC, 0.55));
   }
   b.box('roof', w + 0.9, 0.22, 0.42, cx, GY + h + rh, zc, shade(roofC, 1.25));
   // 两端山墙（判据 ③）：每端 2 面，封闭板顶屋腔
@@ -273,15 +290,33 @@ function shopShell(
       b.box('glow', 1.9, 1.25, 0.1, xx, GY + 4.6, zc - dir * (d / 2 - 0.04), 0xffc66e);
     }
   }
-  // 室内（判据 ①）：compact 档位，9 件单盒形制
-  buildTradeInterior(b, {
-    cx, cz: zc, w: w - TW * 2 - 0.1, d: d - TW * 2 - 0.1,
-    y0: GY, h: h - 0.1,
-    trade: m.trade, variant: m.variant,
-    ux: 1, uz: 0, vx: 0, vz: dir,
-    ceiling: false, compact: true, maxItems: 8,
-  });
+  // 室内（判据 ①）：参数见 riverRoomSpec
+  buildTradeInterior(b, riverRoomSpec(m));
   b.kit(kit, 1, h);
+}
+
+// ============ 铺面断面的单一真相源 ============
+// 檐高与室内参数同时被 build 与 tests/shopInterior.test.ts 的审计读取；两处各写一份必然漂移。
+const SHOP_TW = 0.28;
+
+/** 两排各自的檐高（临水排与内侧排用的是不同的 hash 盐，不能合并） */
+export function riverShopH(m: RiverShop): number {
+  const t = m.row === 1 ? H(m.x0 * 0.017, m.salt) : H(m.x0 * 0.019, m.salt);
+  if (m.row === 1) return m.floors === 1 ? 3.9 + t * 1.3 : m.floors === 2 ? 7.0 + t * 1.2 : 10.1 + t * 1.2;
+  return m.floors === 1 ? 3.7 + t * 1.1 : m.floors === 2 ? 6.8 + t * 1.1 : 9.9 + t * 1.1;
+}
+
+/** 河岸铺面的室内参数（两排同档：进深 10–14、面阔 7–16，地坪 GY） */
+export function riverRoomSpec(m: RiverShop): TradeRoomSpec {
+  const w = m.x1 - m.x0;
+  return {
+    cx: m.x0 + w / 2, cz: m.zc,
+    w: w - SHOP_TW * 2 - 0.1, d: m.depth - SHOP_TW * 2 - 0.1,
+    y0: GY, h: riverShopH(m) - 0.1,
+    trade: m.trade, variant: m.variant,
+    ux: 1, uz: 0, vx: 0, vz: m.side,
+    ceiling: false, maxItems: 8,
+  };
 }
 
 // ============ 临水排（朝水面开敞，背街一面留后门） ============
@@ -290,8 +325,7 @@ function waterShop(b: Baker, m: RiverShop, wallC: number, roofC: number, flagC: 
   const w = m.x1 - m.x0;
   const zc = m.zc;
   const cx = x0 + w / 2;
-  const t = H(x0 * 0.017, m.salt);
-  const h = m.floors === 1 ? 3.9 + t * 1.3 : m.floors === 2 ? 7.0 + t * 1.2 : 10.1 + t * 1.2;
+  const h = riverShopH(m);
   shopShell(b, m, cx, w, d, zc, side, h, wallC, roofC, 'riverbank.shop');
   // 临河一面：幌子（挑向水面）+ 檐下灯
   const zf = zc - side * (d / 2 + 0.06);
@@ -310,8 +344,7 @@ function streetShop(b: Baker, m: RiverShop, wallC: number, roofC: number, flagC:
   const w = m.x1 - m.x0;
   const zc = m.zc;
   const cx = x0 + w / 2;
-  const t = H(x0 * 0.019, m.salt);
-  const h = m.floors === 1 ? 3.7 + t * 1.1 : m.floors === 2 ? 6.8 + t * 1.1 : 9.9 + t * 1.1;
+  const h = riverShopH(m);
   shopShell(b, m, cx, w, d, zc, side, h, wallC, roofC, 'riverbank.shopRow2');
   // 朝街一面：檐柱两列 + 幌子 + 檐下灯
   const zf = zc - side * (d / 2 + 0.06);

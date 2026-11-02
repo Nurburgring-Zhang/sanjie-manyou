@@ -1,8 +1,11 @@
 import * as THREE from 'three';
 import { Baker, SignMesher, SignAtlas, shade } from './bake';
 import { C } from './buildings';
-import { BRIDGE_HALF, bridgeDeckY } from './layout';
-import { riverCenterZ, riverHalfWidth } from './river';
+import {
+  BRIDGE_HALF, bridgeDeckY, MAIN_BRIDGES, bridgeHalfSpan, bridgeProfileY,
+  BRIDGE_END_Y, type BridgeSpec,
+} from './layout';
+import { riverCenterZ, riverHalfWidth, RIVER_WATER_Y } from './river';
 
 // ============ 虹桥：贯木拱桥全复刻 ============
 export function buildBridge(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
@@ -96,8 +99,8 @@ export function buildBridge(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   bridgeArchBands(b);       // C-ITM-0070 木楔铁箍
   bridgeStoneArch(b);       // C-ITM-0071 石拱券
   bridgeSeaHorseRail(b);    // C-ITM-0072 海马瑞兽石栏
-  // ---- R1：主桥之外的三处过河构造（石拱桥 / 木梁桥 / 浮桥）----
-  buildSecondaryCrossings(b, sg, atlas);
+  // ---- R-BRIDGE：主河段其余 7 座桥（石拱/叠梁拱/廊桥/浮桥/木梁）----
+  buildMainCrossings(b, sg, atlas);
 }
 
 // ============ 桥面石作（WS-32）：垫石 / 御道衔接青石 / 木楔铁箍 / 石拱券 / 海马瑞兽石栏 ============
@@ -264,294 +267,375 @@ export function bridgeSeaHorseRail(b: Baker): void {
   }
 }
 
-// ============ R1：主桥之外的三处过河构造 ============
-// 用户原话「河上只有桥，没有其他通道，不然船怎么运行？可以有多座桥，以及很多船。」
-// 位置：石拱桥 −1680 / 木梁桥 +1620 / 浮桥 −2480；彼此间距 800–1680m，全部让开主桥 ±300m。
-// 三座都按「桥面 + 双侧栏杆 + 桥墩」造，浮桥另留 12m 通航孔（中间抬成一座木桁架）。
-export const SECONDARY_CROSSINGS = { stone: -1680, timber: 1620, pontoon: -2480 } as const;
+// ============ R-BRIDGE：主河段桥梁群 ============
+// 判词：「河上建立多座桥的问题，你他妈解决了吗？？？」
+// 旧账：主河段只有虹桥一座；石拱(−1680)/木梁(+1620)/浮桥(−2480) 都在 1.6km 外，
+// 且三座副桥的半跨直接取河半宽 —— 桥面止于水线、两端踏步踩在水里，高空俯视读不出「过河」。
+// 现在桥位/半跨/桥面剖面收到 layout.ts 的 MAIN_BRIDGES 一份真源，本文件只负责造形。
 
-const STONE_W = 6.6;
-const DECK_T = 0.42;
+export interface BridgeRecord {
+  name: string;
+  form: string;
+  x: number;
+  cz: number;
+  halfSpan: number;
+  span: number;
+  wide: number;
+  deckCrownY: number;
+  /** 拱顶桥面高出水面（m）：水面恒 1.0 */
+  crownClearance: number;
+  /** 航道带（河半宽−4m）处桥面高出水面（m） */
+  channelClearance: number;
+}
+export const BRIDGE_LEDGER: BridgeRecord[] = [];
 
-/** 桥轴沿 z，桥面顶标高只随 |dz| 变（抛物线拱背）；half 为水线半宽 */
-function stoneDeckY(dz: number, half: number): number {
-  const t = dz / half;
-  return 2.0 + 2.7 * (1 - t * t);
+/** 浮桥剖面（与 layout.pontoonDeckY 同口径；此处只用于造形，行走高程仍由 layout 提供） */
+function pontoonDeckYOf(x: number, dz: number): number {
+  const half = bridgeHalfSpan({ name: '', form: '浮桥', x, crown: 3.6, wide: 0 });
+  const nav = riverHalfWidth(x) > 26 ? 18 : 6;
+  const top = nav > 6 ? 6.2 : 4.6;
+  const a = Math.abs(dz);
+  if (a <= nav) return top;
+  if (a <= nav + 3) return top - ((a - nav) / 3) * (top - 3.6);
+  if (a <= 29) return 3.6;
+  if (a >= half) return BRIDGE_END_Y;
+  return 3.6 - ((a - 29) / (half - 29)) * (3.6 - BRIDGE_END_Y);
 }
 
-export function buildSecondaryCrossings(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
-  stoneArchBridge(b, sg, atlas, SECONDARY_CROSSINGS.stone, '永寧橋');
-  timberBeamBridge(b, sg, atlas, SECONDARY_CROSSINGS.timber, '通濟橋');
-  pontoonBridge(b, sg, atlas, SECONDARY_CROSSINGS.pontoon, '浮梁');
-  b.kit('bridge.crossing', 3, 1.6);
+/** 桥面标高：浮桥走平桥剖面，其余走抛物线拱背 */
+function deckYOf(s: BridgeSpec, dz: number): number {
+  return s.form === '浮桥' ? pontoonDeckYOf(s.x, dz) : bridgeProfileY(s, dz);
 }
 
-/** 桥名匾两面各一（桥轴沿 z，匾面朝 ±x） */
-function bridgePlaque(sg: SignMesher, atlas: SignAtlas, key: string, name: string, x: number, y: number, z: number, faceX: number): void {
-  for (const s of [-1, 1]) {
-    sg.quad(atlas.text(key + s, name, 220, 76, {
+function ledgerPush(s: BridgeSpec): void {
+  const cz = riverCenterZ(s.x);
+  const half = bridgeHalfSpan(s);
+  const crownY = s.form === '浮桥' ? pontoonDeckYOf(s.x, 0) : s.crown;
+  const hw = riverHalfWidth(s.x);
+  const channel = deckYOf(s, Math.min(hw - 4, half * 0.8));
+  BRIDGE_LEDGER.push({
+    name: s.name,
+    form: s.form,
+    x: s.x,
+    cz: +cz.toFixed(2),
+    halfSpan: +half.toFixed(2),
+    span: +(half * 2).toFixed(2),
+    wide: s.wide,
+    deckCrownY: +crownY.toFixed(2),
+    crownClearance: +(crownY - RIVER_WATER_Y).toFixed(2),
+    channelClearance: +(channel - RIVER_WATER_Y).toFixed(2),
+  });
+}
+
+/** 桥面板：沿 z 分段随拱背起伏，段间带倾角 */
+function deckRun(bk: Baker, s: BridgeSpec, mat: 'ash' | 'wood', cz: number): void {
+  const half = bridgeHalfSpan(s);
+  const N = 34;
+  for (let i = 0; i < N; i++) {
+    const z0 = -half + (2 * half * i) / N;
+    const z1 = -half + (2 * half * (i + 1)) / N;
+    const zm = (z0 + z1) / 2;
+    const y0 = deckYOf(s, z0), y1 = deckYOf(s, z1), ym = deckYOf(s, zm);
+    const ang = -Math.atan2(y1 - y0, z1 - z0);
+    bk.box(mat, s.wide, 0.34, (z1 - z0) * 1.06, s.x, ym - 0.17, cz + zm,
+      shade(mat === 'ash' ? C.stone : C.wood, 1 + (i % 3) * 0.018), 0, ang, 0);
+    if (i % 4 === 0) {
+      bk.box(mat, s.wide - 0.9, 0.05, (z1 - z0) * 0.92, s.x, ym + 0.015, cz + zm, shade(C.stone, 0.9), 0, ang, 0);
+    }
+  }
+}
+
+/** 栏杆：望柱 + 双道横杆 + 外侧霓虹沿口，随桥面坡度逐跨倾斜 */
+function railRun(bk: Baker, s: BridgeSpec, cz: number): void {
+  const half = bridgeHalfSpan(s);
+  for (const sd of [-1, 1]) {
+    const px = s.x + sd * (s.wide / 2 - 0.24);
+    const n = Math.max(8, Math.round((2 * half) / 4.2));
+    let pz = -half + 1.0, py = deckYOf(s, pz) + 1.02;
+    for (let k = 0; k <= n; k++) {
+      const z = -half + 1.0 + ((2 * half - 2.0) * k) / n;
+      const y = deckYOf(s, z) + 1.02;
+      bk.box('wood', 0.2, 1.06, 0.2, px, y - 0.53, cz + z, 0x8a3324);
+      bk.box('glow', 0.16, 0.1, 0.16, px, y + 0.12, cz + z, k % 2 ? C.neonCyan : C.neonGold);
+      if (k > 0) {
+        const dz = z - pz, dy = y - py;
+        const len = Math.hypot(dz, dy);
+        const ang = -Math.atan2(dy, dz);
+        bk.box('wood', 0.12, 0.1, len * 1.04, px, (y + py) / 2, cz + (z + pz) / 2, 0x8a3324, 0, ang, 0);
+        bk.box('wood', 0.1, 0.08, len * 1.04, px, (y + py) / 2 - 0.36, cz + (z + pz) / 2, 0x7a2a20, 0, ang, 0);
+        bk.box('glow', 0.06, 0.06, len * 1.02, s.x + sd * (s.wide / 2 + 0.02), (y + py) / 2 + 0.38, cz + (z + pz) / 2,
+          sd > 0 ? C.neonCyan : C.neonMag, 0, ang, 0);
+      }
+      pz = z; py = y;
+    }
+  }
+}
+
+/** 桥头：桥台 + 两级踏步落到纤道 + 石墩灯 */
+function headRun(bk: Baker, s: BridgeSpec, cz: number, mat: 'ash' | 'wood'): void {
+  const half = bridgeHalfSpan(s);
+  const endY = deckYOf(s, half);
+  for (const sd of [-1, 1]) {
+    const zA = half - 1.25;
+    const top = Math.max(0.5, deckYOf(s, sd > 0 ? zA : -zA) - 0.32);
+    bk.box(mat, s.wide + 0.6, top, 2.5, s.x, top / 2, cz + sd * zA, shade(C.stone, 0.9));
+    // 两级踏步：0.62 / 0.32 倍桥端高，落在纤道
+    for (let k = 0; k < 2; k++) {
+      const h = endY * (0.62 - k * 0.3);
+      if (h <= 0.05) continue;
+      bk.box(mat, s.wide + 0.2, h, 0.74, s.x, h / 2, cz + sd * (half + 0.4 + k * 0.72), shade(C.stone, 0.94 + k * 0.05));
+    }
+    for (const sx of [-1, 1]) {
+      bk.box('ash', 0.52, 1.06, 0.52, s.x + sx * (s.wide / 2 - 0.06), endY + 0.53, cz + sd * (half - 0.15), shade(C.stone, 1.04));
+      bk.box('glow', 0.36, 0.14, 0.36, s.x + sx * (s.wide / 2 - 0.06), endY + 1.14, cz + sd * (half - 0.15), sd > 0 ? C.neonMag : C.neonCyan);
+    }
+  }
+}
+
+/** 桥名匾：桥两端各一（面朝 ±z），双面可读 */
+function plaqueRun(sg: SignMesher, atlas: SignAtlas, s: BridgeSpec, cz: number): void {
+  const half = bridgeHalfSpan(s);
+  const key = 'bridge_name_' + s.x;
+  for (const sd of [-1, 1]) {
+    const y = deckYOf(s, sd * (half - 2.0)) + 2.45;
+    sg.quad(atlas.text(key + sd, s.name, 220, 76, {
       color: '#ffe9c8', glow: '#ffb300', bg: 'rgba(10,8,14,0.85)', border: 'rgba(255,179,0,.9)', fontPx: 54,
-    }), 3.2, 1.1, x + s * faceX, y, z, (s * Math.PI) / 2);
+    }), 3.4, 1.15, s.x, y, cz + sd * (half - 1.6), 0);
   }
 }
 
 /**
- * 三孔石拱桥（西城 · 永寧橋）：中孔 12m 为通航孔，两侧各 8.5m。
- * 桥面抛物线拱背，两端各四级石踏步落到岸上；双侧栏板 + 望柱 + 霓虹沿口。
+ * 石拱桥：一孔（拱辰橋）或三孔（永寧橋）。
+ * 拱腹墙按 2m 切片从拱线砌到桥面板底 —— 侧面读出的是曲面 intrados，不是一块方板。
  */
-function stoneArchBridge(b: Baker, sg: SignMesher, atlas: SignAtlas, x0: number, name: string): void {
-  const cz = riverCenterZ(x0);
-  const half = riverHalfWidth(x0);
-  const W = STONE_W;
-  const deckY = (dz: number): number => stoneDeckY(dz, half);
-  const ARCH = [
-    { a: -6.0, c: 6.0, rise: 3.6, spring: 0.3 },    // 中孔：水面以上净高 2.9，小船可过
-    { a: 8.4, c: 16.9, rise: 2.6, spring: 0.4 },
-    { a: -16.9, c: -8.4, rise: 2.6, spring: 0.4 },
-  ];
+function stoneArchCrossing(bk: Baker, s: BridgeSpec, sg: SignMesher, atlas: SignAtlas): void {
+  const cz = riverCenterZ(s.x);
+  const hw = riverHalfWidth(s.x);
+  const half = bridgeHalfSpan(s);
+  const W = s.wide;
+  const three = s.name === '永寧橋';
+  const arcs = three
+    ? [
+      { c: 0, half: Math.min(9.2, hw * 0.4), spring: RIVER_WATER_Y + 0.5, rise: 4.7 },
+      { c: -hw * 0.68, half: Math.min(4.8, hw * 0.22), spring: RIVER_WATER_Y + 0.35, rise: 3.0 },
+      { c: hw * 0.68, half: Math.min(4.8, hw * 0.22), spring: RIVER_WATER_Y + 0.35, rise: 3.0 },
+    ]
+    : [{ c: 0, half: hw - 1.4, spring: RIVER_WATER_Y + 0.5, rise: 5.0 }];
   const archTop = (dz: number): number => {
-    for (const g of ARCH) {
-      if (dz > g.a && dz < g.c) {
-        const t = (dz - (g.a + g.c) / 2) / ((g.c - g.a) / 2);
-        return g.spring + g.rise * Math.sqrt(Math.max(0, 1 - t * t));
-      }
+    let y = 0.25;
+    for (const g of arcs) {
+      const t = (dz - g.c) / g.half;
+      if (Math.abs(t) < 1) y = Math.max(y, g.spring + g.rise * Math.sqrt(1 - t * t));
     }
-    return 0.35;
+    return y;
   };
-  // 拱腹墙：1.5m 切片自拱线砌到桥面板底（曲面 intrados 才读成"拱"，不是一块方板）
-  const S = 1.5;
-  for (let dz = -half; dz < half - 0.01; dz += S) {
-    const zc = dz + S / 2;
-    const top = deckY(zc) - DECK_T;
-    const bot = archTop(zc);
-    if (top - bot > 0.03) {
-      b.box('ash', W, top - bot, S + 0.02, x0, (top + bot) / 2, cz + zc, shade(C.stone, 0.96 + (Math.abs(Math.round(zc)) % 3) * 0.025));
-    }
-  }
-  // 桥墩 / 桥台：自河床 −2.4 砌到拱脚
-  for (const [z0, z1] of [[6, 8.4], [-8.4, -6], [16.7, half], [-half, -16.7]] as const) {
-    b.box('ash', W + 0.4, 2.75, z1 - z0, x0, -1.02, cz + (z0 + z1) / 2, shade(C.stone, 0.9));
-  }
-  // 分水尖（上下游各一，45° 菱面）
-  for (const pz of [7.2, -7.2]) {
+  for (let z0 = -half; z0 < half - 0.01; z0 += 2) {
+    const zm = z0 + 1;
+    if (Math.abs(zm) > half - 0.4) continue;
+    const top = deckYOf(s, zm) - 0.34;
+    const bot = archTop(zm);
+    if (top - bot < 0.08) continue;
     for (const sx of [-1, 1]) {
-      b.box('ash', 1.5, 5.6, 1.5, x0 + sx * (W / 2 + 0.28), 0.4, cz + pz, shade(C.stone, 1.02), Math.PI / 4);
+      bk.box('ash', 0.64, top - bot, 2.04, s.x + sx * (W / 2 - 0.32), (top + bot) / 2, cz + zm,
+        shade(C.stone, 0.95 + (Math.abs(Math.round(zm)) % 3) * 0.02));
     }
   }
-  // 桥面板（14 段随拱背起坡）
-  const NSEG = 14;
-  for (let i = 0; i < NSEG; i++) {
-    const z0 = -half + (2 * half * i) / NSEG;
-    const z1 = -half + (2 * half * (i + 1)) / NSEG;
-    const zm = (z0 + z1) / 2;
-    const ang = -Math.atan2(deckY(z1) - deckY(z0), z1 - z0);
-    b.box('ash', W, DECK_T, (z1 - z0) * 1.05, x0, deckY(zm) - DECK_T / 2, cz + zm, shade(C.stone, 1.04), 0, ang, 0);
-    b.box('ash', W - 1.3, 0.06, (z1 - z0) * 1.02, x0, deckY(zm) + 0.03, cz + zm, shade(C.stone, 0.9), 0, ang, 0);
-  }
-  // 栏板：望柱 + 双道横杆 + 霓虹沿口
-  const posts: number[] = [];
-  for (let dz = -20.4; dz <= 20.41; dz += 4.08) posts.push(dz);
-  for (const sx of [-1, 1]) {
-    const px = x0 + sx * (W / 2 - 0.28);
-    for (const dz of posts) {
-      const y = deckY(dz);
-      b.box('ash', 0.34, 1.2, 0.34, px, y + 0.6, cz + dz, shade(C.stone, 1.06));
-      b.box('ash', 0.44, 0.12, 0.44, px, y + 1.24, cz + dz, shade(C.stone, 1.14));
-      if (Math.abs(dz) > 19) b.box('glow', 0.2, 0.26, 0.2, px, y + 1.42, cz + dz, C.lantern);
-    }
-    for (let i = 0; i < posts.length - 1; i++) {
-      const zA = cz + posts[i], zB = cz + posts[i + 1];
-      const yA = deckY(posts[i]), yB = deckY(posts[i + 1]);
-      const ang = -Math.atan2(yB - yA, zB - zA);
-      const len = Math.hypot(zB - zA, yB - yA);
-      b.box('ash', 0.22, 0.16, len, px, (yA + yB) / 2 + 0.94, (zA + zB) / 2, shade(C.stone, 1.0), 0, ang, 0);
-      b.box('ash', 0.2, 0.12, len, px, (yA + yB) / 2 + 0.54, (zA + zB) / 2, shade(C.stone, 0.96), 0, ang, 0);
-      b.box('glow', 0.1, 0.1, len, x0 + sx * (W / 2 + 0.02), (yA + yB) / 2 + 1.28, (zA + zB) / 2, sx > 0 ? C.neonCyan : C.neonMag, 0, ang, 0);
-    }
-  }
-  // 拱券脸石：每孔 11 块，随椭圆拱线倾斜
-  for (const g of ARCH) {
-    const span = g.c - g.a, mid = (g.a + g.c) / 2, R = span / 2;
-    const NS = 11;
-    for (let k = 0; k < NS; k++) {
-      const a0 = (Math.PI * k) / NS, a1 = (Math.PI * (k + 1)) / NS;
-      const dz1 = mid + R * Math.cos(a0), dz2 = mid + R * Math.cos(a1);
-      const y1 = g.spring + g.rise * Math.sin(a0), y2 = g.spring + g.rise * Math.sin(a1);
-      const ang = -Math.atan2(y2 - y1, dz2 - dz1);
-      const len = Math.hypot(dz2 - dz1, y2 - y1) * 1.12;
+  // 拱券脸石：沿椭圆拱线逐块倾斜，两外脸各一铺；拱顶龙门石
+  for (const g of arcs) {
+    const N = Math.max(9, Math.round(g.half * 1.4));
+    for (let k = 0; k < N; k++) {
+      const a0 = (Math.PI * k) / N, a1 = (Math.PI * (k + 1)) / N;
+      const dz0 = g.c + g.half * Math.cos(a0), dz1 = g.c + g.half * Math.cos(a1);
+      const y0 = g.spring + g.rise * Math.sin(a0), y1 = g.spring + g.rise * Math.sin(a1);
+      const ang = -Math.atan2(y1 - y0, dz1 - dz0);
+      const len = Math.hypot(dz1 - dz0, y1 - y0) * 1.12;
       for (const sx of [-1, 1]) {
-        b.box('ash', 0.34, 0.62, len, x0 + sx * (W / 2 + 0.1), (y1 + y2) / 2 + 0.1, cz + (dz1 + dz2) / 2,
-          shade(C.stone, 1.06 + (k % 2) * 0.06), 0, ang, 0);
+        bk.box('ash', 0.36, 0.7, len, s.x + sx * (W / 2 + 0.04), (y0 + y1) / 2 + 0.06, cz + (dz0 + dz1) / 2,
+          shade(C.stone, 1.04 + (k % 2) * 0.06), 0, ang, 0);
       }
     }
-    // 拱顶龙门石
-    b.box('ash', 0.4, 0.74, 0.9, x0, g.spring + g.rise + 0.16, cz + mid, shade(C.stone, 1.18));
+    bk.box('ash', 0.42, 0.86, 0.72, s.x, g.spring + g.rise + 0.12, cz + g.c, shade(C.stone, 1.18));
   }
-  // 两端四级石踏步（自桥面 2.0 落到岸面 0）
-  for (const s of [-1, 1]) {
-    for (let i = 0; i < 4; i++) {
-      const top = 1.6 - i * 0.4;
-      b.box('ash', W, top, 1.15, x0, top / 2, cz + s * (half + 0.62 + i * 1.12), shade(C.stone, 0.98 + i * 0.03));
-    }
-    b.box('ash', W + 0.6, 0.16, 1.4, x0, 0.08, cz + s * (half + 4.6), shade(C.stone, 0.94));
-  }
-  bridgePlaque(sg, atlas, 'bridge_stone', name, x0, deckY(0) + 1.9, cz, W / 2 + 0.2);
-  b.kit('bridge.stoneArchSecondary', 1, 3.4);
+  deckRun(bk, s, 'ash', cz);
+  railRun(bk, s, cz);
+  headRun(bk, s, cz, 'ash');
+  plaqueRun(sg, atlas, s, cz);
+  bk.kit('bridge.main.stoneArch', 1, s.crown);
+  bk.kit('bridge.crossing', 1, s.crown);
 }
 
-/**
- * 木梁桥（东城 · 通濟橋）：五道木排架 + 桥面板 + 双侧栏杆，中段起一座四柱茶亭。
- * 桥面 48m（含水线两侧桥台），净跨 42m；排架落在河床上，航道中心不落柱。
- */
-function timberBeamBridge(b: Baker, sg: SignMesher, atlas: SignAtlas, x0: number, name: string): void {
-  const cz = riverCenterZ(x0);
-  const half = riverHalfWidth(x0);
-  const W = 5.2;
-  const L = 24;
-  const deckY = (dz: number): number => 3.25 + 0.35 * (1 - (dz / L) * (dz / L));
-  // 桥面板
-  const NSEG = 16;
-  for (let i = 0; i < NSEG; i++) {
-    const z0 = -L + (2 * L * i) / NSEG, z1 = -L + (2 * L * (i + 1)) / NSEG;
+/** 叠梁拱：六层直木梁逐层内收、每层两根斜梁在桥心交会，形成折线拱 */
+function stackedCrossing(bk: Baker, s: BridgeSpec, sg: SignMesher, atlas: SignAtlas): void {
+  const cz = riverCenterZ(s.x);
+  const hw = riverHalfWidth(s.x);
+  const W = s.wide;
+  const lanes = [-W * 0.38, -W * 0.19, 0, W * 0.19, W * 0.38];
+  const layers = 6;
+  const yBase = RIVER_WATER_Y + 1.15;
+  const yTop = s.crown - 1.9;
+  const beam = (x: number, z0: number, y0: number, z1: number, y1: number, w: number, hgt: number, hex: number): void => {
+    const dz = z1 - z0, dy = y1 - y0;
+    const len = Math.hypot(dz, dy);
+    bk.box('wood', w, hgt, len * 1.05, x, (y0 + y1) / 2, cz + (z0 + z1) / 2, hex, 0, -Math.atan2(dy, dz), 0);
+  };
+  for (let k = 0; k < layers; k++) {
+    const t = k / (layers - 1);
+    const y = yBase + (yTop - yBase) * t;
+    const hl = (hw + 2.0) * (1 - 0.105 * t);
+    const rise = 2.2 - 0.22 * k;
+    for (const lane of lanes) {
+      beam(s.x + lane, -hl, y - rise, 0, y, 0.5, 0.46, shade(0x6a4526, 0.93 + 0.05 * k));
+      beam(s.x + lane, 0, y, hl, y - rise, 0.5, 0.46, shade(0x6a4526, 0.93 + 0.05 * k));
+      // 梁端立柱：把上一层压在下一层的端头上
+      for (const sd of [-1, 1]) {
+        bk.box('wood', 0.28, Math.min(1.6, y - yBase + 0.6), 0.28, s.x + lane, (y - rise + y) / 2, cz + sd * hl - sd * 0.3, 0x5e3e22);
+      }
+    }
+    // 横向系梁（每层 3 道，压住 5 道纵梁）
+    for (const zz of [-hl * 0.55, 0, hl * 0.55]) {
+      bk.box('wood', W * 0.86, 0.2, 0.3, s.x, y - rise * 0.45 + 0.2, cz + zz, 0x7a5230);
+    }
+  }
+  deckRun(bk, s, 'wood', cz);
+  railRun(bk, s, cz);
+  headRun(bk, s, cz, 'wood');
+  plaqueRun(sg, atlas, s, cz);
+  bk.kit('bridge.main.stackedBeam', 1, s.crown);
+  bk.kit('bridge.crossing', 1, s.crown);
+}
+
+/** 廊桥：木桥面 + 两排廊柱 + 随拱起坡的双坡廊顶 + 廊内挂灯 */
+function coveredCrossing(bk: Baker, s: BridgeSpec, sg: SignMesher, atlas: SignAtlas): void {
+  const cz = riverCenterZ(s.x);
+  const half = bridgeHalfSpan(s);
+  const W = s.wide;
+  deckRun(bk, s, 'wood', cz);
+  const n = Math.max(8, Math.round((2 * half) / 3.4));
+  for (let k = 0; k <= n; k++) {
+    const z = -half + 1.6 + ((2 * half - 3.2) * k) / n;
+    const y = deckYOf(s, z);
+    for (const sd of [-1, 1]) bk.box('wood', 0.22, 2.7, 0.22, s.x + sd * (W / 2 - 0.35), y + 1.35, cz + z, 0x7a2a20);
+    bk.box('wood', W, 0.24, 0.2, s.x, y + 2.72, cz + z, 0x5e3e22);
+    if (k % 3 === 1) bk.box('glow', 0.26, 0.34, 0.26, s.x, y + 2.35, cz + z, C.lantern);
+  }
+  // 双坡廊顶：沿桥面分 12 段，段段随拱背起坡
+  const halfW = W / 2 + 0.75, rise = 1.5;
+  const th = Math.atan2(rise, halfW);
+  const L = Math.hypot(halfW, rise);
+  const N = 12;
+  for (let i = 0; i < N; i++) {
+    const z0 = -half + (2 * half * i) / N;
+    const z1 = -half + (2 * half * (i + 1)) / N;
     const zm = (z0 + z1) / 2;
-    const ang = -Math.atan2(deckY(z1) - deckY(z0), z1 - z0);
-    b.box('wood', W, 0.26, (z1 - z0) * 1.04, x0, deckY(zm) - 0.13, cz + zm, shade(C.wood, 1.0 + (i % 2) * 0.08), 0, ang, 0);
-    if (i % 4 === 0) b.box('wood', W + 0.2, 0.12, 0.32, x0, deckY(zm) + 0.02, cz + zm, shade(C.woodDark, 1.06), 0, ang, 0);
-  }
-  // 排架：±18 / ±9 / 0，两柱一梁 + 斜撑 + 石础
-  for (const dz of [-18, -9, 0, 9, 18]) {
-    const yTop = deckY(dz) - 0.28;
-    for (const sx of [-1, 1]) {
-      b.box('wood', 0.28, yTop + 1.8, 0.28, x0 + sx * 2.0, (yTop - 1.8) / 2, cz + dz, shade(C.woodDark, 1.02));
-      b.box('ash', 0.8, 0.5, 0.8, x0 + sx * 2.0, -1.95, cz + dz, shade(C.stone, 0.92));
-      b.box('wood', 0.16, 1.5, 0.16, x0 + sx * 1.45, yTop - 0.85, cz + dz, shade(C.wood, 0.96), 0, 0, sx * 0.42);
+    const y = deckYOf(s, zm) + 2.82;
+    const ang = -Math.atan2(deckYOf(s, z1) - deckYOf(s, z0), z1 - z0);
+    for (const sd of [-1, 1]) {
+      bk.box('roof', L, 0.16, (z1 - z0) * 1.12, s.x + sd * halfW * 0.5, y + rise / 2, cz + zm, 0x3a4450, 0, ang, -sd * th);
     }
-    b.box('wood', W + 0.6, 0.24, 0.3, x0, yTop, cz + dz, shade(C.woodDark, 1.08));
-    b.box('wood', W + 0.2, 0.16, 0.5, x0, yTop + 0.16, cz + dz, shade(C.wood, 1.04));
+    bk.box('roof', 0.42, 0.22, (z1 - z0) * 1.12, s.x, y + rise, cz + zm, 0x4a5560, 0, ang, 0);
   }
-  // 双侧栏杆：立柱 4.6m 一根 + 双道横杆
-  const posts: number[] = [];
-  for (let dz = -23; dz <= 23.01; dz += 4.6) posts.push(dz);
-  for (const sx of [-1, 1]) {
-    const px = x0 + sx * (W / 2 - 0.18);
-    for (const dz of posts) {
-      b.box('wood', 0.2, 1.15, 0.2, px, deckY(dz) + 0.575, cz + dz, shade(C.woodDark, 1.04));
-      b.box('glow', 0.16, 0.16, 0.16, px, deckY(dz) + 1.2, cz + dz, Math.abs(dz) > 22 ? C.lantern : C.neonGold);
-    }
-    for (let i = 0; i < posts.length - 1; i++) {
-      const zA = cz + posts[i], zB = cz + posts[i + 1];
-      const yA = deckY(posts[i]), yB = deckY(posts[i + 1]);
-      const ang = -Math.atan2(yB - yA, zB - zA);
-      const len = Math.hypot(zB - zA, yB - yA);
-      for (const dy of [0.9, 0.5]) b.box('wood', 0.14, 0.12, len, px, (yA + yB) / 2 + dy, (zA + zB) / 2, shade(C.wood, 1.06), 0, ang, 0);
-    }
-  }
-  // 中段茶亭：四柱 + 额枋 + 双坡瓦顶（亭面阔跨桥面）
-  const PY = deckY(0);
-  for (const sx of [-1, 1]) {
-    for (const dz of [-2.3, 2.3]) {
-      b.box('wood', 0.22, 2.4, 0.22, x0 + sx * 1.9, PY + 1.2, cz + dz, shade(C.woodRed, 0.98));
-      b.box('ash', 0.5, 0.16, 0.5, x0 + sx * 1.9, PY + 0.08, cz + dz, shade(C.stone, 1.02));
-    }
-    b.box('wood', 0.2, 0.3, 5.0, x0 + sx * 1.9, PY + 2.32, cz, shade(C.woodDark, 1.06));
-  }
-  for (const dz of [-2.3, 2.3]) b.box('wood', 4.0, 0.3, 0.2, x0, PY + 2.32, cz + dz, shade(C.woodDark, 1.06));
-  for (const sx of [-1, 1]) {
-    b.box('roof', 3.4, 0.2, 5.8, x0 + sx * 1.55, PY + 2.75, cz, shade(C.tile, 1.04), 0, 0, sx * 0.3);
-  }
-  b.box('roof', 0.5, 0.34, 5.9, x0, PY + 3.34, cz, shade(C.ridge, 1.1));
-  b.box('glow', 3.9, 0.1, 0.1, x0, PY + 2.62, cz, C.neonCyan);
-  for (const sx of [-1, 1]) b.box('glow', 0.22, 0.36, 0.22, x0 + sx * 1.5, PY + 2.05, cz - 2.1, C.lantern);
-  // 两端八级木踏步（3.25 → 0）
-  for (const s of [-1, 1]) {
-    for (let i = 0; i < 8; i++) {
-      const top = 3.25 - 0.4 * i;
-      b.box('wood', W, 0.16, 1.05, x0, top - 0.08, cz + s * (L + 0.55 + i * 1.0), shade(C.wood, 0.96 + i * 0.02));
-      b.box('wood', W - 0.8, top, 0.9, x0, top / 2, cz + s * (L + 0.55 + i * 1.0), shade(C.woodDark, 0.92));
-    }
-  }
-  bridgePlaque(sg, atlas, 'bridge_timber', name, x0, PY + 2.0, cz, W / 2 + 0.2);
-  b.kit('bridge.timberSecondary', 1, 3.0);
+  railRun(bk, s, cz);
+  headRun(bk, s, cz, 'ash');
+  plaqueRun(sg, atlas, s, cz);
+  bk.kit('bridge.main.covered', 1, s.crown);
+  bk.kit('bridge.crossing', 1, s.crown);
 }
 
 /**
- * 浮桥（西城 · 浮梁）：二十四只木浮舟托 4.4m 桥面，中间 12m 抬成木桁架通航孔。
- * 两端各四级石踏步上岸，缆绳系在岸上缆桩。
+ * 浮桥：浮舟 + 2.6m 高排架托 3.6m 桥面（桥面高出水面 2.6m），中央留通航孔抬到 6.2m。
+ * 宽河（通津橋）通航孔 36m 覆盖双向航道，浮舟只落在 |dz|≥21 的航道之外；
+ * 窄河（浮梁，无船队航段）通航孔收成 12m，浮舟自 |dz|=8 起铺。
  */
-function pontoonBridge(b: Baker, sg: SignMesher, atlas: SignAtlas, x0: number, name: string): void {
-  const cz = riverCenterZ(x0);
-  const half = riverHalfWidth(x0);
-  const W = 4.4;
-  const LOW = 1.55, HIGH = 3.5, GAP = 6, RAMP = 4.5;
-  const deckY = (dz: number): number => {
-    const a = Math.abs(dz);
-    if (a <= GAP) return HIGH;
-    if (a <= GAP + RAMP) return HIGH - ((a - GAP) / RAMP) * (HIGH - LOW);
-    return LOW;
-  };
-  // 浮舟（横卧圆木，轴沿 x）
-  for (const s of [-1, 1]) {
-    for (let a = GAP + RAMP + 0.7; a <= half - 0.2; a += 1.4) {
-      const dz = s * a;
-      b.cyl('wood', 0.52, 0.52, W + 0.3, 10, x0, 0.95, cz + dz, shade(0x5e3e22, 0.96 + (Math.round(a) % 3) * 0.03), 0, 0, Math.PI / 2);
-      b.box('metal', W + 0.4, 0.1, 0.16, x0, 0.95, cz + dz, 0x4a4e54);
+function pontoonCrossing(bk: Baker, s: BridgeSpec, sg: SignMesher, atlas: SignAtlas): void {
+  const cz = riverCenterZ(s.x);
+  const hw = riverHalfWidth(s.x);
+  const half = bridgeHalfSpan(s);
+  const W = s.wide;
+  const nav = hw > 26 ? 18 : 6;
+  const floatFrom = nav > 6 ? 21 : 8;
+  const floatTo = hw - 0.8;
+  for (const sd of [-1, 1]) {
+    for (let a = floatFrom; a <= floatTo + 0.01; a += 2.2) {
+      const z = sd * a;
+      bk.cyl('wood', 0.56, 0.56, W + 0.5, 10, s.x, RIVER_WATER_Y + 0.06, cz + z,
+        shade(0x5e3e22, 0.95 + (Math.round(a) % 3) * 0.03), 0, 0, Math.PI / 2);
+      bk.box('metal', W + 0.6, 0.12, 0.16, s.x, RIVER_WATER_Y + 0.08, cz + z, 0x4a4e54);
+      for (const ox of [-W / 2 + 0.55, W / 2 - 0.55]) {
+        bk.box('wood', 0.26, 2.72, 0.26, s.x + ox, RIVER_WATER_Y + 1.36, cz + z, 0x5e3e22);
+      }
+      bk.box('wood', W + 0.4, 0.22, 0.3, s.x, 3.52, cz + z, 0x6b4a2b);
+    }
+    // 通航孔：四柱 + 上下弦 + 斜撑（水面以上净空 5.2m）
+    for (const ox of [-W / 2 + 0.5, W / 2 - 0.5]) {
+      bk.box('wood', 0.3, 6.5, 0.3, s.x + ox, 4.25, cz + sd * nav, 0x4a3220);
+      bk.box('ash', 0.8, 0.5, 0.8, s.x + ox, -1.85, cz + sd * nav, shade(C.stone, 0.92));
+    }
+    bk.box('wood', W + 0.5, 0.28, 0.34, s.x, 7.5, cz + sd * nav, 0x5e3e22);
+    bk.box('wood', W + 0.4, 0.26, 0.32, s.x, 6.2, cz + sd * nav, 0x6b4a2b);
+    for (const ox of [-W / 2 + 0.5, W / 2 - 0.5]) {
+      bk.box('wood', 0.16, 3.4, 0.16, s.x + ox, 5.4, cz + sd * (nav - 1.4), 0x5e3e22, 0, sd * 0.56, 0);
     }
   }
-  // 桥面：低段 / 斜段 / 抬升段，逐段随坡
-  const run = (za: number, zb: number): void => {
-    const n = Math.max(1, Math.round(Math.abs(zb - za) / 2.2));
-    for (let i = 0; i < n; i++) {
-      const d0 = za + ((zb - za) * i) / n, d1 = za + ((zb - za) * (i + 1)) / n;
-      const dm = (d0 + d1) / 2;
-      const ang = -Math.atan2(deckY(d1) - deckY(d0), d1 - d0);
-      b.box('wood', W, 0.26, Math.abs(d1 - d0) * 1.04, x0, deckY(dm) - 0.13, cz + dm, shade(C.wood, 1.0 + (i % 2) * 0.07), 0, ang, 0);
-    }
-  };
-  run(-half + 0.2, -GAP - RAMP);
-  run(-GAP - RAMP, -GAP);
-  run(-GAP, GAP);
-  run(GAP, GAP + RAMP);
-  run(GAP + RAMP, half - 0.2);
-  // 通航孔桁架：两端立柱 + 上弦 + 斜杆（水面以上净空 2.5m）
-  for (const s of [-1, 1]) {
+  deckRun(bk, s, 'wood', cz);
+  railRun(bk, s, cz);
+  headRun(bk, s, cz, 'wood');
+  plaqueRun(sg, atlas, s, cz);
+  bk.kit('bridge.main.pontoon', 1, 3.6);
+  bk.kit('bridge.crossing', 1, 3.6);
+}
+
+/** 木梁桥：五道木排架落在河床 + 木桥面 + 中段四柱茶亭（通濟橋） */
+function timberCrossing(bk: Baker, s: BridgeSpec, sg: SignMesher, atlas: SignAtlas): void {
+  const cz = riverCenterZ(s.x);
+  const hw = riverHalfWidth(s.x);
+  const half = bridgeHalfSpan(s);
+  const W = s.wide;
+  const bents = [-half + 2, -hw * 0.8, -hw * 0.4, 0, hw * 0.4, hw * 0.8, half - 2];
+  for (const dz of bents) {
+    const yTop = deckYOf(s, dz) - 0.3;
     for (const sx of [-1, 1]) {
-      b.box('wood', 0.26, HIGH + 1.8, 0.26, x0 + sx * 1.7, (HIGH - 1.8) / 2, cz + s * GAP, shade(C.woodDark, 1.04));
-      b.box('ash', 0.7, 0.5, 0.7, x0 + sx * 1.7, -1.85, cz + s * GAP, shade(C.stone, 0.92));
+      bk.box('wood', 0.3, yTop + 1.6, 0.3, s.x + sx * (W / 2 - 0.6), (yTop - 1.6) / 2, cz + dz, 0x5e3e22);
+      bk.box('ash', 0.8, 0.5, 0.8, s.x + sx * (W / 2 - 0.6), -1.9, cz + dz, shade(C.stone, 0.92));
+      bk.box('wood', 0.16, 1.6, 0.16, s.x + sx * (W / 2 - 1.3), yTop - 0.9, cz + dz, 0x5e3e22, 0, 0, sx * 0.42);
     }
-    b.box('wood', W + 0.4, 0.26, 0.3, x0, HIGH - 0.45, cz + s * GAP, shade(C.woodDark, 1.08));
-    for (const sx of [-1, 1]) {
-      b.box('wood', 0.16, 3.0, 0.16, x0 + sx * 1.7, HIGH - 1.5, cz + s * (GAP - 0.9), shade(C.wood, 1.0), 0, s * 0.55, 0);
-    }
+    bk.box('wood', W + 0.6, 0.24, 0.32, s.x, yTop, cz + dz, 0x6b4a2b);
   }
-  // 栏杆：立柱 3m 一根 + 双道横杆（随桥面起坡）
-  const posts: number[] = [];
-  for (let dz = -half + 0.4; dz <= half - 0.39; dz += 3.0) posts.push(dz);
+  // 中段茶亭：四柱 + 额枋 + 双坡瓦顶
+  const PY = deckYOf(s, 0);
   for (const sx of [-1, 1]) {
-    const px = x0 + sx * (W / 2 - 0.15);
-    for (const dz of posts) {
-      b.box('wood', 0.18, 1.05, 0.18, px, deckY(dz) + 0.52, cz + dz, shade(C.woodDark, 1.02));
-      b.box('glow', 0.14, 0.2, 0.14, px, deckY(dz) + 1.12, cz + dz, Math.abs(dz) > half - 1 ? C.lantern : C.neonGold);
+    for (const dz of [-2.4, 2.4]) {
+      bk.box('wood', 0.24, 2.5, 0.24, s.x + sx * 1.9, PY + 1.25, cz + dz, 0x7a2a20);
+      bk.box('ash', 0.54, 0.16, 0.54, s.x + sx * 1.9, PY + 0.08, cz + dz, shade(C.stone, 1.02));
     }
-    for (let i = 0; i < posts.length - 1; i++) {
-      const zA = cz + posts[i], zB = cz + posts[i + 1];
-      const yA = deckY(posts[i]), yB = deckY(posts[i + 1]);
-      const ang = -Math.atan2(yB - yA, zB - zA);
-      const len = Math.hypot(zB - zA, yB - yA);
-      for (const dy of [0.82, 0.44]) b.box('wood', 0.13, 0.11, len, px, (yA + yB) / 2 + dy, (zA + zB) / 2, shade(C.wood, 1.05), 0, ang, 0);
-    }
+    bk.box('wood', 0.2, 0.3, 5.2, s.x + sx * 1.9, PY + 2.42, cz, 0x5e3e22);
   }
-  // 缆绳 + 岸上缆桩 + 四级石踏步
-  for (const s of [-1, 1]) {
-    const zEnd = cz + s * (half - 0.6), zPost = cz + s * (half + 2.6);
-    b.box('fabric', 0.1, 0.1, 3.4, x0, LOW - 0.1, (zEnd + zPost) / 2, 0x2b1b3d, 0, 0.12, 0);
-    b.cyl('wood', 0.18, 0.22, 1.1, 8, x0, 0.55, zPost, shade(0x5a4630, 1.0));
-    b.cyl('metal', 0.2, 0.2, 0.06, 8, x0, 0.92, zPost, 0x4a4e54);
-    for (let i = 0; i < 4; i++) {
-      const top = 1.2 - i * 0.3;
-      if (top <= 0.05) break;
-      b.box('ash', W, top, 1.1, x0, top / 2, cz + s * (half + 0.6 + i * 1.05), shade(C.stone, 0.98 + i * 0.03));
-    }
+  for (const dz of [-2.4, 2.4]) bk.box('wood', 4.2, 0.3, 0.2, s.x, PY + 2.42, cz + dz, 0x5e3e22);
+  for (const sx of [-1, 1]) bk.box('roof', 3.6, 0.2, 6.0, s.x + sx * 1.6, PY + 2.85, cz, shade(C.tile, 1.04), 0, 0, sx * 0.3);
+  bk.box('roof', 0.5, 0.34, 6.1, s.x, PY + 3.44, cz, shade(C.ridge, 1.1));
+  bk.box('glow', 3.9, 0.1, 0.1, s.x, PY + 2.7, cz, C.neonCyan);
+  deckRun(bk, s, 'wood', cz);
+  railRun(bk, s, cz);
+  headRun(bk, s, cz, 'wood');
+  plaqueRun(sg, atlas, s, cz);
+  bk.kit('bridge.main.timber', 1, s.crown);
+  bk.kit('bridge.crossing', 1, s.crown);
+}
+
+/** 主河段桥梁群总装：虹桥本体已在 buildBridge 里造好，这里补其余 7 座并落台账 */
+export function buildMainCrossings(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
+  BRIDGE_LEDGER.length = 0;
+  for (const spec of MAIN_BRIDGES) {
+    ledgerPush(spec);
+    if (spec.form === '贯木拱') continue;
+    if (spec.form === '石拱') stoneArchCrossing(b, spec, sg, atlas);
+    else if (spec.form === '叠梁拱') stackedCrossing(b, spec, sg, atlas);
+    else if (spec.form === '廊桥') coveredCrossing(b, spec, sg, atlas);
+    else if (spec.form === '浮桥') pontoonCrossing(b, spec, sg, atlas);
+    else timberCrossing(b, spec, sg, atlas);
   }
-  bridgePlaque(sg, atlas, 'bridge_pontoon', name, x0, HIGH + 1.0, cz, W / 2 + 0.2);
-  b.kit('bridge.pontoon', 1, 1.7);
+  b.kit('bridge.ledger', MAIN_BRIDGES.length, 0);
+  // 自动化测试句柄：探针读 __bridges 拿每座桥的世界坐标/桥面高/跨度/形制
+  if (typeof window !== 'undefined') {
+    (window as unknown as Record<string, unknown>)['__bridges'] = BRIDGE_LEDGER;
+  }
 }

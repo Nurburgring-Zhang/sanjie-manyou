@@ -237,7 +237,9 @@ export function createCityTextures(): { wallTex: THREE.CanvasTexture; roofTex: T
 // 故把「垄顶 / 瓦沟」烘进顶点色：只改明暗、法线原样，远景不会因法线抖动起摩尔纹。
 /** 一垄筒瓦的世界间距（m）。宋式垄距 0.28–0.35，取 0.34：224m 紫宸殿在 150m 外仍有 ≈2.4px 垄纹 */
 export const ROOF_RIB_PITCH = 0.34;
-const RIB_HI = 1.24, RIB_LO = 0.78;   // 垄顶 / 瓦沟相对瓦面的明暗乘子
+// 垄顶/瓦沟的明暗差：0.78/1.24 在 25–60m 的街面距离上被贴图与雾吃掉，实测读成一整片灰。
+// 拉到 0.66/1.38（±35%）后，0.34m 垄距在 40m 处仍有可辨的竖纹，且不改变法线、不产生摩尔纹。
+const RIB_HI = 1.38, RIB_LO = 0.66;   // 垄顶 / 瓦沟相对瓦面的明暗乘子
 const RIB_MID = (RIB_HI + RIB_LO) / 2;
 const RIB_AMP = (RIB_HI - RIB_LO) / 2;
 const RING_N = 6;          // 脊→檐环数（表达反宇曲线；纹理由列数承担，环数不动）
@@ -802,9 +804,18 @@ export class Baker {
       src.dispose();
       return;
     }
-    const yrAO = Math.max(0.001, bbAO.max.y - bbAO.min.y);
+    // 世界包围盒（applyMatrix4 之后重算）：AO 的分子分母必须同一坐标系。
+    // 旧实现分子是世界 y、分母是局部高度，曲面屋顶（y 7–9.6 / 局部高 1）kAO≈2.4，
+    // 于是深灰瓦被抬成亮灰、瓦垄的 ±23% 明暗被压平——「屋顶是一整块灰平板」的着色根因。
     src.applyMatrix4(_m4);
     const p = src.getAttribute('position'), n = src.getAttribute('normal');
+    let wMinY = Infinity, wMaxY = -Infinity;
+    for (let i = 0; i < p.count; i++) {
+      const yy = p.getY(i);
+      if (yy < wMinY) wMinY = yy;
+      if (yy > wMaxY) wMaxY = yy;
+    }
+    const wH = Math.max(0.001, wMaxY - wMinY);
     const uv = needsUv ? src.getAttribute('uv') : null;
     // 几何自带的顶点色（瓦垄明暗）作为乘子叠在材质色上；没有则按 1 处理
     const vc = src.getAttribute('color') as THREE.BufferAttribute | null;
@@ -827,7 +838,7 @@ export class Baker {
     for (let i = 0; i < p.count; i++) {
       bp.push3(p.getX(i), p.getY(i), p.getZ(i));
       bn.push3(n.getX(i), n.getY(i), n.getZ(i));
-      const kAO = 0.82 + 0.18 * ((p.getY(i) - bbAO.min.y) / yrAO);
+      const kAO = 0.82 + 0.18 * Math.min(1, Math.max(0, (p.getY(i) - wMinY) / wH));
       const kC = vc ? vc.getX(i) : 1;
       const kR = vc ? vc.getY(i) : 1;
       const kB = vc ? vc.getZ(i) : 1;
@@ -882,7 +893,9 @@ export class Baker {
       tri: Math.floor(n.count / 3), down, out, thin,
     };
     if (this.roofKind === 'roofC' && this.lastRoofs.length) rec.roof = { ...this.lastRoofs[this.lastRoofs.length - 1] };
-    if (thin) rec.stack = roofCallSite();
+    // 曲面屋顶也记调用点：屋顶投诉的归因链是「世界点 → roofC 参数 → 调用函数」，
+    // 缺了 stack 就只能靠尺寸反推，实测会反推到错的生成式（河岸 vs 街屋）。
+    if (thin || this.roofKind === 'roofC') rec.stack = roofCallSite();
     roofPieces.push(rec);
   }
 
@@ -1016,8 +1029,16 @@ export class Baker {
       _bxCorner[k * 3 + 1] = (me[1] * lx + me[5] * ly + me[9] * lz) + me[13];
       _bxCorner[k * 3 + 2] = (me[2] * lx + me[6] * ly + me[10] * lz) + me[14];
     }
-    // 包围盒高度是 max−min：高度为负时也是正的 2|h/2|（bbAO 取的是 min/max，不看符号）
-    const yrAO = Math.max(0.001, Math.abs(hy) + Math.abs(hy));
+    // 包围盒高度取**世界** max−min。旧版这里是 |hy|×2（局部厚度）——分子是世界 y、
+    // 分母是局部高度，两个坐标系混用：倾斜屋面（rx≠0 的双坡板顶）世界高度是局部厚度的
+    // 十几倍，kAO 被放大到 2–10 倍，本该压暗 18% 的接触阴影反而把整片瓦面提亮成一块灰板。
+    let wMinY = _bxCorner[1], wMaxY = _bxCorner[1];
+    for (let k = 1; k < 8; k++) {
+      const cy = _bxCorner[k * 3 + 1];
+      if (cy < wMinY) wMinY = cy;
+      if (cy > wMaxY) wMaxY = cy;
+    }
+    const yrAO = Math.max(0.001, wMaxY - wMinY);
     // 屋面台账（?roofAudit=1）：先取 8 角的 AABB，面循环里再数朝下面
     let aMinX = 0, aMinY = 0, aMinZ = 0, aMaxX = 0, aMaxY = 0, aMaxZ = 0, aDown = 0;
     if (ROOF_AUDIT && g === 'roof') {
@@ -1029,13 +1050,9 @@ export class Baker {
         if (cz < aMinZ) aMinZ = cz; if (cz > aMaxZ) aMaxZ = cz;
       }
     }
-    // 注意：push 里的 bbAO 是 boundingBox 的「活引用」——applyMatrix4 会就地把它重算成世界系，
-    // 所以 kAO 的分母是局部高度、分子却是「世界 y − 世界包围盒 min.y」。这里必须照抄这个口径。
-    let bbMinY = Math.fround(_bxCorner[1]);
-    for (let k = 1; k < 8; k++) {
-      const cy = Math.fround(_bxCorner[k * 3 + 1]);
-      if (cy < bbMinY) bbMinY = cy;
-    }
+    // AO 的上下界都按世界包围盒算（wMinY 已在上面的角变换里取好）；比例夹到 0..1，
+    // 退化构件（平板、零高）统一取 1.0，不再出现 >1 的提亮。
+    const bbMinY = wMinY;
     const b = this.buf[g];
     const buv = b.uv;
     // 先预留再取裸数组：reserve 可能换掉后备缓冲
@@ -1051,7 +1068,7 @@ export class Baker {
     // 量化在这里做一次（8 次），而不是像旧实现那样每个面重乘一遍（36 次）。
     for (let k = 0; k < 8; k++) {
       const yf = Math.fround(_bxCorner[k * 3 + 1]);
-      const kAO = 0.82 + 0.18 * ((yf - bbMinY) / yrAO);
+      const kAO = 0.82 + 0.18 * Math.min(1, Math.max(0, (yf - bbMinY) / yrAO));
       _bxCq[k * 3] = colQ(cr * kAO);
       _bxCq[k * 3 + 1] = colQ(cg * kAO);
       _bxCq[k * 3 + 2] = colQ(cb * kAO);

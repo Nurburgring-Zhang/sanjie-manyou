@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { RNG } from '../core/rng';
-import { inRiverFootprint } from './riverGeom';
+import { inRiverFootprint, riverCenterZ, riverHalfWidth } from './riverGeom';
 
 // ============ 世界坐标与街区布局 ============
 export const RIVER_HALF = 30;        // 汴河半宽（z∈[-30,30]）
@@ -47,6 +47,96 @@ export const V_STREETS: VStreet[] = [
 export function bridgeDeckY(z: number): number {
   const t = THREE.MathUtils.clamp(z / BRIDGE_HALF, -1, 1);
   return 0.7 + 8.4 * (1 - t * t);
+}
+
+// ============ 汴河主河段桥梁登记表（建桥 / 行走 / 探头共用同一份真源） ============
+// 用户判词：「河上建立多座桥的问题，你他妈解决了吗？？？」
+// 旧账：全河只有 虹桥(0) / 石拱(−1680) / 木梁(+1620) / 浮桥(−2480) 四座，
+// 主河段 0→±1600m 之间一座都没有 —— 高空沿河俯视时整条河是空的。
+// 现在 |x|≤1680 每 420–600m 一座，7 座 6 形制（贯木拱/石拱/叠梁拱/廊桥/浮桥/木梁）。
+export type BridgeForm = '贯木拱' | '石拱' | '叠梁拱' | '廊桥' | '浮桥' | '木梁';
+
+export interface BridgeSpec {
+  /** 桥名（与桥面匾额同字） */
+  name: string;
+  form: BridgeForm;
+  /** 桥轴世界 x */
+  x: number;
+  /** 拱顶桥面标高（米；水面恒 1.0） */
+  crown: number;
+  /** 桥面宽（米） */
+  wide: number;
+  /** 半跨（沿 z；缺省由河宽推出） */
+  half?: number;
+  /** 是否计入「主河段」密度账（|x|<2000 的一座不漏） */
+  main?: boolean;
+}
+
+/** 桥面两端落地标高：与虹桥同口径，0.7m 落在纤道上，再两级踏步到岸面 */
+export const BRIDGE_END_Y = 0.7;
+/** 水面标高（riverGeom.RIVER_WATER_Y 的镜像常数，供纯函数免 THREE 依赖使用） */
+export const BRIDGE_WATER_Y = 1.0;
+
+/**
+ * 桥梁台账。顺序即建造顺序；`half` 缺省 = 河半宽 + 3.4（落在纤道内缘、不进铺面）。
+ * 位置一律落在船只航段的空隙或可通航的高拱下（船队分段的原点是 −2480/−1680/0/+1620）。
+ */
+export const MAIN_BRIDGES: BridgeSpec[] = [
+  { name: '浮梁', form: '浮桥', x: -2480, crown: 3.6, wide: 8.2 },
+  { name: '永寧橋', form: '石拱', x: -1680, crown: 8.4, wide: 9.6 },
+  { name: '疊梁橋', form: '叠梁拱', x: -1200, crown: 8.4, wide: 9.0 },
+  { name: '清風橋', form: '廊桥', x: -600, crown: 8.2, wide: 8.8 },
+  { name: '虹橋', form: '贯木拱', x: 0, crown: 9.1, wide: 10.4, half: BRIDGE_HALF },
+  { name: '通津橋', form: '浮桥', x: 600, crown: 3.6, wide: 8.2 },
+  { name: '拱辰橋', form: '石拱', x: 1200, crown: 8.8, wide: 9.2 },
+  { name: '通濟橋', form: '木梁', x: 1620, crown: 7.0, wide: 6.4 },
+];
+
+/** 桥的半跨（沿 z）：河半宽 + 3.4；虹桥用显式 48 */
+export function bridgeHalfSpan(b: BridgeSpec): number {
+  return b.half ?? Math.max(34, riverHalfWidth(b.x) + 3.4);
+}
+
+/** 拱桥桥面抛物线剖面：拱顶 crown、两端 BRIDGE_END_Y */
+export function bridgeProfileY(b: BridgeSpec, dz: number): number {
+  const half = bridgeHalfSpan(b);
+  const t = THREE.MathUtils.clamp(dz / half, -1, 1);
+  return BRIDGE_END_Y + (b.crown - BRIDGE_END_Y) * (1 - t * t);
+}
+
+/** 浮桥的通航孔半宽：宽河（半宽 >26）留 18m 通航孔给双向航道，窄河只做 6m 小孔 */
+export function pontoonNavHalf(x: number): number {
+  return riverHalfWidth(x) > 26 ? 18 : 6;
+}
+
+/**
+ * 浮桥桥面剖面：通航孔顶（宽河 6.2 / 窄河 4.6）→ 3.0m 内降到 3.6m → 平段 → 端部降到 0.7m。
+ * 抬高不是为了好看：用户要求桥面高出水面 ≥2.5m，浮舟托架因此做成 2.6m 高的排架。
+ */
+export function pontoonDeckY(x: number, dz: number): number {
+  const half = bridgeHalfSpan({ name: '', form: '浮桥', x, crown: 3.6, wide: 0 });
+  const nav = pontoonNavHalf(x);
+  const top = nav > 6 ? 6.2 : 4.6;
+  const a = Math.abs(dz);
+  if (a <= nav) return top;
+  if (a <= nav + 3) return top - ((a - nav) / 3) * (top - 3.6);
+  if (a <= 29) return 3.6;
+  if (a >= half) return BRIDGE_END_Y;
+  return 3.6 - ((a - 29) / (half - 29)) * (3.6 - BRIDGE_END_Y);
+}
+
+/**
+ * 桥面行走高程（纯函数）：世界 (x,z) 落在某座桥的桥面内 → 返回桥面 y；否则 null。
+ * 浮桥是平桥 + 中央通航孔抬升，不走抛物线剖面。
+ */
+export function bridgeDeckYAt(x: number, z: number): number | null {
+  for (const b of MAIN_BRIDGES) {
+    if (Math.abs(x - b.x) > b.wide / 2) continue;
+    const dz = z - riverCenterZ(b.x);
+    if (Math.abs(dz) > bridgeHalfSpan(b)) continue;
+    return b.form === '浮桥' ? pontoonDeckY(b.x, dz) : bridgeProfileY(b, dz);
+  }
+  return null;
 }
 
 // ============ POI ============

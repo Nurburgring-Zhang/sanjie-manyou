@@ -4,7 +4,7 @@ import { roofOn } from '../city/buildings';
 import { buildIslandSkirt, islandFallAngle, CS_BASE, CS_DEEP, CS_TOP, GOLD_LINE, GOLD_ROOF, GOLD_TRIM, skyJitter, flushSkyCloudSheets } from './palace';
 import { buildEighteenHells } from './hells';
 import { buildGhostShopDetail } from './fengduDetail';
-import { buildFengduGround, FENGDU } from './fengduGround';
+import { buildHeavenGallery } from './heavenGallery';import { buildFengduGround, FENGDU } from './fengduGround';
 import { PoolSet } from '../actors/pools';
 import { RNG } from '../core/rng';
 
@@ -295,19 +295,20 @@ function scaleHeavenGeometry(scene: THREE.Scene, s: number): number {
   return meshes;
 }
 
-// ============ W47：凌霄宝殿二次放大（仙宫尺度） ============
-// 现状（几何直读）：2.2× 后台基 105.6×70.4、柱网面阔 88、台基底 232.96 → 宝顶 317.7，总高 84.7。
-// 对标太和殿（面阔 200 含廊庑 / 本体 64m）与用户要求「面阔 ≥150、总高 ≥120」，
-// 天宫正殿应比皇宫正殿再大一档，故在 2.2× 之上再叠 1.75×：
-//   面阔 88 → 154、总高 84.7 → 148.2、台基 184.8。
-// 倍率取**等比**而不是 x/z 拉宽 + y 拉高：非等比会把蟠龙柱压成椭圆（差 20%），近看即穿帮。
-// 只缩放「台基 + 殿身 + 屋面 + 室内陈设」这一块（|x|≤56、z 209±62、y≥230），
-// 不动云台岩盘与岛裙：云台半径 197 仍大于放大后 184.8 的台基，殿不会悬空；
-// 云台不动也就不会与南侧斗法云台（中心 z −17.6、半径 96.8）相撞。
-const LINGXIAO_SCALE = 1.75;
+// ============ W47 → W48：凌霄宝殿二次放大（仙宫尺度） ============
+// 判词（用户原话）：「天宫中建筑要比皇宫更大更精致」。太和殿 w=200（imperial.ts 直读），
+// 旧 1.75× 后天宫正殿面阔只有 154 —— 比皇宫正殿窄 46m，「更大」没达成。
+// 本版按硬指标重定倍率：面阔 = 40（柱网）× 2.2 × k ≥ 240 → k = 2.7273。
+//   地面实测（2.2× 口径）：柱网面阔 88、进深 48.4、台基底 232.96 → 宝顶 317.9
+//   再叠 2.7273× 后：面阔 240.0、进深 132.0、总高 231.5、台基 288 × 145.2
+// 倍率取**等比**而不是 x/z 拉宽 + y 拉高：非等比会把蟠龙柱压成椭圆，近看即穿帮。
+// 只缩放「台基 + 殿身 + 屋面 + 室内陈设」这一块（|x|≤60、z 209±62、y≥230）；
+// 台基进深在 realm.ts 同步收窄到 24.2（缩放前）＝145.2m，南缘 136.4 正好让开东西朝房北缘，
+// 宫台 / 前庭 / 大台阶（realm.ts 新段，按世界坐标直写）不落在本盒内，故不会被二次缩放。
+const LINGXIAO_SCALE = 2.7273;
 /** 放大锚点：台基底（缩放时台基底面不动，殿身向上长高） */
 const LINGXIAO_ANCHOR = { x: 0, y: 233, z: 209 } as const;
-const LINGXIAO_HALF_X = 56;
+const LINGXIAO_HALF_X = 60;
 const LINGXIAO_HALF_Z = 62;
 const LINGXIAO_Y_MIN = 230;
 
@@ -2238,11 +2239,19 @@ function buildW20(b: Baker, inner: HIsle[], outer: HIsle[]): void {
   hRoundGate(b, gx, W_CLOUD_Y + 38, gz, Math.atan2(-st.dx, -st.dz));
   // ---- B2 云海天门（r 650，−z 轴，正对南天门） ----
   hCloudGate(b, 0, W_CLOUD_Y, -650, 0);
-  // ---- B3 悬空长廊（r 660 的 ±11.5° 两座云桥仙台之间，弦长 263m） ----
+  // ---- B3 悬空长廊（r 660；旧 `hSkyArcCorridor` 只有 6.2m 宽、5.16m 檐高，读作"过道"，
+  //      用户原话「只做了这个小玩意？？配得上高大上的天宫吗」。改走 heavenGallery：
+  //      廊宽 12m、檐高 14m、弧长翻倍到 ±23°，11 项细节（瓦垄/斗栱/额枋彩画/雀替/蟠龙柱/
+  //      挂落/汉白玉栏杆/金砖/宫灯/槛窗廊墙/脊饰）一项不删，按三角面预算自动选密度档。）----
   const R = 660, half = (11.5 * Math.PI) / 180;
   const c1 = Math.cos(Math.PI / 2 - half) * R, c2 = Math.cos(Math.PI / 2 + half) * R;
   const cz = Math.cos(half) * R;
-  hSkyArcCorridor(b, 0, 0, 660, Math.PI / 2 - half, Math.PI / 2 + half, 202);
+  buildHeavenGallery(b, {
+    cx: 0, cz: 0, y: 202, r: 660,
+    a0: Math.PI / 2 - 23 * (Math.PI / 180),
+    a1: Math.PI / 2 + 23 * (Math.PI / 180),
+    width: 12, eaveH: 14,
+  });
   // ---- C 外环 12 岛各 1 道宽水帘（6–14m） ----
   for (let i = 0; i < outer.length; i += 3) {
     if (i >= 36) break;

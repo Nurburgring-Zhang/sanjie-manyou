@@ -449,6 +449,10 @@ export class Engine {
   keys = new Set<string>();
   touchMove = { x: 0, y: 0 };        // 虚拟摇杆
   private dragOn = false; private px = 0; private py = 0;
+  /** 按下点：与抬起点比较判定「单击（锁指针）」还是「拖拽（转视角）」 */
+  private downX = 0; private downY = 0;
+  /** 指针锁定生效后的第一个 mousemove 丢弃（防浏览器回中产生的假位移） */
+  private lockFresh = false;
   private pinchD = 0;
   private cinemaCurve: THREE.CatmullRomCurve3 | null = null;
   private cinemaLook: THREE.CatmullRomCurve3 | null = null;
@@ -639,15 +643,29 @@ export class Engine {
         && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) this.togglePointerLock();
     });
     window.addEventListener('keyup', (e) => this.keys.delete(e.code));
-    // 左键拖拽：**所有模式**都从这里进入（cinema/focus 一拖即接管，fly/walk 直接转，avatar 交玩家控制器）。
+    // 左键 / 右键拖拽：**所有模式**都从这里进入（cinema/focus 一拖即接管，fly/walk 直接转，avatar 交玩家控制器）。
+    // 指针锁定放在「单击」（按下后几乎没移动）而不是 pointerdown：拖动本身就不该锁指针，
+    // 否则锁定生效瞬间会把相对位移算成一次大跳（旧探针实测单步 0.3168rad ≈ 18°）。
+    this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
     this.canvas.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'touch' || e.button !== 0) return;
+      if (e.pointerType === 'touch') return;
+      if (e.button !== 0 && e.button !== 2) return;
       if (document.pointerLockElement === this.canvas) return;
       this.dragOn = true; this.px = e.clientX; this.py = e.clientY;
+      this.downX = e.clientX; this.downY = e.clientY;
       try { this.canvas.setPointerCapture(e.pointerId); } catch { /* 老浏览器没有 pointer capture */ }
+    });
+    // 单击画面 = 进入鼠标锁定（移动鼠标即转视角）；拖动过 6px 就不算单击，不会抢指针
+    this.canvas.addEventListener('pointerup', (e) => {
+      if (e.pointerType === 'touch' || e.button !== 0) return;
+      if (document.pointerLockElement === this.canvas) return;
+      if (Math.hypot(e.clientX - this.downX, e.clientY - this.downY) > 6) return;
+      this.togglePointerLock();
     });
     window.addEventListener('pointermove', (e) => {
       if (e.pointerType === 'touch' || !this.dragOn) return;
+      // 指针锁定后由 mousemove(movementX/Y) 单一通道驱动，避免同一次移动被算两遍（灵敏度翻倍）
+      if (document.pointerLockElement === this.canvas) return;
       this.dragLook(e.clientX - this.px, e.clientY - this.py);
       this.px = e.clientX; this.py = e.clientY;
     });
@@ -656,12 +674,15 @@ export class Engine {
     window.addEventListener('pointercancel', endDrag);
     window.addEventListener('blur', endDrag);
     // 指针锁定下的连续视角：movementX/Y 是相对位移，直接进同一条 dragLook 通道。
+    // 锁定生效后的第一个事件丢弃：浏览器可能在锁定时把光标回中，首个 movement 是一次假位移。
     window.addEventListener('mousemove', (e) => {
       if (document.pointerLockElement !== this.canvas) return;
+      if (this.lockFresh) { this.lockFresh = false; return; }
       this.dragLook(e.movementX || 0, e.movementY || 0);
     });
     document.addEventListener('pointerlockchange', () => {
       const on = document.pointerLockElement === this.canvas;
+      this.lockFresh = on;
       bus.emit('ui:toast', on ? '鼠标已锁定：移动鼠标转视角（L / Esc 解除）' : '鼠标已解锁');
     });
     this.canvas.addEventListener('wheel', (e) => {

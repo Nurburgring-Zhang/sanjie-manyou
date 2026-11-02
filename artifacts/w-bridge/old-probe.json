@@ -1,0 +1,710 @@
+{
+ "modes": {
+  "cinema": {
+   "before": {
+    "camMode": "cinema",
+    "cinemaActive": true,
+    "avatar": false,
+    "yaw": -1.2617,
+    "pitch": -0.0576
+   },
+   "steps": [
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.2903,
+     "pitch": -0.066
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.3191,
+     "pitch": -0.0744
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.3479,
+     "pitch": -0.0828
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.3767,
+     "pitch": -0.0912
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.4055,
+     "pitch": -0.0996
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.4343,
+     "pitch": -0.108
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.4631,
+     "pitch": -0.1164
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.4919,
+     "pitch": -0.1248
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.5207,
+     "pitch": -0.1332
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.5495,
+     "pitch": -0.1416
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.5783,
+     "pitch": -0.15
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.6071,
+     "pitch": -0.1584
+    }
+   ],
+   "after": {
+    "camMode": "fly",
+    "cinemaActive": false,
+    "avatar": false,
+    "yaw": -1.6071,
+    "pitch": -0.1584
+   },
+   "maxStepYaw": 0.0288,
+   "maxStepPitch": 0.0084,
+   "totalYaw": -0.3454,
+   "totalPitch": -0.1008,
+   "dYaw": [
+    -0.0286,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288
+   ],
+   "dPitch": [
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084
+   ]
+  },
+  "fly": {
+   "before": {
+    "camMode": "fly",
+    "cinemaActive": false,
+    "avatar": false,
+    "yaw": -1.6071,
+    "pitch": -0.1584
+   },
+   "steps": [
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.6359,
+     "pitch": -0.1668
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.6647,
+     "pitch": -0.1752
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.6935,
+     "pitch": -0.1836
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.7223,
+     "pitch": -0.192
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.7511,
+     "pitch": -0.2004
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.7799,
+     "pitch": -0.2088
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.8087,
+     "pitch": -0.2172
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.8375,
+     "pitch": -0.2256
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.8663,
+     "pitch": -0.234
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.8951,
+     "pitch": -0.2424
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.9239,
+     "pitch": -0.2508
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.9527,
+     "pitch": -0.2592
+    }
+   ],
+   "after": {
+    "camMode": "fly",
+    "cinemaActive": false,
+    "avatar": false,
+    "yaw": -1.9527,
+    "pitch": -0.2592
+   },
+   "maxStepYaw": 0.0288,
+   "maxStepPitch": 0.0084,
+   "totalYaw": -0.3456,
+   "totalPitch": -0.1008,
+   "dYaw": [
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288
+   ],
+   "dPitch": [
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084
+   ]
+  },
+  "walk": {
+   "before": {
+    "camMode": "walk",
+    "cinemaActive": false,
+    "avatar": false,
+    "yaw": -1.9527,
+    "pitch": -0.2592
+   },
+   "steps": [
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.6359,
+     "pitch": -0.1668
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.6647,
+     "pitch": -0.1752
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.6935,
+     "pitch": -0.1836
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.7223,
+     "pitch": -0.192
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.7511,
+     "pitch": -0.2004
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.7799,
+     "pitch": -0.2088
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.8087,
+     "pitch": -0.2172
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.8375,
+     "pitch": -0.2256
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.8663,
+     "pitch": -0.234
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.8951,
+     "pitch": -0.2424
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.9239,
+     "pitch": -0.2508
+    },
+    {
+     "camMode": "walk",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.9527,
+     "pitch": -0.2592
+    }
+   ],
+   "after": {
+    "camMode": "walk",
+    "cinemaActive": false,
+    "avatar": false,
+    "yaw": -1.9527,
+    "pitch": -0.2592
+   },
+   "maxStepYaw": 0.3168,
+   "maxStepPitch": 0.0924,
+   "totalYaw": 0,
+   "totalPitch": 0,
+   "dYaw": [
+    0.3168,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288
+   ],
+   "dPitch": [
+    0.0924,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084
+   ]
+  },
+  "focus": {
+   "before": {
+    "camMode": "focus",
+    "cinemaActive": false,
+    "avatar": false,
+    "yaw": -1.4346,
+    "pitch": -0.4343
+   },
+   "steps": [
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.1178,
+     "pitch": -0.3419
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.1466,
+     "pitch": -0.3503
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.1754,
+     "pitch": -0.3587
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.2042,
+     "pitch": -0.3671
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.233,
+     "pitch": -0.3755
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.2618,
+     "pitch": -0.3839
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.2906,
+     "pitch": -0.3923
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.3194,
+     "pitch": -0.4007
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.3482,
+     "pitch": -0.4091
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.377,
+     "pitch": -0.4175
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.4058,
+     "pitch": -0.4259
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": false,
+     "yaw": -1.4346,
+     "pitch": -0.4343
+    }
+   ],
+   "after": {
+    "camMode": "fly",
+    "cinemaActive": false,
+    "avatar": false,
+    "yaw": -1.4346,
+    "pitch": -0.4343
+   },
+   "maxStepYaw": 0.3168,
+   "maxStepPitch": 0.0924,
+   "totalYaw": 0,
+   "totalPitch": 0,
+   "dYaw": [
+    0.3168,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288,
+    -0.0288
+   ],
+   "dPitch": [
+    0.0924,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084,
+    -0.0084
+   ]
+  },
+  "avatar": {
+   "before": {
+    "camMode": "fly",
+    "cinemaActive": false,
+    "avatar": true,
+    "yaw": 2.7636,
+    "pitch": -0.18
+   },
+   "steps": [
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 3.1794,
+     "pitch": -0.081
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 3.1416,
+     "pitch": -0.09
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 3.1038,
+     "pitch": -0.099
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 3.066,
+     "pitch": -0.108
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 3.0282,
+     "pitch": -0.117
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 2.9904,
+     "pitch": -0.126
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 2.9526,
+     "pitch": -0.135
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 2.9148,
+     "pitch": -0.144
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 2.877,
+     "pitch": -0.153
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 2.8392,
+     "pitch": -0.162
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 2.8014,
+     "pitch": -0.171
+    },
+    {
+     "camMode": "fly",
+     "cinemaActive": false,
+     "avatar": true,
+     "yaw": 2.7636,
+     "pitch": -0.18
+    }
+   ],
+   "after": {
+    "camMode": "fly",
+    "cinemaActive": false,
+    "avatar": true,
+    "yaw": 2.7636,
+    "pitch": -0.18
+   },
+   "maxStepYaw": 0.4158,
+   "maxStepPitch": 0.099,
+   "totalYaw": 0,
+   "totalPitch": 0,
+   "dYaw": [
+    0.4158,
+    -0.0378,
+    -0.0378,
+    -0.0378,
+    -0.0378,
+    -0.0378,
+    -0.0378,
+    -0.0378,
+    -0.0378,
+    -0.0378,
+    -0.0378,
+    -0.0378
+   ],
+   "dPitch": [
+    0.099,
+    -0.009,
+    -0.009,
+    -0.009,
+    -0.009,
+    -0.009,
+    -0.009,
+    -0.009,
+    -0.009,
+    -0.009,
+    -0.009,
+    -0.009
+   ]
+  }
+ },
+ "clamp": {
+  "limitRad": 1.4835,
+  "expectDeg": 85,
+  "top": 1.4835,
+  "topDeg": 85,
+  "bottom": -1.4835,
+  "bottomDeg": -85,
+  "topSequence": [
+   1.4835,
+   1.4835,
+   1.4835,
+   1.4835
+  ],
+  "bottomSequence": [
+   -1.4835,
+   -1.4835,
+   -1.4835,
+   -1.4835
+  ],
+  "within": true
+ },
+ "avatarClamp": {
+  "limitRad": 1.4835,
+  "top": 1.4835,
+  "topDeg": 85,
+  "bottom": -1.4835,
+  "bottomDeg": -85,
+  "within": true
+ },
+ "checks": {
+  "smooth": false,
+  "cinemaReleased": true,
+  "clamp": true,
+  "avatarClamp": true
+ },
+ "pass": false
+}
