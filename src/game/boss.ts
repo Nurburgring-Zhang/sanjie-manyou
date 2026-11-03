@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import type { Actor } from '../actors/types';
+import type { Random } from '../actors/behaviors';
 import type { Vfx } from '../fx/vfx';
 import type { PlayerController } from './player';
-import { bus } from '../core/rng';
+import { bus, RNG } from '../core/rng';
 import type { BossSpec } from '../data/boss';
 
 /**
@@ -16,6 +17,16 @@ import type { BossSpec } from '../data/boss';
  *           玩家被 active 命中 → reset()（回恢复点，Boss 血量复位，等待 respawnDelay）
  */
 export type BossState = 'idle' | 'engage' | 'telegraph' | 'active' | 'dead' | 'respawning';
+
+/**
+ * 旧路径默认随机源：core/rng 的 mulberry32（固定种子，与 behaviors/crowd 同款口径）。
+ * 出招判定影响 sim（grab/sweep 分支改变后续全部行为序列），必须可复现；
+ * 联机 / 回放 / 无头测试必须显式注入 rng——照 behaviors.ts / crowd.ts 的注入规矩。
+ */
+const DEFAULT_RNG: Random = (() => {
+  const r = new RNG(0x5e7a1);
+  return () => r.next();
+})();
 
 export class ArenaBoss {
   readonly spec: BossSpec;
@@ -39,6 +50,12 @@ export class ArenaBoss {
   private fill: HTMLDivElement | null = null;
   private label: HTMLDivElement | null = null;
   private next: 'sweep' | 'grab' = 'sweep';
+  /** 注入随机源：出招判定（rollMove）用。默认 DEFAULT_RNG 单机行为可复现；测试/回放显式传入 */
+  rng: Random = DEFAULT_RNG;
+  /** P2-3：HUD 文本缓存——只有变化才写 DOM（旧版每帧 new span + replaceChildren） */
+  private numSpan: HTMLSpanElement | null = null;
+  private lastLabel = '';
+  private lastNum = '';
 
   constructor(
     spec: BossSpec,
@@ -83,7 +100,7 @@ export class ArenaBoss {
    */
   private rollMove(): 'sweep' | 'grab' {
     if (!this.canGrab) return 'sweep';
-    return Math.random() < 0.45 ? 'grab' : 'sweep';
+    return this.rng() < 0.45 ? 'grab' : 'sweep';
   }
 
   /** 玩家出手：真实输入（KeyJ / 屏幕点击）经 world 转到这里 */
@@ -227,9 +244,19 @@ export class ArenaBoss {
     const active = !this.defeated && this.state !== 'idle';
     this.bar.style.opacity = active || this.defeated ? '1' : '0';
     this.fill.style.width = `${(this.hp / this.spec.maxHp) * 100}%`;
-    this.label.textContent = `${this.spec.name} · ${this.defeated ? '已伏誅' : this.spec.phaseName[this.phase - 1]}`;
-    const num = document.createElement('span');
-    num.textContent = `${Math.round(this.hp)} / ${this.spec.maxHp}`;
-    this.label.replaceChildren(this.label.firstChild ?? document.createTextNode(this.spec.name), num);
+    // P2-3：只有文本变化才碰 DOM（旧版每帧 new span + replaceChildren）
+    const labelText = `${this.spec.name} · ${this.defeated ? '已伏誅' : this.spec.phaseName[this.phase - 1]}`;
+    if (labelText !== this.lastLabel) {
+      this.lastLabel = labelText;
+      this.label.textContent = labelText;
+      this.numSpan = document.createElement('span');
+      this.label.appendChild(this.numSpan);
+      this.lastNum = '';
+    }
+    const numText = `${Math.round(this.hp)} / ${this.spec.maxHp}`;
+    if (numText !== this.lastNum && this.numSpan) {
+      this.lastNum = numText;
+      this.numSpan.textContent = numText;
+    }
   }
 }

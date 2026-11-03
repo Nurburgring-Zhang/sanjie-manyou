@@ -323,7 +323,7 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
   const tickerSpan = ui.querySelector('#ticker span') as HTMLElement;
   const queue: string[] = [];
   let tickTimer = 0;
-  bus.on('battle:report', (s) => { queue.push(String(s)); });
+  bus.on('battle:report', (s) => { if (queue.length < 32) queue.push(String(s)); }); // P2-4：封顶，防高频战报把队列推到无界
   const welcome = ['长卷徐展，汴京入市。虹桥两岸，正店脚店，酒旗招展。', '天上人间同此夜：且看齐天大圣，反出南天门！'];
   queue.push(...welcome);
 

@@ -1,0 +1,1151 @@
+{
+ "generatedAt": "2026-11-03T18:35:13.114Z",
+ "url": "http://127.0.0.1:4182/",
+ "total": 113,
+ "heavenCount": 2,
+ "bad": [],
+ "floatingWarns": [
+  {
+   "label": "骑上云龙（可飞天）",
+   "x": -79.2,
+   "y": 2171.7,
+   "z": 132,
+   "gy": null,
+   "dy": null,
+   "grounded": false,
+   "band": "heaven"
+  }
+ ],
+ "rows": [
+  {
+   "label": "在瑤池·蟠桃賞賜（蟠桃点→铜钱单向）",
+   "x": 330,
+   "y": 2148.6,
+   "z": 44,
+   "gy": 2148.6,
+   "dy": 0,
+   "grounded": true,
+   "band": "heaven"
+  },
+  {
+   "label": "在茶坊点茶·点茶/听书/小唱",
+   "x": -36,
+   "y": 0.1,
+   "z": 62,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在孙羊正店·散座·正店酒菜",
+   "x": 226,
+   "y": 0.1,
+   "z": 66,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在孙羊正店·雅座·席面包间",
+   "x": 226,
+   "y": 0.1,
+   "z": 72,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在十千脚店·脚店沽饮",
+   "x": 122,
+   "y": 0.1,
+   "z": 64,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在唐家酒店·村酿",
+   "x": -2820,
+   "y": 0.1,
+   "z": 940,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在久住王員外家·客茶投宿",
+   "x": 340,
+   "y": 0.1,
+   "z": 64,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在飯鋪·平价饭食",
+   "x": 2680,
+   "y": 0.1,
+   "z": 860,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在南岸胡饼摊·现烤胡饼",
+   "x": -60,
+   "y": 0.1,
+   "z": -66,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在南岸鱼羹摊·鱼羹",
+   "x": -90,
+   "y": 0.1,
+   "z": -60,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在码头鱼粥棚·鱼粥",
+   "x": -238,
+   "y": 0.1,
+   "z": 44,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在东市炒肺摊·炒肺灌肺",
+   "x": 2740,
+   "y": 0.1,
+   "z": 940,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在东市环饼摊·环饼",
+   "x": 2860,
+   "y": 0.1,
+   "z": 940,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在西市馉饳儿摊·馉饳儿",
+   "x": -2860,
+   "y": 0.1,
+   "z": 860,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在西市冷元子摊·冷饮甜汤",
+   "x": -2740,
+   "y": 0.1,
+   "z": 940,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在州桥夜市·旋煎羊白肠",
+   "x": 0,
+   "y": 0.1,
+   "z": 40,
+   "gy": 3.27,
+   "dy": -3.17,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在瓦子茶棚·凉浆解渴",
+   "x": 306,
+   "y": 0.1,
+   "z": 90,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在御街饮子摊·药饮子",
+   "x": 0,
+   "y": 0.1,
+   "z": 600,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在上清观素斋·素面斋饭",
+   "x": 540,
+   "y": 0.1,
+   "z": 118,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在瓦子骰宝棚·骰宝押注（底注10）",
+   "x": 320,
+   "y": 0.1,
+   "z": 96,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在州桥五子棋摊·五子棋对弈（彩头5）",
+   "x": 30,
+   "y": 0.1,
+   "z": 50,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在南岸双陆摊·双陆对局（注5）",
+   "x": -30,
+   "y": 0.1,
+   "z": -70,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在码头骰摊·码头速骰（注5）",
+   "x": -220,
+   "y": 0.1,
+   "z": 44,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在东市五子摊·五子棋（彩头3）",
+   "x": 2900,
+   "y": 0.1,
+   "z": 880,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在西市关扑摊·关扑掷钱（每扑2）",
+   "x": -2620,
+   "y": 0.1,
+   "z": 920,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "看·勾栏大棚",
+   "x": 306,
+   "y": 0.1,
+   "z": 78,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "看·说书棚",
+   "x": 270,
+   "y": 0.1,
+   "z": 92,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "看·傀儡棚",
+   "x": 342,
+   "y": 0.1,
+   "z": 92,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "看·影戏棚",
+   "x": 352,
+   "y": 0.1,
+   "z": 100,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "看·相扑场",
+   "x": 330,
+   "y": 0.1,
+   "z": 110,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "听·东市楼歌台",
+   "x": 2800,
+   "y": 0.1,
+   "z": 900,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "听·琵琶船",
+   "x": -100,
+   "y": 0.1,
+   "z": 0,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "听·虹桥笛手",
+   "x": 0,
+   "y": 0.1,
+   "z": 20,
+   "gy": 7.64,
+   "dy": -7.54,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "听·西市楼铁笛",
+   "x": -2800,
+   "y": 0.1,
+   "z": 900,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在香药铺·香料药材",
+   "x": 40,
+   "y": 0.1,
+   "z": 62,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在王家纸马·纸马冥器",
+   "x": 352,
+   "y": 0.1,
+   "z": 66,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在解当铺·典当/淘死当",
+   "x": 258,
+   "y": 0.1,
+   "z": 64,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在赵太丞家·诊疗抓药",
+   "x": 168,
+   "y": 0.1,
+   "z": 64,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在綢緞莊·绸缎量裁",
+   "x": -2900,
+   "y": 0.1,
+   "z": 960,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在明家靴店·靴鞋",
+   "x": 2740,
+   "y": 0.1,
+   "z": 820,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在果子鋪·鲜果蜜煎",
+   "x": 180,
+   "y": 0.1,
+   "z": 64,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在东市绢帛行·绢帛批发",
+   "x": 2880,
+   "y": 0.1,
+   "z": 820,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在西市金银铺·打制银器",
+   "x": -2660,
+   "y": 0.1,
+   "z": 820,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在西市雕版书坊·购书",
+   "x": -2960,
+   "y": 0.1,
+   "z": 860,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在东市香药行栈·香药批发",
+   "x": 2960,
+   "y": 0.1,
+   "z": 860,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在码头鱼市·鲜鱼竞买",
+   "x": -250,
+   "y": 0.1,
+   "z": 40,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在南岸杂货担·针线杂货",
+   "x": -100,
+   "y": 0.1,
+   "z": -70,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在柳林弓矢摊·租弓买箭",
+   "x": -450,
+   "y": 0.1,
+   "z": 90,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在御街马市鞍具铺·鞍鞯辔头",
+   "x": 60,
+   "y": 0.1,
+   "z": -1200,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在金耀门漕仓粜米·粮米",
+   "x": 4700,
+   "y": 0.1,
+   "z": 120,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": 217.7,
+   "y": 0.1,
+   "z": 88.8,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": 260.6,
+   "y": 0.1,
+   "z": 81.4,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": 194.3,
+   "y": 0.1,
+   "z": 91.1,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": 309.3,
+   "y": 0.1,
+   "z": 86.1,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": 355.1,
+   "y": 0.1,
+   "z": 92.8,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": 143.9,
+   "y": 0.1,
+   "z": 65.7,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": -1.1,
+   "y": 0.1,
+   "z": 46.2,
+   "gy": 1.32,
+   "dy": -1.22,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": -1.3,
+   "y": 0.1,
+   "z": 48.5,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": -92.4,
+   "y": 0.1,
+   "z": -58.3,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在小吃摊买点吃的",
+   "x": -117.2,
+   "y": 0.1,
+   "z": -62.2,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": 327.8,
+   "y": 0.1,
+   "z": 62,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": 275.2,
+   "y": 0.1,
+   "z": 73.7,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": 203.8,
+   "y": 0.1,
+   "z": 82.5,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": 271.9,
+   "y": 0.1,
+   "z": 93.9,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": 309.6,
+   "y": 0.1,
+   "z": 85.7,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": 185.5,
+   "y": 0.1,
+   "z": 73.3,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": 343.6,
+   "y": 0.1,
+   "z": 85.7,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": 236.3,
+   "y": 0.1,
+   "z": 86.8,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": -33.3,
+   "y": 0.1,
+   "z": 42,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "在摊上淘件玩意儿",
+   "x": -3.9,
+   "y": 0.1,
+   "z": 44.4,
+   "gy": 1.91,
+   "dy": -1.81,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "坐下喝碗茶",
+   "x": -36,
+   "y": 0.1,
+   "z": 58,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "坐下喝碗茶",
+   "x": 40,
+   "y": 0.1,
+   "z": 58,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "坐下喝碗茶",
+   "x": 168,
+   "y": 0.1,
+   "z": 58,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "坐下喝碗茶",
+   "x": 330,
+   "y": 0.1,
+   "z": 58,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "坐下喝碗茶",
+   "x": 480,
+   "y": 0.1,
+   "z": 60,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "进孙羊正店喝酒",
+   "x": 226,
+   "y": 0.1,
+   "z": 56,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "进十千脚店喝酒",
+   "x": 122,
+   "y": 0.1,
+   "z": 56,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "进南岸酒肆喝酒",
+   "x": -40,
+   "y": 0.1,
+   "z": -58,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "进城门酒家喝酒",
+   "x": 430,
+   "y": 0.1,
+   "z": 60,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "掷骰子押一把",
+   "x": 210,
+   "y": 0.1,
+   "z": 84,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "掷骰子押一把",
+   "x": 280,
+   "y": 0.1,
+   "z": 88,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "掷骰子押一把",
+   "x": 340,
+   "y": 0.1,
+   "z": 84,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "掷骰子押一把",
+   "x": -30,
+   "y": 0.1,
+   "z": -70,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "坐在勾栏看戏",
+   "x": 306,
+   "y": 0.1,
+   "z": 78,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "听一场小唱",
+   "x": 240,
+   "y": 0.1,
+   "z": 88,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "坐听说书",
+   "x": -30,
+   "y": 0.1,
+   "z": 42,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "坐听说书",
+   "x": 306,
+   "y": 0.1,
+   "z": 70,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "赏一曲（5 文）",
+   "x": 232,
+   "y": 0.1,
+   "z": 58,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "赏一曲（5 文）",
+   "x": 306,
+   "y": 0.1,
+   "z": 66,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "抚琴一曲",
+   "x": 306,
+   "y": 0.1,
+   "z": 92,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "与人对弈五子棋",
+   "x": 60,
+   "y": 0.1,
+   "z": 64,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "与人对弈五子棋",
+   "x": 240,
+   "y": 0.1,
+   "z": 92,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "与人对弈五子棋",
+   "x": -36,
+   "y": 0.1,
+   "z": 62,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "开间房睡一觉（10 文）",
+   "x": 206,
+   "y": 0.1,
+   "z": 104.2,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "去净房方便一下",
+   "x": 452,
+   "y": 0.1,
+   "z": 40,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "去净房方便一下",
+   "x": -104,
+   "y": 0.1,
+   "z": -60,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "帮码头扛包赚钱（+20 文）",
+   "x": -238,
+   "y": 0.95,
+   "z": 38,
+   "gy": 0,
+   "dy": 0.95,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "帮码头扛包赚钱（+20 文）",
+   "x": -252,
+   "y": 0.95,
+   "z": 36,
+   "gy": 0,
+   "dy": 0.95,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "帮码头扛包赚钱（+20 文）",
+   "x": -222,
+   "y": 0.95,
+   "z": 36,
+   "gy": 0,
+   "dy": 0.95,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "汤隆铁匠铺：买口钢刀（30 文）",
+   "x": 380,
+   "y": 0.1,
+   "z": 62,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "助凌振点炮——轰击汴河！",
+   "x": -320,
+   "y": 0.1,
+   "z": 42,
+   "gy": 0,
+   "dy": 0.1,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "骑上骏马",
+   "x": -230,
+   "y": 0,
+   "z": 46,
+   "gy": 0,
+   "dy": 0,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "骑上骏马",
+   "x": 452,
+   "y": 0,
+   "z": 64,
+   "gy": 0,
+   "dy": 0,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "骑上骏马",
+   "x": -420,
+   "y": 0,
+   "z": 92,
+   "gy": 0,
+   "dy": 0,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "骑上仙鹤（可飞天）",
+   "x": -440,
+   "y": 0,
+   "z": 84,
+   "gy": 0,
+   "dy": 0,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "骑上仙鹤（可飞天）",
+   "x": -262,
+   "y": 0.95,
+   "z": 34,
+   "gy": 0,
+   "dy": 0.95,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "骑上金龙（可飞天）",
+   "x": 516,
+   "y": 0,
+   "z": 172,
+   "gy": 0,
+   "dy": 0,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "骑上云龙（可飞天）",
+   "x": -79.2,
+   "y": 2171.7,
+   "z": 132,
+   "gy": null,
+   "dy": null,
+   "grounded": false,
+   "band": "heaven"
+  },
+  {
+   "label": "骑上麒麟",
+   "x": 544,
+   "y": 0,
+   "z": -2,
+   "gy": 0,
+   "dy": 0,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "骑上麒麟",
+   "x": -70,
+   "y": 0,
+   "z": 40,
+   "gy": 0,
+   "dy": 0,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "跳上小船去开船",
+   "x": -244,
+   "y": 0.4,
+   "z": 19.5,
+   "gy": 0.95,
+   "dy": -0.55,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "步入「阴阳界」，直下地府",
+   "x": 470,
+   "y": 0,
+   "z": 24,
+   "gy": 0,
+   "dy": 0,
+   "grounded": true,
+   "band": "other"
+  },
+  {
+   "label": "走「返阳门」回汴京",
+   "x": 0,
+   "y": -260,
+   "z": -124,
+   "gy": -260,
+   "dy": 0,
+   "grounded": true,
+   "band": "other"
+  }
+ ]
+}

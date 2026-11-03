@@ -391,3 +391,38 @@ node scripts/verify-packaged.mjs "release-v79/win-unpacked/CyberQingming.exe"
 - **SPEC-总账 1.2 分区流式**（唯一还红的账）、B8 换算副本、贴脸屋面、远景雾、云海时序。
 - 白玉台「格栅笼」根系统：**仍需用户裁**（槛墙 vs 檐口屋顶）。
 - 遗留 31 文件工作树本轮已锁 commit（见 git log）。
+
+---
+
+## 2026-11-04 02:xx · 全面审计轮（4 路集群 + 对抗审核 + F1 修复包）
+
+> 主文档：`artifacts/SPEC-全面审计-20261104.md`。四路 agent 集群（联网检索/静态审核/探针实证/账本抽检）+ 对抗审核 A。
+
+### 审计发现（新）
+
+- **联网检索首次成功**（前会话持续 429）：6/6 任务有结果。最高价值：①打包态 58ms 头号嫌疑=软渲染回退/冷缓存（先跑 GPU 状态探针再谈归因）②LoAF 长帧归因 API ③onBeforeCompile 缓存键陷阱（已静态排查：全仓 8 处均静态注入，未触发）。
+- **静态审核 P1×4**：蟠桃赏赐交互点坐标绕过 heavenPoint（玩法整体不可达）/ 无 webglcontextlost 处理（GPU 崩溃=永久黑屏）/ npcSweep O(车×4400人) 每 3 帧全量分配 / 击飞按 id 线性 find。P2×15 详见主文档。
+- **探针实证**：水上行人 11→0、河里建房 24→0（历史项确认已修）；**新 FAIL：bridgeDeckOff=5**（虹桥带 3 人贴水面）→E3；**probe-grain 首次实测 26 坊全过**（CV 0.455）——账本 2.1「散落歪扭」欠账清掉；T_static 18,959,342 自洽。
+- **账本抽检 8 条静态核验：0 假绿**（2 weak 为行号漂移）。
+- **E4**：修复前构建 30s 窗 52×toFixed 运行时错误；修复后复测 0——不宣称已修，记「已消失+probe-error-stack 常驻把守」。
+
+### 本轮修复（F1，全部实测）
+
+- P1-1 蟠桃坐标走 heavenPoint（审核 A 纠 y=204 平台表口径）→ **probe-interact-reach 实测 dy=0**（113 点整类机检，骑龙浮空点 WARN 待设计裁决）
+- P1-2 webglcontextlost/restored 提示 + boot().catch
+- P1-4 launches 改 Map<Actor,LaunchState>（审核 A 核实无悬挂风险）
+- P2-1 loadInt（0 值不再被吞）P2-2 interact 时钟+骰子 rng **纳管确定性门（A 类 6→7 文件全 0 PASS）** P2-3 boss HUD 缓存写 P2-4 战报队列封顶 P2-5 水Link 越界守卫
+- 验证链：tsc 0 错 / vitest 81/81 / probe-determinism PASS / interact-reach PASS / error-stack 0
+
+### 对抗审核
+
+- 审核 A：APPROVE_WITH_FIXES，四条硬伤全部采纳修订（y 值/骰子 rng/F5 诚实化/LoAF 口径收窄）。
+- **审核 B：本轮缺席**（子代理并发限制中断且会话失效）——如实登记待补跑，不假装审过。
+
+### 下一步（按优先级）
+
+1. **E3 桥面行人 y 对齐**（唯一探针红项）
+2. **F4 打包态 GPU 状态探针**（58ms 归因前置，检索最高嫌疑）
+3. E1 npcSweep 性能切片（探针护航）
+4. 补跑对抗审核 B
+5. -1 阶段剩余 spike：H3 龙 → H1 → H2 → H6 → H4 → H7

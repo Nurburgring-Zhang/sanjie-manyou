@@ -2359,3 +2359,14 @@ npx vitest run              → 6 files / 81 tests 通过
 node scripts/probe-determinism.mjs → A 类 physics 0 / behaviors 0 / crowd 0 / player 0 → RESULT=PASS
 node scripts/probe-p95-attrib.mjs  (600帧×2轮) → artifacts/p95-attrib-600.json 落盘
 ```
+
+---
+
+## 2026-11-04 · 全面审计轮收口（4 路集群 + F1 修复包，主文档 SPEC-全面审计-20261104.md）
+
+- 联网检索首次成功（6/6）；静态审核 P1×4 修 3 立 1（E1）；探针实证 PASS 4 / FAIL 1（新红项 E3 bridgeDeckOff=5）；账本抽检 8 条 0 假绿。
+- 2.1 散落歪扭：probe-grain 首次实测 **26 坊全过**（CV 0.455≥0.35 / top2≤17%≤55% / IQR≥0.48≥0.18）→ 本条 🟡→✅。
+- 确定性门 A 类 **6→7 文件**（physics/behaviors/crowd/player/boss/havoc/**interact**）全 0 命中 PASS；boss/havoc/interact 三处 sim 级随机源全部种子化注入。
+- 新增探针 4 个：probe-frame-pacing / probe-error-stack / probe-interact-reach / （待建 probe-gpu-status）。
+- E4 toFixed×52：修复后复测 0，诚实记「已消失+常驻把守」，不宣称归因。
+- 对抗审核 A：APPROVE_WITH_FIXES（四条全采纳）；**审核 B 缺席待补**。

@@ -31,6 +31,9 @@ const SIM_FILES = [
   'src/actors/behaviors.ts',
   'src/actors/crowd.ts',
   'src/game/player.ts',
+  'src/game/boss.ts',
+  'src/sky/havoc.ts',
+  'src/game/interact.ts',
 ];
 
 /** 非确定性 API（正则 + 人类可读名） */

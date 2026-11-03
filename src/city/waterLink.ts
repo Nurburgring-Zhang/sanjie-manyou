@@ -316,6 +316,7 @@ export function buildWaterLinks(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
   for (const r of RIVERS) {
     if (!r.spring) continue;
     const P = r.pts, n = P.length;
+    if (n < 2) continue; // P2-5：P[n-2] 需要 ≥2 个点（全仓唯一未设防的 [i-1] 型索引）
     const [ex, ez] = P[n - 1];
     let ux = ex - P[n - 2][0], uz = ez - P[n - 2][1];
     const l = Math.hypot(ux, uz) || 1;

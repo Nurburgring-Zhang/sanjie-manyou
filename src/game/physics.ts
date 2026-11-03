@@ -64,7 +64,7 @@ export class ImpactSystem {
 
   /** 玩家当前兵器倍率：徒手 1，钢刀 2.5，炮 20 */
   playerWeapon = { key: 'fist', label: '双拳', mult: 1 };
-  private launches = new Map<number, LaunchState>();
+  private launches = new Map<Actor, LaunchState>();
   private respawn: { a: Actor; at: number }[] = [];
   private bumpCd = 0;
   private acc = 0;
@@ -119,7 +119,7 @@ export class ImpactSystem {
 
   /** 击飞：抛体运动，落地转击倒 */
   launch(target: Actor, dir: THREE.Vector3, force: number): void {
-    this.launches.set(target.id, {
+    this.launches.set(target, {
       vx: dir.x * force, vy: 6 + force * 0.22, vz: dir.z * force,
       until: this.clock() + 4000, fragile: profileOf(target).fragile, home: target.pos.clone(),
     });
@@ -255,18 +255,18 @@ export class ImpactSystem {
 
   /** 一个固定步内的物理推进（发包 / 落地 / 复活） */
   private step(dt: number, now: number): void {
-    // 击飞弹道积分
-    for (const [id, L] of this.launches) {
-      const a = this.crowd.actors.find((x) => x.id === id);
-      if (!a) { this.launches.delete(id); continue; }
-      if (now > L.until) { this.launches.delete(id); continue; }
+    // 击飞弹道积分。launches 直接持 Actor 引用（crowd 的 id 单调不复用、actors 无删除路径，
+    // 审核A已核无悬挂风险）——旧版按 id 在本步内线性 find 全体 4496 人 × ≤16 子步，
+    // Boss/AoE 群体击飞即 O(L×n×子步) 帧尖峰（审计 P1-4）
+    for (const [a, L] of this.launches) {
+      if (now > L.until) { this.launches.delete(a); continue; }
       L.vy -= 21 * dt;
       a.pos.x += L.vx * dt;
       a.pos.z += L.vz * dt;
       a.yOff += L.vy * dt;
       if (a.yOff <= 0) {
         a.yOff = 0;
-        this.launches.delete(id);
+        this.launches.delete(a);
         a.action = 'knockedDown';
         a.impactUntil = now + 3400;
         this.vfx.burst(a.pos.clone().add(new THREE.Vector3(0, 0.3, 0)), 16, 0xc8b090, 5, 0.5, 1, 4);

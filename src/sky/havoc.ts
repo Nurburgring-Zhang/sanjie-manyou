@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { Crowd } from '../actors/crowd';
+import type { Random } from '../actors/behaviors';
+import { RNG } from '../core/rng';
 import { DeityStage } from './deities';
 import { SkyCenters } from './realm';
 import { Vfx } from '../fx/vfx';
@@ -52,6 +54,14 @@ export class Havoc {
   /** 机检停摆开关：探针量落位时置 true，战斗编排不再移动演员 */
   hold = false;
   readonly reports: string[] = [];
+  /**
+   * 注入随机源：雷暴落点等编排抖动用。默认 core/rng 的 mulberry32 固定种子（与
+   * behaviors/crowd/boss 同款口径），同运行同顺序可复现；测试/回放显式传入。
+   */
+  rng: Random = (() => {
+    const r = new RNG(0x5e7a1);
+    return () => r.next();
+  })();
 
   constructor(private crowd: Crowd, private stage: DeityStage, private centers: SkyCenters, private vfx: Vfx) {
     // SkyCenters 是「缩放前 x/z + 已抬 y」的混合口径；编排本身按缩放前米书写，
@@ -253,7 +263,7 @@ export class Havoc {
           this.boltT -= dt;
           if (this.boltT <= 0) {
             this.boltT = 0.5;
-            const p = this.at('arena', (Math.random() - 0.5) * 30, 3, (Math.random() - 0.5) * 30);
+            const p = this.at('arena', (this.rng() - 0.5) * 30, 3, (this.rng() - 0.5) * 30);
             this.vfx.bolt(p.clone().setY(p.y + 30 * HEAVEN_SCALE), p);
             this.vfx.burst(p, 24, 0xbfe8ff, 9, 0.7, 1.3);
           }

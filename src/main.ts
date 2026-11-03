@@ -55,4 +55,10 @@ async function boot(): Promise<void> {
   (window as unknown as Record<string, unknown>)['__perf'] = () => ({ calls: engine.renderer.info.render.calls, tris: engine.renderer.info.render.triangles });
 }
 
-boot();
+// P1-2：boot() 原先无 catch——init 任一步抛错即 unhandled rejection，用户停在加载页无任何提示
+boot().catch((err: unknown) => {
+  const msg = err instanceof Error ? err.message : String(err);
+  const tip = document.querySelector('.load-tip');
+  if (tip) tip.textContent = `加载失败：${msg}（按 F5 重试）`;
+  console.error('[boot]', err);
+});

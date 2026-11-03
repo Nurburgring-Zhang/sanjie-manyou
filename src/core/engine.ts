@@ -558,6 +558,24 @@ export class Engine {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(this.renderer.domElement);
     this.canvas = this.renderer.domElement;
+    // P1-2：GPU 进程崩溃/驱动重置时 canvas 派发 webglcontextlost——不 preventDefault 则
+    // 恢复流程被浏览器取消，画面永久黑屏且无提示。这里给用户可见的提示与恢复路径。
+    this.canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();
+      if (!document.getElementById('ctx-lost-tip')) {
+        const tip = document.createElement('div');
+        tip.id = 'ctx-lost-tip';
+        tip.textContent = '图形上下文已丢失（GPU 重置），等待恢复……若持续黑屏请按 F5 重载。';
+        tip.style.cssText = 'position:fixed;right:12px;bottom:12px;z-index:9999;background:#7f1d1d;color:#fff;padding:10px 14px;border-radius:8px;font:14px/1.5 sans-serif;max-width:420px';
+        document.body.appendChild(tip);
+      }
+      console.error('[engine] WebGL context lost');
+    });
+    this.canvas.addEventListener('webglcontextrestored', () => {
+      document.getElementById('ctx-lost-tip')?.remove();
+      this.renderer.resetState();
+      console.log('[engine] WebGL context restored');
+    });
     this.input = new PointerInputRouter(this.canvas);
 
     this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.5, 52000);

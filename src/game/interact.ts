@@ -1,6 +1,7 @@
 import * as THREE from 'three';
+import type { Random } from '../actors/behaviors';
 import type { PlayerController } from './player';
-import { bus } from '../core/rng';
+import { bus, RNG } from '../core/rng';
 
 // ============ 交互系统：提示 / 铜钱经济 / 商铺 / 骰子赌局 / 五子棋 ============
 export interface Interactable {
@@ -24,15 +25,23 @@ export class InteractSystem {
   private nearest: Interactable | null = null;
   /** 上一次写进 #interact-prompt 的文本：相同就一个 DOM 写都不发 */
   private promptText: string | null = null;
+  /** 注入随机源：骰子赌局用（输赢改铜钱=影响 sim，必须可复现；behaviors/crowd/boss/havoc 同款规矩） */
+  rng: Random = (() => { const r = new RNG(0x5e7a1); return () => r.next(); })();
+
+  /** P2-1：NaN 才回缺省——`parseInt(...) || 缺省` 会把合法的 0 也吞掉（0 文钱重载变 500） */
+  private static loadInt(key: string, dflt: number): number {
+    const v = parseInt(localStorage.getItem(key) ?? '', 10);
+    return Number.isNaN(v) ? dflt : v;
+  }
 
   constructor(uiRoot: HTMLElement, private player: PlayerController) {
     this.root = uiRoot;
     this.prompt = document.createElement('div');
     this.prompt.id = 'interact-prompt';
     uiRoot.appendChild(this.prompt);
-    this.coins = parseInt(localStorage.getItem('cq_coins') ?? '500', 10) || 500;
-    this.yinde = parseInt(localStorage.getItem('cq_yinde') ?? '0', 10) || 0;
-    this.peach = parseInt(localStorage.getItem('cq_peach') ?? '3', 10) || 3;
+    this.coins = InteractSystem.loadInt('cq_coins', 500);
+    this.yinde = InteractSystem.loadInt('cq_yinde', 0);
+    this.peach = InteractSystem.loadInt('cq_peach', 3);
     this.player.interactHook = () => {
       const n = this.nearest;
       if (n) { n.exec(); }
@@ -61,7 +70,7 @@ export class InteractSystem {
   act(action: string, seconds: number, say: string): void {
     const a = this.player.actor;
     a.action = action;
-    this.player.busyUntil = performance.now() + seconds * 1000;
+    this.player.busyUntil = this.player.clock() + seconds * 1000;
     window.setTimeout(() => { if (this.player.actor.action === action) this.player.actor.action = 'stand'; }, seconds * 1000);
     bus.emit('ui:toast', say);
   }
@@ -142,7 +151,7 @@ export class InteractSystem {
     diceBox.style.cssText = 'display:flex;gap:6px;justify-content:center;padding:10px 0;';
     const roll = (pickBig: boolean): void => {
       if (!this.pay(bet)) return;
-      const dice = [0, 0, 0].map(() => 1 + Math.floor(Math.random() * 6));
+      const dice = [0, 0, 0].map(() => 1 + Math.floor(this.rng() * 6));
       const sum = dice[0] + dice[1] + dice[2];
       const isBig = sum >= 11;
       const win = pickBig === isBig;

@@ -1341,8 +1341,12 @@ export class World {
   private registerInteractions(): void {
     const I = this.interact;
     // ===== B8：61 交互点全表注册（20 卷 §5.2；R/W 挂既有坐骑/开船系统不重复注册） =====
-    // B10：瑶池蟠桃赏赐（三币律第三接口）
-    I.add(new THREE.Vector3(PEACH_GRANT.x, 208.5, PEACH_GRANT.z), 5, '在瑤池·蟠桃賞賜（蟠桃点→铜钱单向）', () => {
+    // B10：瑶池蟠桃赏赐（三币律第三接口）。
+    // 审计 P1-1 修复：旧版把预缩放坐标当地球坐标直写 (150,208.5,20)，而真实瑶池在世界
+    // (330,2148.6,44)（heavenY(204)≈2148.6，PLATFORMS 表 (150,204,25) r19 是玩家站面）——
+    // distanceToSquared<25 永不成立，玩法整体不可达。现走 heavenPoint，y 与平台表同款 204；
+    // r 取 11 = 预缩放 5 × HEAVEN_SCALE(2.2)。
+    I.add(new THREE.Vector3(...heavenPoint(PEACH_GRANT.x, 204, PEACH_GRANT.z)), 11, '在瑤池·蟠桃賞賜（蟠桃点→铜钱单向）', () => {
       I.openShop(PEACH_GRANT.name, PEACH_GRANT.goods);
     });
     for (const p of POINTS) {
