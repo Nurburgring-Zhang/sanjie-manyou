@@ -5,6 +5,7 @@ import { SkyCenters } from './realm';
 import { RNG } from '../core/rng';
 import { Vfx } from '../fx/vfx';
 import { VGeo, BeastPool, W12_MAT, beastGeo, sh2, type P3 } from './creatures';
+import { HEAVEN_SCALE, heavenPoint, heavenY } from './heavenFrame';
 
 // ============================================================
 // W12 仙魔神佛：神像分型（8 冠 / 10 持物 / 4 法座 / 袍摆分片 / 背光）
@@ -43,6 +44,22 @@ export interface StatueSpec {
   figure?: boolean;
   coat?: [number, number];
 }
+
+// ============ 哮天犬的落脚面（缩放前 y，世界 y 一律走 heavenY）============
+// Actor 模型原点在脚底：crowd.writeActor 把实例根矩阵直接放在 a.pos（躯干/头在局部
+// y=1.14/1.64、大腿 0.94），所以 pos.y 就是脚底高度，不存在「模型中心」补偿（补偿量 = 0）。
+// 犬绕二郎神跑的中轴御道由 heavenColonnade.ts 的 buildFloor 铺在斗法台上：
+//   DECK = 206.12（= SKY_STAND_Y.arenaS，realm.platform 的台面铺装顶）
+//   PAVE = DECK + 0.14 = 206.26（40×64 缩放前米的 ash 板顶面，即犬脚下的可见地面）
+// 落位账把二郎神放在 206.12（台面，不含御道），旧码又按 c.y − 1.2 下沉 —— 犬脚因此
+// 落到御道面下 1.2 + 0.14×2.2 ≈ 1.51 世界米（实测 1.55–1.58，差额是御道 0.01–0.02 的石材线脚）。
+// 御道板的水平范围 = heavenColonnade 的 WALK_IN=20 与 |Z0|=|Z1|=32（缩放前米）。
+const DOG_GROUND = {
+  halfX: 20,      // WALK_IN
+  halfZ: 32,      // |Z0| = |Z1|
+  roadY: 206.26,  // PAVE = DECK + 0.14
+  deckY: 206.12,  // SKY_STAND_Y.arenaS（御道之外退回台面）
+};
 
 const TAU = Math.PI * 2;
 const GOLD = 0xb89434;
@@ -652,7 +669,15 @@ export function statueSpec(d: DeityDef, x: number, y: number, z: number, ry: num
 
 // ============ 天宫神道落位（弧形，避开殿堂中心与台沿望柱）============
 interface Ring { x: number; y: number; z: number; r: number; a0: number; a1: number }
-const RING: Record<string, Ring> = {
+
+/** 单尊石像的落位账（探针读点）：world 坐标 + 所依据的弧参数（缩放前口径）。 */
+export interface ShrineSpot {
+  name: string; home: string; ring: string;
+  x: number; y: number; z: number;
+  cx: number; cz: number; r: number; ringY: number;
+}
+/** 缩放前的弧参数原表；palace/court 与 arena 的修正见下方 RING 覆写（W5）。 */
+const RING_PRESCALE: Record<string, Ring> = {
   // 角坐标：0=+x（东），π/2=+z；殿前在 −z（神道自城门 −85 方向进），故 palace/court 弧取负角
   palace: { x: 0, y: 214.12, z: 95, r: 30, a0: -2.5, a1: -1.0 },
   court: { x: 0, y: 214.12, z: 74, r: 14, a0: -2.35, a1: -1.15 },
@@ -670,12 +695,39 @@ const RING: Record<string, Ring> = {
   gate: { x: 0, y: 203.12, z: -85, r: 22, a0: 0.62, a1: 2.52 },
 };
 
+/**
+ * 世界口径 → 缩放前口径：RING 存的是「缩放前」数，落位时统一 x/z/r ×2.2、y 走 heavenY。
+ * W5 修正两处布局冲突（scaleHeavenGeometry 把 x/z 也放大 2.2× 后暴露）：
+ *  · palace/court：W48 把凌霄殿台基二次放大 2.7273×（南缘推到世界 z≈136.4），原弧位缩放后
+ *    落在台基体内。改到前庭外缘世界 x=±52.8 的左右两列（z=100/110/120/130），弧心取外侧
+ *    ±250、R=197.2 —— 台面上是一列近直的石像生，半径仍由 RING.r 判定。
+ *  · arena：12 座光柱正好落在缩放后 r=88 的圆周上，神像半径内收到 83.6 避开。
+ */
+const RING: Record<string, Ring> = {
+  ...RING_PRESCALE,
+  arena: { ...RING_PRESCALE.arena, r: 38 },
+  arenaW: { ...RING_PRESCALE.arenaW, r: 38 },
+  arenaE: { ...RING_PRESCALE.arenaE, r: 38 },
+  arenaN: { ...RING_PRESCALE.arenaN, r: 38 },
+  arenaS: { ...RING_PRESCALE.arenaS, r: 38 },
+  palaceE: { x: 250 / HEAVEN_SCALE, y: 214.12, z: 115 / HEAVEN_SCALE, r: 197.2 / HEAVEN_SCALE, a0: 3.0655, a1: 3.2177 },
+  palaceW: { x: -250 / HEAVEN_SCALE, y: 214.12, z: 115 / HEAVEN_SCALE, r: 197.2 / HEAVEN_SCALE, a0: 0.0761, a1: -0.0761 },
+  palace: { x: 250 / HEAVEN_SCALE, y: 214.12, z: 115 / HEAVEN_SCALE, r: 197.2 / HEAVEN_SCALE, a0: 3.0655, a1: 3.2177 },
+  court: { x: -250 / HEAVEN_SCALE, y: 214.12, z: 115 / HEAVEN_SCALE, r: 197.2 / HEAVEN_SCALE, a0: 0.0761, a1: -0.0761 },
+};
+
+/** 名册 → 弧位：palace/court 的 5+3 尊分到前庭左右两列（其余用 home 原键）。 */
+const RING_KEY: Record<string, string> = {
+  '玉皇大帝': 'palaceE', '王母娘娘': 'palaceE', '太白金星': 'palaceE', '仙官·甲': 'palaceE',
+  '王灵官': 'palaceW', '赤脚大仙': 'palaceW', '仙官·乙': 'palaceW', '仙官·丙': 'palaceW',
+};
+
 // ============ 神佛驻场：日常小剧场 ============
 export class DeityStage {
   map = new Map<string, import('../actors/types').Actor>();
   private erlangDog: { a: import('../actors/types').Actor; center: THREE.Vector3 } | null = null;
   private ringT = 0;
-  /** 36 尊石像合并为一张网格（1 个 draw call）；头光走细环实例池 */
+  /** 35 尊石像合并为一张网格（1 个 draw call）；头光走细环实例池 */
   private shrine: THREE.Mesh | null = null;
   private halos: BeastPool | null = null;
 
@@ -722,27 +774,35 @@ export class DeityStage {
     void rng;
   }
 
-  /** 36 尊按 home 分弧落位：同一 home 的神均分该弧（角度由名册顺序决定，确定性） */
+  /** 35 尊按环落位：同一环的神均分该弧（角度由名册顺序决定，确定性） */
   private buildShrines(): void {
     const ps = this.crowd.poolSet();
     if (!ps) return;
     const g = new VGeo();
     const halos: Halo[] = [];
     const total = new Map<string, number>();
-    for (const d of DEITIES) total.set(d.home, (total.get(d.home) ?? 0) + 1);
+    for (const d of DEITIES) { const k = RING_KEY[d.name] ?? d.home; total.set(k, (total.get(k) ?? 0) + 1); }
     const seen = new Map<string, number>();
+    const spots: ShrineSpot[] = [];
     const m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler();
     for (const d of DEITIES) {
-      const ring = RING[d.home] ?? RING.arena;
-      const n = total.get(d.home) ?? 1;
-      const i = seen.get(d.home) ?? 0;
-      seen.set(d.home, i + 1);
+      // 石像/头光不走 scaleHeavenGeometry（运行期自建网格），RING 又全是缩放前的天宫坐标，
+      // 故用 heavenY/heavenPoint 同一套换算：y=heavenY(y)、x/z/r 同乘 HEAVEN_SCALE。
+      const key = RING_KEY[d.name] ?? d.home;
+      const base = RING[key] ?? RING.arena;
+      const ring = { ...base, y: heavenY(base.y) };
+      // ring.y 已在上面的构造里走 heavenY（世界口径），不再二次抬升
+      const n = total.get(key) ?? 1;
+      const i = seen.get(key) ?? 0;
+      seen.set(key, i + 1);
       const full = ring.a1 - ring.a0 > Math.PI * 1.99;
       const a = ring.a0 + (ring.a1 - ring.a0) * (full ? i / n : (n === 1 ? 0.5 : i / (n - 1)));
-      const px = ring.x + Math.cos(a) * ring.r;
-      const pz = ring.z + Math.sin(a) * ring.r;
-      const ry = Math.atan2(px - ring.x, pz - ring.z);   // 朝外：来人自殿前/台外看见面部
+      const px0 = ring.x + Math.cos(a) * ring.r;
+      const pz0 = ring.z + Math.sin(a) * ring.r;
+      const ry = Math.atan2(px0 - ring.x, pz0 - ring.z);   // 朝外：来人自殿前/台外看见面部
+      const px = px0 * HEAVEN_SCALE, pz = pz0 * HEAVEN_SCALE;
       const spec = statueSpec(d, px, ring.y, pz, ry);
+      spots.push({ name: d.name, home: d.home, ring: key, x: px, y: ring.y, z: pz, cx: ring.x, cz: ring.z, r: ring.r, ringY: base.y });
       const one = new VGeo();
       const hs: Halo[] = [];
       buildStatue(one, spec, hs);
@@ -765,6 +825,7 @@ export class DeityStage {
     this.shrine.castShadow = true;
     this.shrine.frustumCulled = false;
     ps.scene.add(this.shrine);
+    this.shrine.userData.statues = spots;
     // 头光：细环（TorusGeometry 半径 1、管径 0.032 → 面积约 0.1m²/尊），小面积 glow
     const haloGeo = new THREE.TorusGeometry(1, 0.032, 3, 18);
     this.halos = new BeastPool(ps.scene, haloGeo, glowMat, 96, 'sky_halo');
@@ -784,14 +845,22 @@ export class DeityStage {
     const moon = this.map.get('嫦娥仙子');
     if (moon) {
       moon.pos.x += 0; // 广寒台内环绕
-      moon.pos.set(40 + Math.cos(t * 0.5) * 6, 209, -55 + Math.sin(t * 0.5) * 6);
+      // 每帧复位必须用抬升后的台面（旧 209），否则嫦娥会被拉回人间上方 200m 的空中。
+      const [mx, my, mz] = heavenPoint(40 + Math.cos(t * 0.5) * 6, 209.12, -55 + Math.sin(t * 0.5) * 6);
+      moon.pos.set(mx, my, mz);
       moon.yaw += dt * 0.8;
     }
     // 哮天犬绕二郎神
     if (this.erlangDog) {
       const er = this.map.get('二郎神杨戬');
       const c = er ? er.pos : this.erlangDog.center;
-      this.erlangDog.a.pos.set(c.x + Math.cos(t * 1.4) * 7, c.y - 1.2, c.z + Math.sin(t * 1.4) * 7);
+      // 脚底取御道面（Actor 原点在脚底，补偿 0）；不跟二郎神的 y —— 他的脚底是台面
+      // 206.12，比御道铺装顶低 0.14，且战斗幕会被 havoc 抬到空中。
+      const dx = Math.cos(t * 1.4) * 7;
+      const dz = Math.sin(t * 1.4) * 7;
+      const onRoad = Math.abs((c.x + dx) / HEAVEN_SCALE) <= DOG_GROUND.halfX
+        && Math.abs((c.z + dz) / HEAVEN_SCALE) <= DOG_GROUND.halfZ;
+      this.erlangDog.a.pos.set(c.x + dx, heavenY(onRoad ? DOG_GROUND.roadY : DOG_GROUND.deckY), c.z + dz);
       this.erlangDog.a.yaw = t * 1.4 + Math.PI / 2;
     }
     // 观音莲波

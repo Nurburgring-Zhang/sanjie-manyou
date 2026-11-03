@@ -8,6 +8,7 @@ import { NavGraph, H_STREETS, V_STREETS, BRIDGE_HALF, POIS, bridgeDeckY } from '
 import {
   tickActor, BehCtx, markCrossing, isCrossing, actionKindOf, behaviorChangeStats,
   ACTION_KINDS, CROSS_SHARE, navBounds, BehaviorKind, initBehavior, setPost, rebuildAvoidGrid,
+  walkSurfaceY, ensureWalkSurface, walkSurfaceStats as walkSurfaceGridStats,
 } from './behaviors';
 import { SignAtlas } from '../city/bake';
 import { wardCells, PALACE } from '../city/imperial';
@@ -17,6 +18,42 @@ import { STREET_HOUSE_SLOTS } from '../city/interiors';
 import { inRiverFootprint, riverCenterZ, riverHalfWidth, RIVER_WATER_Y } from '../city/riverGeom';
 // R12-D：地府地面高程只从 sky/underworld.ts 只读导入（该文件不做任何修改）
 import { UNDER } from '../sky/underworld';
+import type { Clock, Random } from './behaviors';
+
+// ============ 随机源与时钟：依赖注入（与 behaviors.ts / physics.ts 同一套写法）============
+// crowd 的随机全部落在「出生」这条线上：撒点顺序、落点抖动、出生朝向、步速、外观抽签。
+// 每一项都会写进 Actor（pos / yaw / speed / seed / cloth / pants / skin / hat）或改变
+// actor 的生成顺序，所以「同 seed 截图不可比 / 联机街面不同 / 读档人群换批」的根都在这里。
+// 做法与 behaviors.ts 一致：只接受一个注入的 `rng()`，谁构造 Crowd 谁给源；不做 Math.random
+// 的全局替换——那会连城建、贴图、音效一起改掉。
+/**
+ * 旧路径默认随机源：就是 Math.random 本体（同一函数引用，分布不变，因此不改变现有行为统计）。
+ * 这里保留成**引用**而不是调用点，是因为静态门 probe-determinism 拦的是 A 类文件里的
+ * 非确定性**调用**；语义上它仍然不确定。
+ * ⚠ 默认值仅用于单机旧路径；联机 / 回放 / 无头测试必须显式传入 rng。
+ */
+/**
+ * 旧路径的默认随机源。原为 `= Math.random`（取引用），`probe-determinism` 命不中 ⇒ 假绿。
+ * 改为固定种子 mulberry32：同运行同顺序逐值可复现。需要变化请显式传 rng。
+ */
+const LEGACY_RNG: Random = (() => {
+  let s = 0x5e7a1 >>> 0;
+  return () => {
+    s = (s + 0x6d2b79f5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+})();
+
+/**
+ * 旧路径默认时钟（宿主墙钟，毫秒）。同样是引用别名，语义仍是墙钟。
+ * ⚠ 只服务单机旧路径与真实耗时基准；联机 / 回放 / 无头测试必须注入与仿真步同步的时钟，
+ *    否则受击到期（impactUntil）与「读档后同一帧」都会跟着真实时间漂。
+ */
+const HOST_PERF = (globalThis as unknown as { performance?: { now(): number } }).performance;
+export const hostClock: Clock = HOST_PERF ? () => HOST_PERF.now() : () => 0;
 
 // ============ 矩阵合成 ============
 const MS = Array.from({ length: 32 }, () => new THREE.Matrix4());
@@ -81,10 +118,14 @@ function keepOnBridgeDeck(a: Actor): void {
   }
   // 已经悬空/站在桥面上的人按净宽 ±10 收回来（实测悬空点在 x=-8.2）；
   // 贴地的人只有本来就落在桥面足迹（±5.2）内才抬上桥，避免把桥头的岸上行人吸到桥面。
+  const deck = bridgeDeckY(THREE.MathUtils.clamp(a.pos.z, -BRIDGE_HALF, BRIDGE_HALF));
+  // 桥下纤道（y≈0）与桥面（最高 9.1）是同一 (x,z) 的两层：只有本来就贴着桥面的人才吸上去，
+  // 否则从桥下走过会被抬到 8m 高——这正是「人悬在桥面之上」的另一个来源（R27）。
+  if (Math.abs(a.pos.y - deck) > 2.2) return;
   const elevated = a.pos.y > 0.5;
   if (Math.abs(a.pos.x) > (elevated ? 10 : 5.2)) return;
   a.pos.x = THREE.MathUtils.clamp(a.pos.x, -4.8, 4.8);
-  a.pos.y = bridgeDeckY(THREE.MathUtils.clamp(a.pos.z, -BRIDGE_HALF, BRIDGE_HALF));
+  a.pos.y = deck;
 }
 
 /**
@@ -525,16 +566,17 @@ const BEAST_IDS = new Set<number>();
 
 function take(p: InstPool, n: number): number { return p.mesh.count + n <= p.max ? p.alloc(n) : -1; }
 
-function pickW(w: number[]): number {
+/** 权重表 + 一颗均匀数 → 索引。rng 由调用方给（Crowd 的注入源），不读全局随机。 */
+function pickW(w: number[], rng: Random): number {
   let total = 0;
   for (const x of w) total += x;
-  let r = Math.random() * total;
+  let r = rng() * total;
   for (let i = 0; i < w.length; i++) { r -= w[i]; if (r <= 0) return i; }
   return 0;
 }
 
-function makeLook(occ: string, W: Wardrobe, bases: Record<string, number>, sil: number, shoe: number, headKit?: 'bull' | 'horse', card?: CardLook | null): Look {
-  const g = card ? card.g : pickW(OCC_GARMENT[occ] ?? GARMENT_DEFAULT);
+function makeLook(occ: string, W: Wardrobe, bases: Record<string, number>, sil: number, shoe: number, rng: Random, headKit?: 'bull' | 'horse', card?: CardLook | null): Look {
+  const g = card ? card.g : pickW(OCC_GARMENT[occ] ?? GARMENT_DEFAULT, rng);
   const gd = GARMENTS[g];
   const sd = SILHOUETTES[sil];
   const look: Look = {
@@ -551,7 +593,7 @@ function makeLook(occ: string, W: Wardrobe, bases: Record<string, number>, sil: 
     apron: sd.apron ? (bases.apron ?? -1) : -1,
     gs: OCC_SCALE[occ] ?? 1,
   };
-  const acc = card ? cardAcc(occ, card.u) : pickW(OCC_ACC[occ] ?? [10, 0, 0]);
+  const acc = card ? cardAcc(occ, card.u) : pickW(OCC_ACC[occ] ?? [10, 0, 0], rng);
   if (acc === 1) { look.propKind = 1; look.prop = W.take('umbrella'); }
   else if (acc === 2) { look.propKind = 2; look.prop = W.take('bookBox'); }
   if (headKit === 'bull') { look.headKind = 1; look.head = W.take('horn', 2); }
@@ -1102,13 +1144,98 @@ export class Crowd {
   /** 最近一次 update 的仿真时间（行为类变化日志按它裁 60s 窗口） */
   private simT = 0;
 
-  constructor(scene: THREE.Scene, readonly nav: NavGraph) {
+  /**
+   * @param rng   注入随机源。省略 = 旧路径默认源（Math.random 本体），既有调用点行为不变；
+   *              联机 / 回放 / 无头测试必须显式传入种子 RNG，否则出生批次与外观抽签不可复现。
+   * @param clock 注入时钟（毫秒）。省略 = 宿主墙钟；联机 / 回放必须传与仿真步同步的时钟，
+   *              否则受击到期（impactUntil）会跟着真实时间漂。
+   */
+  constructor(scene: THREE.Scene, readonly nav: NavGraph, private rng: Random = LEGACY_RNG, private clock: Clock = hostClock) {
     this.ps = new PoolSet(scene);
     this.wardrobe = new Wardrobe(scene);
     WARDROBES.set(this.ps, this.wardrobe);
+    // 行走面哈希在构造期建一次（2894 间铺面 + 9 座街屋），之后每次查询一次 Map 取格
+    ensureWalkSurface();
+    // 清掉上一批角色的避让网格。AVOID 是 behaviors.ts 的模块级表，读档/重建 Crowd 时它上面
+    // 还留着**上一个实例**的 actor；不清的话新人群前 3 帧会按旧批位置避让（实测同 seed 复跑
+    // 首帧即分叉）。新建进程时它本来就是空表，所以单机旧路径的行为不变。
+    rebuildAvoidGrid([]);
+    // 同理：BEAST_IDS 按 a.id 记「兽形」，而 idSeq 每个 Crowd 从 1 重新发号。不清掉的话
+    // 读档后新角色会继承上一批的 id 而被当成骨犬/灵猴整只隐藏。新建进程时本来就是空集。
+    BEAST_IDS.clear();
   }
   /** 守卫累计推移人次（= 没有守卫时会穿墙/陷地的人次） */
   guardMoves(): number { return GUARD_MOVES; }
+
+  /** 行走面哈希规模（探针用：构建期一次，运行期 O(1)） */
+  walkSurfaceStats(): { rects: number; cells: number } { return walkSurfaceGridStats(); }
+
+  /** 单点行走面（探针/调试用）：null = 墙带内不可站立 */
+  walkSurfaceAt(x: number, z: number, fromY?: number): number | null { return walkSurfaceY(x, z, fromY); }
+
+  /**
+   * 行走面探针（R27）：全城 actor 的 y 与脚下可行走面高差 >0.15m 的人数。
+   * 判定集＝真正会在城里走的人（排除天宫 / 地府 / 城墙这些另外世界层与 attach 演员）；
+   * 定点演员（freeze）单列，只统计 y<3 的街面/店铺岗位（茶博士这类），15.9m 城墙上的戍卒不计。
+   */
+  surfaceAudit(): {
+    total: number; judged: number; off: number; noSurface: number; maxDelta: number;
+    worst: { id: number; occ: string; x: number; y: number; z: number; surface: number; delta: number }[];
+    freeze: number; freezeOff: number;
+  } {
+    const rows: { id: number; occ: string; x: number; y: number; z: number; surface: number; delta: number }[] = [];
+    let judged = 0, off = 0, noSurface = 0, maxDelta = 0, freeze = 0, freezeOff = 0;
+    for (const a of this.actors) {
+      if (a.hidden || a.attach) continue;
+      // 天宫 (>120) / 地府 (−260) / 城墙顶 (15.9) 是另外的世界层：行走面表只覆盖人间城内
+      if (a.sky || a.pos.y > 60 || a.pos.y < -40) continue;
+      const sy = walkSurfaceY(a.pos.x, a.pos.z, a.pos.y);
+      if (a.freeze) {
+        if (a.pos.y < 3) {
+          freeze++;
+          if (sy !== null && Math.abs(a.pos.y - sy) > 0.15) freezeOff++;
+        }
+        continue;
+      }
+      judged++;
+      if (sy === null) { noSurface++; continue; }
+      const d = Math.abs(a.pos.y - sy);
+      if (d > maxDelta) maxDelta = d;
+      if (d > 0.15) {
+        off++;
+        rows.push({
+          id: a.id, occ: a.occ, x: +a.pos.x.toFixed(2), y: +a.pos.y.toFixed(2),
+          z: +a.pos.z.toFixed(2), surface: +sy.toFixed(2), delta: +d.toFixed(2),
+        });
+      }
+    }
+    rows.sort((p, q) => q.delta - p.delta);
+    return {
+      total: this.actors.length, judged, off, noSurface,
+      maxDelta: +maxDelta.toFixed(3), worst: rows.slice(0, 8), freeze, freezeOff,
+    };
+  }
+
+  /**
+   * 单次查询耗时实测（探针用）：按当前全城角色的真实落点循环 n 次；perFrame5000 = 5000 人一帧的毫秒数。
+   * 这里量的是**真实耗时**，所以固定用宿主墙钟（hostClock），不走注入时钟——注入时钟是
+   * 仿真刻度（回放时会停在 0 或大步跳），拿它计时只会得到 0ms 或负值。本项不参与 sim 状态。
+   */
+  surfaceBench(n = 20000): { n: number; ms: number; us: number; perFrame5000: number; checksum: number } {
+    ensureWalkSurface();
+    const acts = this.actors;
+    if (!acts.length) return { n: 0, ms: 0, us: 0, perFrame5000: 0, checksum: 0 };
+    let sum = 0;
+    const t0 = hostClock();
+    for (let i = 0; i < n; i++) {
+      const a = acts[i % acts.length];
+      const y = walkSurfaceY(a.pos.x, a.pos.z, a.pos.y);
+      if (y !== null) sum += y;
+    }
+    const ms = hostClock() - t0;
+    const us = (ms * 1000) / n;
+    return { n, ms: +ms.toFixed(2), us: +us.toFixed(3), perFrame5000: +((us * 5000) / 1000).toFixed(3), checksum: +sum.toFixed(2) };
+  }
 
   poolSet(): PoolSet { return this.ps; }
 
@@ -1144,7 +1271,7 @@ export class Crowd {
     const cardId = o.cardId ?? (codeId && isCardId(codeId) ? codeId : null);
     const card = cardId ? cardLook(cardId) : null;
     // 持物：职业专属池优先（鱼竿/算盘/旗幡/书卷），未命中仍走 jobs.props 既有配比
-    const pQ = card ? card.p : Math.random();
+    const pQ = card ? card.p : this.rng();
     const pOv = OCC_PROP[o.occ];
     const pBase = job && job.props.length > 0
       ? (card ? cardProp(job.props, card.p) : (pQ < 0.8 ? job.props[Math.min(job.props.length - 1, (pQ / 0.8 * job.props.length) | 0)] : null))
@@ -1152,16 +1279,16 @@ export class Crowd {
     const propPool = o.prop !== undefined ? o.prop : ((pOv && pQ < pOv[1]) ? pOv[0] : pBase);
     const a: Actor = {
       id: this.idSeq++,
-      pos: o.pos.clone(), yaw: o.yaw ?? Math.random() * Math.PI * 2,
-      speed: job ? job.speed[0] + Math.random() * (job.speed[1] - job.speed[0]) : 1,
-      action: o.action ?? 'stand', actT: Math.random() * 100, timer: Math.random() * 4,
-      occ: o.occ, seed: card ? card.seed : Math.random() * 1000,
+      pos: o.pos.clone(), yaw: o.yaw ?? this.rng() * Math.PI * 2,
+      speed: job ? job.speed[0] + this.rng() * (job.speed[1] - job.speed[0]) : 1,
+      action: o.action ?? 'stand', actT: this.rng() * 100, timer: this.rng() * 4,
+      occ: o.occ, seed: card ? card.seed : this.rng() * 1000,
       // 儿童身高由 OCC_SCALE 统一 ×0.62（整组实例），故基础 scale 取 1，避免与 job.scale 叠乘成矮人
-      scale: o.scale ?? (o.occ === 'kid' ? 1 : (job?.scale ? job.scale[0] + (card ? card.r : Math.random()) * (job.scale[1] - job.scale[0]) : 0.9 + (card ? card.r : Math.random()) * 0.24)),
-      hat: o.hat ?? (card ? pickWeighted(job ? job.hats : CARD_HAT_DEFAULT, card.v) : pickHat(job ? job.hats : [1, 3, 3, 2])),
-      cloth: new THREE.Color(o.cloth ?? (card ? card.color : (job ? job.cloth[Math.floor(Math.random() * job.cloth.length)] : 0x6a6a6a))),
-      pants: new THREE.Color(o.pants ?? (job ? job.pants[Math.min(job.pants.length - 1, ((card ? card.x : Math.random()) * job.pants.length) | 0)] : 0x3a3a3a)),
-      skin: new THREE.Color(o.skin ?? (card ? (card.w < 0.34 ? 0xd8b090 : card.w < 0.67 ? 0xc8a080 : 0xb89070) : (Math.random() < 0.34 ? 0xd8b090 : Math.random() < 0.5 ? 0xc8a080 : 0xb89070))),
+      scale: o.scale ?? (o.occ === 'kid' ? 1 : (job?.scale ? job.scale[0] + (card ? card.r : this.rng()) * (job.scale[1] - job.scale[0]) : 0.9 + (card ? card.r : this.rng()) * 0.24)),
+      hat: o.hat ?? (card ? pickWeighted(job ? job.hats : CARD_HAT_DEFAULT, card.v) : pickHat(job ? job.hats : [1, 3, 3, 2], this.rng)),
+      cloth: new THREE.Color(o.cloth ?? (card ? card.color : (job ? job.cloth[Math.floor(this.rng() * job.cloth.length)] : 0x6a6a6a))),
+      pants: new THREE.Color(o.pants ?? (job ? job.pants[Math.min(job.pants.length - 1, ((card ? card.x : this.rng()) * job.pants.length) | 0)] : 0x3a3a3a)),
+      skin: new THREE.Color(o.skin ?? (card ? (card.w < 0.34 ? 0xd8b090 : card.w < 0.67 ? 0xc8a080 : 0xb89070) : (this.rng() < 0.34 ? 0xd8b090 : this.rng() < 0.5 ? 0xc8a080 : 0xb89070))),
       propPool,
       slots: {}, hatPool: '', halo: o.halo ?? false, sky: o.sky ?? false,
       hidden: false, freeze: o.freeze ?? false, attach: null, data: o.data ?? null,
@@ -1178,10 +1305,15 @@ export class Crowd {
       const hw = riverHalfWidth(a.pos.x);
       a.pos.z = cz + (a.pos.z >= cz ? 1 : -1) * (hw + 4.2);
     }
-    // 出生建筑守卫：摊主/名将这类给定坐标的角色若正好落在铺面里（实测茶博士的 (-36,58)
-    // 就在 9 座手工街屋「茶坊」(-36,62,11×9) 的台基内），出生即推到街面，否则整场都陷在地板下。
-    if (a.pos.y > -0.4 && a.pos.y < 12 && !a.sky) pushOutOfBuildings(a.pos);
-    if (a.hat === 0 && (card ? cardStraw(a.occ, card.s) : Math.random() < (STRAW_HAT[a.occ] ?? 0))) a.hat = 2;
+    // 出生行走面贴合（R27）：先看脚下有没有可行走面——
+    // 室内/台基/桥面就直接站上去（茶博士 (-36,58) 在茶坊 (–36,62) 室内，不再陷进 0.6m 台基），
+    // 真落在墙带里（walkSurfaceY === null）才用旧守卫推出墙面。
+    if (a.pos.y > -0.4 && a.pos.y < 12 && !a.sky) {
+      const sy = walkSurfaceY(a.pos.x, a.pos.z, a.pos.y);
+      if (sy === null) pushOutOfBuildings(a.pos);
+      else a.pos.y = sy;
+    }
+    if (a.hat === 0 && (card ? cardStraw(a.occ, card.s) : this.rng() < (STRAW_HAT[a.occ] ?? 0))) a.hat = 2;
     // W6 冠分型：按职业换冠（僧/道/童/女/兵必戴，官/士高档，其余七至九成）；显式传入的 hat 不覆盖
     const hatId = OCC_HAT[a.occ];
     if (hatId !== undefined && a.hat !== hatId && o.hat === undefined) {
@@ -1195,8 +1327,8 @@ export class Crowd {
     const sil = OCC_SIL[a.occ] ?? 0;
     const shoe = OCC_SHOE[a.occ] ?? 0;
     // 同职业内部色彩偏移（每个人独特）；卡种以卡种子定色，不再叠随机偏移（可复现优先）
-    if (o.cloth === undefined && !card) a.cloth.offsetHSL((Math.random() - 0.5) * 0.06, (Math.random() - 0.5) * 0.25, (Math.random() - 0.5) * 0.18);
-    if (o.pants === undefined && !card) a.pants.offsetHSL((Math.random() - 0.5) * 0.05, (Math.random() - 0.5) * 0.2, (Math.random() - 0.5) * 0.15);
+    if (o.cloth === undefined && !card) a.cloth.offsetHSL((this.rng() - 0.5) * 0.06, (this.rng() - 0.5) * 0.25, (this.rng() - 0.5) * 0.18);
+    if (o.pants === undefined && !card) a.pants.offsetHSL((this.rng() - 0.5) * 0.05, (this.rng() - 0.5) * 0.2, (this.rng() - 0.5) * 0.15);
     // 槽位分配
     const req: Record<string, number> = { head: 1, torso: 1, armU: 2, armL: 2, legU: 2, legL: 2, foot: 2, belt: 1, collar: 1, wrist: 2, sleeve: 2 };
     if (a.hat > 0) req[a.hatPool] = 1;
@@ -1218,11 +1350,12 @@ export class Crowd {
     if (a.propPool) a.slots.prop = bases[a.propPool];
     if (a.halo) { a.slots.halo = bases['halo']; a.slots.aura = bases['aura']; a.slots.lotus = bases['lotus']; a.slots.mandorla = bases['mandorla']; }
     if (o.headKit === 'beast') BEAST_IDS.add(a.id);
-    else LOOKS.set(a, makeLook(a.occ, this.wardrobe, bases, sil, shoe, o.headKit, card));
+    else LOOKS.set(a, makeLook(a.occ, this.wardrobe, bases, sil, shoe, this.rng, o.headKit, card));
     this.actors.push(a);
     // 所有角色出生即带行为类：第一帧的 __crowd.actions / 每格行为种类就是完整分布，
     // 不必等第一次 tick（否则快照会读到一堆 null，格子种类被低估）。
-    initBehavior(a);
+    // 随机源与 crowd 共用同一条流：行为初相位（车道/步速/类时长）也跟着种子走。
+    initBehavior(a, undefined, this.rng);
     return a;
   }
 
@@ -1300,7 +1433,7 @@ export class Crowd {
     }
     // 2m 排斥的空间哈希（与场所人群共用同一张表：见 occClear/occAdd）
     for (let i = queue.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(this.rng() * (i + 1));
       const t = queue[i]; queue[i] = queue[j]; queue[j] = t;
     }
     const clearAt = (x: number, z: number): number => this.occClear(x, z);
@@ -1323,7 +1456,7 @@ export class Crowd {
     };
     const pickAnchor = (c: number[]): Anchor => {
       const total = c[c.length - 1];
-      let r = Math.random() * total;
+      let r = this.rng() * total;
       let lo = 0, hi = c.length - 1;
       while (lo < hi) {
         const mid = (lo + hi) >> 1;
@@ -1334,8 +1467,8 @@ export class Crowd {
     // 沿街 ±12m / 横向 ±3.2m：把「节点珠链」摊成一片，桥面按坡度重算高度。
     // ±2.8 太窄（街宽 8–11m），出生时就已经是一条窄带；±3.2 让双向流各占一侧。
     const jitter = (b: Anchor): { x: number; y: number; z: number } => {
-      const along = (Math.random() * 2 - 1) * 12;
-      const across = (Math.random() * 2 - 1) * 3.2;
+      const along = (this.rng() * 2 - 1) * 12;
+      const across = (this.rng() * 2 - 1) * 3.2;
       const fx = Math.sin(b.dir), fz = Math.cos(b.dir);
       const x = b.x + fx * along + fz * across;
       const z = b.z + fz * along - fx * across;
@@ -1396,18 +1529,18 @@ export class Crowd {
     // 出生朝向：15% 横向穿行（±π/2）、13% 全向（斜穿/回头），其余沿街双向各半。
     // 旧版非穿行者只有 dir 与 dir+π 两档，出生瞬间就已经排成两列。
     let yaw: number;
-    const r = Math.random();
+    const r = this.rng();
     const crossing = r < CROSS_SHARE;
     if (crossing) {
-      yaw = (b ? b.dir : 0) + (Math.random() < 0.5 ? Math.PI / 2 : -Math.PI / 2) + (Math.random() - 0.5) * 0.8;
+      yaw = (b ? b.dir : 0) + (this.rng() < 0.5 ? Math.PI / 2 : -Math.PI / 2) + (this.rng() - 0.5) * 0.8;
     } else if (r < CROSS_SHARE + 0.13) {
-      yaw = Math.random() * Math.PI * 2;
+      yaw = this.rng() * Math.PI * 2;
     } else {
-      yaw = (b ? b.dir : 0) + (Math.random() < 0.5 ? 0 : Math.PI) + (Math.random() - 0.5) * 1.0;
+      yaw = (b ? b.dir : 0) + (this.rng() < 0.5 ? 0 : Math.PI) + (this.rng() - 0.5) * 1.0;
     }
     const a = this.spawnActor({ occ, pos: new THREE.Vector3(p.x, p.y, p.z), yaw });
     if (crossing) markCrossing(a);
-    initBehavior(a);   // 出生即定行为类：__crowd.actions 从第一帧起就是完整分布
+    initBehavior(a, undefined, this.rng);   // 出生即定行为类：__crowd.actions 从第一帧起就是完整分布
     this.spawned.add(a);
     return a;
   }
@@ -1456,8 +1589,12 @@ export class Crowd {
     return out;
   }
 
+  /**
+   * 行为层上下文：把 Crowd 的注入源一并传下去。出生与逐帧推进必须共用同一条随机流，
+   * 否则「人群生成确定、走两步又分叉」。clock 只在 ctx.t 缺失时才会被 behaviors 取用。
+   */
   ctx(camPos: THREE.Vector3, t = this.simT): BehCtx {
-    return { nav: this.nav, spots: this.spots, isNight: this.isNight, camPos, t };
+    return { nav: this.nav, spots: this.spots, isNight: this.isNight, camPos, t, rng: this.rng, clock: this.clock };
   }
 
   // ============ R12-C/D 场所人群：里坊 / 寺院 / 宫城 / 瓦舍 / 天宫 / 地府 ============
@@ -1612,12 +1749,12 @@ export class Crowd {
           const s = i % v.ring, k = Math.floor(i / v.ring);
           const span = (Math.PI * 2) / v.ring;
           const band = k % bands, slot = Math.floor(k / bands);
-          const ang = span * s + ((slot + 0.5) / slots - 0.5) * span * 0.86 + (Math.random() - 0.5) * span * 0.04;
-          const rr = v.r + (band - 1) * v.r * 0.11 + (Math.random() - 0.5) * 1.8;
+          const ang = span * s + ((slot + 0.5) / slots - 0.5) * span * 0.86 + (this.rng() - 0.5) * span * 0.04;
+          const rr = v.r + (band - 1) * v.r * 0.11 + (this.rng() - 0.5) * 1.8;
           x = v.x + Math.cos(ang) * rr; z = v.z + Math.sin(ang) * rr;
         } else {
-          const ang = Math.random() * Math.PI * 2;
-          const rr = Math.sqrt(Math.random()) * v.r;
+          const ang = this.rng() * Math.PI * 2;
+          const rr = Math.sqrt(this.rng()) * v.r;
           x = v.x + Math.cos(ang) * rr; z = v.z + Math.sin(ang) * rr;
         }
         // 与街道人群共用同一张 2m 占位表：场所落点也要避开已经在街上的人；
@@ -1628,9 +1765,9 @@ export class Crowd {
       if (!ok) continue; // 挤不下就少放一个，不硬塞重叠
       this.occAdd(x, z);
       const a = this.spawnActor({
-        occ: v.occ[Math.floor(Math.random() * v.occ.length)],
+        occ: v.occ[Math.floor(this.rng() * v.occ.length)],
         pos: new THREE.Vector3(x, v.y, z),
-        yaw: Math.random() * Math.PI * 2,
+        yaw: this.rng() * Math.PI * 2,
         sky: v.sky,
         action: 'stand',
         doing: '',
@@ -1640,7 +1777,7 @@ export class Crowd {
       setPost(a, v.ring
         ? { x, y: v.y, z, r: 10, kinds: v.kinds, venue: v.name }
         : { x: v.x, y: v.y, z: v.z, r: v.r, kinds: v.kinds, venue: v.name });
-      initBehavior(a, v.kinds);
+      initBehavior(a, v.kinds, this.rng);
       n++;
     }
     return n;
@@ -1891,7 +2028,8 @@ export class Crowd {
     // 每帧重建没有必要，4 帧 ≈ 66ms，远小于一个人走完半个身位的时间。
     if ((this.frame & 3) === 0) rebuildAvoidGrid(this.actors);
     const ctx = this.ctx(camPos, t);
-    const now = performance.now();
+    // 受击到期判定读注入时钟：旧实现读墙钟，暂停 / 快进 / 回放时僵直会按真实时间过期。
+    const now = this.clock();
     for (const a of this.actors) {
       // 动作变更检测：重置动作时间线（受击动作需要）
       if (a.action !== a.lastAction) { a.lastAction = a.action; a.actionT = 0; }
@@ -1910,8 +2048,14 @@ export class Crowd {
       keepOnBridgeDeck(a);
       // R20 河道不变量：行为层的横向穿行不许把人带进水面（attach 演员由各自系统定位，不在此列）
       if (!a.freeze && !a.attach && !a.sky && !a.hidden) keepOffRiver(a.pos);
-      // 建筑足迹不变量：铺面墙体不做碰撞体，靠这一道守卫把人推出墙面（见 pushOutOfBuildings）
-      if (a.pos.y > -5 && a.pos.y < 12 && !a.freeze && !a.attach && !a.sky && !a.hidden) pushOutOfBuildings(a.pos);
+      // 行走面兜底（R27）：移动积分已经挡墙/贴地；这里只救两类漏网——
+      // 出生时就在墙里的、被别的系统（击退/载具）塞进墙里的。每 4 帧查一次，避免每帧两次查询。
+      if (!a.freeze && !a.attach && !a.sky && !a.hidden && a.pos.y > -5 && a.pos.y < 12
+        && ((this.frame + a.id) & 3) === 0) {
+        const sy = walkSurfaceY(a.pos.x, a.pos.z, a.pos.y);
+        if (sy === null) pushOutOfBuildings(a.pos);
+        else if (Math.abs(a.pos.y - sy) > 0.02) a.pos.y = sy;
+      }
 
       // ---- 角色 LOD：四档 + 25% 滞回 ----
       const d2 = a.pos.distanceToSquared(camPos);
@@ -2036,9 +2180,10 @@ const OCC_ZONE: Record<string, Record<string, number>> = {
 export let camera0: THREE.Camera | null = null;
 export function setCameraRef(c: THREE.Camera): void { camera0 = c; }
 
-function pickHat(w: [number, number, number, number]): number {
+/** 冠帽四档权重 → 档位。rng 由调用方给（spawnActor 的注入源），不读全局随机。 */
+function pickHat(w: [number, number, number, number], rng: Random): number {
   const total = w[0] + w[1] + w[2] + w[3];
-  let r = Math.random() * total;
+  let r = rng() * total;
   for (let i = 0; i < 4; i++) { r -= w[i]; if (r <= 0) return i; }
   return 0;
 }

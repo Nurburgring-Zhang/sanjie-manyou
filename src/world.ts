@@ -1,6 +1,10 @@
 import * as THREE from 'three';
-const _skyTopHigh = new THREE.Color(0x14245c);
-const _skyBotHigh = new THREE.Color(0xffcf94);
+// 天宫穹顶高阶色。原值 0x14245c（深海军蓝）/ 0xffcf94（桃色）在 applyLighting 之后
+// 以 k*0.9 覆盖淡蓝灰天顶，两者混成整片紫褐，把白玉/金瓦/云海全糊掉。
+// 改成「晴空蓝 → 暖白金」的仙家天光，并把权重降到 0.55，让 applyLighting 的 _skyTopC 仍有一半话语权。
+const _skyTopHigh = new THREE.Color(0x4d8ecb);
+const _skyMidHigh = new THREE.Color(0xbcd8ee);
+const _skyBotHigh = new THREE.Color(0xf2e6cd);
 import { Engine } from './core/engine';
 import { Baker, BakerStats, SignAtlas, SignMesher } from './city/bake';
 import { buildNav, POIS, bridgeDeckY } from './city/layout';
@@ -25,7 +29,8 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { PoiGuide } from './game/poiGuide';
 import { buildSkyRealm, SkyCenters } from './sky/realm';
 import { DeityStage } from './sky/deities';
-import { Havoc } from './sky/havoc';
+import { Havoc, SKY_STAND_Y } from './sky/havoc';
+import { DEITIES } from './data/deities';
 import { ArenaBoss } from './game/boss';
 import { JULING } from './data/boss';
 import { Vfx } from './fx/vfx';
@@ -42,6 +47,7 @@ import { buildLingxiaoInterior, buildDoushuaiInterior, buildGuanghanInterior, bu
 import { buildUnderworldExpansion, buildCloudSeaView, CloudSeaHandle } from './sky/expansion';
 import { beautifyHeaven } from './sky/beautify';
 import { buildSkyExpansion } from './sky/expansion';
+import { HEAVEN_BASE_LIFTED, HEAVEN_LIFT, HEAVEN_Y_MIN, heavenPoint } from './sky/heavenFrame';
 import { buildTerrain, terrainHeight, waterAt as terrainWaterAt, scatterVegetation } from './world/terrain';
 import { MOUNTAINS } from './world/terrain';
 import { buildDesertOutpost } from './world/desertOutpost';
@@ -69,6 +75,23 @@ const idle = (timeoutMs: number): Promise<void> => new Promise((r) => {
   if (typeof w.requestIdleCallback === 'function') w.requestIdleCallback(() => r(), { timeout: timeoutMs });
   else setTimeout(r, Math.min(timeoutMs, 120));
 });
+/**
+ * 堆归因开关：只认 URL 查询参数 `?heapAudit=1`（`?heapAudit=0` 关闭）。
+ *
+ * 选 URL 而不是 `window.__heapAudit` 的理由：
+ *   ① 不依赖注入时序——`evaluateOnNewDocument` 若晚于模块求值，开关会静默失效；URL 在导航时
+ *      就已确定，dev server / preview / 打包 Electron 三处语义一致。
+ *   ② 可见、可审计：地址栏与日志里就写着「这次是归因跑」，不会被上一轮探针残留的全局变量
+ *      悄悄把生产载入拖慢 400ms（这正是本次要修掉的失败模式）。
+ *   ③ 任何探针不必改启动顺序就能复用，只要在 URL 上带参数。
+ */
+const heapAuditEnabled = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  try {
+    const v = new URLSearchParams(window.location.search).get('heapAudit');
+    return v !== null && v !== '0' && v !== 'false';
+  } catch { return false; }
+};
 /**
  * 把一块几何的所有缓冲**当场**还给分配器。
  *
@@ -155,6 +178,7 @@ const _sunDir = new THREE.Vector3();
 // ---- 天宫界域配色（参考「栖光·中式天宫」系列：淡蓝灰天 + 暖金晨光 + 翻涌白云）----
 // 人间黄昏是血红，直接套到天宫上就没有"仙境"感；y>150 时按高度过渡到这一套。
 const _skyTopC = new THREE.Color(0x7e97b4);   // 天顶：淡蓝灰
+const _skyMidC = new THREE.Color(0xa8c4dc);   // 中段霾带：比天顶更亮更浅
 const _skyBotC = new THREE.Color(0xeadcc6);   // 近地平：晨光暖白
 const _skyFogC = new THREE.Color(0xa8b6c6);   // 雾：云白偏冷（0xc9d4de 太浅，1km 外整片洗成白）
 const _skySunC = new THREE.Color(0xffd7a0);   // 日照：夕照暖金
@@ -165,6 +189,7 @@ const _underSun = new THREE.Color(0x661a14);
 const _underHemi = new THREE.Color(0x2a5a42);
 const _underGnd = new THREE.Color(0x101820);
 const _underTop = new THREE.Color(0x0d0308);
+const _underMid = new THREE.Color(0x1b0709);
 const _underBot = new THREE.Color(0x3a0a10);
 
 export interface HeroEntry { code: string; name: string; nick: string; group: string; doing: string; weapon: string; desc: string; x: number; z: number; sky: boolean }
@@ -178,6 +203,17 @@ export interface ObjectiveStep {
   /** 在目标链中的 1 基序号（含已完成节点） */
   index: number;
   total: number;
+}
+
+/** 活体神佛演员落位账（world.deitySpots，探针读点） */
+export interface DeityActorSpot {
+  name: string; home: string;
+  /** 缩放前口径（DeityStage 摆人用的原值） */
+  preX: number; preY: number; preZ: number;
+  /** heavenPoint 换算后的世界落点（脚底） */
+  x: number; y: number; z: number;
+  /** 缩放前环心与水平半径（判定「半径 ×HEAVEN_SCALE」用） */
+  cx: number; cz: number; r: number;
 }
 
 export class World {
@@ -198,6 +234,10 @@ export class World {
   audio = new Soundscape();
   atlas = new SignAtlas();
   centers!: SkyCenters;
+  /** 活体神佛演员落位账（探针读点）：缩放前口径 + heavenPoint 换算后的世界落点 + 环心/半径 */
+  deitySpots: DeityActorSpot[] = [];
+  /** 机检停摆开关：探针量落位时冻结 DeityStage 的每日编排（嫦娥绕月、哮天犬绕二郎神） */
+  deityHold = false;
   player!: PlayerController;
   interact!: InteractSystem;
   impacts!: ImpactSystem;
@@ -266,7 +306,15 @@ export class World {
         POIS['naihe'] = { name: '地府·奈何桥', pos: new THREE.Vector3(0, UNDER.y + 2, -60), radius: 18 };
         POIS['yanluo'] = { name: '地府·阎罗殿', pos: new THREE.Vector3(0, UNDER.y + 2, 60), radius: 22 };
         // 重建新增地标 POI（紫宸殿 y≈台基上）
-        POIS['jiangtai'] = { name: '天宫·将台', pos: new THREE.Vector3(0, 214, 20), radius: 16, sky: true };
+        // 天宫·将台：boss 战恢复点（data/boss.ts:47 recoverPoi='jiangtai'），落斗法云台台面，不是巡天將臺。
+        // 旧值 (0,214,20) 是混合口径（x/z 旧世界米 + y 缩放前米）：liftHeavenResiduals 只补 +HEAVEN_LIFT，
+        // 实测 (0,2149,20) 埋进云台石座 4.26m（探针 ground=2147.28）。改走唯一换算 heavenPoint：
+        // 落脚面取云台铺装顶 206.12（realm.ts:36 platform() 台面 y+0.12；havoc.ts:26 SKY_STAND_Y.arena），
+        // z=9.09 即原世界 z=20÷2.2 —— 落在将台（realm.ts:699 platform(0,214,20,12)）台脚，
+        // 并保留「将台/星宿中心差 10m」的既有导引间距（objectiveReached 注释）。
+        // 远射线实测命中的是将台台面 2170.86：落点位于台身悬挑之下，探针只判近射线落脚面，不判净空。
+        // 另：palace.ts:2067 的巡天將臺 (22,206,−35) 是独立建筑，与本 POI 的 boss 战场不是同一 host。
+        POIS['jiangtai'] = { name: '天宫·将台', pos: new THREE.Vector3(...heavenPoint(0, 206.12, 9.09)), radius: 16, sky: true };
         POIS['zichen'] = { name: '紫宸殿', pos: new THREE.Vector3(0, 6, -4040), radius: 40 };
         POIS['fengdu'] = { name: '地府·丰都鬼城', pos: new THREE.Vector3(540, UNDER.y + 2, 85), radius: 120 };
         POIS['shibayu'] = { name: '地府·十八狱环', pos: new THREE.Vector3(0, UNDER.y + 2, 55), radius: 60 };
@@ -274,7 +322,11 @@ export class World {
         POIS['sansheng'] = { name: '地府·三生石', pos: new THREE.Vector3(24, UNDER.y + 2, -104), radius: 10 };
         POIS['wangxiang'] = { name: '地府·望乡台', pos: new THREE.Vector3(-150, UNDER.y + 18, -150), radius: 14 };
         POIS['scroll'] = { name: '上河长卷（横向观画）', pos: new THREE.Vector3(-560, 9, 46), radius: 10 };
-        POIS['star9'] = { name: '天宫·星宿九府', pos: new THREE.Vector3(0, 216, 30), radius: 46, sky: true }; // B10 迁两列中点
+        // 天宫·星宿九府：host 待定——九府是 x≈±215~230、z −70~80 的两列岛链（realm.ts:2207 buildStarPalaces），
+        // 没有单点可站；本 POI 是 B10「两列中点」的片区标记，只把混合口径收进 heavenPoint：
+        // z=13.64 即原世界 z=30÷2.2，落脚面同斗法云台 206.12（远射线命中将台台面 2170.86，与将台同在悬挑下）。
+        // 若日后为九府建岛链集散点，改 pos 即可，不动 radius 语义。
+        POIS['star9'] = { name: '天宫·星宿九府', pos: new THREE.Vector3(...heavenPoint(0, 206.12, 13.64)), radius: 46, sky: true }; // B10 迁两列中点
         // 2026-11-01 巡检修复「传送凌霄宝殿 95% 纯白」：天宫几何在 sky/expansion.ts 里被整体放大
         // HEAVEN_SCALE=2.2×（绕 (0,196,0)），而 layout.ts 的 lingxiao 仍是**放大前**的 palace 锚点
         // (0,214,95)。放大后该点落在斗法云台台体内部（台面 y≈235.7，落点 y=214 埋进石座 21m），
@@ -450,6 +502,10 @@ export class World {
       }],
       ['云起天宫', () => {
         this.centers = buildSkyRealm(baker, sg, this.atlas, this.crowd.poolSet(), scene, rng);
+        // 天宫整层抬升：SkyCenters 是**缩放前**坐标，几何稍后由 scaleHeavenGeometry 统一放大+抬升；
+        // 这里先把弧心抬到新高度，后续 DeityStage/Havoc/Boss/香炉 VFX 直接读到抬升后的值，
+        // 不必在每个消费者里再写一遍 +HEAVEN_LIFT（那必然漏）。
+        for (const v of Object.values(this.centers)) v.y += HEAVEN_LIFT;
         this.starsMesh = scene.getObjectByName('stars') as THREE.Points;
         this.milkyMesh = scene.getObjectByName('milkyway') as THREE.Points;
         this.skyLayers = ['stars', 'milkyway', 'sky_river', 'pool_cloudFar']
@@ -458,6 +514,8 @@ export class World {
       }],
       ['仙界装点', () => {
         islandsCache = beautifyHeaven(baker, scene, rng);
+        // 云瀑粒子落点不是烘焙几何（vfx 按坐标喷粒子），随整层一起抬，否则水会从 1935m 下往上喷。
+        for (const p of islandsCache) p.y += HEAVEN_LIFT;
       }],
       ['云海·宫阙群', async () => {
         await buildSkyExpansion(baker, this.crowd.poolSet(), scene, rng);
@@ -540,7 +598,8 @@ export class World {
           this.dynamicLights.push({ l: pl, base: L.int });
         }
         this.vfx = new Vfx(scene);
-        this.vfx.addEmberSource(this.centers.furnace.clone().add(new THREE.Vector3(3.4, 2.4, 0)));
+        // 丹炉口（furnace.x + 3.4, 炉身 +2.4, furnace.z）也是缩放前口径：与演员同一套 heavenPoint
+        this.vfx.addEmberSource(new THREE.Vector3(...heavenPoint(this.centers.furnace.x + 3.4, SKY_STAND_Y.furnace + 2.4, this.centers.furnace.z)));
         for (const w of islandsCache) this.vfx.addWaterfall(w);
         this.vfx.setPetals(0.12);
       }],
@@ -582,12 +641,13 @@ export class World {
       }],
       ['神佛就位', () => {
         this.deities = new DeityStage(this.crowd, this.centers, rng, this.vfx);
+        this.standDeityActors();
         this.havoc = new Havoc(this.crowd, this.deities, this.centers, this.vfx);
         // 首个遭遇：擂台上的巨灵神。用已有个体做化身，不新增角色池消耗。
         this.boss = new ArenaBoss(
           JULING,
           this.deities.map.get(JULING.name),
-          this.centers.arena.clone(),
+          new THREE.Vector3(...heavenPoint(this.centers.arena.x, SKY_STAND_Y.arena, this.centers.arena.z)),
           this.vfx,
           () => this.player,
           () => {
@@ -763,16 +823,24 @@ export class World {
     }
     // 合批前等一次 idle：给 idle GC 一个明确的结算点，`__heapPre` 才是「合批真实起点」，
     // 否则量到的是还没被回收的生成期垃圾（实测同一份代码 pre 在 1448–1873MB 之间乱跳）。
-    {
+    // 但这只是**测量仪器**，不是生产载入的一部分：Promise.all 取慢者 ⇒ 硬下界 400ms，
+    // 且整段落在 __loadStartAt..__loadEndAt 之内（即 engineMs，红线 12s 只剩几十毫秒余量）。
+    // 故只在 ?heapAudit=1 时执行；关闭时连 idle/sleep 都不排，engineMs 直接省掉这一档。
+    const heapAudit = heapAuditEnabled();
+    if (typeof window !== 'undefined') (window as unknown as { __heapAuditOn?: boolean }).__heapAuditOn = heapAudit;
+    if (heapAudit) {
+      const tSettle = performance.now();
       phase('settle');
       await Promise.all([idle(800), new Promise<void>((resolve) => setTimeout(resolve, 400))]);
+      (window as unknown as { __settleMs?: number }).__settleMs = Math.round(performance.now() - tSettle);
     }
     // 峰值堆归因：记录合批前后的堆。合并期**源几何与合并结果同时驻留**是原本的假设，
     // 改法见 compactStatic/releaseGeometry 的头注（同步归还，不再靠 GC 追赶）。
+    // 归因关闭时不测量：写 -1 明确表示「未测量」，避免下游把 undefined 当 0、或读到同页上一轮的残留值。
     {
       const mem = (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory;
       const w = window as unknown as { __heapPre?: number };
-      if (mem) w.__heapPre = Math.round(mem.usedJSHeapSize / 1048576);
+      w.__heapPre = heapAudit && mem ? Math.round(mem.usedJSHeapSize / 1048576) : -1;
     }
     phase('compact');
     await compactStatic();
@@ -785,6 +853,8 @@ export class World {
     // R19：云海从 city_fabric 切出来单独淡出。必须在 compactStatic 之后——切分对象是合并后的整块几何，
     // 之前各步的 city_fabric 碎片还没合批，切一次会有大半云海留在原网格里继续糊在天上。
     this.cloudSea = buildCloudSeaView(scene);
+    // 几何已由 scaleHeavenGeometry 统一「缩放 + 抬升」；下面把不经过顶点通道的几类对象补齐。
+    this.liftHeavenResiduals();
     // 生成结束时间戳：与 __loadStartAt 一起界定「世界生成期」，把首帧着色器编译排除在阻塞统计外
     if (typeof window !== 'undefined') (window as unknown as { __loadEndAt?: number }).__loadEndAt = performance.now();
     if (typeof window !== 'undefined') {
@@ -821,13 +891,23 @@ export class World {
     this.fill = new THREE.DirectionalLight(0x8aa0c8, 0.95);
     this.fill.name = 'fill';
     scene.add(this.fill); scene.add(this.fill.target);
+    // 三段式穹顶：h=0.5 是地平线；t=pow(h,0.45) 把 0°/10°/20°/40°/90° 仰角映到
+    // 0.732/0.786/0.840/0.915/1.0。暖橙只守到 ~8°，8–21° 抬到亮蓝灰霾带，21° 以上
+    // 再压到天顶蓝 —— 暖冷之间永远经过高亮度色，不会停在中性紫灰（旧两色直插的病灶）。
     this.domeMat = new THREE.ShaderMaterial({
       side: THREE.BackSide, depthWrite: false, fog: false,
-      uniforms: { uTop: { value: new THREE.Color(0x1a2b52) }, uBot: { value: new THREE.Color(0xd46a2e) } },
+      uniforms: {
+        uTop: { value: new THREE.Color(0x1a2b52) },
+        uMid: { value: new THREE.Color(0x9fb4cc) },
+        uBot: { value: new THREE.Color(0xd46a2e) },
+      },
       vertexShader: `varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-      fragmentShader: `uniform vec3 uTop; uniform vec3 uBot; varying vec3 vP;
+      fragmentShader: `uniform vec3 uTop; uniform vec3 uMid; uniform vec3 uBot; varying vec3 vP;
         void main(){ float h = clamp(normalize(vP).y * 0.5 + 0.5, 0.0, 1.0);
-        vec3 c = mix(uBot, uTop, pow(h, 0.45)); gl_FragColor = vec4(c, 1.0); }`,
+        float t = pow(h, 0.45);
+        vec3 c = mix(uBot, uMid, smoothstep(0.735, 0.845, t));
+        c = mix(c, uTop, smoothstep(0.845, 0.99, t));
+        gl_FragColor = vec4(c, 1.0); }`,
     });
     const dome = new THREE.Mesh(new THREE.SphereGeometry(46000, 32, 16), this.domeMat);
     dome.renderOrder = -10;
@@ -857,14 +937,17 @@ export class World {
       new THREE.Vector3(-120, 22, 20), new THREE.Vector3(-10, 24, 4), new THREE.Vector3(70, 20, 28),
       new THREE.Vector3(150, 15, 54), new THREE.Vector3(270, 13, 50), new THREE.Vector3(390, 17, 44),
       new THREE.Vector3(480, 24, 48), new THREE.Vector3(540, 40, 78), new THREE.Vector3(320, 150, 168),
-      new THREE.Vector3(0, 214, 150), new THREE.Vector3(-60, 210, 40), new THREE.Vector3(0, 120, 120),
+      // 末段是「钻到天宫底盘下方仰看」的镜头：旧值 214/210 是台面下 4m；抬升后同步 +HEAVEN_LIFT，
+      // 否则开场会飞到 2150m 高台下的空气里，什么都看不到。最后一点 120 是回落人间，不动。
+      new THREE.Vector3(0, 214 + HEAVEN_LIFT, 150), new THREE.Vector3(-60, 210 + HEAVEN_LIFT, 40), new THREE.Vector3(0, 120, 120),
     ]);
     const look = new THREE.CatmullRomCurve3([
       new THREE.Vector3(-380, 5, 18), new THREE.Vector3(-260, 4, 4), new THREE.Vector3(-140, 3, 0),
       new THREE.Vector3(-20, 10, 0), new THREE.Vector3(0, 12, 0), new THREE.Vector3(120, 6, 40),
       new THREE.Vector3(180, 6, 40), new THREE.Vector3(280, 6, 26), new THREE.Vector3(400, 8, 18),
-      new THREE.Vector3(480, 10, 26), new THREE.Vector3(320, 60, 80), new THREE.Vector3(60, 200, 60),
-      new THREE.Vector3(0, 208, 10), new THREE.Vector3(0, 60, 60), new THREE.Vector3(0, 20, 60),
+      // 视线目标同样跟着天宫底盘走（200/208 是旧台面下的仰视点）。
+      new THREE.Vector3(480, 10, 26), new THREE.Vector3(320, 60, 80), new THREE.Vector3(60, 200 + HEAVEN_LIFT, 60),
+      new THREE.Vector3(0, 208 + HEAVEN_LIFT, 10), new THREE.Vector3(0, 60, 60), new THREE.Vector3(0, 20, 60),
     ]);
     this.engine.setCinemaPath(pos, look, 84);
   }
@@ -879,6 +962,7 @@ export class World {
     // 平移跟随是天空盒的标准做法，且球壁距观察者恒为 46000，永远在 far 之内。
     this.skyDome.position.copy(cam.position);
     this.domeMat.uniforms.uTop.value.copy(time.skyTop);
+    this.domeMat.uniforms.uMid.value.copy(time.skyMid);
     this.domeMat.uniforms.uBot.value.copy(time.skyBot);
     const fog = this.engine.scene.fog as THREE.FogExp2;
     fog.color.copy(time.fogColor);
@@ -903,12 +987,14 @@ export class World {
     // 天庭高度：雾再按高度收敛，否则云上看下去只剩一片沙色浓雾，看不见脚下城郭
     // 天庭高度再收敛：原 0.34 仍把浮岛侧面糊成一片灰白（就是「薄饼感」的来源之一），
     // 降到 0.14 让 300–600m 外的岛锥露出岩层轮廓，同时保留远山的空气透视。
-    fog.density *= THREE.MathUtils.lerp(1, 0.14, THREE.MathUtils.clamp((cam.position.y - 120) / 110, 0, 1));
+    // 120 是旧天宫云层下沿；整层抬升后按 +HEAVEN_LIFT 同步，否则在 2131 的天宫里雾永远是街面档。
+    fog.density *= THREE.MathUtils.lerp(1, 0.14, THREE.MathUtils.clamp((cam.position.y - (120 + HEAVEN_LIFT)) / 110, 0, 1));
     if (this.hazeMatRef) {
       this.hazeMatRef.color.copy(time.fogColor).lerp(time.skyBot, 0.25);
       // 地平霾环（r=14–33km、opacity .82）按高度淡出：它在人间压远地平线掠射伪影是必要的，
       // 但升到云上会加一层灰（非主因，主因是穹顶，见 applySkyDomeTint）。120m 起、210m 归零。
-      this.hazeMatRef.opacity = 0.82 * (1 - THREE.MathUtils.clamp((cam.position.y - 120) / 90, 0, 1));
+      // 120m 起、210m 归零（旧天宫高度带）→ 整层抬升后同步 +HEAVEN_LIFT。
+      this.hazeMatRef.opacity = 0.82 * (1 - THREE.MathUtils.clamp((cam.position.y - (120 + HEAVEN_LIFT)) / 90, 0, 1));
     }
     GLOW_MAT.color.setScalar(Math.min(1.02, time.neon));
     // 精修5：室内/界域点光昼夜节律（白天保 30% 暗处可读，夜满亮；与烘焙 glow 同源 neon）
@@ -922,12 +1008,14 @@ export class World {
     // 星河/银河仅夜间可见（黄昏留可见下限会在天际线浮白色方块带）
     if (this.starsMesh) (this.starsMesh.material as THREE.PointsMaterial).opacity = THREE.MathUtils.clamp((time.neon - 0.95) * 2.2, 0, 0.92);
     if (this.milkyMesh) (this.milkyMesh.material as THREE.PointsMaterial).opacity = THREE.MathUtils.clamp((time.neon - 0.95) * 1.1, 0, 0.5);
-    // 天宫氛围：相机升到云海之上（y>150）后，天穹/雾/日照整档换成「淡蓝灰天 + 暖金晨光」。
+    // 天宫氛围：相机升到云海之上后，天穹/雾/日照整档换成「淡蓝灰天 + 暖金晨光」。
     // 参考视频里天宫的基调是晨间的清透蓝灰，不是人间的血红黄昏；不换的话云海会被染成红汤。
+    // 旧阈值 150 是「天宫在 ~200m」时代的数；整层抬升后按 +HEAVEN_LIFT 同步。
     {
-      const sf = THREE.MathUtils.clamp((cam.position.y - 150) / 90, 0, 1);
+      const sf = THREE.MathUtils.clamp((cam.position.y - (150 + HEAVEN_LIFT)) / 90, 0, 1);
       if (sf > 0.001) {
         this.domeMat.uniforms.uTop.value.lerp(_skyTopC, sf);
+        this.domeMat.uniforms.uMid.value.lerp(_skyMidC, sf);
         this.domeMat.uniforms.uBot.value.lerp(_skyBotC, sf);
         fog.color.lerp(_skyFogC, sf);
         fog.density = THREE.MathUtils.lerp(fog.density, 0.00006, sf);
@@ -951,13 +1039,14 @@ export class World {
     }
     // 地府氛围：仅当玩家真正下探到幽冥层（y<-100）才过渡，地面为 0
     if (this.player) {
-      // 以相机高度为主、角色高度为辅：飞行/传送机位下探幽冥也能拿到地府氛围，
-      // 否则从地府仰望会看到阳间天穹与山体倒挂。
-      const depthY = Math.min(this.player.actor.pos.y, cam.position.y);
-      // 过渡带 160m → 120m：地府台面在 −260，相机常在 −219…−240，
-      // 用 160 时 uf 只到 0.74，雾色里还留着 26% 的人间暮色（浅紫），岩顶因此读成灰紫平色。
-      // 120 之下 −220 即达 0.99，岩顶才落到真正的深栗雾里。
-      const uf = THREE.MathUtils.clamp((-depthY - 100) / 120, 0, 1);
+      // 只认相机高度：旧版取 min(玩家.y, 相机.y)，玩家从殿前挪到荒野时 uf 从 0.79 跳到 1，
+      // 同一机位雾色 #170407 → #150406、密度 0.01350 → 0.02243（C1 探针实测）。
+      // 渲染结果只允许由「相机位置 + 时间相位」决定，玩家状态不得参与——否则同一帧
+      // 换个人站法画面就换一套雾，可复现性直接没了。
+      const depthY = cam.position.y;
+      // 过渡带 120m → 60m：地府岩顶板在 −46…−104，进洞即该换天光；
+      // 60m 让 u_hero（相机 −195）落到 uf=1，背景不再残留 21% 人间暮色暖雾。
+      const uf = THREE.MathUtils.clamp((-depthY - 100) / 60, 0, 1);
       if (uf > 0.001) {
         fog.color.lerp(_underFog, uf);
         // 地府雾比人间浓一档：岩顶板在 −46…−104，从台面（−260）仰视有 120–210m，
@@ -971,6 +1060,7 @@ export class World {
         this.hemi.color.lerp(_underHemi, uf);
         this.hemi.groundColor.lerp(_underGnd, uf);
         this.domeMat.uniforms.uTop.value.lerp(_underTop, uf);
+        this.domeMat.uniforms.uMid.value.lerp(_underMid, uf);
         this.domeMat.uniforms.uBot.value.lerp(_underBot, uf);
         const skyHidden = uf > 0.5;
         for (const o of this.skyLayers) o.visible = !skyHidden;
@@ -984,15 +1074,18 @@ export class World {
 
   /**
    * 地府命名 POI 保护系数：0 = 落在某个地府 POI 的可读半径内，1 = 完全在野外深域。
-   * 半径取注册值（丰都/十八狱这种大区封顶 60m），外侧再用 0.8r 做 smoothstep 过渡，
-   * 使「站在阎罗殿前」与「走进殿后的荒原」是连续渐变而不是硬跳。
+   *
+   * `halo` 是给第三人称机位留的外扩：CAM_OFF 常把相机摆在落点后 70–90m（阎罗殿 92m），
+   * 只按 POI 自身半径判，相机会被判成「野外」，目的地反而最黑。
+   * 旧版用 min(相机, 玩家) 补这个盲区，代价是雾随玩家位置跳变；外扩半径只跟相机有关，
+   * 同一相机永远得到同一结果。
    */
-  private hellPoiShield(x: number, z: number): number {
+  private hellPoiShield(x: number, z: number, halo = 0): number {
     let shield = 1;
     for (const key in POIS) {
       const p = POIS[key];
       if (p.pos.y > -100) continue;              // 只保护地府层（人间/天宫都在 y > −100）
-      const r = Math.min(p.radius || 14, 60);
+      const r = Math.min((p.radius || 14) + halo, 120);
       const d = Math.hypot(x - p.pos.x, z - p.pos.z);
       const t = THREE.MathUtils.clamp((d - r) / Math.max(6, r * 0.8), 0, 1);
       shield = Math.min(shield, t * t * (3 - 2 * t));
@@ -1015,34 +1108,116 @@ export class World {
     // 2026-11-01 修黑屏：原来 `density *= 1 + 9k`，阎罗殿（dIn≈212 → k≈0.83）把雾密度乘到 8.5 倍，
     // 92m 外殿体透过率≈0 ⇒ 传送到阎罗殿/十八狱是**满屏纯黑**（巡检实测中位亮度 1/255、p95 17）。
     // 这不是"越往里越黑"该有的效果——那两个是**目的地**，不是深渊。
-    // 2026-11-01 二修（按 POI 分档）：全局钳制会把整层地府锁在 0.0135，深处永远到不了"伸手不见五指"。
-    // 现在改成分档曲线：命名 POI 半径内保可读（上限 0.0135，100m 处透过率 ≥12%），
-    // POI 外随 shield 抬到 0.052（30m 处 9%、50m 处 0.1% ⇒ 接近全黑）。
-    const shield = this.hellPoiShield(cam.position.x, cam.position.z);
-    // 第三人称机位离落点常 70–90m（如阎罗殿 CAM_OFF 是 [0,26,92]），只按相机判会把**目的地也判成野外**
-    // （首版实测：传送到阎罗殿后画面反而更黑）。化身在 POI 内同样算保护——玩家站着的地方必须读得清。
-    const pl = this.player?.actor?.pos;
-    const shieldMin = pl && pl.y < -100 ? Math.min(shield, this.hellPoiShield(pl.x, pl.z)) : shield;
-    const cap = THREE.MathUtils.lerp(0.0135, 0.052, shieldMin);
+    // 2026-11-01 二修（按 POI 分档）：全局钳制会把整层地府锁在一个密度上，深处永远到不了"伸手不见五指"。
+    // 现在改成分档曲线：命名 POI 半径内保可读，POI 外随 shield 抬到 0.052（30m 处 9%、50m 处 0.1% ⇒ 接近全黑）。
+    // 相机外扩 60m：CAM_OFF 把第三人称机位摆在落点后 70–90m（阎罗殿 92m），
+    // 只按落点半径判会把**目的地本身**判成野外（首版实测：传送到阎罗殿后画面反而更黑）。
+    // 外扩只读相机，不读玩家——旧版 min(相机, 玩家) 就是 C1「只挪玩家雾就跳变」的来源。
+    const shield = this.hellPoiShield(cam.position.x, cam.position.z, 60);
+    // POI 上限 0.0135 → 0.0105：92m 处透过率从 0.21 抬到 0.39（≥0.35 的验收线），
+    // 殿体不再是雾里的剪影；POI 外仍按 shield 抬到 0.052（30m 处 9%、50m 处 0.1% ⇒ 近全黑），
+    // 「往里走逐渐变黑」的纵深曲线不受影响。
+    const cap = THREE.MathUtils.lerp(0.0105, 0.052, shield);
     fog.density = Math.min(fog.density * (1 + 9 * k), cap);
     // 颜色/自发光压暗同样分档：POI 内只压 35%，野外按原曲线压到 28%
-    const dark = 0.72 * k * (0.35 + 0.65 * shieldMin);
+    const dark = 0.72 * k * (0.35 + 0.65 * shield);
     fog.color.multiplyScalar(1 - dark);
     GLOW_MAT.color.multiplyScalar(1 - dark);
   }
 
   /**
-   * 天宫穹顶染色：人间用的黄昏渐变（skyTop 0x2e4066 / skyBot 0xc4764a）升到云上会把整个画面压成灰纸。
+   * 天宫穹顶染色：人间用的黄昏渐变（skyTop 蓝 / skyMid 亮蓝灰 / skyBot 暖橙）升到云上会把整个画面压成灰纸。
    * 证据：`shot-hide nodome`（仅隐藏 r>40000 的穹顶两网格）→ 天空变黑、浮岛岩锥立刻清晰；
-   * 而改霾环/雾/云海材质均无视觉变化。必须写在本函数末尾：applyLighting 里会重设 uTop/uBot。
+   * 而改霾环/雾/云海材质均无视觉变化。必须写在本函数末尾：applyLighting 里会重设 uTop/uMid/uBot。
    */
   private applySkyDomeTint(): void {
     const cam = this.engine.camera;
-    const k = THREE.MathUtils.clamp((cam.position.y - 120) / 90, 0, 1);
+    // 旧 120m 是天宫云层下沿；抬升后同步（否则天宫穹顶会提前 1935m 就染成仙家天色）。
+    const k = THREE.MathUtils.clamp((cam.position.y - (120 + HEAVEN_LIFT)) / 90, 0, 1);
     if (k <= 0) return;
     const u = this.domeMat.uniforms;
-    u.uTop.value.lerp(_skyTopHigh, k * 0.9);
-    u.uBot.value.lerp(_skyBotHigh, k * 0.75);
+    u.uTop.value.lerp(_skyTopHigh, k * 0.55);
+    u.uMid.value.lerp(_skyMidHigh, k * 0.55);
+    u.uBot.value.lerp(_skyBotHigh, k * 0.5);
+  }
+
+  /**
+   * 活体神佛演员落位：DeityStage 构造之后补一次统一换算。
+   *
+   * DeityStage 用 SkyCenters 的**混合口径**摆人：x/z 是缩放前、y 已经 +HEAVEN_LIFT，
+   * 且 y 取的是云台名义高而不是可站的面（arenaW/E/N/S 写 208 而台面 206.12、
+   * palace 写 214 被凌霄殿台基整片埋掉、high 写 223 是斗法台上方的悬空点）。
+   * 于是演员比台面低 12–22m、水平半径只有应给的 1/2.2，等于站在台基/岩体里面。
+   *
+   * 这里与天宫石像（sky_pantheon，deities.ts buildShrines）同一套口径收口：
+   * 脚底取该 host 的落脚面 SKY_STAND_Y（与 Havoc 共用一张表），x/z 与环偏移
+   * 仍是 DeityStage 的缩放前米，落位时统一走 heavenPoint —— 不另立第二套换算。
+   */
+  private standDeityActors(): void {
+    const homes = new Map(DEITIES.map((d) => [d.name, d.home]));
+    // 莲台顶面半径（realm.ts lotusPad：lotus r=5 / lotus2 r=3.6）。DeityStage 的环半径
+    // 3.8 对 lotus2 会落到莲瓣斜面外、悬空 2.07m；莲台上的演员一律收到台面内。
+    const LOTUS_TOP_R: Record<string, number> = { lotus: 5, lotus2: 3.6 };
+    const spots: DeityActorSpot[] = [];
+    for (const [name, a] of this.deities.map) {
+      const home = homes.get(name) ?? 'arena';
+      const c = this.centers[home as keyof SkyCenters] ?? this.centers.arena;
+      let preX = a.pos.x;
+      let preZ = a.pos.z;
+      const lr = LOTUS_TOP_R[home];
+      if (lr) {
+        const dx = preX - c.x, dz = preZ - c.z;
+        const d = Math.hypot(dx, dz);
+        const lim = lr - 0.6;
+        if (d > lim) { preX = c.x + (dx / d) * lim; preZ = c.z + (dz / d) * lim; }
+      }
+      const preY = SKY_STAND_Y[home] ?? a.pos.y - HEAVEN_LIFT;
+      const [x, y, z] = heavenPoint(preX, preY, preZ);
+      a.pos.set(x, y, z);
+      spots.push({
+        name, home, preX, preY, preZ, x, y, z,
+        cx: c.x, cz: c.z, r: Math.hypot(preX - c.x, preZ - c.z),
+      });
+    }
+    this.deitySpots = spots;
+  }
+
+  /**
+   * 天宫整层抬升的补扫（幂等）。
+   *
+   * `scaleHeavenGeometry` 只改 Mesh 顶点；演员、POI、云团实例池是数据对象，不走那条通道：
+   *  · 演员：SkyCenters 已在「云起天宫」早抬，但各模块自带的 spawn 常量（灵猴 202、赵公明 208 等）
+   *    仍在旧高度，统一补一次；
+   *  · POI：天宫点位写在 layout.ts / palace.ts，传送落点必须与几何同高；
+   *  · pool_cloud：realm.ts 用实例矩阵在 206–214 摆的云团，不是顶点几何。
+   * 判据用 [HEAVEN_Y_MIN, HEAVEN_BASE_LIFTED)：人间 <150、地府为负都不会被误抬；
+   * 已经抬过的对象（≥2131）也不会被抬第二次，所以本函数可以安全重入。
+   */
+  private liftHeavenResiduals(): void {
+    for (const a of this.crowd?.actors ?? []) {
+      if (a.pos.y >= HEAVEN_Y_MIN && a.pos.y < HEAVEN_BASE_LIFTED) a.pos.y += HEAVEN_LIFT;
+    }
+    for (const key in POIS) {
+      const p = POIS[key];
+      if (p.sky && p.pos.y >= HEAVEN_Y_MIN && p.pos.y < HEAVEN_BASE_LIFTED) p.pos.y += HEAVEN_LIFT;
+    }
+    const pool = this.engine.scene.getObjectByName('pool_cloud') as THREE.InstancedMesh | undefined;
+    if (pool?.isInstancedMesh) {
+      const m = new THREE.Matrix4();
+      let maxY = -Infinity;
+      for (let i = 0; i < pool.count; i++) {
+        pool.getMatrixAt(i, m);
+        maxY = Math.max(maxY, m.elements[13]);
+      }
+      if (maxY > -Infinity && maxY < HEAVEN_BASE_LIFTED) {
+        for (let i = 0; i < pool.count; i++) {
+          pool.getMatrixAt(i, m);
+          m.elements[13] += HEAVEN_LIFT;
+          pool.setMatrixAt(i, m);
+        }
+        pool.instanceMatrix.needsUpdate = true;
+      }
+    }
   }
 
   private updateIndoorBloom(): void {
@@ -1099,7 +1274,8 @@ export class World {
     this.applySkyDomeTint();
     // 远景云海仅在高空可见（地面视角不遮挡城区）
     const cf = this.engine.scene.getObjectByName('pool_cloudFar');
-    if (cf) cf.visible = this.engine.camera.position.y > 120;
+    // 远景云海在旧天宫高度（120m 以上）才可见；整层抬升后改用 +HEAVEN_LIFT 的相对阈值。
+    if (cf) cf.visible = this.engine.camera.position.y > 120 + HEAVEN_LIFT;
     // R19：云海盘按观察者高度淡出——地面 ≤90m 时整片隐藏，≥180m 才满不透明。
     // 缺这一句时云海永远是满不透明的一块暗板，从地面看就是横贯地平线的一条黑带/黑圆。
     this.cloudSea?.setViewerY(this.engine.camera.position.y);
@@ -1107,7 +1283,7 @@ export class World {
     this.heroStage.update(t, dt);
     this.units.update(t, dt);
     this.units.updatePlayerBoat();
-    this.deities.update(t, dt);
+    if (!this.deityHold) this.deities.update(t, dt);
     this.boss.update(dt);
     // 界域可行走平面：相机夹取要用它，否则地府/天宫里的移动会把相机夹回人间地面
     this.engine.realmFloor = this.player?.realmY ?? 1.7;
@@ -1121,7 +1297,8 @@ export class World {
     }
     // 三界音轨：跨界才发事件（每帧发会把 gain 调度打满）
     const cy = this.engine.camera.position.y;
-    const realm = cy < -100 ? 'difu' : cy > 120 ? 'tiangong' : 'renjian';
+    // 旧 120 是「天宫在 200m」时代的分界；抬升后人在 1000m 中空不该再算天宫。
+    const realm = cy < -100 ? 'difu' : cy > 120 + HEAVEN_LIFT ? 'tiangong' : 'renjian';
     if (realm !== this.audioRealm) {
       this.audioRealm = realm;
       bus.emit('realm:change', realm);

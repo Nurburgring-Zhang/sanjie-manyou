@@ -5,6 +5,8 @@ import { PITCH_LIMIT, type Engine } from '../core/engine';
 import { bridgeDeckY, bridgeDeckYAt, BRIDGE_HALF } from '../city/layout';
 import { terrainHeight, waterAt } from '../world/terrain';
 import { bus } from '../core/rng';
+import { legacyClock, type Clock } from '../actors/behaviors';
+import { HEAVEN_LIFT, HEAVEN_SCALE, heavenPoint } from '../sky/heavenFrame';
 
 // ============ 玩家化身：GTA 式第三人称控制（附身模式） ============
 export type PlayerMode = 'soul' | 'avatar';       // 灵魂相机 / 附身
@@ -58,8 +60,20 @@ export class PlayerController {
   boat: DriveBoat | null = null;
   interact: { pos: THREE.Vector3; r: number; label: string; exec: () => void } | null = null;
   busyUntil = 0;                                  // 交互动作锁定
-  private downX = 0; private downY = 0;
+  /**
+   * 注入时钟（毫秒）：busy/交互锁定的时间基准。默认 legacyClock（宿主 performance.now），
+   * 单机行为不变；无头测试 / 回放必须显式传入固定时钟——照 behaviors.ts / crowd.ts 的注入规矩。
+   */
+  clock: Clock = legacyClock;
+  /** 移动端跳跃键置位、下一帧 update 消费；与键盘 Space 走同一条地面判定 */
+  private jumpQueued = false;
   private fadeEl: HTMLElement | null = null;
+  /**
+   * 上一次 update 看到的化身位置。
+   * `world.teleport` / `respawnPlayerAt` / 交互点 / Boss 击退都会直接改 `actor.pos`，
+   * 不经过本类；靠跨帧位移识别「外部瞬移」，就地重算 realmY。
+   */
+  private lastX = 0; private lastY = 0; private lastZ = 0;
 
   constructor(private engine: Engine, crowd: Crowd, spawn: THREE.Vector3) {
     this.actor = crowd.spawnActor({
@@ -68,6 +82,7 @@ export class PlayerController {
       data: { name: '游侠', nick: '你', group: 'guest', weapon: '双足', desc: '汴京城中的过客，全城任行', code: 'player' },
     });
     this.actor.freeze = true;
+    this.lastX = spawn.x; this.lastY = spawn.y; this.lastZ = spawn.z;
     crowd.heroes.push(this.actor);
     this.bindInput();
     // 灵魂模式提示
@@ -104,17 +119,52 @@ export class PlayerController {
     this.fadeHint = s;
   }
 
+  /**
+   * 落点 → 界域平面（`actor.pos.y` 是脚底）。
+   * 异界（天宫/地府）直接以落点为钉面：这样「每帧钉住」是幂等操作，传送落点不被二次改写；
+   * -1.7 只属于「相机眼高 → 脚底」的换算，见 toggleMode（落点本身已经在地面高度上）。
+   */
+  private realmAt(landingY: number): number | null {
+    return landingY > 120 || landingY < -120 ? landingY : null;
+  }
+
+  /** 落位唯一入口：写位置并由落点反推 realmY（portal / 下坐骑 / 切模式共用） */
+  private landAt(x: number, y: number, z: number): void {
+    this.actor.pos.set(x, y, z);
+    this.realmY = this.realmAt(y);
+    this.vy = 0;
+    this.lastX = x; this.lastY = y; this.lastZ = z;
+  }
+
+  /**
+   * 外部瞬移识别：`world.teleport` / `respawnPlayerAt` / 交互点 / Boss 击退直接改 `actor.pos`
+   * 时不经过本类，跨帧位移超过一帧最大行程即视为瞬移，就地按落点重算 realmY。
+   * 阈值留两倍余量：水平 12m（飞行坐骑 60m/s × dt 上限 0.1s = 6m）；
+   * 垂直 8m（跳跃最高 7.5² / (2·22) ≈ 1.3m）。
+   */
+  private syncExternalMove(): void {
+    const p = this.actor.pos;
+    if (Math.hypot(p.x - this.lastX, p.z - this.lastZ) > 12 || Math.abs(p.y - this.lastY) > 8) {
+      this.realmY = this.realmAt(p.y);
+      this.vy = 0;
+    }
+    this.lastX = p.x; this.lastY = p.y; this.lastZ = p.z;
+  }
+
   toggleMode(): void {
     if (this.state !== 'foot') { bus.emit('ui:toast', '请先下坐骑/下船（E 键）再切换'); return; }
     this.mode = this.mode === 'soul' ? 'avatar' : 'soul';
     if (this.mode === 'avatar') {
-      // 化身搬到相机脚下：否则在灵界（天宫/地府）按 V，相机会跳回城里的化身位置
+      // 化身搬到相机脚下：否则在灵界（天宫/地府）按 V，相机会跳回城里的化身位置。
+      // 异界沿用「相机眼高 − 1.7m = 脚底」的既有口径；人间落到相机脚下的地面，
+      // 否则从天上附身时化身会停在旧界的空中一路下坠（天宫→人间按 V 的实测症状）。
       const c = this.engine.camera.position;
-      this.actor.pos.x = c.x;
-      this.actor.pos.z = c.z;
-      this.realmY = c.y > 120 || c.y < -120 ? c.y - 1.7 : null;
-      if (this.realmY !== null) this.actor.pos.y = this.realmY;
-      this.vy = 0;
+      if (c.y > 120 || c.y < -120) {
+        this.landAt(c.x, c.y - 1.7, c.z);
+      } else {
+        const gh = this.groundHeight(c.x, c.z, c.y);
+        this.landAt(c.x, Number.isFinite(gh) ? gh : 0, c.z);
+      }
       // 相机就位到化身身后：camYaw 必须等于化身朝向。
       // 旧值 `actor.yaw + Math.PI` 让相机与朝向差 180°，而移动方向是由 camYaw 推出来的，
       // 于是「附身态按 W 会倒退」——正是用户报的「附身/灵魂时按键是反的」。
@@ -129,18 +179,21 @@ export class PlayerController {
 
   private bindInput(): void {
     window.addEventListener('keydown', (ev) => {
+      // 按住不放时浏览器会以按键重复速率连发 keydown（约 30 次/秒）：
+      // V 会疯狂翻转附身、E/F 会连发交互与攻击，这里只认物理按下的第一次。
+      if (ev.repeat) return;
       if (ev.code === 'KeyV') this.toggleMode();
       if (ev.code === 'KeyE' && this.mode === 'avatar') this.tryInteract();
       if (ev.code === 'KeyF') this.tryAttack();
     });
     const el = this.engine.renderer.domElement;
-    el.addEventListener('pointerdown', (e) => { this.downX = e.clientX; this.downY = e.clientY; });
-    el.addEventListener('pointerup', (e) => {
-      if (e.pointerType !== 'touch') {
-        // 仅点击（非拖拽）才出拳
-        if (Math.hypot(e.clientX - this.downX, e.clientY - this.downY) < 6) this.tryAttack();
-      }
-    });
+    // 单击（非拖拽）出拳。路由保证同一次单击只触发一个消费点：
+    // 英雄聚焦优先级更高（点角色不会同时挥拳），指针锁定只作兜底。
+    this.engine.input.register('attack', () => {
+      if (this.mode !== 'avatar' || this.state !== 'foot') return false;
+      this.tryAttack();
+      return true;
+    }, 10);
     // 视角拖拽不再在 Player 里挂第二套 pointermove：
     // engine.dragLook → onAvatarDrag → avatarLookDrag 是唯一通道。
     // 旧版引擎与 Player 各挂一套，附身态一次拖动会双倍转视角（灵敏度忽高忽低）。
@@ -162,7 +215,7 @@ export class PlayerController {
   /** 攻击入口由物理系统注入 */
   attackHook: (() => void) | null = null;
   tryInteract(): void {
-    if (performance.now() < this.busyUntil) return;
+    if (this.clock() < this.busyUntil) return;
     if (this.state === 'mount' && this.mounted) { this.dismount(); return; }
     if (this.state === 'boat' && this.boat) { this.dismount(); return; }
     this.interactHook?.();
@@ -171,12 +224,20 @@ export class PlayerController {
     if (this.mode === 'avatar' && this.state === 'foot') this.attackHook?.();
   }
 
+  /** 移动端跳跃键入口：只置一次请求，真正起跳仍由 update 的地面判定决定 */
+  jump(): void {
+    if (this.mode !== 'avatar' || this.state !== 'foot') return;
+    this.jumpQueued = true;
+  }
+
   // ---- 高度场：地面/桥面/码头/天空平台/地府/大地山河 ----
   groundHeight(x: number, z: number, refY: number): number {
     if (refY < -100) { // 地府层
       return -260;
     }
-    if (refY > 150) { // 天空：平台 + 大地山川（远山可被顶开）
+    // 天宫层（旧 150 是「天宫在 200m」时代的分界）：抬升后只有真正到了天宫高度才套平台表。
+    // 若仍用 150，任何在 150–2085m 中空飞行的人都会被「平台高于自己」顶到 2153m。
+    if (refY > 150 + HEAVEN_LIFT) { // 天宫：平台 + 大地山川（远山可被顶开）
       let best = -Infinity;
       for (const p of PLATFORMS) {
         const dx = x - p.x, dz = z - p.z;
@@ -204,12 +265,18 @@ export class PlayerController {
   update(t: number, dt: number): void {
     if (this.mode !== 'avatar') {
       // 灵魂模式：化身站立呼吸，相机不受控
-      this.actor.action = performance.now() < this.busyUntil ? this.actor.action : 'stand';
+      this.jumpQueued = false;
+      this.actor.action = this.clock() < this.busyUntil ? this.actor.action : 'stand';
       return;
     }
+    // 跳跃请求每帧最多消费一次：忙时也清掉，避免动作结束后补跳
+    const wantJump = this.jumpQueued;
+    this.jumpQueued = false;
+    // 世界层直接改 actor.pos 的传送（teleport / 死亡重生 / 阴阳界交互点）在这里被识别
+    this.syncExternalMove();
     const k = this.engine.keys;
     const joy = this.engine.touchMove;
-    const now = performance.now();
+    const now = this.clock();
     const busy = now < this.busyUntil || now < this.actor.impactUntil;
     let ix = 0, iz = 0;
     if (!busy) {
@@ -256,7 +323,9 @@ export class PlayerController {
           const sp = run ? 60 : 34;
           m.pos.addScaledVector(dir, sp * dt);
         }
-        m.pos.y = THREE.MathUtils.clamp(m.pos.y, -60, 900);
+        // 上限 900 是「天宫在 200m」时代的天花板；整层抬到 2150 后必须放开到 900+HEAVEN_LIFT，
+        // 否则骑飞行坐骑永远飞不到天宫（到 900 就被夹住）。
+        m.pos.y = THREE.MathUtils.clamp(m.pos.y, -60, 900 + HEAVEN_LIFT);
         m.yaw = this.camYaw + Math.PI;
         m.phase += dt * (6 + (run ? 5 : 0));
         m.speed = Math.hypot(m.pos.x - px0, m.pos.z - pz0) / Math.max(dt, 1e-4);
@@ -335,11 +404,13 @@ export class PlayerController {
         this.vy = 0;
       } else {
         const target = Number.isFinite(gh) ? gh : 0;
-        if (p.y > target + 0.05) { this.vy -= 22 * dt; p.y = Math.max(target, p.y + this.vy * dt); this.actor.action = 'stand'; }
+        // 起跳当帧 vy>0 但 p.y 只比地面高 0.05：若只看位置会走 else 把 vy 清零，
+        // 跳跃在平地上等于没发生（移动端跳跃键实测 dy=0）。有向上速度就继续积分。
+        if (p.y > target + 0.05 || this.vy > 0) { this.vy -= 22 * dt; p.y = Math.max(target, p.y + this.vy * dt); this.actor.action = 'stand'; }
         else { p.y = target; this.vy = 0; }
       }
       const groundY = this.realmY !== null ? this.realmY : (Number.isFinite(gh) ? gh : 0);
-      if (k.has('Space') && p.y <= groundY + 0.05 && !busy) { this.vy = 7.5; p.y += 0.05; }
+      if ((k.has('Space') || wantJump) && p.y <= groundY + 0.05 && !busy) { this.vy = 7.5; p.y += 0.05; }
       if (!busy) this.actor.action = (ix !== 0 || iz !== 0) ? (run ? 'run' : 'walk') : 'stand';
       // 脚步：按实际位移节流发事件（跑动 2.4 步/秒、步行 1.6 步/秒），静止不发
       const moving = (ix !== 0 || iz !== 0) && this.state === 'foot';
@@ -372,14 +443,14 @@ export class PlayerController {
       this.fadeEl.style.transition = 'opacity .45s';
       this.fadeEl.style.opacity = '1';
       window.setTimeout(() => {
-        this.actor.pos.set(pt.to[0], pt.to[1], pt.to[2]);
-        this.vy = 0;
+        // 跨界必须同步 realmY：旧实现只搬位置，地府→人间后化身仍被钉在 −260
+        this.landAt(pt.to[0], pt.to[1], pt.to[2]);
         bus.emit('ui:toast', pt.label);
         this.fadeEl!.style.opacity = '0';
       }, 460);
-      this.busyUntil = performance.now() + 1000;
+      this.busyUntil = this.clock() + 1000;
     } else {
-      this.actor.pos.set(pt.to[0], pt.to[1], pt.to[2]);
+      this.landAt(pt.to[0], pt.to[1], pt.to[2]);
       bus.emit('ui:toast', pt.label);
     }
   }
@@ -387,7 +458,8 @@ export class PlayerController {
   private dismount(): void {
     if (this.mounted) {
       const m = this.mounted;
-      this.actor.pos.set(m.pos.x + 2, this.groundHeight(m.pos.x + 2, m.pos.z, m.pos.y) || 0, m.pos.z);
+      const gy = this.groundHeight(m.pos.x + 2, m.pos.z, m.pos.y);
+      this.landAt(m.pos.x + 2, Number.isFinite(gy) ? gy : 0, m.pos.z);
       this.actor.action = 'stand';
       this.mounted = null; this.state = 'foot';
       bus.emit('ui:toast', '已下' + (m.name));
@@ -395,7 +467,7 @@ export class PlayerController {
     if (this.boat) {
       const b = this.boat;
       const bank = Math.abs(b.z) > 12 ? Math.sign(b.z) : 1;
-      this.actor.pos.set(b.x, 0, bank * 30);
+      this.landAt(b.x, 0, bank * 30);
       this.actor.action = 'stand';
       b.driven = false; this.boat = null; this.state = 'foot';
       bus.emit('ui:toast', '已靠岸下船');
@@ -409,6 +481,13 @@ export const PLATFORMS: Platform[] = [
   { x: -150, y: 201, z: 45, r: 27 }, { x: 150, y: 204, z: 25, r: 19 }, { x: 120, y: 206, z: 120, r: 15 },
   { x: 152, y: 205, z: 142, r: 12 }, { x: 40, y: 209, z: -55, r: 17 },
 ];
+// 平台表是**烘焙前**的天宫坐标（x/z 与 y 都是），而几何在 expansion 里被 2.2× + 抬升：
+// 必须走与顶点相同的变换，否则附身落在天宫时 groundHeight 会返回旧值 206，化身直接坠到人间上空。
+// （x/z 也要换算：只看 y 会让「站得住」的判定落在离实体平台 1.2 倍远的位置。）
+for (const p of PLATFORMS) {
+  const [x, y, z] = heavenPoint(p.x, p.y, p.z);
+  p.x = x; p.y = y; p.z = z; p.r *= HEAVEN_SCALE;
+}
 export const DOCKS: [number, number, number, number][] = [
   [-238, 24, 42, 14], [-206, 20, 18, 10], [-268, 22, 20, 10],
 ];

@@ -703,7 +703,9 @@ function paifang(b: Baker, sg: SignMesher, atlas: SignAtlas, z: number, name: st
   b.box('wood', 12.6, 0.85, 0.42, 0, 7.5, z, 0x2a4a3a);
   b.roofC('roof', 0, 7.95, z, 0x3a4450, 0, 15.8, 1.9, 3.0);
   for (const s of [-1, 1] as const) b.roofC('roof', s * 10.6, 6.45, z, 0x33404a, 0, 8.2, 1.2, 2.5);
-  b.box('glow', 15.2, 0.12, 0.12, 0, 7.2, z + 0.1, neon);
+  // 额枋灯：旧版一根 15.2m 不断的灯条横跨三间（街面/御街视角都是一条连续亮线）。
+  // 改成分段灯管：2.2m 管 / 3.2m 暗段，五段均匀落在额枋上。
+  for (let lx = -6.4; lx <= 6.4; lx += 3.2) b.box('glow', 2.2, 0.12, 0.12, lx, 7.2, z + 0.1, neon);
   sg.quad(
     atlas.text(key, name, 320, 84, { color: '#ffe9c8', glow: '#ffb300', bg: 'rgba(12,10,18,0.9)', border: 'rgba(255,179,0,.8)', fontPx: 56 }),
     5.0, 1.3, 0, 7.5, z + 0.26, 0,

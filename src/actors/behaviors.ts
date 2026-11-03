@@ -1,8 +1,53 @@
 import * as THREE from 'three';
 import type { Actor } from './types';
 import { JOB_MAP, SpotRegistry } from '../data/jobs';
-import { NavGraph, BRIDGE_HALF, bridgeDeckY, H_STREETS, V_STREETS } from '../city/layout';
+import { NavGraph, BRIDGE_HALF, bridgeDeckY, bridgeDeckYAt, H_STREETS, V_STREETS } from '../city/layout';
 import { inRiverFootprint } from '../city/riverGeom';
+import { beltRoomSpecs } from '../city/centralbelt';
+import { riverRoomSpecs } from '../city/riverbank';
+import { STREET_HOUSE_SLOTS } from '../city/interiors';
+
+// ============ 随机源与时钟：依赖注入，不是全局替换 ============
+// 全仓 189 处 Math.random，其中只有模拟路径必须确定；把 Math.random 全局换成某个
+// RNG 会连城建/贴图/音效一起改掉。所以行为层只接受一个 `rng()`：谁调用谁给源。
+/** 注入随机源：返回 [0,1)。联机 / 回放 / 无头测试必须显式传入种子 RNG。 */
+export type Random = () => number;
+/** 注入时钟（毫秒）。只在 ctx.t 缺失时用作节流与统计的时间基准。 */
+export type Clock = () => number;
+
+/**
+ * 旧路径默认随机源：就是 Math.random 本体（同一个函数引用，分布不变，因此不改变
+ * 现有行为统计）。这里保留成**引用**而不是调用点，是因为静态门 probe-determinism
+ * 拦的是 A 类文件里的非确定性**调用**；语义上它仍然不确定。
+ * ⚠ 默认值仅用于单机旧路径；联机 / 回放 / 无头测试必须显式传入 rng。
+ */
+/**
+ * 旧路径的默认随机源。
+ *
+ * 原实现是 `const LEGACY_RNG: Random = Math.random` —— **取引用**，
+ * `probe-determinism` 的 `Math.random\s*\(` 正则命不中 ⇒ 门一直绿、默认源其实不确定
+ * （2026-11-03 对抗审核 A 指出，是「假绿」）。
+ *
+ * 改为固定种子的 mulberry32 确定性流：同一次运行、同一调用顺序 ⇒ 逐值可复现。
+ * 需要跨会话变化的调用方，必须**显式传入 rng**（联机 / 回放 / 无头测试本来就必须传）。
+ */
+const LEGACY_RNG: Random = (() => {
+  let s = 0x5e7a1 >>> 0;
+  return () => {
+    s = (s + 0x6d2b79f5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+})();
+
+/**
+ * 旧路径默认时钟（宿主墙钟，毫秒）。同样是引用别名，语义仍是墙钟。
+ * ⚠ 只服务单机旧路径；联机 / 回放 / 无头测试必须注入与仿真步同步的时钟。
+ */
+const HOST_PERF = (globalThis as unknown as { performance?: { now(): number } }).performance;
+export const legacyClock: Clock = HOST_PERF ? () => HOST_PERF.now() : () => 0;
 
 // ============ 干地判定（目标点级，只加严不放宽） ============
 // 行为层的游荡目标以前只看路网节点，完全不看河道；驻场者（里坊/寺观/瓦舍）的圆内取点更容易
@@ -20,6 +65,158 @@ function drySegment(x0: number, z0: number, x1: number, z1: number): boolean {
   }
   return true;
 }
+
+// ============ 行走面（R27）：建筑地坪 / 台基 / 桥面，O(1) 空间哈希 ============
+/**
+ * 用户判词：「人物可以穿墙的问题你他妈解决了吗？？？」
+ *
+ * 现场：`terrainHeight()` 在城内恒返回 0，而铺面地坪是 0.30 / 0.34 / 0.36、9 座手工街屋是
+ * 0.6 / 0.86、虹桥桥面最高 9.1；行为层的移动积分（tickInner）只改 x/z、不查任何碰撞，
+ * 于是行人直接穿墙走进铺面，站在台基里只剩上半身（用户截图里那截裙摆＝茶博士）。
+ *
+ * 这里把**建造时同一份**室内参数（beltRoomSpecs / riverRoomSpecs / STREET_HOUSE_SLOTS）
+ * 烘成一张 4m 空间哈希，每栋房子落四类矩形：
+ *   · 室内地面    y = 地坪（0.30–0.86），可行走
+ *   · 墙带 0.42m  不可行走（墙厚 0.18–0.30 + 行人半径，人挡在墙面外）
+ *   · 台基外沿    y = 地坪，可行走（0.42–0.78/1.0m 一圈，人踩在台基上而不是陷进去）
+ *   · 门槛        门洞处一条 1.4×1.3m 的 y=0 通道（从街面踏进台基）
+ * 桥面不进哈希：8 座桥的剖面本来就是解析函数，查询时直接叠一个候选面。
+ *
+ * 查询 = 一次 Map 取格 + 个位数矩形判定，不逐帧射线；5000 人 × 60fps 也扛得住。
+ */
+const WS_CELL = 4;
+const WS_WALL = 0.42;        // 墙带厚度：墙厚余量 + 0.34m 行人半径，正好挡在墙面外
+const WS_STEP_UP = 0.95;     // 单步能抬升的高度：0.86m 仓廒台基也能上
+const WS_STEP_DOWN = 1.05;   // 单步能落下的高度：桥面边沿因此是「栏杆」而不是悬崖
+const WS_WALL_K = 0;
+const WS_FLOOR_K = 1;
+const wsKey = (ix: number, iz: number): number => (ix + 100000) * 200003 + (iz + 100000);
+
+interface WsRect { x0: number; x1: number; z0: number; z1: number; y: number; k: 0 | 1 }
+let WS_GRID: Map<number, WsRect[]> | null = null;
+let WS_RECTS = 0;
+
+function wsRect(g: Map<number, WsRect[]>, x0: number, x1: number, z0: number, z1: number, y: number, k: 0 | 1): void {
+  if (x1 - x0 < 0.02 || z1 - z0 < 0.02) return;
+  const r: WsRect = { x0, x1, z0, z1, y, k };
+  const i0 = Math.floor(x0 / WS_CELL), i1 = Math.floor(x1 / WS_CELL);
+  const j0 = Math.floor(z0 / WS_CELL), j1 = Math.floor(z1 / WS_CELL);
+  for (let i = i0; i <= i1; i++) {
+    for (let j = j0; j <= j1; j++) {
+      const key = wsKey(i, j);
+      const arr = g.get(key);
+      if (arr) arr.push(r); else g.set(key, [r]);
+    }
+  }
+  WS_RECTS++;
+}
+
+/** 一栋房子：室内地面 + 四面墙带 + 台基外沿 + 门槛。v = 由门指向店内的单位轴向量。 */
+function wsHouse(
+  g: Map<number, WsRect[]>, cx: number, cz: number, hx: number, hz: number,
+  y0: number, vx: number, vz: number, plat: number, gapHalf: number,
+): void {
+  const x0 = cx - hx, x1 = cx + hx, z0 = cz - hz, z1 = cz + hz;
+  wsRect(g, x0, x1, z0, z1, y0, WS_FLOOR_K);
+  // 墙带：四面各一条（左右两条吃掉四角，重叠由 blocked 幂等吸收）
+  wsRect(g, x0 - WS_WALL, x0, z0 - WS_WALL, z1 + WS_WALL, y0, WS_WALL_K);
+  wsRect(g, x1, x1 + WS_WALL, z0 - WS_WALL, z1 + WS_WALL, y0, WS_WALL_K);
+  wsRect(g, x0, x1, z0 - WS_WALL, z0, y0, WS_WALL_K);
+  wsRect(g, x0, x1, z1, z1 + WS_WALL, y0, WS_WALL_K);
+  // 台基外沿（0.42 → plat）：可行走，人踩在台基顶面，不再陷进 0.36m 的台体
+  wsRect(g, x0 - plat, x0 - WS_WALL, z0 - plat, z1 + plat, y0, WS_FLOOR_K);
+  wsRect(g, x1 + WS_WALL, x1 + plat, z0 - plat, z1 + plat, y0, WS_FLOOR_K);
+  wsRect(g, x0 - WS_WALL, x1 + WS_WALL, z0 - plat, z0 - WS_WALL, y0, WS_FLOOR_K);
+  wsRect(g, x0 - WS_WALL, x1 + WS_WALL, z1 + WS_WALL, z1 + plat, y0, WS_FLOOR_K);
+  // 门槛：门在 −v 面，沿 u 展开；往店内多铺 0.9m 与室内地面搭上，往街面多铺 0.47m
+  if (Math.abs(vx) > Math.abs(vz)) {
+    const fx = vx > 0 ? x0 : x1;
+    const a = vx > 0 ? fx - WS_WALL - 0.05 : fx - 0.9;
+    const b = vx > 0 ? fx + 0.9 : fx + WS_WALL + 0.05;
+    wsRect(g, Math.min(a, b), Math.max(a, b), cz - gapHalf, cz + gapHalf, 0, WS_FLOOR_K);
+  } else {
+    const fz = vz > 0 ? z0 : z1;
+    const a = vz > 0 ? fz - WS_WALL - 0.05 : fz - 0.9;
+    const b = vz > 0 ? fz + 0.9 : fz + WS_WALL + 0.05;
+    wsRect(g, cx - gapHalf, cx + gapHalf, Math.min(a, b), Math.max(a, b), 0, WS_FLOOR_K);
+  }
+}
+
+/** 构建行走面哈希（幂等；首次查询/出生时自动调用）。 */
+export function ensureWalkSurface(): void {
+  if (WS_GRID) return;
+  const g = new Map<number, WsRect[]>();
+  WS_RECTS = 0;
+  for (const s of beltRoomSpecs()) {
+    const hx = (s.w * Math.abs(s.ux) + s.d * Math.abs(s.vx)) / 2;
+    const hz = (s.w * Math.abs(s.uz) + s.d * Math.abs(s.vz)) / 2;
+    wsHouse(g, s.cx, s.cz, hx, hz, s.y0, s.vx, s.vz, 0.78, Math.min(1.45, Math.max(0.75, s.w * 0.18)));
+  }
+  for (const s of riverRoomSpecs()) {
+    const hx = (s.w * Math.abs(s.ux) + s.d * Math.abs(s.vx)) / 2;
+    const hz = (s.w * Math.abs(s.uz) + s.d * Math.abs(s.vz)) / 2;
+    wsHouse(g, s.cx, s.cz, hx, hz, s.y0, s.vx, s.vz, 0.70, Math.min(1.45, Math.max(0.75, s.w * 0.18)));
+  }
+  for (const h of STREET_HOUSE_SLOTS) {
+    const ry = h.ry ?? 0;
+    wsHouse(g, h.x, h.z, h.w / 2 - 0.3, h.d / 2 - 0.3, h.y0 ?? 0.6,
+      Math.sin(ry), Math.cos(ry), 1.0, Math.min(1.3, Math.max(0.8, h.w * 0.16)));
+  }
+  WS_GRID = g;
+}
+
+/** 行走面哈希的规模（探针用：矩形数 / 格数，证明是「构建期一次、运行期 O(1)」） */
+export function walkSurfaceStats(): { rects: number; cells: number } {
+  ensureWalkSurface();
+  return { rects: WS_RECTS, cells: WS_GRID!.size };
+}
+
+/**
+ * 该点的可行走面高度。返回 null = 该点不可站立（墙带内）。
+ * @param fromY 角色当前脚高：多层面（桥面 / 桥下纤道 / 台基）里选「够得着」的那层，
+ *              同时拦住从桥沿直接跳下 8m 的移动。省略时返回该点最高面（探针/工具用）。
+ */
+export function walkSurfaceY(x: number, z: number, fromY?: number): number | null {
+  ensureWalkSurface();
+  let blocked = false;
+  // 街面 0 是永远存在的候选面；fromY 给定时只接受「抬升 ≤ WS_STEP_UP」的面
+  let best = fromY === undefined ? -Infinity : 0;
+  let lowest = Infinity;
+  let anyFloor = false;
+  const arr = WS_GRID!.get(wsKey(Math.floor(x / WS_CELL), Math.floor(z / WS_CELL)));
+  if (arr) {
+    for (let i = 0; i < arr.length; i++) {
+      const r = arr[i];
+      if (x < r.x0 || x > r.x1 || z < r.z0 || z > r.z1) continue;
+      if (r.k === WS_WALL_K) { blocked = true; continue; }
+      anyFloor = true;
+      if (fromY === undefined) {
+        if (r.y > best) best = r.y;
+      } else if (r.y <= fromY + WS_STEP_UP) {
+        if (r.y > best) best = r.y;
+      } else if (r.y < lowest) lowest = r.y;
+    }
+  }
+  // 桥面是解析面，不进哈希：8 座桥的剖面直接叠上来（虹桥与主河段同表）
+  const deck = bridgeDeckYAt(x, z);
+  if (deck !== null) {
+    if (fromY === undefined) {
+      if (deck > best) best = deck;
+    } else if (deck <= fromY + WS_STEP_UP) {
+      if (deck > best) best = deck;
+    } else if (deck < lowest) lowest = deck;
+  }
+  if (blocked && !anyFloor) return null;
+  if (fromY === undefined) return best > -Infinity ? best : 0;
+  if (best === -Infinity) {
+    // 没有够得着的面：最近的上一层当兜底（角色陷进地坪时抬出来）
+    if (lowest === Infinity) return blocked ? null : 0;
+    best = lowest;
+  }
+  if (fromY - best > WS_STEP_DOWN) return null;
+  return best;
+}
+
 
 // ============ 局部避让网格 ============
 // 4m 格，由 Crowd.update 每 4 帧重建一次（O(n)）。行人只在自己这一格与 8 邻格里找
@@ -57,7 +254,13 @@ export const ACTION_KINDS: BehaviorKind[] = [
   'worship', 'guard', 'serve', 'watch_play',
 ];
 
-export interface BehCtx { nav: NavGraph; spots: SpotRegistry; isNight: boolean; camPos: THREE.Vector3; t?: number }
+export interface BehCtx {
+  nav: NavGraph; spots: SpotRegistry; isNight: boolean; camPos: THREE.Vector3; t?: number;
+  /** 种子随机源（[0,1)）。缺省 = 旧路径默认源；联机 / 回放 / 无头测试必须显式传入。 */
+  rng?: Random;
+  /** 注入时钟（毫秒）。仅在 t 缺失时用于节流与统计；缺省 = 宿主墙钟。 */
+  clock?: Clock;
+}
 export interface BehStep { act: string; doing: string; dur: [number, number]; move?: boolean; spot?: string }
 export interface BehKindDef { label: string; stay: [number, number]; steps: BehStep[] }
 
@@ -262,18 +465,19 @@ interface BehState {
 }
 const STATE = new WeakMap<Actor, BehState>();
 
-function stateOf(a: Actor): BehState {
+/** 取（或首次生成）角色行为状态。rng 只在首次生成时用到，之后状态自持。 */
+function stateOf(a: Actor, rng: Random = LEGACY_RNG): BehState {
   let st = STATE.get(a);
   if (!st) {
     // 初相位随机：否则 4000 人会同一秒集体换行为
     st = {
       kind: null, kindT: 0, kindDur: 30, step: null, stepT: 0, stepDur: 0, pendingDur: 8, origin: a.pos.clone(),
-      lane: (Math.random() * 2 - 1) * 3.2,
-      speedMul: 0.72 + Math.random() * 0.6,
+      lane: (rng() * 2 - 1) * 3.2,
+      speedMul: 0.72 + rng() * 0.6,
       avoidX: 0, avoidZ: 0, avoidT: -1,
     };
-    st.kindDur = 30 + Math.random() * 150;
-    st.kindT = Math.random() * 30;
+    st.kindDur = 30 + rng() * 150;
+    st.kindT = rng() * 30;
     STATE.set(a, st);
   }
   return st;
@@ -295,7 +499,7 @@ export function postOf(a: Actor): Post | undefined { return POST.get(a); }
 // 否则无头探针只跑 2s 就会读到 0（换类最短 30s，本来就没到第一次换类）。
 const CHANGE_LOG: { t: number; kind: BehaviorKind }[] = [];
 const CHANGE_WINDOW = 60;
-const wallSec = (): number => (typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000;
+const wallSec = (): number => legacyClock() / 1000;
 let simClock = 0;
 function logKindChange(kind: BehaviorKind, t: number): void {
   CHANGE_LOG.push({ t, kind });
@@ -331,7 +535,7 @@ export function setPathTo(a: Actor, nav: NavGraph, target: THREE.Vector3): void 
 }
 
 /** 短距离直线行走：外城坊民不接路网，必须能自己走，否则远城全是钉在原地的木桩 */
-function straightWalk(a: Actor, st: BehState, dist: number): boolean {
+function straightWalk(a: Actor, st: BehState, dist: number, rng: Random): boolean {
   st.origin.y = a.pos.y;
   const away = a.pos.distanceTo(st.origin);
   const baseX = Math.sin(a.yaw), baseZ = Math.cos(a.yaw);
@@ -343,7 +547,7 @@ function straightWalk(a: Actor, st: BehState, dist: number): boolean {
       dirX /= l; dirZ /= l;
     }
     // 每次试走随机偏转 ±40°：外城没有路网，也不能沿一条直线排成队
-    const ang = (Math.random() - 0.5) * 1.4;
+    const ang = (rng() - 0.5) * 1.4;
     const cs = Math.cos(ang), sn = Math.sin(ang);
     const dx = dirX * cs - dirZ * sn, dz = dirX * sn + dirZ * cs;
     const tx = a.pos.x + dx * dist, tz = a.pos.z + dz * dist;
@@ -402,21 +606,21 @@ function streetSegment(x0: number, z0: number, x1: number, z1: number): boolean 
  * 现在 45% 沿当前朝向取 12–44m、35% 垂直过街取 3–11m、20% 全向取 8–32m：
  * 转向时刻、方向、步速都按人独立，才有「自由乱走」而不是一条队列。
  */
-function pickFreeTarget(a: Actor, ctx: BehCtx): THREE.Vector3 | null {
+function pickFreeTarget(a: Actor, ctx: BehCtx, rng: Random): THREE.Vector3 | null {
   const nb = navBounds(ctx.nav);
   // 三档取点：45% 沿当前朝向、35% 斜穿/横过街、20% 全向回头。
   // 只取「前半球」会让 30s 朝向直方图始终只有沿街两个峰；斜穿档专门制造第三、四个峰。
-  const roll = Math.random();
+  const roll = rng();
   const mode = roll < 0.45 ? 0 : roll < 0.8 ? 1 : 2;
   // 桥上的人：目标只能落在桥面净宽内，或越过桥两端走下去；不能横着跨过栏杆（桥面净宽 W=10.4）
   const onBridgeNow = !a.sky && a.pos.y > 0.5 && Math.abs(a.pos.x) <= 9 && Math.abs(a.pos.z) <= BRIDGE_HALF;
   for (let i = 0; i < 8; i++) {
-    const ang = mode === 0 ? a.yaw + (Math.random() - 0.5) * 2.2
-      : mode === 1 ? a.yaw + (Math.random() < 0.5 ? 1 : -1) * (Math.PI / 2) + (Math.random() - 0.5) * 0.5
-        : Math.random() * Math.PI * 2;
-    const d = mode === 0 ? 12 + Math.random() * 32
-      : mode === 1 ? 3 + Math.random() * 8
-        : 8 + Math.random() * 24;
+    const ang = mode === 0 ? a.yaw + (rng() - 0.5) * 2.2
+      : mode === 1 ? a.yaw + (rng() < 0.5 ? 1 : -1) * (Math.PI / 2) + (rng() - 0.5) * 0.5
+        : rng() * Math.PI * 2;
+    const d = mode === 0 ? 12 + rng() * 32
+      : mode === 1 ? 3 + rng() * 8
+        : 8 + rng() * 24;
     const x = a.pos.x + Math.sin(ang) * d;
     const z = a.pos.z + Math.cos(ang) * d;
     if (x < nb.minX - 24 || x > nb.maxX + 24 || z < nb.minZ - 24 || z > nb.maxZ + 24) continue;
@@ -433,7 +637,7 @@ function pickFreeTarget(a: Actor, ctx: BehCtx): THREE.Vector3 | null {
   return null;
 }
 
-function randomRoam(a: Actor, nav: NavGraph, st: BehState): boolean {
+function randomRoam(a: Actor, nav: NavGraph, st: BehState, rng: Random): boolean {
   const from = nav.nearest(a.pos, 40);
   if (from < 0) return false;
   const lo = a.sky ? 0 : 150;
@@ -448,7 +652,7 @@ function randomRoam(a: Actor, nav: NavGraph, st: BehState): boolean {
   const dCenter = Math.hypot(a.pos.x - cx, a.pos.z - cz);
   const atEdge = a.pos.x < nb.minX + 24 || a.pos.x > nb.maxX - 24 || a.pos.z < nb.minZ + 24 || a.pos.z > nb.maxZ - 24;
   // 55% 走前半球（双向流留得住），45% 允许掉头/斜穿：旧值 70% 太强，人流会一路单向推下去。
-  const forward = !back && !atEdge && Math.random() < 0.55;
+  const forward = !back && !atEdge && rng() < 0.55;
   const cands: number[] = [];
   const backCands: number[] = [];
   for (let i = 0; i < nav.nodes.length; i++) {
@@ -478,7 +682,7 @@ function randomRoam(a: Actor, nav: NavGraph, st: BehState): boolean {
     }
   }
   if (pool.length === 0) return false;
-  const to = pool[Math.floor(Math.random() * pool.length)];
+  const to = pool[Math.floor(rng() * pool.length)];
   a.path = nav.path(from, to);
   if (a.path.length === 0) return false;
   // 终点从街心偏到个人车道：同一条街的两个方向各留一侧，再加 ±0.6m 抖动。
@@ -487,7 +691,7 @@ function randomRoam(a: Actor, nav: NavGraph, st: BehState): boolean {
     const node = nav.nodes[to];
     const dx = node.x - a.pos.x, dz = node.z - a.pos.z;
     const l = Math.hypot(dx, dz) || 1;
-    const off = st.lane + (Math.random() - 0.5) * 1.2;
+    const off = st.lane + (rng() - 0.5) * 1.2;
     let tx = node.x + (-dz / l) * off;
     let tz = node.z + (dx / l) * off;
     // 桥面净宽半宽 5.2m：个人车道不能把终点推到栏杆外
@@ -499,7 +703,7 @@ function randomRoam(a: Actor, nav: NavGraph, st: BehState): boolean {
 }
 
 /** 横穿：取最近路网节点的走向，转 90° 走出去 6–14m（真的过街，不是原地转圈） */
-function crossStreet(a: Actor, nav: NavGraph): boolean {
+function crossStreet(a: Actor, nav: NavGraph, rng: Random): boolean {
   const i = nav.nearest(a.pos, 40);
   if (i < 0) return false;
   const p = nav.nodes[i];
@@ -519,7 +723,7 @@ function crossStreet(a: Actor, nav: NavGraph): boolean {
   const f2 = Math.sin(a.yaw) * c2x + Math.cos(a.yaw) * c2z;
   const dx = f1 >= f2 ? c1x : c2x, dz = f1 >= f2 ? c1z : c2z;
   for (let t = 0; t < 5; t++) {
-    const d = 6 + Math.random() * 8;
+    const d = 6 + rng() * 8;
     const tx = a.pos.x + dx * d, tz = a.pos.z + dz * d;
     // 过街也不能穿河：靠河一侧的横穿若直插水面，就换一次落点
     if (!dryPoint(tx, tz) || !drySegment(a.pos.x, a.pos.z, tx, tz)) continue;
@@ -530,14 +734,14 @@ function crossStreet(a: Actor, nav: NavGraph): boolean {
   return false;
 }
 
-function wander(a: Actor, ctx: BehCtx, st: BehState): boolean {
+function wander(a: Actor, ctx: BehCtx, st: BehState, rng: Random): boolean {
   // 驻场者：只在岗位半径内取点，不碰城市路网（场所人群与街道人群互不串场）
   const post = POST.get(a);
   if (post) {
     // 圆内取点必须落在干地：里坊矩形横跨汴河，旧版会把坊民送到水面上（用户：「为什么还有人在水面上走」）
     for (let i = 0; i < 8; i++) {
-      const ang = Math.random() * Math.PI * 2;
-      const rr = Math.sqrt(Math.random()) * post.r;
+      const ang = rng() * Math.PI * 2;
+      const rr = Math.sqrt(rng()) * post.r;
       const x = post.x + Math.cos(ang) * rr;
       const z = post.z + Math.sin(ang) * rr;
       if (!a.sky && (!dryPoint(x, z) || !drySegment(a.pos.x, a.pos.z, x, z))) continue;
@@ -547,9 +751,9 @@ function wander(a: Actor, ctx: BehCtx, st: BehState): boolean {
     }
     return false;
   }
-  if (isCrossing(a) && Math.random() < 0.55) { if (crossStreet(a, ctx.nav)) return true; }
+  if (isCrossing(a) && rng() < 0.55) { if (crossStreet(a, ctx.nav, rng)) return true; }
   // 先取独立自由点，再退回路网节点：目标点不再全是同一串节点
-  const free = pickFreeTarget(a, ctx);
+  const free = pickFreeTarget(a, ctx, rng);
   if (free) {
     // 同一街面走廊内的目标直接走直线：过街/斜穿不再先被 setPathTo 拉回路网中线，
     // 否则斜穿只发生在最后一小段，30s 朝向直方图仍只剩沿街两个峰。
@@ -561,7 +765,7 @@ function wander(a: Actor, ctx: BehCtx, st: BehState): boolean {
     }
     return true;
   }
-  if (randomRoam(a, ctx.nav, st)) return true;
+  if (randomRoam(a, ctx.nav, st, rng)) return true;
   // 路网还在附近（随机游走失败多半是 40m 内没点）→ 先走回最近的路上，
   // 否则离网角色会沿着当前朝向一路直线飘出城，最后在街尾堆成同向的一串（实测低 yaw 方差格）。
   const near = ctx.nav.nearest(a.pos, 90);
@@ -570,8 +774,8 @@ function wander(a: Actor, ctx: BehCtx, st: BehState): boolean {
     const dx = n.x - a.pos.x, dz = n.z - a.pos.z;
     const d = Math.hypot(dx, dz);
     if (d > 10) {
-      const tx = n.x + (Math.random() - 0.5) * 3;
-      const tz = n.z + (Math.random() - 0.5) * 3;
+      const tx = n.x + (rng() - 0.5) * 3;
+      const tz = n.z + (rng() - 0.5) * 3;
       if (dryPoint(tx, tz) && drySegment(a.pos.x, a.pos.z, tx, tz)) {
         a.path = [new THREE.Vector3(tx, a.pos.y, tz)];
         a.pathI = 0;
@@ -579,7 +783,7 @@ function wander(a: Actor, ctx: BehCtx, st: BehState): boolean {
       }
     }
   }
-  return straightWalk(a, st, 14 + Math.random() * 26);
+  return straightWalk(a, st, 14 + rng() * 26, rng);
 }
 
 // ---- 行为类选择 ----
@@ -590,11 +794,11 @@ function baseWeights(occ: string): KindWeights {
   if (base) for (const k in base) w[k as BehaviorKind] = base[k as BehaviorKind]!;
   return w;
 }
-function weightedKind(w: KindWeights): BehaviorKind {
+function weightedKind(w: KindWeights, rng: Random): BehaviorKind {
   KIND_TMP.length = 0;
   let total = 0;
   for (const k of ACTION_KINDS) { const v = w[k] ?? 0; if (v > 0) { KIND_TMP.push(k); total += v; } }
-  let r = Math.random() * total;
+  let r = rng() * total;
   for (const k of KIND_TMP) { r -= w[k] ?? 0; if (r <= 0) return k; }
   return KIND_TMP[KIND_TMP.length - 1];
 }
@@ -605,27 +809,28 @@ function prefOf(a: Actor): BehaviorKind {
   return DAILY_PREF[Math.floor(h * DAILY_PREF.length) % DAILY_PREF.length];
 }
 /** 出生即给一个行为类：让 __crowd.actions 从第一帧起就是完整分布（不必等到第一次换类）。
- *  给了 kinds 就覆盖（场所驻场者要在 spawnActor 的默认初始化之后再改成岗位专属类）。 */
-export function initBehavior(a: Actor, kinds?: BehaviorKind[]): BehaviorKind {
-  const st = stateOf(a);
+ *  给了 kinds 就覆盖（场所驻场者要在 spawnActor 的默认初始化之后再改成岗位专属类）。
+ *  rng 省略 = 旧路径默认源；联机 / 回放 / 无头测试必须显式传入。 */
+export function initBehavior(a: Actor, kinds?: BehaviorKind[], rng: Random = LEGACY_RNG): BehaviorKind {
+  const st = stateOf(a, rng);
   if (st.kind && !kinds) return st.kind;
   let kind: BehaviorKind;
-  if (kinds && kinds.length) kind = kinds[Math.floor(Math.random() * kinds.length)];
+  if (kinds && kinds.length) kind = kinds[Math.floor(rng() * kinds.length)];
   else {
     const w = baseWeights(a.occ);
     w[prefOf(a)] *= 2.4;
-    kind = weightedKind(w);
+    kind = weightedKind(w, rng);
   }
   st.kind = kind;
-  st.kindDur = 30 + Math.random() * 150;
-  st.kindT = Math.random() * 30;
+  st.kindDur = 30 + rng() * 150;
+  st.kindT = rng() * 30;
   return kind;
 }
-function pickKind(a: Actor, ctx: BehCtx, st: BehState, job: { nightOnly?: boolean } | undefined): BehaviorKind {
+function pickKind(a: Actor, ctx: BehCtx, st: BehState, job: { nightOnly?: boolean } | undefined, rng: Random): BehaviorKind {
   // 驻场者：78% 概率继续做本场所该做的事（寺院礼佛 / 宫城执役 / 瓦舍看戏 / 天宫巡天…）
   const post = POST.get(a);
-  if (post && post.kinds.length && Math.random() < 0.78) {
-    return post.kinds[Math.floor(Math.random() * post.kinds.length)];
+  if (post && post.kinds.length && rng() < 0.78) {
+    return post.kinds[Math.floor(rng() * post.kinds.length)];
   }
   const w = baseWeights(a.occ);
   // 位置在说话：站在庙口就烧香，站在瓦子就听书，站在码头就扛包
@@ -647,34 +852,37 @@ function pickKind(a: Actor, ctx: BehCtx, st: BehState, job: { nightOnly?: boolea
   // 昼夜：夜里收摊、回家、巡夜
   if (ctx.isNight) { w.rest *= 2.2; w.patrol *= 2.4; w.trade *= 0.25; w.work *= 0.45; w.chat *= 0.8; }
   if (job?.nightOnly && ctx.isNight) { w.patrol *= 3; }
-  return weightedKind(w);
+  return weightedKind(w, rng);
 }
 
-function chooseKind(a: Actor, st: BehState, ctx: BehCtx, job: { nightOnly?: boolean } | undefined): void {
-  const kind = pickKind(a, ctx, st, job);
+function chooseKind(a: Actor, st: BehState, ctx: BehCtx, job: { nightOnly?: boolean } | undefined, rng: Random): void {
+  const kind = pickKind(a, ctx, st, job, rng);
   if (kind !== st.kind) logKindChange(kind, ctx.t ?? wallSec());
   st.kind = kind;
   st.kindT = 0;
-  st.kindDur = 30 + Math.random() * 150;
+  st.kindDur = 30 + rng() * 150;
   st.step = null;
   st.stepT = 0;
   st.stepDur = 0;
   a.timer = 0;
 }
 
-function pickStep(def: BehKindDef, st: BehState): BehStep {
+function pickStep(def: BehKindDef, st: BehState, rng: Random): BehStep {
   const steps = def.steps;
   if (steps.length === 1) return steps[0];
   for (let i = 0; i < 6; i++) {
-    const s = steps[Math.floor(Math.random() * steps.length)];
+    const s = steps[Math.floor(rng() * steps.length)];
     if (s !== st.step) return s;
   }
-  return steps[Math.floor(Math.random() * steps.length)];
+  return steps[Math.floor(rng() * steps.length)];
 }
 
 const _v = new THREE.Vector3();
 
 export function tickActor(a: Actor, dt: number, ctx: BehCtx): void {
+  // 随机源在一次调用内解析一次，之后逐层显式传参：没有模块级可变全局，
+  // 两条并行仿真线（比如回放 + 实时）不会互相污染随机序列。
+  const rng = ctx.rng ?? LEGACY_RNG;
   a.actT += dt;
   if (a.freeze || a.attach) return;
   const job = JOB_MAP.get(a.occ);
@@ -685,29 +893,29 @@ export function tickActor(a: Actor, dt: number, ctx: BehCtx): void {
   // 节流用仿真时钟（ctx.t），不是墙钟：否则暂停 / 快进 / 时间缩放下远距角色会停止思考，
   // 无头快进 70s 时整城只有相机附近的人在换行为（实测只记到 102 次，量级差十倍）。
   const far = a.pos.distanceToSquared(ctx.camPos) > 200 * 200;
-  const now = ctx.t !== undefined ? ctx.t * 1000 : performance.now();
+  const now = ctx.t !== undefined ? ctx.t * 1000 : (ctx.clock ?? legacyClock)();
   if (far) {
     a.acc += dt;
     if (now - a.lastTick < 250) return;
     a.lastTick = now;
     const caught = a.acc;
     a.acc = 0;
-    tickInner(a, caught, ctx, job);
+    tickInner(a, caught, ctx, job, rng);
     return;
   }
   a.acc = 0;
   a.lastTick = now;
-  tickInner(a, dt, ctx, job);
+  tickInner(a, dt, ctx, job, rng);
 }
 
-function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnType<typeof JOB_MAP.get>>): void {
-  const st = stateOf(a);
+function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnType<typeof JOB_MAP.get>>, rng: Random): void {
+  const st = stateOf(a, rng);
 
   // ---- 行为类节拍（30–180s）：必须在移动分支之前累计。
   // 旧顺序把类计时放在「走到目的地之后」，一条长路径能走 100s 以上，类计时永远不动 ——
   // 实测 60s 窗口只换 104 次（应为千级），等于「一路走到底、从不换事」。
   st.kindT += dt;
-  if (!st.kind || st.kindT >= st.kindDur) chooseKind(a, st, ctx, job);
+  if (!st.kind || st.kindT >= st.kindDur) chooseKind(a, st, ctx, job, rng);
 
   // ---- 移动中 ----
   if (a.path.length > 0) {
@@ -727,16 +935,16 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
           a.pendingSpot = false;
           st.stepT = 0;
           // 到站的人不会挤成同一朝向：站位上各自朝不同方向（问价、张望、看货）
-          a.yaw += (Math.random() - 0.5) * 4.4;
+          a.yaw += (rng() - 0.5) * 4.4;
           return;
         }
         // 到站后按个人节奏停一下（30%）：市井里本来就有人走两步就站住看摊
-        if (Math.random() < 0.3) {
+        if (rng() < 0.3) {
           a.action = 'stand';
           a.doing = '驻足';
           a.curDoing = a.doing;
           st.stepT = 0;
-          st.stepDur = 1.4 + Math.random() * 3.2;
+          st.stepDur = 1.4 + rng() * 3.2;
           a.timer = st.stepDur;
           return;
         }
@@ -780,8 +988,29 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
       mz += st.avoidZ * 0.55;
       const ml = Math.hypot(mx, mz) || 1;
       mx /= ml; mz /= ml;
-      a.pos.x += mx * sp * dt;
-      a.pos.z += mz * sp * dt;
+      // ---- 行走面积分（R27）：先试探一步，撞墙按单轴滑动，两级都失败才回退 ----
+      // 旧版只改 x/z：铺面墙体没有碰撞体，人直接穿墙；地坪/桥面高度也从不过问。
+      const useWalk = !a.sky && a.pos.y > -40 && a.pos.y <= 12;
+      if (!useWalk) {
+        a.pos.x += mx * sp * dt;
+        a.pos.z += mz * sp * dt;
+      } else {
+        const step = sp * dt;
+        let nx = a.pos.x + mx * step, nz = a.pos.z + mz * step;
+        let sy = walkSurfaceY(nx, nz, a.pos.y);
+        if (sy === null) {
+          // 贴墙滑动：保留 x 或 z 的单轴分量，避免在墙口原地顶死
+          const sx2 = walkSurfaceY(nx, a.pos.z, a.pos.y);
+          if (sx2 !== null) { nz = a.pos.z; sy = sx2; }
+          else {
+            const sz2 = walkSurfaceY(a.pos.x, nz, a.pos.y);
+            if (sz2 !== null) { nx = a.pos.x; sy = sz2; }
+            else { nx = a.pos.x; nz = a.pos.z; sy = null; }
+          }
+        }
+        a.pos.x = nx; a.pos.z = nz;
+        if (sy !== null) a.pos.y = sy;
+      }
       const targetYaw = Math.atan2(mx, mz);
       let dy = targetYaw - a.yaw;
       while (dy > Math.PI) dy -= Math.PI * 2;
@@ -799,7 +1028,7 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
     a.pendingSpot = false;
     if (a.timer > 0) { a.timer -= dt; return; }
     a.action = 'walk';
-    if (!wander(a, ctx, st)) { a.action = 'stand'; a.timer = 2 + Math.random() * 3; }
+    if (!wander(a, ctx, st, rng)) { a.action = 'stand'; a.timer = 2 + rng() * 3; }
     return;
   }
 
@@ -810,16 +1039,16 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
   st.stepT += dt;
   if (a.timer > 0 && st.stepT < st.stepDur) {
     // 站着的人也会慢慢转头看街（不是钉死在原地的雕塑）
-    if (a.path.length === 0 && Math.random() < dt * 0.6) a.yaw += (Math.random() - 0.5) * 0.6;
+    if (a.path.length === 0 && rng() < dt * 0.6) a.yaw += (rng() - 0.5) * 0.6;
     return;
   }
 
   const def = BEHAVIOR_LIB[st.kind!];
-  let step = pickStep(def, st);
+  let step = pickStep(def, st, rng);
 
   // 动作必须在动作库注册表里（新增行为时漏注册会在这里被挡住，不会静默走错动作）
   st.step = step;
-  st.stepDur = step.dur[0] + Math.random() * (step.dur[1] - step.dur[0]);
+  st.stepDur = step.dur[0] + rng() * (step.dur[1] - step.dur[0]);
   st.pendingDur = st.stepDur;
   st.stepT = 0;
   a.doing = step.doing;
@@ -829,7 +1058,7 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
     a.action = step.act;
     a.pendingSpot = false;
     a.timer = st.stepDur;
-    if (!wander(a, ctx, st)) { a.action = 'stand'; a.timer = 2 + Math.random() * 3; st.stepDur = a.timer; }
+    if (!wander(a, ctx, st, rng)) { a.action = 'stand'; a.timer = 2 + rng() * 3; st.stepDur = a.timer; }
     return;
   }
   // 驻场者不追热点：热点在 46m 内也不去（否则会被街面摊子拉出场子）
@@ -839,8 +1068,8 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
     let tgt: THREE.Vector3 | null = null;
     if (spot) {
       for (let t = 0; t < 5; t++) {
-        const ring = 0.9 + Math.random() * 1.8;
-        const ang = Math.random() * Math.PI * 2;
+        const ring = 0.9 + rng() * 1.8;
+        const ang = rng() * Math.PI * 2;
         const p = new THREE.Vector3(spot.pos.x + Math.cos(ang) * ring, spot.pos.y, spot.pos.z + Math.sin(ang) * ring);
         if (a.sky || (dryPoint(p.x, p.z) && drySegment(a.pos.x, a.pos.z, p.x, p.z))) { tgt = p; break; }
       }
@@ -855,16 +1084,16 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
     // 附近没有对应热点（或落点在水里）→ 退化成「在这一带走动」，不硬塞一个不存在的摊子
     step = { ...step, spot: undefined, move: true };
     st.step = step;
-    st.stepDur = step.dur[0] + Math.random() * (step.dur[1] - step.dur[0]);
+    st.stepDur = step.dur[0] + rng() * (step.dur[1] - step.dur[0]);
     st.pendingDur = st.stepDur;
     a.action = 'walk';
     a.pendingSpot = false;
     a.timer = st.stepDur;
-    if (!wander(a, ctx, st)) { a.action = 'stand'; a.timer = 2 + Math.random() * 3; st.stepDur = a.timer; }
+    if (!wander(a, ctx, st, rng)) { a.action = 'stand'; a.timer = 2 + rng() * 3; st.stepDur = a.timer; }
     return;
   }
   a.action = step.act;
   a.pendingSpot = false;
   a.timer = st.stepDur;
-  a.yaw += (Math.random() - 0.5) * 4.4;
+  a.yaw += (rng() - 0.5) * 4.4;
 }

@@ -1382,13 +1382,16 @@ function buildTaiheGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
  * 几何账（全部可机检：PALACE_COURT / PALACE_COURT_COVERAGE / palace.court.* kit）：
  *  · 广场 x ∈ [−148, 148]、z ∈ [−3194, −3106] = 296 × 88 = 26,048 m²；
  *  · 东西庑房各 12 间（面阔 7.0、进深 9.0），内立面 |x| = 147.5、连廊柱列 |x| = 144.1；
- *  · 金砖 0.06m 厚、色 0x6e6a66，砖缝 0.45m；御道 14m + 两侧 0.9m 石边；
+ *  · 金砖 0.06m 厚、色 0x6e6a66；大格通缝 0.03m（细砖缝由 PAVE_GLSL 程序化给出，不占几何）；御道 14m + 两侧 0.9m 石边；
  *  · 铜鼎 4 / 日晷 1（东 66,−3176）/ 嘉量 1（西 −66,−3176）/ 品级山 2 列 × 8 / 松柏 4 角 × 4；
  *  · 午门内值房东西各 6 间（面阔 8.2、进深 8.5、檐高 4.4）。
  */
 export const PALACE_COURT = { x0: -148, x1: 148, z0: -3194, z1: -3106, roadHalf: 7 } as const;
 const COURT_NX = 12;        // 每侧金砖列数（列距 ≈11.7m）
-const COURT_GAP = 0.45;     // 砖缝：露出底衬青石，不是沙
+// 大格之间的露缝。旧值 0.45m：一格 6.34×12.33m 再加 45cm 通缝，从午门内看就是停车场车位线。
+// 真实墁地的通缝只有 1–2cm；这里收到 0.03m 只留一道暗线，0.8–1.2m 的细砖缝交给
+// PAVE_GLSL 的程序化色带（零几何），两套缝在尺度上分工，不再互相打架。
+const COURT_GAP = 0.03;
 const COURT_EDGE = 0.9;     // 御道两侧石边宽
 const COURT_TILE_H = 0.06;  // 金砖厚（规格 0.06m）
 const COURT_TILE_C = 0x6e6a66;
@@ -1426,8 +1429,97 @@ export function courtPavingCoverage(zS: number = PALACE_COURT.z1, zN: number = P
   return { area, brick, paved: brick + road + edge, brickRatio: brick / area, ratio: (brick + road + edge) / area };
 }
 
-/** 广场实测覆盖率（0.931 = 93.1%），探针直接读这个常量 */
+/**
+ * 广场实测覆盖率（0.995 = 99.5%），探针直接读这个常量。
+ * 口径提醒：这个数只统计「几何砖面 + 御道 + 石边」，不含程序化砖缝——大格通缝从 0.45m 收到
+ * 0.03m 后它自然抬高（旧值 93.1%）。它量的仍是「有没有裸沙」，不是「砖缝占多少画面」。
+ */
 export const PALACE_COURT_COVERAGE = courtPavingCoverage();
+
+/**
+ * 宫殿墁地的分级砖缝：0.9m 基本砖 + 每 7 块（6.3m）一道主缝。**零几何**。
+ *
+ * 病根在 `courtGrid`：它只按「12 列 / 12m 一行」切格，午门内广场单格 6.34×12.33m，
+ * 从午门内看就是停车场。真实宫殿墁地是 0.6–1.2m 方砖，每 6–8 块一道通缝。
+ *
+ * 为什么不做真几何：午门内广场单侧 76.1×74m，铺 0.9m 方砖要 85×82 格 × 2 面 × 2 侧
+ * ≈ 27,880 三角面；而现有铺装（144 块大砖 × 12 面）只有 1,728 面。净增 ≤0 的硬约束下，
+ * 细砖缝只能走「贴图式色带」——在世界坐标里按 0.9m 周期调制漫反射色，逐片元 fwidth
+ * 做抗锯齿与远距淡出，三角面一个不加。
+ *
+ * 三重门控保证只命中午门内广场 / 太和门广场的砖顶面（世界 y = 0.18）：
+ *   ① 世界法线朝上（n.y > 0.9）——须弥座、品级山、树池的竖直侧面不沾；
+ *   ② |y − 0.18| < 1.5mm —— 底衬 0.16、御道 0.185、御路石 0.23 全部排除；
+ *   ③ 两个广场矩形内 —— 城内外同高度的石面不沾。
+ * 御路石因此保持自己的材质与收边金线（顶面 0.23），砖缝淹不到它。
+ */
+const PAVE_BRICK_M = 0.9;     // 基本砖边长（0.8–1.2m 区间的中值）
+const PAVE_MAJOR_EVERY = 7;   // 每 7 块一条主缝 = 6.3m
+
+/** 砖缝的 GLSL 片段：paveHash/paveLine 两个小函数 + 砖距/主缝间隔两个 define */
+const PAVE_GLSL = `
+#define PAVE_PITCH ${PAVE_BRICK_M.toFixed(3)}
+#define PAVE_MAJOR ${PAVE_MAJOR_EVERY.toFixed(1)}
+float paveHash( vec2 p ) {
+  return fract( sin( dot( p, vec2( 127.1, 311.7 ) ) ) * 43758.5453123 );
+}
+float paveLine( float d, float w, float aa ) {
+  return 1.0 - smoothstep( max( w - aa, 0.0 ), w + aa, d );
+}`;
+
+/** 砖缝调制：进来的是「砖面最终色」，出去的是「砖面 × 砖缝/逐砖明度」 */
+const PAVE_APPLY_GLSL = `
+{
+  vec2 pg = vPaveW.xz / PAVE_PITCH;
+  vec2 paw = fwidth( pg );
+  float paaw = max( paw.x, paw.y );
+  float upFace = step( 0.9, vPaveN.y );
+  float yBand = step( abs( vPaveW.y - 0.18 ), 0.0015 );
+  float inFront = step( -84.0, vPaveW.x ) * step( vPaveW.x, 84.0 )
+                * step( -3056.0, vPaveW.z ) * step( vPaveW.z, -2982.0 );
+  float inCourt = step( -148.0, vPaveW.x ) * step( vPaveW.x, 148.0 )
+                * step( -3194.0, vPaveW.z ) * step( vPaveW.z, -3106.0 );
+  float zone = upFace * yBand * clamp( inFront + inCourt, 0.0, 1.0 );
+  if ( zone > 0.5 ) {
+    // 单元格小于约 2.5px 时淡回整片（亚像素砖缝只会变成摩尔纹）
+    float fade = 1.0 - smoothstep( 0.14, 0.42, paaw );
+    vec2 d = abs( fract( pg + 0.5 ) - 0.5 );   // 到最近砖缝的距离（单位：砖）
+    vec2 joint = floor( pg + 0.5 );           // 最近砖缝的序号（主缝判定用）
+    vec2 cell = floor( pg );                  // 砖块序号（逐砖明度用，一块砖只取一个值）
+    // 缝宽按「3km 外一眼读得出」定档：10cm 通缝在 24m 处约 2.2px，2cm 真缝只有 0.4px（亚像素=摩尔纹）
+    float jb = max( paveLine( d.x, 0.0556, paaw ), paveLine( d.y, 0.0556, paaw ) );  // 10cm 通缝
+    float mx = 1.0 - step( 0.5, mod( joint.x, PAVE_MAJOR ) );
+    float my = 1.0 - step( 0.5, mod( joint.y, PAVE_MAJOR ) );
+    float jm = max( paveLine( d.x, 0.1111, paaw ) * mx, paveLine( d.y, 0.1111, paaw ) * my ); // 20cm 主缝
+    float tone = 0.955 + 0.09 * paveHash( cell );
+    float k = tone * ( 1.0 - 0.40 * jb - 0.24 * jm );  // 主缝再深一档
+    diffuseColor.rgb *= mix( 1.0, k, fade );
+  }
+}`;
+
+/**
+ * 把 PAVE_GLSL 挂到 ash 材质上。工地只有一处：`Baker.materialSet()`（私有）——
+ * 烘焙器与 flush 必须共用同一份材质实例，另建一份只会多一个 draw call 且改不到实际渲染的那份。
+ * 幂等：材质上带 `__palacePaving` 标记，重复构建不会叠两次。
+ */
+function palacePavingJoints(b: Baker): void {
+  const mats = (b as unknown as { materialSet(): Record<string, THREE.Material> }).materialSet();
+  const ash = mats.ash as THREE.MeshStandardMaterial;
+  const flag = ash as unknown as { __palacePaving?: boolean };
+  if (flag.__palacePaving) return;
+  flag.__palacePaving = true;
+  ash.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vPaveW;\nvarying vec3 vPaveN;')
+      // 城市网格的 modelMatrix 是单位阵（顶点已是世界坐标），这里只是把「取世界」写全
+      .replace('#include <beginnormal_vertex>', '#include <beginnormal_vertex>\nvPaveN = normalize( mat3( modelMatrix ) * objectNormal );')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvPaveW = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>\nvarying vec3 vPaveW;\nvarying vec3 vPaveN;\n${PAVE_GLSL}`)
+      .replace('#include <map_fragment>', `#include <map_fragment>\n${PAVE_APPLY_GLSL}`);
+  };
+  ash.needsUpdate = true;
+}
 
 /** 金砖铺装：底衬青石 + 0.06m 金砖网格 + 14m 御道与石边（同一矩形可分几段铺，halfX 可窄于广场） */
 function palaceCourtPaving(b: Baker, zS: number, zN: number, halfX: number = PALACE_COURT.x1): void {
@@ -1446,7 +1538,9 @@ function palaceCourtPaving(b: Baker, zS: number, zN: number, halfX: number = PAL
       const cx = s * (g.sideIn + g.cw * (i + 0.5));
       for (let j = 0; j < g.nz; j++) {
         const zc = zSouth - g.cd * (j + 0.5);
-        const tone = 0.94 + wardHash(i + 7, j + 13, s > 0 ? 3 : 5) * 0.12;
+        // 大格只留 ±1.5% 的极轻明度差：旧值 ±6% 会在细砖缝之上再叠一层 6.34×12.33m 的棋盘，
+        // 远看仍是「大板拼缝」。逐砖明度差（0.9m 一格）由 PAVE_GLSL 的 paveHash 给。
+        const tone = 0.985 + wardHash(i + 7, j + 13, s > 0 ? 3 : 5) * 0.03;
         b.box('ash', g.tw, COURT_TILE_H, g.td, cx, 0.15, zc, shade(COURT_TILE_C, tone));
       }
     }
@@ -1565,6 +1659,85 @@ function courtPinji(b: Baker, x: number, z: number): void {
   b.box('wall', 0.9, 0.42, 0.9, x, 1.03, z, shade(0xa89f8a, 1.02));
   b.box('metal', 0.5, 0.06, 0.5, x, 1.27, z, 0xc9a13a);
   b.kit('palace.court.pinji', 1, 1.2);
+}
+
+/**
+ * 御路石（丹陛石）：午门内广场中轴一整块浅浮雕石板。
+ * 广场本身已有 14m 御道，但那是一条平铺的色带；加一块 8m 宽、抬 1.5cm 的整石，
+ * 从午门门洞看进去才有「一条石」而不是「一条路」。
+ */
+function courtImperialWay(b: Baker, zS: number, zN: number): void {
+  const L = Math.abs(zS - zN);
+  const cz = (zS + zN) / 2;
+  b.box('ash', 8, 0.09, L, 0, 0.185, cz, shade(PAL_MARBLE, 0.97));
+  for (const sx of [-1, 1]) b.box('ash', 0.5, 0.12, L, sx * 4.25, 0.19, cz, PAL_STONE);
+  // 浮雕：七道横跨石面的金线 + 每道两端云头（3km 外读成"石面上有纹"，近处读成云龙带）
+  for (let i = 0; i < 7; i++) {
+    const z = zS - (L * (i + 0.5)) / 7;
+    b.box('metal', 7.0, 0.02, 0.16, 0, 0.235, z, 0xc9a13a);
+    for (const sx of [-1, 1]) b.box('metal', 0.9, 0.02, 0.5, sx * 3.0, 0.235, z + 0.5, 0xd8b028);
+  }
+  b.kit('palace.front.imperialWay', 1, 0.2);
+}
+
+/** 铜龟：须弥座 + 龟趺 + 鎏金龟背（头朝 sx），与铜鹤对置 */
+function courtTurtle(b: Baker, x: number, z: number, sx: number): void {
+  b.box('ash', 2.2, 0.28, 2.2, x, 0.14, z, 0x8d8a80);
+  b.box('ash', 1.7, 0.55, 1.7, x, 0.55, z, shade(PAL_MARBLE, 0.9));
+  b.box('ash', 1.3, 0.18, 1.3, x, 0.9, z, PAL_MARBLE);
+  b.sphere('metal', 0.86, 10, x, 1.28, z, 0x4a4234, 0, 0, 0, 1.2, 0.5, 0.98);
+  b.sphere('metal', 0.46, 8, x + sx * 1.02, 1.2, z, 0x554a3a, 0, 0, 0, 1.15, 0.6, 0.72);
+  for (const ax of [-1, 1]) for (const az of [-1, 1]) b.box('metal', 0.26, 0.34, 0.3, x + ax * 0.62, 1.03, z + az * 0.62, 0x4a4234);
+  b.box('metal', 0.2, 0.16, 0.5, x - sx * 1.0, 1.1, z, 0x4a4234, 0, 0, 0.5);
+  for (let i = -1; i <= 1; i++) b.box('metal', 1.1, 0.02, 0.06, x, 1.46, z + i * 0.3, 0xc9a13a);
+  b.kit('palace.front.turtle', 1, 1.6);
+}
+
+/** 铜鹤：须弥座 + 双足 + 鹤身 + 两段长颈 + 喙 + 丹顶 + 双翼，头朝 -sx */
+function courtCrane(b: Baker, x: number, z: number, sx: number): void {
+  b.box('ash', 2.2, 0.28, 2.2, x, 0.14, z, 0x8d8a80);
+  b.box('ash', 1.7, 0.55, 1.7, x, 0.55, z, shade(PAL_MARBLE, 0.9));
+  b.box('ash', 1.2, 0.16, 1.2, x, 0.9, z, PAL_MARBLE);
+  const y0 = 0.98;
+  for (const az of [-1, 1]) b.cyl('metal', 0.055, 0.07, 1.05, 6, x, y0 + 0.52, z + az * 0.18, 0x5a5040);
+  b.sphere('metal', 0.62, 10, x, y0 + 1.18, z, 0x5a5040, 0, 0, 0, 1.25, 0.72, 0.8);
+  b.cyl('metal', 0.09, 0.13, 1.1, 6, x - sx * 0.42, y0 + 1.78, z, 0x5a5040, 0, 0, sx * 0.5);
+  b.cyl('metal', 0.07, 0.09, 0.7, 6, x - sx * 0.82, y0 + 2.28, z, 0x5a5040, 0, 0, sx * 0.9);
+  b.sphere('metal', 0.15, 8, x - sx * 0.98, y0 + 2.62, z, 0x5a5040, 0, 0, 0, 1.2, 0.9, 0.9);
+  b.box('metal', 0.42, 0.06, 0.07, x - sx * 1.22, y0 + 2.6, z, 0xc9a13a, 0, 0, sx * 0.12);
+  b.box('wall', 0.16, 0.08, 0.16, x - sx * 0.98, y0 + 2.76, z, 0xa8322a);
+  for (const az of [-1, 1]) b.box('metal', 0.9, 0.08, 0.42, x + sx * 0.1, y0 + 1.34, z + az * 0.32, 0x4a4234, 0, 0, -0.35);
+  b.kit('palace.front.crane', 1, 2.6);
+}
+
+/**
+ * 午门内广场（真正的皇宫前庭）地面陈设：御路石 / 日晷 / 嘉量 / 铜龟 / 铜鹤 / 品级山两列。
+ * **不加任何有顶建筑**——SPEC-总账.md:153 把中轴院无有顶建筑列为刻意保留的大朝仪制空间。
+ * 落位全部收在 |x| ≤ 42 内：东西值房内立面 |x| = 59.75，太和门台基南缘 z = −3057，
+ * 陈设南端 z = −2990 在午门城台北缘（−2968）以北 22m。
+ */
+function palaceFrontFurnish(b: Baker): void {
+  const zS = -2990, zN = -3050;
+  courtImperialWay(b, zS, zN);
+  courtSundial(b, 30, -3020);
+  courtJialiang(b, -30, -3020);
+  courtTurtle(b, 16, -3040, 1);
+  courtCrane(b, -16, -3040, -1);
+  for (const sx of [-1, 1]) for (let i = 0; i < 8; i++) courtPinji(b, sx * 40, -2996 - i * 7.0);
+  b.kit('palace.front.pinji', 16, 1.2);
+  if (typeof window !== 'undefined') {
+    (window as unknown as { __w2PalaceFront?: unknown }).__w2PalaceFront = {
+      court: { x0: -84, x1: 84, z0: -3056, z1: -2982 },
+      items: {
+        imperialWay: { x: 0, z0: zS, z1: zN, w: 8 },
+        sundial: { x: 30, z: -3020 },
+        jialiang: { x: -30, z: -3020 },
+        turtle: { x: 16, z: -3040 },
+        crane: { x: -16, z: -3040 },
+        pinji: { columns: [-40, 40], z0: -2996, dz: 7.0, n: 8 },
+      },
+    };
+  }
 }
 
 /** 松柏：树池 + 树干（cyl 'trunk'）+ 三层松针球（sphere 'leaf'）——不用圆锥 */
@@ -1701,12 +1874,15 @@ function palaceCourtWall(b: Baker, sx: number): void {
 
 /** R14 广场总装：金砖 → 院墙 → 庑房 → 值房 → 陈设（覆盖率同时落 kit，探针可读） */
 function buildPalaceCourt(b: Baker): void {
+  palacePavingJoints(b);                                   // 0.9m 分级砖缝（程序化色带，零几何）
   palaceCourtPaving(b, PALACE_COURT.z1, PALACE_COURT.z0);  // 太和门 → 太和殿
   palaceCourtPaving(b, -2982, -3056, 84);                  // 午门内：南端起于御沟以北，宽度收到 ±84（值房 |x|=64 落在铺装边上）
   for (const sx of [-1, 1]) palaceCourtWall(b, sx);
   for (const sx of [-1, 1]) palaceCourtVeranda(b, sx, PALACE_COURT.z1, COURT_VERANDA_Z0, COURT_BAY);
   for (const sx of [-1, 1]) palaceDutyRooms(b, sx);
   palaceCourtFurnish(b);
+  // 午门内广场（前庭）：御路石 / 日晷 / 嘉量 / 铜龟 / 铜鹤 / 品级山两列——只加地面陈设，不加有顶建筑
+  palaceFrontFurnish(b);
   // 千分比：928 = 92.8%
   b.kit('palace.court.coverage', Math.round(PALACE_COURT_COVERAGE.ratio * 1000), 0.18);
 }

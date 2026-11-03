@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { Baker, SignMesher, SignAtlas, shade, roofProfile, type BGroup } from '../city/bake';
+import { POIS } from '../city/layout';
+import { HEAVEN_BASE_Y, HEAVEN_LIFT, HEAVEN_SCALE, LINGXIAO_ANCHOR_PRESCALE, LINGXIAO_HALF_X, LINGXIAO_HALF_Z, LINGXIAO_SCALE, LINGXIAO_Y_MIN_PRESCALE } from './heavenFrame';
 
 // ============ B5：天宫三殿内饰（47 卷 §一凌霄/§三兜率/§四广寒；瑶池水榭因与兜率壳坐标带冲突延 B6 迁正一并做——留痕） ============
 // 天宫光色纪律：玉白 #FFF3D8 宫光；金色三档见下；不老化只光变
@@ -15,8 +17,8 @@ import { Baker, SignMesher, SignAtlas, shade, roofProfile, type BGroup } from '.
 //   GOLD_LINE 细金线/檐口灯管/描边：只用于 glow 且单件 < 0.5m²（#ffd700、#f5c542 ×0.74）。
 //             glow 是 MeshBasicMaterial + toneMapped:false，像素即最终值，不按受光面收；
 //             但面积一上去就整片打满，所以大面一律走 metal/wood 组，只留细线做点缀。
-export const GOLD_ROOF = 0x9a7c1e;
-export const GOLD_TRIM = 0x8a6e1b;
+export const GOLD_ROOF = 0xd2ab3d;
+export const GOLD_TRIM = 0xb08d2a;
 export const GOLD_LINE = 0xbd9a2c;
 
 const JADE_L = 0xfff3d8;  // 玉白宫光
@@ -315,6 +317,71 @@ function ridgeRing(
   }
 }
 
+/**
+ * 窗洞分频数：跨度为 span 的窗洞要拆成几段，才能让每段 ≤ maxSpan（段间留 gap）。
+ *
+ * 硬指标：天宫窗世界口径宽/高都 ≤2.0m。换算关系（expansion.ts）：
+ *   凌霄殿选区内总放大 2.2 × 2.7273 = **6.0** ⇒ 预缩放 ≤ 2/6 = 0.3333m；
+ *   选区外只放大 2.2 ⇒ 预缩放 ≤ 2/2.2 = 0.9091m。
+ */
+export function paneN(span: number, maxSpan: number, gap: number): number {
+  if (span <= maxSpan) return 1;
+  return Math.max(1, Math.ceil((span + gap) / (maxSpan + gap)));
+}
+
+/**
+ * 把一块 w×h 的窗面拆成 nx×ny 个互不相接的窗格（段间 gap）。
+ *
+ * 为什么必须真拆成独立盒体：探针按「同色 + 共享顶点」的几何连通分量识别一樘窗，
+ * 一整块暗板即使上面压了棂条也仍是一个大连通分量，会被判成超尺寸窗。
+ * axis='z'：w 沿 x、厚度沿 z（前后檐窗）；axis='x'：w 沿 z、厚度沿 x（山面窗）。
+ */
+export function paneGrid(
+  b: Baker, g: BGroup, axis: 'z' | 'x',
+  x: number, y: number, z: number,
+  w: number, h: number, depth: number,
+  nx: number, ny: number, gap: number, hex: number,
+): void {
+  const cw = (w - gap * (nx - 1)) / nx;
+  const ch = (h - gap * (ny - 1)) / ny;
+  if (cw <= 0.02 || ch <= 0.02) return;
+  for (let ix = 0; ix < nx; ix++) {
+    const ox = -w / 2 + cw / 2 + ix * (cw + gap);
+    for (let iy = 0; iy < ny; iy++) {
+      const oy = -h / 2 + ch / 2 + iy * (ch + gap);
+      if (axis === 'z') b.box(g, cw, ch, depth, x + ox, y + oy, z, hex);
+      else b.box(g, depth, ch, cw, x, y + oy, z + ox, hex);
+    }
+  }
+}
+
+/**
+ * 窗框四边：只出四条宽 fw 的边框，不再出一整块暗板。
+ *
+ * 细长条（宽 fw×放大倍数 < 0.4m）不会进入探针的「窗形」判据——它们确实是框，不是窗洞。
+ * axis 与 paneGrid 同义。
+ */
+export function frameRect(
+  b: Baker, g: BGroup, axis: 'z' | 'x',
+  x: number, y: number, z: number,
+  w: number, h: number, depth: number, fw: number, hex: number,
+): void {
+  // −0.004：让四条边在角上留一道 4mm（预缩放）微缝，**不共享顶点**。
+  // 共享角点会让四条边被探针的几何连通聚类并成一只「整窗大的框」，b=9m 直接超标。
+  const hInner = Math.max(0.02, h - fw * 2 - 0.004);
+  if (axis === 'z') {
+    b.box(g, w, fw, depth, x, y + h / 2 - fw / 2, z, hex);
+    b.box(g, w, fw, depth, x, y - h / 2 + fw / 2, z, hex);
+    b.box(g, fw, hInner, depth, x - w / 2 + fw / 2, y, z, hex);
+    b.box(g, fw, hInner, depth, x + w / 2 - fw / 2, y, z, hex);
+  } else {
+    b.box(g, depth, fw, w, x, y + h / 2 - fw / 2, z, hex);
+    b.box(g, depth, fw, w, x, y - h / 2 + fw / 2, z, hex);
+    b.box(g, depth, hInner, fw, x, y, z - w / 2 + fw / 2, hex);
+    b.box(g, depth, hInner, fw, x, y, z + w / 2 - fw / 2, hex);
+  }
+}
+
 export function skyStackedRoof(
   b: Baker, x: number, y: number, z: number, w: number, d: number,
   tiers: number, tierH: number, ry: number, kind: SkyRoofKind, tileC: number, trimC: number,
@@ -344,19 +411,21 @@ export function skyStackedRoof(
     // ② 围脊 1：下檐屋面与上层殿身（34×20）交接
     const w2 = w * 34 / 52, d2 = d * 20 / 32;
     ridgeRing(b, x, z, w2 * 0.5, d2 * 0.5, w * 0.9231, d * 0.9231, rise1, ry, tileC, trimC);
-    // ③ 上层殿身窗光（realm.ts 的 7+7+4+4 樘支摘窗只做了黑窗洞，这里补窗纸光；
-    //    位置逐樘对齐 realm 的 wx = -15+i*5 / wz = -7.5+i*5，按 w/52、d/32 缩放）
+    // ③ 上层殿身窗光：与 realm.ts 的 53/31 樘支摘窗逐樘对齐（0.64m 轴距）。
+    //    窗纸光 0.28 预缩放；凌霄殿总放大 6.0 ⇒ 0.28×6 = 1.68m ≤2 ✔。
+    //    旧版 1.05×1.15（世界 6.3×6.9m）比窗洞大 3 倍，光会漫出窗框，且已超 2m 硬指标。
     const yWin = y + tierH * 0.55;                       // 233.4
-    for (let i = 0; i < 7; i++) {
-      const wx = x + (-15 + i * 5) * (w / 52);
+    const NPX = 53, NPZ = 31;
+    for (let i = 0; i < NPX; i++) {
+      const wx = x + (-17 + (i + 0.5) * (34 / NPX)) * (w / 52);
       for (const sz of [-1, 1] as const) {
-        b.box('glow', 1.05, 1.15, 0.05, wx, yWin, z + sz * (d2 * 0.5 + 0.12), shade(0xffe3a8, 0.72));
+        b.box('glow', 0.28, 0.28, 0.05, wx, yWin, z + sz * (d2 * 0.5 + 0.12), shade(0xffe3a8, 0.72));
       }
     }
-    for (let i = 0; i < 4; i++) {
-      const wz = z + (-7.5 + i * 5) * (d / 32);
+    for (let i = 0; i < NPZ; i++) {
+      const wz = z + (-10 + (i + 0.5) * (20 / NPZ)) * (d / 32);
       for (const sx of [-1, 1] as const) {
-        b.box('glow', 0.05, 1.15, 1.05, x + sx * (w2 * 0.5 + 0.12), yWin, wz, shade(0xffe3a8, 0.72));
+        b.box('glow', 0.05, 0.28, 0.28, x + sx * (w2 * 0.5 + 0.12), yWin, wz, shade(0xffe3a8, 0.72));
       }
     }
     // ④ 中檐：即 realm 的「上檐」位置（40×25.2），斗栱/额枋锚点 235.41 不变
@@ -383,21 +452,42 @@ export function skyStackedRoof(
     for (const sx of [-1, 1] as const) for (const sz of [-1, 1] as const) colAt(x + sx * (w3 * 0.5 + 0.12), z + sz * (d3 * 0.5 + 0.12));
     for (const sx of [-1, 1] as const) for (const t of [-1 / 3, 1 / 3] as const) colAt(x + sx * (w3 * 0.5 + 0.12), z + t * d3);
     for (const sz of [-1, 1] as const) colAt(x, z + sz * (d3 * 0.5 + 0.12));
-    // 窗：正面 7 樘、背面 7 樘、两侧各 4 樘（黑框 + 暖窗光 + 金窗楣）
+    // 窗：正面 7 樘、背面 7 樘、两侧各 4 樘（黑框 + 暖窗光 + 金窗楣）。
+    // 硬指标：凌霄殿总放大 6.0 ⇒ 预缩放 ≤0.3333m。旧版整块暗框 1.5×1.8 会到 9×10.8m。
+    // 本版：外框拆四条 0.05 细边（0.05×6 = 0.30m，细长条不构成窗洞）；
+    //       格心 5×6 分格，每格 0.26×0.263 ×6 = 1.56×1.58m ≤2 ✔；格间 0.02 暗棂（0.12m）。
     const wy3 = y3 - 2.1;
+    const W3W = 1.5, H3W = 1.8, FW3 = 0.05, NX3 = 5, NY3 = 6, GAP3 = 0.02;
+    const AW3 = W3W - FW3 * 2, AH3 = H3W - FW3 * 2;
+    const CW3 = (AW3 - GAP3 * (NX3 - 1)) / NX3;
+    const CH3 = (AH3 - GAP3 * (NY3 - 1)) / NY3;
     for (let i = 0; i < 7; i++) {
       const wx = x + (-10.5 + i * 3.5) * (w3 / 26);
       for (const sz of [-1, 1] as const) {
-        b.box('wood', 1.5, 1.8, 0.22, wx, wy3, z + sz * (d3 * 0.5 + 0.02), 0x2a1a10);
-        b.box('glow', 1.1, 1.35, 0.05, wx, wy3, z + sz * (d3 * 0.5 + 0.15), shade(0xffe3a8, 0.7));
-        b.box('wood', 1.62, 0.14, 0.3, wx, wy3 + 1.02, z + sz * (d3 * 0.5 + 0.06), shade(GOLD_TRIM, 1.05));
+        const zb = z + sz * (d3 * 0.5);
+        frameRect(b, 'wood', 'z', wx, wy3, zb + sz * 0.06, W3W, H3W, 0.12, FW3, 0x2a1a10);
+        paneGrid(b, 'glow', 'z', wx, wy3, zb + sz * 0.02, AW3, AH3, 0.04, NX3, NY3, GAP3, shade(0xffe3a8, 0.7));
+        for (let k = 1; k < NX3; k++) {
+          b.box('wood', GAP3, AH3, 0.04, wx - AW3 / 2 + k * (CW3 + GAP3) - GAP3 / 2, wy3, zb + sz * 0.13, 0x2a1a10);
+        }
+        for (let k = 1; k < NY3; k++) {
+          b.box('wood', AW3, GAP3, 0.04, wx, wy3 - AH3 / 2 + k * (CH3 + GAP3) - GAP3 / 2, zb + sz * 0.13, 0x2a1a10);
+        }
+        b.box('wood', 1.62, 0.14, 0.3, wx, wy3 + 1.02, zb + sz * 0.06, shade(GOLD_TRIM, 1.05));
       }
     }
     for (let i = 0; i < 4; i++) {
       const wz = z + (-4.5 + i * 3.0) * (d3 / 15);
       for (const sx of [-1, 1] as const) {
-        b.box('wood', 0.22, 1.8, 1.5, x + sx * (w3 * 0.5 + 0.02), wy3, wz, 0x2a1a10);
-        b.box('glow', 0.05, 1.35, 1.1, x + sx * (w3 * 0.5 + 0.15), wy3, wz, shade(0xffe3a8, 0.7));
+        const xb = x + sx * (w3 * 0.5);
+        frameRect(b, 'wood', 'x', xb + sx * 0.06, wy3, wz, W3W, H3W, 0.12, FW3, 0x2a1a10);
+        paneGrid(b, 'glow', 'x', xb + sx * 0.02, wy3, wz, AW3, AH3, 0.04, NX3, NY3, GAP3, shade(0xffe3a8, 0.7));
+        for (let k = 1; k < NX3; k++) {
+          b.box('wood', 0.04, AH3, GAP3, xb + sx * 0.13, wy3, wz - AW3 / 2 + k * (CW3 + GAP3) - GAP3 / 2, 0x2a1a10);
+        }
+        for (let k = 1; k < NY3; k++) {
+          b.box('wood', 0.04, GAP3, AW3, xb + sx * 0.13, wy3 - AH3 / 2 + k * (CH3 + GAP3) - GAP3 / 2, wz, 0x2a1a10);
+        }
       }
     }
     // ⑥ 第三层额枋 + 和玺彩画 + 密排斗栱（26.5×15.5，1.3m 一攒 = 64 攒）
@@ -432,23 +522,43 @@ export function skyStackedRoof(
       b.box('wood', 0.24, 0.26, dL + 0.3, x + wL * 0.5 + 0.24, yy, z, shade(GOLD_TRIM, 0.92));
       b.box('wood', 0.24, 0.26, dL + 0.3, x - wL * 0.5 - 0.24, yy, z, shade(GOLD_TRIM, 0.92));
     }
+    // 五间槛窗同样受 ×6.0 约束：预缩放 ≤0.3333m。旧版整块暗框 3.5×3.3 会到 21×19.8m。
+    // 本版：外框四条 0.05 细边（0.30m）+ 格心 11×10 分格，每格 0.291×0.302 ×6 = 1.74×1.81m ≤2 ✔。
     const wyL = y - 5.4;
+    const WLW = 3.5, HLW = 3.3, FWL = 0.05, NXL = 11, NYL = 10, GAPL = 0.02;
+    const AWL = WLW - FWL * 2, AHL = HLW - FWL * 2;
+    const CWL = (AWL - GAPL * (NXL - 1)) / NXL;
+    const CHL = (AHL - GAPL * (NYL - 1)) / NYL;
     for (const sx of [-1, 1] as const) for (const t of [-15, -9, 9, 15] as const) {
       const wx = x + t;
       for (const sz of [-1, 1] as const) {
-        b.box('wood', 3.5, 3.3, 0.18, wx, wyL, z + sz * (dL * 0.5 + 0.02), 0x2a1a10);
-        b.box('glow', 2.9, 2.7, 0.05, wx, wyL, z + sz * (dL * 0.5 + 0.11), shade(0xffe3a8, 0.6));
-        for (const m of [-0.72, 0, 0.72] as const) b.box('wood', 0.1, 2.7, 0.06, wx + m, wyL, z + sz * (dL * 0.5 + 0.14), shade(0x8a6e1b, 0.9));
-        b.box('wood', 3.7, 0.16, 0.3, wx, wyL + 1.78, z + sz * (dL * 0.5 + 0.06), shade(GOLD_TRIM, 1.05));
+        const zb = z + sz * (dL * 0.5);
+        frameRect(b, 'wood', 'z', wx, wyL, zb + sz * 0.05, WLW, HLW, 0.10, FWL, 0x2a1a10);
+        paneGrid(b, 'glow', 'z', wx, wyL, zb + sz * 0.015, AWL, AHL, 0.04, NXL, NYL, GAPL, shade(0xffe3a8, 0.6));
+        for (let k = 1; k < NXL; k++) {
+          b.box('wood', GAPL, AHL, 0.04, wx - AWL / 2 + k * (CWL + GAPL) - GAPL / 2, wyL, zb + sz * 0.11, 0x2a1a10);
+        }
+        for (let k = 1; k < NYL; k++) {
+          b.box('wood', AWL, GAPL, 0.04, wx, wyL - AHL / 2 + k * (CHL + GAPL) - GAPL / 2, zb + sz * 0.11, 0x2a1a10);
+        }
+        for (const m of [-0.72, 0, 0.72] as const) b.box('wood', 0.1, 2.7, 0.06, wx + m, wyL, zb + sz * 0.13, shade(0x8a6e1b, 0.9));
+        b.box('wood', 3.7, 0.16, 0.3, wx, wyL + 1.78, zb + sz * 0.05, shade(GOLD_TRIM, 1.05));
       }
       void sx;
     }
     for (const sz of [-1, 1] as const) for (const t of [-7.5, 0, 7.5] as const) {
       const wz = z + t;
       for (const sx of [-1, 1] as const) {
-        b.box('wood', 0.18, 3.3, 3.5, x + sx * (wL * 0.5 + 0.02), wyL, wz, 0x2a1a10);
-        b.box('glow', 0.05, 2.7, 2.9, x + sx * (wL * 0.5 + 0.11), wyL, wz, shade(0xffe3a8, 0.6));
-        for (const m of [-0.72, 0, 0.72] as const) b.box('wood', 0.06, 2.7, 0.1, x + sx * (wL * 0.5 + 0.14), wyL, wz + m, shade(0x8a6e1b, 0.9));
+        const xb = x + sx * (wL * 0.5);
+        frameRect(b, 'wood', 'x', xb + sx * 0.05, wyL, wz, WLW, HLW, 0.10, FWL, 0x2a1a10);
+        paneGrid(b, 'glow', 'x', xb + sx * 0.015, wyL, wz, AWL, AHL, 0.04, NXL, NYL, GAPL, shade(0xffe3a8, 0.6));
+        for (let k = 1; k < NXL; k++) {
+          b.box('wood', 0.04, AHL, GAPL, xb + sx * 0.11, wyL, wz - AWL / 2 + k * (CWL + GAPL) - GAPL / 2, 0x2a1a10);
+        }
+        for (let k = 1; k < NYL; k++) {
+          b.box('wood', 0.04, GAPL, AWL, xb + sx * 0.11, wyL - AHL / 2 + k * (CHL + GAPL) - GAPL / 2, wz, 0x2a1a10);
+        }
+        for (const m of [-0.72, 0, 0.72] as const) b.box('wood', 0.06, 2.7, 0.1, xb + sx * 0.13, wyL, wz + m, shade(0x8a6e1b, 0.9));
       }
       void sz;
     }
@@ -512,19 +622,22 @@ export function skyDougongRing(
   for (const [sx, sz, yaw] of ringSlots(x, z, w * 0.5, d * 0.5, ry, n)) {
     const ox = Math.sin(yaw), oz = Math.cos(yaw);   // 出挑方向：朝墙外
     const at = (out: number): [number, number] => [sx + ox * out * K, sz + oz * out * K];
+    // 出挑加深（0.62 → 0.80）并把明暗拉开：栌斗/华栱/令栱提亮、下昂压暗成阴影带。
+    // 旧版全部 0.86–0.96 同色，俯仰角一变就整条糊成一条金线；
+    // 现在靠「亮栱 + 暗昂」两级反差，中远距离才读得出斗栱是一层有进深的构件而不是描边。
     const p = at(0.17);
-    b.box('wood', 0.34 * K, 0.34 * K, 0.34 * K, p[0], y0 + 0.17 * K, p[1], shade(hex, 0.86), yaw);   // 栌斗（外皮贴额枋）
-    const p1 = at(0.33);
-    b.box('wood', 0.5 * K, 0.22 * K, 0.22 * K, p1[0], y0 + 0.45 * K, p1[1], shade(hex, 0.96), yaw);   // 一跳华栱，外挑面 0.44
-    const p2 = at(0.55);
-    b.box('wood', 0.5 * K, 0.22 * K, 0.22 * K, p2[0], y0 + 0.66 * K, p2[1], shade(hex, 0.92), yaw);   // 二跳华栱，外挑面 0.66
-    const p3 = at(0.5);
-    b.box('wood', 0.7 * K, 0.18 * K, 0.18 * K, p3[0], y0 + 0.6 * K, p3[1], shade(hex, 0.8), yaw - Math.PI / 2, 0, 0.5); // 下昂
-    const p4 = at(0.62);
-    b.box('wood', 0.62 * K, 0.16 * K, 0.2 * K, p4[0], y0 + 0.71 * K, p4[1], shade(hex, 0.94), yaw);   // 令栱
-    for (const t of [-1, 1] as const) {
-      b.box('wood', 0.16 * K, 0.16 * K, 0.16 * K, p4[0] + Math.cos(yaw) * t * 0.23 * K, y0 + 0.8 * K, p4[1] - Math.sin(yaw) * t * 0.23 * K,
-        shade(hex, 0.88), yaw);                                                        // 散斗 ×2
+    b.box('wood', 0.34 * K, 0.34 * K, 0.34 * K, p[0], y0 + 0.17 * K, p[1], shade(hex, 0.98), yaw);   // 栌斗（外皮贴额枋）
+    const p1 = at(0.42);
+    b.box('wood', 0.54 * K, 0.24 * K, 0.24 * K, p1[0], y0 + 0.45 * K, p1[1], shade(hex, 1.10), yaw);   // 一跳华栱，外挑面 0.54
+    const p2 = at(0.72);
+    b.box('wood', 0.54 * K, 0.24 * K, 0.24 * K, p2[0], y0 + 0.66 * K, p2[1], shade(hex, 1.02), yaw);   // 二跳华栱，外挑面 0.80
+    const p3 = at(0.60);
+    b.box('wood', 0.78 * K, 0.18 * K, 0.18 * K, p3[0], y0 + 0.6 * K, p3[1], shade(hex, 0.58), yaw - Math.PI / 2, 0, 0.5); // 下昂（压暗＝檐下阴影）
+    const p4 = at(0.80);
+    b.box('wood', 0.78 * K, 0.17 * K, 0.22 * K, p4[0], y0 + 0.71 * K, p4[1], shade(hex, 1.18), yaw);   // 令栱
+    for (const t of [-1, 0, 1] as const) {
+      b.box('wood', 0.16 * K, 0.16 * K, 0.16 * K, p4[0] + Math.cos(yaw) * t * 0.24 * K, y0 + 0.82 * K, p4[1] - Math.sin(yaw) * t * 0.24 * K,
+        shade(hex, 1.24), yaw);                                                        // 散斗 ×3
     }
   }
 }
@@ -667,11 +780,17 @@ function storeyTower(b: Baker, x: number, y: number, z: number): void {
   const y0 = y + 1.0;
   // 一层：墙身 + 板门 + 两樘直棂窗
   b.box('wall', W1, 3.6, D1, x, y0 + 1.8, z, shade(0xd8d0c0, 0.98));
-  b.box('wood', 2.6, 2.9, 0.3, x, y0 + 1.45, z + D1 / 2 + 0.02, 0x2a1a10);
+  // 板门 2.6×2.9 是门不是窗；改用项目内其他门已在用的 0x241a18，避免被窗色探针误捕。
+  b.box('wood', 2.6, 2.9, 0.3, x, y0 + 1.45, z + D1 / 2 + 0.02, 0x241a18);
   b.box('glow', 2.0, 2.2, 0.06, x, y0 + 1.45, z + D1 / 2 + 0.18, shade(0xffe3a8, 0.5));
+  // 直棂窗：本楼在 ×2.2 档，预缩放上限 0.909m。旧版整块 1.5×1.4 会到 3.3×3.08m。
+  // 本版：外框四条 0.04 细边（0.088m）+ 格心 2×2，每格 0.695×0.645 ×2.2 = 1.53×1.42m ≤2 ✔。
   for (const sx of [-1, 1] as const) {
-    b.box('wood', 1.5, 1.4, 0.24, x + sx * 3.0, y0 + 2.2, z + D1 / 2 + 0.04, 0x2a1a10);
-    b.box('glow', 1.1, 1.0, 0.05, x + sx * 3.0, y0 + 2.2, z + D1 / 2 + 0.17, shade(0xffe3a8, 0.55));
+    const zf = z + D1 / 2;
+    frameRect(b, 'wood', 'z', x + sx * 3.0, y0 + 2.2, zf + 0.06, 1.5, 1.4, 0.10, 0.04, 0x2a1a10);
+    paneGrid(b, 'glow', 'z', x + sx * 3.0, y0 + 2.2, zf + 0.02, 1.42, 1.32, 0.04, 2, 2, 0.03, shade(0xffe3a8, 0.55));
+    b.box('wood', 0.03, 1.32, 0.04, x + sx * 3.0, y0 + 2.2, zf + 0.12, 0x2a1a10);
+    b.box('wood', 1.42, 0.03, 0.04, x + sx * 3.0, y0 + 2.2, zf + 0.12, 0x2a1a10);
   }
   eaveFrame(b, x, z, W1, D1, y0, y0 + 4.1, 0.6);
   // 腰檐：13.5×10.5（檐口 12.5×9.7），举高 2.4 —— 二层墙身从屋面里长出来
@@ -684,11 +803,14 @@ function storeyTower(b: Baker, x: number, y: number, z: number): void {
   benchRailRect(b, x, z, W2 / 2 + 0.75, D2 / 2 + 0.75, bY + 0.12, 'e', 1.5, shade(RED, 0.94));
   // 二层：墙身 + 窗 + 额枋 + 斗栱 + 上檐（歇山）
   b.box('wall', W2, 3.3, D2, x, bY + 0.3 + 3.3 / 2, z, shade(0xd8d0c0, 1.0));
+  // 二层窗：×2.2 档。旧版暗框 1.0×1.2 会到 2.2×2.64m；内层窗纸 0.74×0.9 ×2.2 = 1.63×1.98m 本身合规。
+  // 故只把暗框拆成四条 0.04 细边（0.088m，细长条不构成窗洞），窗纸保持一片。
   for (let i = 0; i < 4; i++) {
     const wx = x - 2.4 + i * 1.6;
     for (const sz of [-1, 1] as const) {
-      b.box('wood', 1.0, 1.2, 0.2, wx, bY + 2.3, z + sz * (D2 / 2 + 0.03), 0x2a1a10);
-      b.box('glow', 0.74, 0.9, 0.05, wx, bY + 2.3, z + sz * (D2 / 2 + 0.14), shade(0xffe3a8, 0.62));
+      const zb = z + sz * (D2 / 2);
+      frameRect(b, 'wood', 'z', wx, bY + 2.3, zb + sz * 0.06, 1.0, 1.2, 0.10, 0.04, 0x2a1a10);
+      b.box('glow', 0.74, 0.9, 0.05, wx, bY + 2.3, zb + sz * 0.02, shade(0xffe3a8, 0.62));
     }
   }
   eaveFrame(b, x, z, W2, D2, bY + 0.3, bY + 3.7, 0.45);
@@ -1096,13 +1218,13 @@ export function buildGuanghanInterior(b: Baker, sg: SignMesher, atlas: SignAtlas
 // 本工程点光走 three r180 物理单位，既有 SKY_LIGHTS 为 40–140 cd，按字面写 0.3 cd 在 18m 处照度 <0.001 lux，等于假灯。
 // 落点压在各殿天花/梁下：凌霄 −0.7（室内天花 222.56）、星宿 −1.45（天花 217.95）、瑶池宫 −1.6（廊顶板底 211.50）、
 // 瑶池主亭 −0.25（梁底 212.40），蟠桃园保持 207.5（看园厅屋面止于 206.7，该层只余园内空腔）。
-/** 天宫放大系数：与 expansion.ts 的 HEAVEN_SCALE / LINGXIAO_SCALE 同源（那边不可反向 import，此处复刻并在此说明） */
-const SKY_SCALE = 2.2;
-const LINGXIAO_K = 2.7273;
-const SKY_BASE_Y = 196;
-/** 凌霄二次放大的锚点与范围，与 expansion.ts 的 enlargeLingxiao 逐字一致 */
-const LX_A = { x: 0, y: 233, z: 209 } as const;
-const LX_HX = 60, LX_HZ = 62, LX_YMIN = 233;
+/** 天宫放大系数：取自 ./heavenFrame（唯一真相源），不再在本文件手抄 2.2 / 196。 */
+const SKY_SCALE = HEAVEN_SCALE;
+const LINGXIAO_K = LINGXIAO_SCALE;
+const SKY_BASE_Y = HEAVEN_BASE_Y;
+/** 凌霄二次放大的锚点与范围：与 expansion.ts 同源于 ./heavenFrame（原先各写一份，阈值差 3m） */
+const LX_A = LINGXIAO_ANCHOR_PRESCALE;
+const LX_HX = LINGXIAO_HALF_X, LX_HZ = LINGXIAO_HALF_Z, LX_YMIN = LINGXIAO_Y_MIN_PRESCALE;
 
 /**
  * 室内点光的世界坐标换算。
@@ -1124,7 +1246,9 @@ function skyLightWorld(x: number, y: number, z: number): [number, number, number
     wz = LX_A.z + (wz - LX_A.z) * LINGXIAO_K;
     k = SKY_SCALE * LINGXIAO_K;
   }
-  return [wx, wy, wz, k];
+  // 最后统一加整层抬升：锚点/倍率保持原样（那是放大后的天宫坐标），只把结果平移。
+  // 不加这一句，12 盏灯会全部沉到台基下 HEAVEN_LIFT 米——殿内实际无灯。
+  return [wx, wy + HEAVEN_LIFT, wz, k];
 }
 
 /** 天宫室内点光（玉白/丹火/月白——物理单位）。坐标为 pre-scale 天宫坐标，导出前统一换算到放大后世界。 */
@@ -1885,11 +2009,38 @@ export function buildTianfuAnnex(b: Baker, sg: SignMesher, atlas: SignAtlas): vo
       }
     }
     b.box('wood', 4.0, 0.32, 0.34, -75, y0 + 4.12, zf + 0.12, shade(0x4a3220, 1.1));
+    // 武库槛窗：×2.2 档，预缩放上限 0.909m。旧版整块 2.0×1.8 → 4.40×3.96m。
+    // 本版 3×2 分格：每格 0.627×0.870 ×2.2 = 1.38×1.91m ≤2 ✔（格心暖光再内收 0.04）。
+    const wukuGrid = (axis: 'z' | 'x', cx: number, cz: number, out: number): void => {
+      const WW = 2.0, WH = 1.8, GAP = 0.06, nx = 3, ny = 2;
+      const cw = (WW - GAP * (nx - 1)) / nx, ch = (WH - GAP * (ny - 1)) / ny;
+      for (let ix = 0; ix < nx; ix++) {
+        const oa = -WW / 2 + cw / 2 + ix * (cw + GAP);
+        for (let iy = 0; iy < ny; iy++) {
+          const oy = -WH / 2 + ch / 2 + iy * (ch + GAP);
+          if (axis === 'z') {
+            b.box('wood', cw, ch, 0.16, cx + oa, y0 + 3.1 + oy, cz + out, shade(0x4a3220, 1.0));
+            b.box('glow', cw - 0.04, ch - 0.04, 0.05, cx + oa, y0 + 3.1 + oy, cz + out + 0.1, shade(0xffc66e, 0.5));
+          } else {
+            b.box('wood', 0.16, ch, cw, cx, y0 + 3.1 + oy, cz + oa, shade(0x4a3220, 1.0));
+            b.box('glow', 0.05, ch - 0.04, cw - 0.04, cx + out, y0 + 3.1 + oy, cz + oa, shade(0xffc66e, 0.5));
+          }
+        }
+      }
+      for (let k = 1; k < nx; k++) {
+        const oa = -WW / 2 + k * (cw + GAP) - GAP / 2;
+        if (axis === 'z') b.box('wood', GAP, WH, 0.18, cx + oa, y0 + 3.1, cz + out + 0.02, shade(0x4a3220, 0.9));
+        else b.box('wood', 0.18, WH, GAP, cx + Math.sign(out) * 0.14, y0 + 3.1, cz + oa, shade(0x4a3220, 0.9));
+      }
+      for (let k = 1; k < ny; k++) {
+        const oy = -WH / 2 + k * (ch + GAP) - GAP / 2;
+        if (axis === 'z') b.box('wood', WW, GAP, 0.18, cx, y0 + 3.1 + oy, cz + out + 0.02, shade(0x4a3220, 0.9));
+        else b.box('wood', 0.18, GAP, WW, cx + Math.sign(out) * 0.14, y0 + 3.1 + oy, cz, shade(0x4a3220, 0.9));
+      }
+    };
     for (const s of [-1, 1]) {
       const wx = -75 + s * 4.6;
-      b.box('wood', 2.0, 1.8, 0.16, wx, y0 + 3.1, zf + 0.1, shade(0x4a3220, 1.0));
-      b.box('glow', 1.72, 1.52, 0.05, wx, y0 + 3.1, zf + 0.2, shade(0xffc66e, 0.5));
-      for (let k = 1; k < 4; k++) b.box('wood', 0.07, 1.52, 0.07, wx - 0.86 + (1.72 * k) / 4, y0 + 3.1, zf + 0.24, shade(0x4a3220, 0.9));
+      wukuGrid('z', wx, zf, 0.1);
       b.box('ash', 2.24, 0.14, 0.36, wx, y0 + 2.13, zf + 0.12, 0xb4b0a8);
     }
     b.kit('sky.wuku.door', 1, y0 + 2.0);
@@ -1899,9 +2050,7 @@ export function buildTianfuAnnex(b: Baker, sg: SignMesher, atlas: SignAtlas): vo
       for (let k = 0; k < 2; k++) {
         const wz = 15 - 2.4 + k * 4.8;
         const wx = -75 + s * 6.51;
-        b.box('wood', 0.16, 1.8, 2.0, wx, y0 + 3.1, wz, shade(0x4a3220, 1.0));
-        b.box('glow', 0.05, 1.52, 1.72, wx + s * 0.1, y0 + 3.1, wz, shade(0xffc66e, 0.5));
-        for (let m = 1; m < 4; m++) b.box('wood', 0.07, 1.52, 0.07, wx + s * 0.14, y0 + 3.1, wz - 0.86 + (1.72 * m) / 4, shade(0x4a3220, 0.9));
+        wukuGrid('x', wx, wz, s * 0.1);
         b.box('ash', 0.36, 0.14, 2.24, wx + s * 0.02, y0 + 2.13, wz, 0xb4b0a8);
         b.kit('sky.wuku.window', 1, y0 + 3.1);
       }
@@ -1929,13 +2078,17 @@ export function buildTianfuAnnex(b: Baker, sg: SignMesher, atlas: SignAtlas): vo
     for (let k = 0; k < 4; k++) {
       for (const s of [-1, 1]) {
         const sx = 22 + s * (2.7 + k * 1.0);
+        // 箭窗：×2.2 档，预缩放上限 0.909m。旧版暗孔 0.42×1.24 → 0.92×2.73m（高超标）。
+        // 本版拆成上下两孔 0.42×0.6 ×2.2 = 0.92×1.32m ≤2 ✔，中间加石棂；石框 1.46 是框不是洞。
         b.box('ash', 0.62, 1.46, 0.2, sx, y0 + 2.7, zf + 0.04, 0x9a9282);
-        b.box('lacquer', 0.42, 1.24, 0.2, sx, y0 + 2.7, zf + 0.1, 0x161214);
+        for (const oy of [-0.32, 0.32]) b.box('lacquer', 0.42, 0.6, 0.2, sx, y0 + 2.7 + oy, zf + 0.1, 0x161214);
+        b.box('ash', 0.62, 0.06, 0.22, sx, y0 + 2.7, zf + 0.08, 0x9a9282);
       }
       for (const s of [-1, 1]) {
         const sz = -35 - 3.0 + k * 2.0;
         b.box('ash', 0.2, 1.46, 0.62, 22 + s * 6.04, y0 + 2.7, sz, 0x9a9282);
-        b.box('lacquer', 0.2, 1.24, 0.42, 22 + s * 6.1, y0 + 2.7, sz, 0x161214);
+        for (const oy of [-0.32, 0.32]) b.box('lacquer', 0.2, 0.6, 0.42, 22 + s * 6.1, y0 + 2.7 + oy, sz, 0x161214);
+        b.box('ash', 0.22, 0.06, 0.62, 22 + s * 6.08, y0 + 2.7, sz, 0x9a9282);
       }
     }
     // 上层同样开一排小箭窗（10×2.8 的灰体块，正面 -29+1=… 取 -24.98 即 +z 外皮外 0.02）
@@ -1983,7 +2136,702 @@ export function buildTianfuAnnex(b: Baker, sg: SignMesher, atlas: SignAtlas): vo
     pad(-75 + sx * 4.8, 24.0, 2.0, 1.9, 206.12);
     itmWuKuDrum(b, -75 + sx * 4.8, 206.12, 24.0);                                    // T-ITM-0101 战鼓×2（演武小院）
   }
+  // W49：A 尺度标尺 + B 加密柱列（东西两院，200 柱 / ≥500 攒斗栱 / 9 层台基 / 0.34m 瓦垄）
+  buildHeavenScaleColonnade(b);
 }
+// ============================================================================================
+// W49：天宫尺度标尺 + 加密柱列（SPEC《天宫巨大化》A/B 两项）
+// --------------------------------------------------------------------------------------------
+// 核心判据：巨大感来自「人与建筑的比例」，不来自绝对尺寸。所以本段所有构件**守真实尺寸**，
+// 靠**数量与跨度**堆威压：
+//   A1 人 1.7m（既有 crowd 场所人群管线，不新增系统）
+//   A2 门扇 3.0m / 台阶 16cm / 栏杆 1.1m / 宫灯 0.6m / 香炉 1.2m
+//   A3 虬曲古松（13m）/ 石狮一对（2.6m）/ 青铜钟（1.8m）
+//   B1 柱列 200 根、柱距 4.45m；柱径自 B5v2 起分四级（角墩 4.8 / 轴柱 3.4 / 间柱 2.3 / 余柱 1.5），
+//      根数不变——原「全部 2.0m」是「100 根等距白柱 = 格栅笼」的直接成因
+//   B2 斗栱 ≥500 攒（攒距 1.6m，仍在 1.2–1.6m 带内）
+//   B3 瓦垄间距 0.34m（世界尺度，不随放大走），垄数由屋面宽 / 0.34 自然得出
+//   B4 台基 9 层，每层 1.55m
+//
+// 坐标系：天宫几何在 expansion.ts 里绕 (0,196,0) 等比放大 2.2×，凌霄殿选区再叠 2.7273×。
+// 本段的落点（|x| ≥ 150）在凌霄二次放大盒（|x|≤60）之外，只吃 2.2×，故一律按**最终世界尺寸**
+// 写，再用 tgX/tgY/tgZ 逆变换回烘焙坐标 —— 落成尺寸就是图纸尺寸，不靠估算。
+// ============================================================================================
+const TG_HS = 2.2;                                   // = expansion.ts 的 HEAVEN_SCALE（同源复刻，不反向 import）
+const TG_BASE_Y = 196;                               // = expansion.ts 的 HEAVEN_BASE_Y
+const tgX = (v: number): number => v / TG_HS;
+const tgY = (v: number): number => TG_BASE_Y + (v - TG_BASE_Y) / TG_HS;
+const tgZ = (v: number): number => v / TG_HS;
+
+/** 世界尺寸盒（内部折回烘焙坐标） */
+function tgBox(b: Baker, g: BGroup, w: number, h: number, d: number, x: number, y: number, z: number,
+  hex: number, ry = 0, rx = 0, rz = 0): void {
+  b.box(g, w / TG_HS, h / TG_HS, d / TG_HS, tgX(x), tgY(y), tgZ(z), hex, ry, rx, rz);
+}
+/** 世界尺寸圆柱（rt/rb 为世界半径；open=true 只出侧壁，省 2×seg 个端面——柱箍用它） */
+function tgCyl(b: Baker, g: BGroup, rt: number, rb: number, h: number, seg: number, x: number, y: number, z: number,
+  hex: number, ry = 0, rx = 0, rz = 0, open = false): void {
+  b.cyl(g, rt / TG_HS, rb / TG_HS, h / TG_HS, seg, tgX(x), tgY(y), tgZ(z), hex, ry, rx, rz, open);
+}
+
+/** 世界坐标台账：探针只读这一份，数字全部来自建造时用的同一批常量 */
+export const TG_METRICS = {
+  scaleFrame: 'world (baked → ×2.2 by expansion.ts)',
+  deckY: 0, courtTopY: 0,
+  tiers: 0, tierH: 0,
+  columns: 0, columnDia: 0, columnH: 0, columnTotalH: 0, columnPitch: 0,
+  /** B5v2：柱径已分四级（角墩 / 轴柱 / 间柱 / 余柱）——columnDia 只是名义值，实际按这一组查 */
+  columnDiaByRank: [] as number[],
+  dougong: 0, dougongPitch: 0,
+  tilePitch: 0, tileRibs: 0,
+  props: {} as Record<string, number>,
+  peoplePoi: [] as number[],
+  courts: [] as { cx: number; cz: number; cols: number; dougong: number }[],
+  /** 探针 ROI：每院「台基底 / 台面 / 柱顶」三层四角的**世界坐标**（已含 ×2.2 与 HEAVEN_LIFT）。
+   *  与建造共用同一批常量，scripts/probe-court-read.mjs 直接 project()，不另抄一份尺寸。 */
+  roi: [] as {
+    name: string; deckY: number; baseY: number; capY: number;
+    base: number[][]; deck: number[][]; cap: number[][];
+  }[],
+};
+
+const TG_DECK = 235.86;       // 宫台面 / 前庭面（realm.ts W_DECK，实测同值）
+const TG_TIER_H = 1.55;       // B4：每层 1.55m
+const TG_TIERS = 9;           // B4：9 层
+const TG_TIER_STEP = 0.8;     // 每层内收
+const TG_COL_H = 18.0;        // 柱身净高
+const TG_COL_PLINTH = 0.7;    // 柱础总高
+const TG_COL_CAP = 0.5;       // 柱头箍
+const TG_COL_TOTAL = TG_COL_PLINTH + TG_COL_H + TG_COL_CAP;   // 19.2m（额枋底；角墩另加高 5.2m）
+const TG_COUNT_PER_COURT = 100;   // 两院合计 200
+const TG_COURT_HW = 72.5;     // 每院 145 × 115（台基底面）
+const TG_COURT_HD = 57.5;
+const TG_RING_INSET = 3.0;    // 柱心退台面边缘
+const TG_DOUGONG_PITCH = 1.6; // B2：攒距 1.6m（1.2–1.6 带内）
+const TG_TILE_PITCH = 0.34;   // B3：瓦垄间距（世界尺度）
+
+// ============ B5：柱列院汉白玉分级（只改材质与表面，不动尺寸/数量/实例）============
+// 判据（改前实测）：整院只有 MB/MB2 两级色（#e8e0cc / #d6cdb6，ΔL≈10），台面 18 条 0.5m
+// 金缝在 700m 外只剩 0.1px，九层台基与 100 根柱连成一块白板（证据 h_hero.png / el_34.png）。
+// 分级口径：①裙板→⑥望柱 六级白玉自下而上逐级提亮（相邻 sRGB 明度差 ≥9/255）；
+// 台面另起一路用深色抛光石（对照图 f_67a905：白玉 + 金饰 + 深色镜面地），
+// 让「白」只留在栏柱与压边，院心不再是一片白。
+const JADE_SKIRT = 0xa89a80;  // ① 裙板 / 柱础下枭（最暗，压住底部）
+const JADE_WAIST = 0xbfb197;  // ② 束腰 / 栏板下寻杖 / 桥帮
+const JADE_TIER_A = 0xe0d3b6; // ③ 台帮正层
+const JADE_TIER_B = 0xc8b998; // ④ 台帮交替层（与③逐层错开，Δ≈28 保证 700m 外仍能读出层）
+const JADE_COPING = 0xeee3c9; // ⑤ 压檐石 / 台面白玉压边
+const JADE_DECK = 0xf8f1de;   // ⑥ 望柱（最亮，counter-light 下与⑤再分一档）
+const JADE_FLUTE_L = 0xe6dabb;// 柱身受光棱
+const JADE_FLUTE_D = 0xcfc2a5;// 柱身凹槽（逐棱错开 = 竖向凹槽的明暗读法）
+
+// ============ B5v2：组织层（主次 / 收分 / 中轴 / 明度分区）============
+// 判据（B5 改前实测，探针 scripts/probe-court-read.mjs）：court_close 三带明度
+//   「内院 105 < 中环 109 < 外圈 124」——外圈是近处柱列与台帮、内院是深色地面，
+//   读成「一圈白栅栏围一块黑地」的笼子；hero 里中心与中环只差 0.05（完全没有主次）。
+// B5v2 不改数量与体量，只把三件事组织起来：
+//   ① 柱分四级：角柱（加粗加高加金冠）/ 轴柱（对中轴的两根）/ 间柱 / 余柱（压暗变细）；
+//   ② 台基自下而上收进（须弥座轮廓），台帮整体压暗、只留压檐石一线提亮；
+//   ③ 台面三环明度（外圈暗、中环、内院亮）+ 贯穿中轴的御道与御沟色带。
+const DECK_OUT = 0x6b6152;    // 台面外圈（压暗一档，把院落「收」进来）
+const DECK_MID = 0x9c8f73;    // 台面中环
+const DECK_MID_2 = 0x8c7f64;
+const DECK_IN = 0xe4d6b4;     // 内院（提亮：远看是一方温色石庭）
+const DECK_IN_2 = 0xf0e2c0;
+const DECK_IN_3 = 0xd8caa8;
+const DECK_PATH = 0xd9c9a8;   // 中轴御道（贯穿东西桥口）
+const DECK_PATH_2 = 0xfff6e2; // 御道中线提亮（夹御沟的亮线）
+const DECK_WATER = 0x62807c;  // 御沟（水意象，冷色；只是铺装色带，不建实体）
+const DECK_CURB = 0x5b5245;   // 御道压边
+const DECK_SEAM = 0x6b6252;   // 台面 3m 细缝
+const DECK_SEAM_M = 0x94886f; // 台面 12m 主缝
+// 台基：外圈压暗。上沿留一线压檐石，九层台帮靠「亮线 + 两层错色 + 暗缝」读出层数，
+// 而不是整块发白的板。竖向面吃低角度主光，反照率必须比台面再压一档，否则远看仍是一堵白墙。
+const PODIUM_LIP = 0xf2e8cf;
+const PODIUM_A = 0x84775f;
+const PODIUM_B = 0x6e6250;
+const PODIUM_JOINT = 0x4a4237;
+const PODIUM_FOOT_A = 0x5f5546;
+const PODIUM_FOOT_B = 0x534a3d;
+const PODIUM_FOOT_J = 0x3f382e;
+
+/** 须弥座收分：每层相对台面的外扩（下标 0 = 顶层 … 8 = 底层）。
+ *  B5 的收分写反了（`halfW - 0.8*i`，i=0 是最上层）→ 上宽下窄成倒锥，轮廓直上直下甚至外悬。
+ *  这里台面尺寸不动（145×115）、底层外扩 5.8m：底比顶宽 11.6m，自下而上逐层收进。 */
+const TG_TIER_FLARE = [0, 0.30, 0.62, 0.95, 1.35, 2.20, 3.40, 4.60, 5.80];
+
+/** 柱的四个等级（柱数不变，只改直径 / 身高 / 明度 / 金饰）。
+ *  tone 是线性空间的乘子（shade 走线性），0.46 落到 sRGB 明度 ≈150——与内院地面同量级，
+ *  于是 200m 外那 100 根「白栅栏」退成一层浅浮雕，只有角柱与轴柱还立得住。 */
+const COL_RANKS = [
+  { dia: 4.80, extra: 5.20, seg: 4, tone: 1.04, bands: 2, plinth: 1.34, square: true, flare: 1.0 },  // 0 角墩
+  { dia: 3.40, extra: 1.60, seg: 4, tone: 0.92, bands: 1, plinth: 1.30, square: true, flare: 1.0 },  // 1 轴柱
+  { dia: 2.30, extra: 0.00, seg: 10, tone: 0.58, bands: 1, plinth: 1.34, square: false, flare: 1.34 }, // 2 间柱
+  { dia: 1.50, extra: 0.00, seg: 8, tone: 0.42, bands: 0, plinth: 1.30, square: false, flare: 1.56 },  // 3 余柱
+] as const;
+
+
+/** 矩形周长参数化：t ∈ [0,1) → 点 + 该点的外法向 yaw */
+function tgRingPoint(hx: number, hz: number, t: number): [number, number, number] {
+  const W = 2 * hx, D = 2 * hz, P = 2 * (W + D);
+  let s = (((t % 1) + 1) % 1) * P;
+  if (s < W) return [-hx + s, hz, 0];              // 南边（+z 侧）
+  s -= W;
+  if (s < D) return [hx, hz - s, Math.PI / 2];     // 东边
+  s -= D;
+  if (s < W) return [hx - s, -hz, Math.PI];        // 北边
+  s -= W;
+  return [-hx, -hz + s, -Math.PI / 2];             // 西边
+}
+
+// ---- 自定义三角面缓冲：世界坐标建面，flush 时统一折回烘焙坐标（与 tgBox 同一变换）----
+type TGV = [number, number, number];
+const _tgCol = new THREE.Color();
+const _tgLinCache = new Map<number, TGV>();
+/** sRGB hex → 线性 RGB（与 Baker.push 的 this.color.setHex 同口径） */
+function tgLin(hex: number): TGV {
+  const hit = _tgLinCache.get(hex);
+  if (hit) return hit;
+  _tgCol.setHex(hex);
+  const v: TGV = [_tgCol.r, _tgCol.g, _tgCol.b];
+  _tgLinCache.set(hex, v);
+  return v;
+}
+
+/**
+ * 台基/柱身的低面数载体：一块台阶面用 2 个三角面 + 顶点色，替代「每种颜色一个盒体」。
+ * 面数账（单院）：九层台基 27 盒 = 324 面 → 本条 288 面；台面铺装 18 盒 = 216 面 → 188 面。
+ */
+class TGSurf {
+  private p: number[] = [];
+  private c: number[] = [];
+  private u: number[] = [];
+  tris = 0;
+  private tri(a: TGV, b: TGV, c: TGV, col: TGV): void {
+    this.tris++;
+    this.p.push(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]);
+    this.c.push(col[0], col[1], col[2], col[0], col[1], col[2], col[0], col[1], col[2]);
+    for (const q of [a, b, c]) this.u.push(q[0] * 0.06, q[1] * 0.06);
+  }
+  quad(a: TGV, b: TGV, c: TGV, d: TGV, hex: number): void {
+    const col = tgLin(hex);
+    this.tri(a, b, c, col);
+    this.tri(a, c, d, col);
+  }
+  /** 长方体四侧面（法线朝外），不含顶底——九层台基的顶面被上一层压住、底面落在岩帽上 */
+  sides(x0: number, x1: number, z0: number, z1: number, y0: number, y1: number, hex: number): void {
+    this.quad([x1, y0, z1], [x1, y0, z0], [x1, y1, z0], [x1, y1, z1], hex); // +x
+    this.quad([x0, y0, z0], [x0, y0, z1], [x0, y1, z1], [x0, y1, z0], hex); // −x
+    this.quad([x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1], hex); // +z
+    this.quad([x1, y0, z0], [x0, y0, z0], [x0, y1, z0], [x1, y1, z0], hex); // −z
+  }
+  /** 水平面（+Y） */
+  top(x0: number, x1: number, z0: number, z1: number, y: number, hex: number): void {
+    this.quad([x0, y, z1], [x1, y, z1], [x1, y, z0], [x0, y, z0], hex);
+  }
+  flush(b: Baker, g: BGroup): void {
+    if (!this.p.length) return;
+    const P = this.p;
+    for (let i = 0; i < P.length; i += 3) {
+      P[i] = tgX(P[i]);
+      P[i + 1] = tgY(P[i + 1]);
+      P[i + 2] = tgZ(P[i + 2]);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(P, 3));
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(this.c, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(this.u, 2));
+    geo.computeVertexNormals();
+    b.addGeo(g, geo, 0, 0, 0, 0xffffff);
+    this.p.length = 0; this.c.length = 0; this.u.length = 0;
+  }
+}
+
+/**
+ * 九层台基：自下而上逐层收进（须弥座轮廓），每层切 2 条横带——暗缝 / 台帮（A/B 逐层交替）。
+ * 700m 机位下每层只有 ~5px，3 条带会退化成斜纹噪点（实测初版）；2 条带 + 交替色差
+ * 才读得出「九层台阶」。暗缝≈shade(台帮, 0.58)，是逐层压檐的暗线。
+ * v2：台帮整体压暗一档（外圈压暗），顶层上沿换压檐石一线提亮；下三层再压一档做落地基脚。
+ */
+function tgPodium(b: Baker, cx: number, cz: number, halfW: number, halfD: number): void {
+  const body = new TGSurf();
+  const SHADOW = 0.50, BODY = TG_TIER_H - SHADOW;   // 暗缝加宽到 0.5m：200m 处约 2.4px，才不会碎成虚线
+  for (let i = 0; i < TG_TIERS; i++) {
+    const f = TG_TIER_FLARE[i] ?? TG_TIER_STEP * i;
+    const hw = halfW + f, hd = halfD + f;
+    const yb = TG_DECK - TG_TIER_H * (i + 1);
+    const foot = i >= TG_TIERS - 3;
+    const tone = foot ? (i % 2 ? PODIUM_FOOT_B : PODIUM_FOOT_A) : i % 2 ? PODIUM_B : PODIUM_A;
+    body.sides(cx - hw, cx + hw, cz - hd, cz + hd, yb, yb + BODY, tone);
+    // 顶层上沿 = 压檐石（唯一保留最亮的一线）；其余层是暗缝
+    const cap = i === 0 ? PODIUM_LIP : foot ? PODIUM_FOOT_J : PODIUM_JOINT;
+    body.sides(cx - hw, cx + hw, cz - hd, cz + hd, yb + BODY, yb + TG_TIER_H, cap);
+  }
+  body.flush(b, 'ash');
+}
+
+/**
+ * 台面铺装：三环明度（外圈暗 → 中环 → 内院亮）+ 石缝 + 贯穿中轴的御道 / 御沟。
+ * B5 是「深色镜面地 + 白玉压边」——远看仍是一整块黑地，柱子压在黑地上就是一圈白栅栏。
+ * v2 把地面本身分成三带：外圈压到最暗、中环过渡、内院抬到温色石面，再加一条 14m 御道
+ * 贯穿东西桥口（中轴），院心就有了「明堂」而不只是空场。
+ */
+function tgDeckPaving(b: Baker, cx: number, cz: number, halfW: number, halfD: number): void {
+  const s = new TGSurf();
+  const Y = TG_DECK;
+  const IN_W = halfW * 0.56, IN_D = halfD * 0.60;     // 内院 81 × 69
+  const MID_W = halfW * 0.845, MID_D = halfD * 0.86;  // 中环 122 × 99
+  // ---- 外圈（四边框，压暗）----
+  s.top(cx - halfW, cx + halfW, cz - halfD, cz - MID_D, Y, DECK_OUT);
+  s.top(cx - halfW, cx + halfW, cz + MID_D, cz + halfD, Y, DECK_OUT);
+  s.top(cx - halfW, cx - MID_W, cz - MID_D, cz + MID_D, Y, DECK_OUT);
+  s.top(cx + MID_W, cx + halfW, cz - MID_D, cz + MID_D, Y, DECK_OUT);
+  // ---- 中环（四边框）----
+  s.top(cx - MID_W, cx + MID_W, cz - MID_D, cz - IN_D, Y, DECK_MID);
+  s.top(cx - MID_W, cx + MID_W, cz + IN_D, cz + MID_D, Y, DECK_MID);
+  s.top(cx - MID_W, cx - IN_W, cz - IN_D, cz + IN_D, Y, DECK_MID_2);
+  s.top(cx + IN_W, cx + MID_W, cz - IN_D, cz + IN_D, Y, DECK_MID_2);
+  // ---- 内院：4×3 大板（三档近色，只在近看时读得出石面，远看是一方温色石庭）----
+  const NX = 4, NZ = 3, TONES = [DECK_IN, DECK_IN_2, DECK_IN_3];
+  for (let ix = 0; ix < NX; ix++) for (let iz = 0; iz < NZ; iz++) {
+    const x0 = cx - IN_W + (2 * IN_W * ix) / NX, x1 = cx - IN_W + (2 * IN_W * (ix + 1)) / NX;
+    const z0 = cz - IN_D + (2 * IN_D * iz) / NZ, z1 = cz - IN_D + (2 * IN_D * (iz + 1)) / NZ;
+    s.top(x0, x1, z0, z1, Y + 0.004, TONES[(ix * 2 + iz * 3) % 3]);
+  }
+  // 内院边框：暗线一圈 + 外侧金线一圈（把「明堂」框住，远看是一条亮边）
+  const BW = 1.2, yB = Y + 0.008;
+  s.top(cx - IN_W, cx + IN_W, cz - IN_D, cz - IN_D + BW, yB, DECK_CURB);
+  s.top(cx - IN_W, cx + IN_W, cz + IN_D - BW, cz + IN_D, yB, DECK_CURB);
+  s.top(cx - IN_W, cx - IN_W + BW, cz - IN_D + BW, cz + IN_D - BW, yB, DECK_CURB);
+  s.top(cx + IN_W - BW, cx + IN_W, cz - IN_D + BW, cz + IN_D - BW, yB, DECK_CURB);
+  // 明堂核心：内院正中一方最亮的石台（45×38），暗线压边 + 金线内圈——
+  // 「内院提亮」在 500m 机位上的落点；不立实体，只用铺装色阶。
+  const CW = halfW * 0.40, CD = halfD * 0.40, yC0 = Y + 0.006;
+  s.top(cx - CW - 1.1, cx + CW + 1.1, cz - CD - 1.1, cz - CD, yC0, DECK_CURB);
+  s.top(cx - CW - 1.1, cx + CW + 1.1, cz + CD, cz + CD + 1.1, yC0, DECK_CURB);
+  s.top(cx - CW - 1.1, cx - CW, cz - CD, cz + CD, yC0, DECK_CURB);
+  s.top(cx + CW, cx + CW + 1.1, cz - CD, cz + CD, yC0, DECK_CURB);
+  s.top(cx - CW, cx + CW, cz - CD, cz + CD, yC0, 0xfef5e2);
+  // 石缝分两级：3m 细缝（近景石格）+ 12m 主缝（远景压线）。
+  const y = Y + 0.012;
+  for (let k = 1; k * 3 < 2 * halfW; k++) {
+    const x = cx - halfW + k * 3, major = k % 4 === 0, hw = major ? 0.18 : 0.15;
+    s.top(x - hw, x + hw, cz - halfD, cz + halfD, y, major ? DECK_SEAM_M : DECK_SEAM);
+  }
+  for (let k = 1; k * 3 < 2 * halfD; k++) {
+    const z = cz - halfD + k * 3, major = k % 4 === 0, hw = major ? 0.18 : 0.15;
+    s.top(cx - halfW, cx + halfW, z - hw, z + hw, y, major ? DECK_SEAM_M : DECK_SEAM);
+  }
+  // ---- 中轴御道：14m 宽贯穿全院（东西接桥口），中央 2.6m 御沟只是冷色铺装带 ----
+  // 远景要读得出「有一条轴」：亮线（0.9m）+ 暗水（2.6m）夹出一条硬边，195m 处约 2px/9px。
+  const yP = Y + 0.018, yW = Y + 0.022, pathW = 14, curbW = 0.7, chW = 2.6;
+  s.top(cx - halfW, cx + halfW, cz - pathW / 2 - curbW, cz - pathW / 2, yP, DECK_CURB);
+  s.top(cx - halfW, cx + halfW, cz + pathW / 2, cz + pathW / 2 + curbW, yP, DECK_CURB);
+  s.top(cx - halfW, cx + halfW, cz - pathW / 2, cz - chW / 2, yP, DECK_PATH);
+  s.top(cx - halfW, cx + halfW, cz + chW / 2, cz + pathW / 2, yP, DECK_PATH);
+  s.top(cx - halfW, cx + halfW, cz - chW / 2 - 0.9, cz - chW / 2, yW, DECK_PATH_2);
+  s.top(cx - halfW, cx + halfW, cz + chW / 2, cz + chW / 2 + 0.9, yW, DECK_PATH_2);
+  s.top(cx - halfW, cx + halfW, cz - chW / 2, cz + chW / 2, yW, DECK_WATER);
+  // 白玉压边：沿台面外缘 0.9m 一圈，把三带地面框在白玉台基里（对照图的白石边）
+  const W = 0.9, yc = Y + 0.03;
+  s.top(cx - halfW, cx + halfW, cz - halfD, cz - halfD + W, yc, JADE_COPING);
+  s.top(cx - halfW, cx + halfW, cz + halfD - W, cz + halfD, yc, JADE_COPING);
+  s.top(cx - halfW, cx - halfW + W, cz - halfD + W, cz + halfD - W, yc, JADE_COPING);
+  s.top(cx + halfW - W, cx + halfW, cz - halfD + W, cz + halfD - W, yc, JADE_COPING);
+  s.flush(b, 'ash');
+}
+
+/** 单根柱：方础 + 柱身（逐棱明暗 = 竖向凹槽）+ 金箍 + 柱头金箍；按等级改直径 / 身高 / 明度 / 金冠。
+ *  B5 的 200 根柱同径同高同色，柱身还各带 24 块云龙浮雕（5.7 万面）——远看只有噪点，没有主次。
+ *  v2 把面数从浮雕挪到「分级」：角柱 12 棱 φ3.2 加高 4.6m 顶金冠，轴柱 φ2.7，间柱 φ2.3，
+ *  余柱 φ1.75 且压到 0.46 明度。柱数一根不减（两院仍 200 根）。 */
+function tgColumn(b: Baker, x: number, z: number, topY: number, rank: 0 | 1 | 2 | 3): void {
+  const R = COL_RANKS[rank];
+  const rad = R.dia / 2;
+  const pw = R.dia * R.plinth;
+  const dim = rank === 3 ? 0.88 : 1;
+  tgBox(b, 'ash', pw, 0.36, pw, x, topY + 0.18, z, shade(JADE_SKIRT, dim));     // 方础下枭（最暗）
+  tgBox(b, 'ash', pw * 0.86, 0.34, pw * 0.86, x, topY + 0.53, z, shade(JADE_WAIST, dim)); // 方础上枋
+  const y0 = topY + TG_COL_PLINTH;
+  const H = TG_COL_H + R.extra;
+  const cL = shade(JADE_FLUTE_L, R.tone), cD = shade(JADE_FLUTE_D, R.tone);
+  const s = new TGSurf();
+  if (R.square) {
+    // 角墩 / 轴柱：方形墩身（下大上小 4% 收分），四棱一线——远景读「墩」，不是「棍」
+    const hb = rad, ht = rad * 0.96;
+    s.quad([x - hb, y0, z + hb], [x + hb, y0, z + hb], [x + ht, y0 + H, z + ht], [x - ht, y0 + H, z + ht], cL); // +z
+    s.quad([x + hb, y0, z + hb], [x + hb, y0, z - hb], [x + ht, y0 + H, z - ht], [x + ht, y0 + H, z + ht], cD); // +x
+    s.quad([x + hb, y0, z - hb], [x - hb, y0, z - hb], [x - ht, y0 + H, z - ht], [x + ht, y0 + H, z - ht], cL); // −z
+    s.quad([x - hb, y0, z - hb], [x - hb, y0, z + hb], [x - ht, y0 + H, z + ht], [x - ht, y0 + H, z - ht], cD); // −x
+  } else {
+    const N = R.seg;
+    const yF = y0 + H * 0.22;              // 柱脚高度：下段外张 = 柱础收分（远景读「墩」，不是「棍」）
+    const rb = rad * R.flare, rf = rad * 1.04;
+    for (let i = 0; i < N; i++) {
+      const a0 = (i / N) * Math.PI * 2, a1 = ((i + 1) / N) * Math.PI * 2;
+      const col = i % 2 ? cD : cL;
+      const pb = (a: number): TGV => [x + Math.cos(a) * rb, y0, z + Math.sin(a) * rb];
+      const pf = (a: number): TGV => [x + Math.cos(a) * rf, yF, z + Math.sin(a) * rf];
+      const pt = (a: number): TGV => [x + Math.cos(a) * rad * 0.955, y0 + H, z + Math.sin(a) * rad * 0.955];
+      s.quad(pb(a0), pf(a0), pf(a1), pb(a1), i % 2 ? shade(cD, 0.9) : shade(cL, 0.9));
+      s.quad(pf(a0), pt(a0), pt(a1), pf(a1), col);
+    }
+  }
+  s.flush(b, 'ash');
+  // 缠柱金箍：角墩两道（金—亮金），轴柱/间柱一道
+  for (let k = 0; k < R.bands; k++) {
+    const yy = y0 + H * (R.bands === 2 ? (k === 0 ? 0.24 : 0.62) : 0.5);
+    const hex = shade(GOLD_TRIM, k === 0 ? 1.0 : 1.18);
+    if (R.square) tgBox(b, 'metal', rad * 2 + 0.24, 0.34, rad * 2 + 0.24, x, yy, z, hex);
+    else tgCyl(b, 'metal', rad + 0.09, rad + 0.09, 0.26, 10, x, yy, z, hex, 0, 0, 0, true);
+  }
+  // 角墩专属：金冠（两枚方斗 + 一枚出檐板），远景里四个角各有一个亮点，轮廓不再是一条平线
+  if (rank === 0) {
+    tgBox(b, 'metal', rad * 2 + 0.6, 0.5, rad * 2 + 0.6, x, y0 + H + 0.25, z, GOLD_TRIM);
+    tgBox(b, 'metal', rad * 2 + 1.6, 0.34, rad * 2 + 1.6, x, y0 + H + 0.66, z, shade(GOLD_TRIM, 1.22));
+    tgBox(b, 'metal', rad * 2 + 0.9, 0.4, rad * 2 + 0.9, x, y0 + H + 1.02, z, shade(GOLD_TRIM, 1.05));
+  }
+  // 柱头金箍
+  if (rank > 0 && rank <= 2) {
+    if (R.square) tgBox(b, 'metal', rad * 2 + 0.28, 0.4, rad * 2 + 0.28, x, y0 + H - 0.2, z, shade(GOLD_TRIM, 1.06));
+    else tgCyl(b, 'metal', rad + 0.13, rad + 0.13, 0.44, 10, x, y0 + H - 0.22, z, shade(GOLD_TRIM, 1.06), 0, 0, 0, true);
+  }
+}
+
+/** 双坡瓦顶：屋脊沿 z，坡向 ±x。瓦垄按 TG_TILE_PITCH 世界间距铺，垄数 = 半宽 / 0.34 */
+function tgRibRoof(b: Baker, cx: number, cy: number, cz: number, w: number, d: number, rise: number,
+  tileC: number, trimC: number): number {
+  const half = w / 2;
+  const ang = Math.atan2(rise, half);
+  const slant = Math.hypot(half, rise);
+  const rows = Math.max(1, Math.round(half / TG_TILE_PITCH));
+  for (const s of [-1, 1] as const) {
+    tgBox(b, 'roof', slant, 0.24, d, cx + (s * half) / 2, cy + rise / 2 - 0.12, cz, shade(tileC, 0.60), 0, 0, -s * ang); // 瓦床
+    for (let i = 0; i < rows; i++) {
+      const t = (i + 0.5) / rows;
+      tgBox(b, 'roof', 0.30, 0.16, d, cx + s * t * half, cy + rise * (1 - t) + 0.10, cz,
+        shade(tileC, i % 2 ? 0.94 : 0.86), 0, 0, -s * ang);                        // 筒瓦垄
+    }
+    tgBox(b, 'wood', 0.24, 0.36, d + 0.4, cx + s * (half + 0.04), cy - 0.14, cz, shade(trimC, 0.92)); // 檐口封板
+  }
+  tgBox(b, 'roof', 0.72, 0.46, d + 0.5, cx, cy + rise + 0.18, cz, shade(tileC, 0.82));                 // 正脊
+  tgBox(b, 'metal', 0.52, 0.22, d + 0.62, cx, cy + rise + 0.48, cz, trimC);                           // 脊上金压
+  for (const s of [-1, 1] as const) {
+    tgBox(b, 'metal', 0.34, 0.86, 0.46, cx, cy + rise + 0.58, cz + s * (d / 2 + 0.06), shade(trimC, 1.08)); // 鸱吻
+  }
+  return rows * 2;
+}
+
+/** 须弥座栏杆：望柱 + 两道寻杖，通高 1.1m（A2 真实尺寸）；望柱头与压条走金，栏板走玉 */
+function tgRail(b: Baker, x0: number, z0: number, x1: number, z1: number, y: number): void {
+  const dx = x1 - x0, dz = z1 - z0, len = Math.hypot(dx, dz);
+  if (len < 0.6) return;
+  const ry = Math.atan2(-dz, dx);
+  const n = Math.max(1, Math.round(len / 2.6));
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    tgBox(b, 'ash', 0.2, 0.9, 0.2, x0 + dx * t, y + 0.45, z0 + dz * t, JADE_DECK, ry);            // 望柱（最亮）
+    tgBox(b, 'metal', 0.3, 0.2, 0.3, x0 + dx * t, y + 1.0, z0 + dz * t, shade(GOLD_TRIM, 1.1), ry); // 望柱头（金）
+  }
+  tgBox(b, 'metal', len, 0.12, 0.15, (x0 + x1) / 2, y + 0.86, (z0 + z1) / 2, shade(GOLD_TRIM, 0.9), ry); // 栏板压条（金）
+  tgBox(b, 'ash', len, 0.1, 0.13, (x0 + x1) / 2, y + 0.46, (z0 + z1) / 2, JADE_WAIST, ry);            // 下寻杖（玉）
+}
+
+/** 虬曲古松：主干 6 段折转（0.8→0.28m 收分）+ 4 条横枝 + 8 团针冠（13m，A3 参照 R6） */
+function tgAncientPine(b: Baker, x: number, y: number, z: number, seed: number): void {
+  const lean = ((seed % 7) / 7 - 0.5) * 1.4;
+  let px = x, pz = z, py = y;
+  const segs: { x: number; z: number; y: number; r: number }[] = [];
+  for (let i = 0; i < 6; i++) {
+    const h = 2.2 - i * 0.14, r = 0.8 - i * 0.085;
+    const nx = px + Math.sin(seed + i * 1.9) * 0.95 + lean * 0.3;
+    const nz = pz + Math.cos(seed * 1.3 + i * 1.3) * 0.85;
+    tgCyl(b, 'trunk', r * 0.9, r, h, 8, (px + nx) / 2, py + h / 2, (pz + nz) / 2,
+      shade(0x463527, 0.9 + i * 0.035), 0, 0, Math.atan2(nx - px, h) * 0.9);
+    segs.push({ x: nx, z: nz, y: py + h, r });
+    px = nx; pz = nz; py += h;
+  }
+  // 横枝：从第 2/3/4/5 段向外斜挑，枝端挂一团针冠
+  for (let k = 0; k < 4; k++) {
+    const s = segs[k + 1];
+    const ang = seed * 0.9 + k * 1.62;
+    const len = 4.2 - k * 0.55;
+    const ex = s.x + Math.cos(ang) * len, ez = s.z + Math.sin(ang) * len;
+    const ey = s.y + 0.5 + (k % 2) * 0.5;
+    tgCyl(b, 'trunk', 0.12, 0.3, len, 6, (s.x + ex) / 2, (s.y + ey) / 2, (s.z + ez) / 2,
+      shade(0x463527, 0.95), -ang, 0, Math.PI / 2 - 0.28);
+    tgCyl(b, 'leaf', 1.5, 0.55, 0.55, 8, ex, ey + 0.25, ez, shade(0x2f5a34, 0.92 + (k % 3) * 0.05));
+    tgCyl(b, 'leaf', 0.85, 1.35, 0.5, 8, ex, ey + 0.62, ez, shade(0x35633a, 0.88 + (k % 2) * 0.08));
+  }
+  // 顶冠：三团错落压顶，读成"伞盖"而不是一根棍
+  for (let k = 0; k < 3; k++) {
+    const ang = seed * 1.1 + k * 2.1;
+    const cx2 = px + Math.cos(ang) * (1.4 - k * 0.35), cz2 = pz + Math.sin(ang) * (1.4 - k * 0.35);
+    const cy2 = py - 0.4 + k * 0.55;
+    tgCyl(b, 'leaf', 2.4 - k * 0.35, 0.9, 1.0, 9, cx2, cy2, cz2, shade(0x335f37, 0.9 + k * 0.05));
+    tgCyl(b, 'leaf', 1.3, 2.1 - k * 0.3, 0.8, 9, cx2, cy2 + 0.62, cz2, shade(0x3c6b3d, 0.86 + k * 0.06));
+  }
+}
+
+/** 石狮：须弥座 + 蹲狮（通高 2.6m，A3 参照 R5） */
+function tgStoneLion(b: Baker, x: number, y: number, z: number, ry: number): void {
+  const MB = 0xd8d0bc;
+  tgBox(b, 'ash', 1.6, 0.5, 1.6, x, y + 0.25, z, shade(MB, 0.96), ry);
+  tgBox(b, 'ash', 1.3, 0.24, 1.3, x, y + 0.62, z, shade(MB, 1.06), ry);
+  const ca = Math.cos(ry), sa = Math.sin(ry);
+  const P = (u: number, w: number): [number, number] => [x + ca * u - sa * w, z + sa * u + ca * w];
+  let p = P(0, 0.05);
+  tgBox(b, 'ash', 0.9, 0.85, 1.0, p[0], y + 1.15, p[1], shade(MB, 1.0), ry);        // 身
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {                            // 四腿
+    p = P(sx * 0.3, sz * 0.34);
+    tgBox(b, 'ash', 0.22, 0.42, 0.24, p[0], y + 0.95, p[1], shade(MB, 0.94), ry);
+  }
+  p = P(0, 0.62);
+  tgBox(b, 'ash', 0.72, 0.62, 0.66, p[0], y + 1.86, p[1], shade(MB, 1.05), ry);    // 头
+  for (const sx of [-1, 1]) {                                                      // 耳
+    p = P(sx * 0.32, 0.62);
+    tgBox(b, 'ash', 0.16, 0.18, 0.2, p[0], y + 2.1, p[1], shade(MB, 0.98), ry);
+  }
+  p = P(0, -0.05);
+  tgBox(b, 'ash', 0.3, 0.5, 0.36, p[0], y + 0.85, p[1], shade(MB, 0.9), ry, 0, 0.5); // 尾
+}
+
+/** 青铜钟：木架 + 钟身（通高 1.8m，钟口 1.4m，A3 参照 R3） */
+function tgBronzeBell(b: Baker, x: number, y: number, z: number, ry: number): void {
+  const BRZ = 0x6f7a52, GOLDV = GOLD_TRIM;
+  tgBox(b, 'ash', 2.2, 0.28, 2.2, x, y + 0.14, z, shade(0xc8c0b0, 1.02), ry);
+  for (const s of [-1, 1] as const) {
+    tgBox(b, 'wood', 0.24, 3.4, 0.24, x + Math.cos(ry) * s * 1.0, y + 1.7, z - Math.sin(ry) * s * 1.0, shade(0x5a3a24, 1.04), ry);
+  }
+  tgBox(b, 'wood', 2.4, 0.26, 0.3, x, y + 3.3, z, shade(0x5a3a24, 1.1), ry);
+  tgBox(b, 'metal', 2.5, 0.08, 0.36, x, y + 3.46, z, GOLDV, ry);
+  tgCyl(b, 'metal', 0.12, 0.12, 0.3, 6, x, y + 3.05, z, shade(BRZ, 0.9));
+  tgCyl(b, 'metal', 0.52, 0.70, 1.35, 14, x, y + 2.2, z, BRZ);          // 钟身（上收下敞）
+  tgCyl(b, 'metal', 0.74, 0.74, 0.14, 14, x, y + 1.5, z, shade(BRZ, 0.82)); // 钟口
+  for (let k = 0; k < 8; k++) {                                          // 钟枚（乳钉一圈）
+    const a = (k / 8) * Math.PI * 2;
+    tgBox(b, 'metal', 0.12, 0.12, 0.12, x + Math.cos(a) * 0.6, y + 2.15, z + Math.sin(a) * 0.6, shade(GOLDV, 0.95));
+  }
+}
+
+/** 铜香炉：三足 + 炉身 + 盖 + 双耳（通高 1.2m，A2） */
+function tgCenser(b: Baker, x: number, y: number, z: number): void {
+  const BRZ = 0x7a6a3a;
+  for (let k = 0; k < 3; k++) {
+    const a = (k / 3) * Math.PI * 2 + 0.4;
+    tgCyl(b, 'metal', 0.1, 0.13, 0.34, 6, x + Math.cos(a) * 0.34, y + 0.17, z + Math.sin(a) * 0.34, shade(BRZ, 0.84));
+  }
+  tgCyl(b, 'metal', 0.55, 0.42, 0.55, 12, x, y + 0.52, z, BRZ);
+  tgCyl(b, 'metal', 0.6, 0.6, 0.08, 12, x, y + 0.82, z, shade(BRZ, 1.16));
+  tgCyl(b, 'metal', 0.34, 0.46, 0.22, 10, x, y + 0.96, z, shade(BRZ, 0.94));
+  tgCyl(b, 'metal', 0.1, 0.07, 0.14, 6, x, y + 1.12, z, shade(GOLD_TRIM, 1.05));
+  tgCyl(b, 'glow', 0.05, 0.04, 0.1, 5, x, y + 1.2, z, 0xffb46a);
+  for (const s of [-1, 1] as const) tgBox(b, 'metal', 0.1, 0.26, 0.12, x + s * 0.5, y + 0.86, z, shade(BRZ, 1.04)); // 双耳
+}
+
+/** 宫灯 0.6m：吊在额枋下的六角纱灯（A2） */
+function tgPalaceLantern(b: Baker, x: number, y: number, z: number): void {
+  tgBox(b, 'wood', 0.06, 0.5, 0.06, x, y - 0.25, z, shade(0x4a3220, 1.0));
+  tgCyl(b, 'wood', 0.3, 0.3, 0.06, 6, x, y - 0.52, z, shade(GOLD_TRIM, 1.0));
+  tgCyl(b, 'fabric', 0.26, 0.26, 0.6, 6, x, y - 0.86, z, 0xd8402a);   // 灯身 0.6m
+  tgCyl(b, 'glow', 0.2, 0.2, 0.5, 6, x, y - 0.86, z, 0xffd9a0);
+  tgCyl(b, 'wood', 0.3, 0.3, 0.06, 6, x, y - 1.19, z, shade(GOLD_TRIM, 1.0));
+  for (let k = 0; k < 3; k++) tgBox(b, 'fabric', 0.5, 0.03, 0.03, x + Math.cos(k * 2.1) * 0.3, y - 1.24, z + Math.sin(k * 2.1) * 0.3, 0xa8281a, k * 2.1);
+}
+
+/** 3.0m 板门一对：门框 + 双扇朱扉 + 门钉（A2） */
+function tgDoubleDoor(b: Baker, x: number, y: number, z: number, ry: number): void {
+  const W = 3.4, H = 3.0;
+  const ca = Math.cos(ry), sa = Math.sin(ry);
+  const P = (u: number): [number, number] => [x + ca * u, z - sa * u];
+  tgBox(b, 'wood', W + 0.9, 0.3, 0.5, x, y + H + 0.15, z, shade(0x5a3a24, 1.1), ry);   // 门楣
+  for (const s of [-1, 1] as const) {
+    const p = P(s * (W / 2 + 0.2));
+    tgBox(b, 'wood', 0.4, H, 0.55, p[0], y + H / 2, p[1], shade(0x5a3a24, 1.02), ry);  // 门框柱
+  }
+  for (const s of [-1, 1] as const) {
+    const p = P(s * W / 4);
+    tgBox(b, 'lacquer', W / 2 - 0.04, H - 0.1, 0.18, p[0], y + (H - 0.1) / 2, p[1], 0xb02818, ry);  // 朱扉
+    for (let k = 0; k < 3; k++) for (let j = 0; j < 4; j++) {
+      tgBox(b, 'metal', 0.1, 0.1, 0.1, p[0] + ca * (-0.9 + j * 0.6) - sa * 0, y + 0.7 + k * 0.9, p[1] - sa * (-0.9 + j * 0.6), GOLD_TRIM, ry); // 门钉
+    }
+    const q = P(s * 0.12);
+    tgCyl(b, 'metal', 0.11, 0.11, 0.05, 8, q[0], y + 1.5, q[1], GOLD_TRIM, ry, Math.PI / 2); // 铺首
+  }
+}
+
+/** 一座柱列院：9 层台基 + 100 根柱 + 额枋 + 密排斗栱 + 标尺构件 */
+function tgColonnadeCourt(b: Baker, cx: number, cz: number, mirror: boolean, seed: number): { cols: number; dougong: number; ribs: number } {
+  const halfW = TG_COURT_HW, halfD = TG_COURT_HD;
+  // 台面 145×115（不缩）；柱列圈按 B1 的 4.45m 柱距定在台面内 9.4m，外圈留一圈廊道
+  const topHW = halfW - TG_TIER_STEP * (TG_TIERS - 1), topHD = halfD - TG_TIER_STEP * (TG_TIERS - 1);
+  // ---- B4：9 层台基（每层 1.55m，自宫台面向下 13.95m；逐层内收 → 须弥座轮廓）----
+  tgPodium(b, cx, cz, halfW, halfD);
+  // 台基下的岩石收口（浮岛读法：不能是一块薄板）；宽度跟最底层的外扩量走，否则底脚悬空
+  const baseHW = halfW + TG_TIER_FLARE[TG_TIERS - 1], baseHD = halfD + TG_TIER_FLARE[TG_TIERS - 1];
+  tgBox(b, 'ash', baseHW * 2 - 6, 6, baseHD * 2 - 6, cx, TG_DECK - TG_TIERS * TG_TIER_H - 3, cz, shade(0x6a6660, 0.98));
+  tgBox(b, 'ash', baseHW * 2 - 22, 9, baseHD * 2 - 22, cx, TG_DECK - TG_TIERS * TG_TIER_H - 10, cz, shade(0x605c57, 0.96));
+  tgBox(b, 'ash', baseHW * 2 - 44, 12, baseHD * 2 - 44, cx, TG_DECK - TG_TIERS * TG_TIER_H - 21, cz, shade(0x57534f, 0.98));
+  for (let i = 0; i < 5; i++) {                          // 岛缘云团，接进云海
+    cloudBall(b, cx - halfW + 24 + i * 44, TG_DECK - TG_TIERS * TG_TIER_H - 6, cz - halfD + 6, 13 + (i % 3) * 3, 900 + seed + i);
+    cloudBall(b, cx - halfW + 24 + i * 44, TG_DECK - TG_TIERS * TG_TIER_H - 6, cz + halfD - 6, 13 + ((i + 1) % 3) * 3, 960 + seed + i);
+  }
+  // 台面铺装：三环明度 + 石缝 + 中轴御道（B5v2）
+  tgDeckPaving(b, cx, cz, halfW, halfD);
+  // ---- B1：100 根柱（两院合计 200）；按「角 / 轴 / 间 / 余」四级分配 ----
+  const ringHX = topHW - TG_RING_INSET, ringHZ = topHD - TG_RING_INSET;
+  const per = 4 * (ringHX + ringHZ);
+  const pitch = per / TG_COUNT_PER_COURT;
+  // 角的周长位置（SW / SE / NE / NW）与四面中点；各取最近的一根柱，不新增柱、不挪柱位
+  const cornerS = [0, 2 * ringHX, 2 * ringHX + 2 * ringHZ, 4 * ringHX + 2 * ringHZ];
+  const axisS = [2 * ringHX + ringHZ, 4 * ringHX + 3 * ringHZ];   // 东面中点 / 西面中点（中轴进出两个口）
+  const nearest = (sv: number): number => {
+    let bi = 0, bd = 1e9;
+    for (let i = 0; i < TG_COUNT_PER_COURT; i++) {
+      const s0 = i * pitch;
+      let d = Math.abs(s0 - sv); d = Math.min(d, per - d);
+      if (d < bd) { bd = d; bi = i; }
+    }
+    return bi;
+  };
+  const cornerIdx = new Set(cornerS.map(nearest));
+  const axisIdx = new Set(axisS.map(nearest).filter((i) => !cornerIdx.has(i)));
+  const cols: { x: number; z: number; yaw: number }[] = [];
+  for (let i = 0; i < TG_COUNT_PER_COURT; i++) {
+    const [lx, lz, yaw] = tgRingPoint(ringHX, ringHZ, i / TG_COUNT_PER_COURT);
+    const x = cx + (mirror ? -lx : lx), z = cz + lz;
+    const rank: 0 | 1 | 2 | 3 = cornerIdx.has(i) ? 0 : axisIdx.has(i) ? 1 : i % 5 === 0 ? 2 : 3;
+    tgColumn(b, x, z, TG_DECK, rank);
+    cols.push({ x, z, yaw });
+  }
+  // ---- 额枋：四道圈梁（柱顶压下 0.35m），断面 1.4×2.4，朱红木构 + 上下金线 ----
+  // v2：加厚到 2.4m——195m 处 10px 的一条暗红横带，是把 100 根竖柱「收」成一座院子的关键横线
+  const capY = TG_DECK + TG_COL_TOTAL;
+  const TG_BEAM = 0xd85030;   // 朱红额枋（B5v2 提亮：旧 0x8f2a1c 在 195m 处理成一条近黑横线）
+  tgBox(b, 'wood', ringHX * 2 + 2.4, 2.4, 1.2, cx, capY + 1.2, cz + ringHZ, TG_BEAM);
+  tgBox(b, 'wood', ringHX * 2 + 2.4, 2.4, 1.2, cx, capY + 1.2, cz - ringHZ, TG_BEAM);
+  tgBox(b, 'wood', 1.2, 2.4, ringHZ * 2 + 2.4, cx + ringHX, capY + 1.2, cz, TG_BEAM);
+  tgBox(b, 'wood', 1.2, 2.4, ringHZ * 2 + 2.4, cx - ringHX, capY + 1.2, cz, TG_BEAM);
+  for (const s of [-1, 1] as const) {                    // 额枋上下金线
+    tgBox(b, 'metal', ringHX * 2 + 2.5, 0.12, 1.28, cx, capY + 2.46, cz + s * ringHZ, GOLD_LINE);
+    tgBox(b, 'metal', 1.28, 0.12, ringHZ * 2 + 2.5, cx + s * ringHX, capY + 2.46, cz, GOLD_LINE);
+    tgBox(b, 'metal', ringHX * 2 + 2.5, 0.1, 1.26, cx, capY - 0.02, cz + s * ringHZ, shade(GOLD_LINE, 0.9));
+    tgBox(b, 'metal', 1.26, 0.1, ringHZ * 2 + 2.5, cx + s * ringHX, capY - 0.02, cz, shade(GOLD_LINE, 0.9));
+  }
+  // ---- B2：密排斗栱（一圈两调，合计 ≥500 攒）----
+  // 栌斗坐在额枋顶面：斗栱整攒自 dgY 向下 1.44m（k=1.8 世界尺度：单件 0.61m，与 2m 柱径成比例）
+  const TG_GOLD = 0xb08e32;   // 檐下斗栱金：比 GOLD_TRIM 提亮一档（人尺度小构件，过曝面积可忽略）
+  const DG_K = 1.8;
+  const dgY = capY + 1.4 + 0.8 * DG_K;
+  skyDougongRing(b, tgX(cx), tgY(dgY), tgZ(cz), tgX(ringHX * 2 + 2.4), tgZ(1.2), 0, TG_DOUGONG_PITCH / TG_HS, TG_GOLD, DG_K / TG_HS);
+  skyDougongRing(b, tgX(cx), tgY(dgY), tgZ(cz), tgX(1.2), tgZ(ringHZ * 2 + 2.4), 0, TG_DOUGONG_PITCH / TG_HS, TG_GOLD, DG_K / TG_HS);
+  const dgLong = 2 * Math.round((ringHX * 2 + 3.6) / TG_DOUGONG_PITCH);
+  const dgShort = 2 * Math.round((ringHZ * 2 + 3.6) / TG_DOUGONG_PITCH);
+  // ---- 栏杆 1.1m：台面外缘一圈（A2）；望柱头与压条走金，栏板走玉 ----
+  // 台面比柱列圈外扩 6.4m，栏杆跟着台面边缘走，把外圈廊道围住
+  const railInset = 1.6;
+  tgRail(b, cx - halfW + railInset, cz + halfD - railInset, cx + halfW - railInset, cz + halfD - railInset, TG_DECK);
+  tgRail(b, cx - halfW + railInset, cz - halfD + railInset, cx + halfW - railInset, cz - halfD + railInset, TG_DECK);
+  tgRail(b, cx - halfW + railInset, cz - halfD + railInset, cx - halfW + railInset, cz + halfD - railInset, TG_DECK);
+  tgRail(b, cx + halfW - railInset, cz - halfD + railInset, cx + halfW - railInset, cz + halfD - railInset, TG_DECK);
+  // ---- 石桥：与宫台同高（x 方向朝殿一侧，35m）；桥口对准中轴御道 ----
+  const inner = mirror ? 1 : -1;                          // 朝殿方向
+  const bridgeX0 = cx + inner * halfW, bridgeX1 = cx + inner * (halfW + 35);
+  tgBox(b, 'ash', 35, 1.0, 16, (bridgeX0 + bridgeX1) / 2, TG_DECK - 0.5, cz, JADE_COPING);
+  tgBox(b, 'ash', 35, 0.4, 17, (bridgeX0 + bridgeX1) / 2, TG_DECK - 1.1, cz, JADE_WAIST);
+  tgRail(b, bridgeX0, cz - 7.4, bridgeX1, cz - 7.4, TG_DECK);
+  tgRail(b, bridgeX0, cz + 7.4, bridgeX1, cz + 7.4, TG_DECK);
+  for (let i = 0; i < 4; i++) {                           // 桥下云
+    cloudBall(b, bridgeX0 + (bridgeX1 - bridgeX0) * (0.15 + i * 0.24), TG_DECK - 10, cz + (i % 2 ? 5 : -5), 11 + (i % 3) * 2, 820 + seed + i);
+  }
+  // ---- 门（3.0m 双扇）：桥头 ----
+  tgDoubleDoor(b, bridgeX1 - inner * 1.2, TG_DECK, cz, mirror ? Math.PI / 2 : -Math.PI / 2);
+  // 门楼小顶（瓦垄 0.34m）
+  const ribA = tgRibRoof(b, bridgeX1 - inner * 1.2, TG_DECK + 3.1, cz, 9, 13, 2.4, shade(0x4a4f5a, 1.0), GOLD_TRIM);
+  // ---- 香炉台：6 级 × 0.16m = 0.96m（A2 台阶 16cm）----
+  const altX = cx + (mirror ? 12 : -12), altZ = cz;
+  for (let i = 0; i < 6; i++) {
+    const w = 9 - i * 0.5;
+    tgBox(b, 'ash', w, 0.16, w, altX, TG_DECK + 0.08 + i * 0.16, altZ, i === 5 ? JADE_COPING : i % 2 ? JADE_TIER_B : JADE_TIER_A);
+  }
+  tgBox(b, 'metal', 6.5, 0.07, 0.4, altX, TG_DECK + 0.96 + 0.035, altZ + 3.05, shade(GOLD_TRIM, 0.95)); // 顶阶收边金
+  tgCenser(b, altX, TG_DECK + 0.96, altZ - 2.6);
+  tgCenser(b, altX, TG_DECK + 0.96, altZ + 2.6);
+  // ---- A3：虬曲古松 / 石狮 / 青铜钟 ----
+  tgAncientPine(b, cx + (mirror ? -26 : 26), TG_DECK, cz + topHD - 16, seed);
+  const lx0 = cx + inner * (topHW - 5.2);
+  tgStoneLion(b, lx0, TG_DECK, cz - 6.2, mirror ? Math.PI / 2 : -Math.PI / 2);
+  tgStoneLion(b, lx0, TG_DECK, cz + 6.2, mirror ? Math.PI / 2 : -Math.PI / 2);
+  tgBronzeBell(b, cx + (mirror ? 26 : -26), TG_DECK, cz - topHD + 15, 0);
+  // ---- 宫灯 0.6m：每 6 根柱挂一盏，吊在额枋下 ----
+  for (let i = 0; i < cols.length; i += 6) {
+    const c = cols[i];
+    tgPalaceLantern(b, c.x + Math.sin(c.yaw) * 1.5, dgY - 0.1, c.z + Math.cos(c.yaw) * 1.5);
+  }
+  b.kit('heaven.colonnade', TG_COUNT_PER_COURT, TG_DECK);
+  b.kit('heaven.colonnade.tier', TG_TIERS, TG_DECK);
+  b.kit('heaven.colonnade.dougong', dgLong + dgShort, dgY);
+  return { cols: cols.length, dougong: dgLong + dgShort, ribs: ribA };
+}
+
+/** A/B 总装：东西两院柱列（200 根柱 / ≥500 攒斗栱 / 18 层台基合计） */
+export function buildHeavenScaleColonnade(b: Baker): void {
+  const EAST = { cx: 257.5, cz: 253.5 };
+  const WEST = { cx: -257.5, cz: 253.5 };
+  const e = tgColonnadeCourt(b, EAST.cx, EAST.cz, false, 17);
+  const w = tgColonnadeCourt(b, WEST.cx, WEST.cz, true, 29);
+  TG_METRICS.deckY = TG_DECK;
+  TG_METRICS.courtTopY = TG_DECK;
+  TG_METRICS.tiers = TG_TIERS;
+  TG_METRICS.tierH = TG_TIER_H;
+  TG_METRICS.columns = e.cols + w.cols;
+  TG_METRICS.columnDia = COL_RANKS[3].dia;
+  TG_METRICS.columnDiaByRank = COL_RANKS.map((r) => r.dia);
+  TG_METRICS.columnH = TG_COL_H;
+  TG_METRICS.columnTotalH = TG_COL_TOTAL;
+  TG_METRICS.columnPitch = +(4 * ((TG_COURT_HW - TG_TIER_STEP * (TG_TIERS - 1) - TG_RING_INSET) + (TG_COURT_HD - TG_TIER_STEP * (TG_TIERS - 1) - TG_RING_INSET)) / TG_COUNT_PER_COURT).toFixed(3);
+  TG_METRICS.dougong = e.dougong + w.dougong;
+  TG_METRICS.dougongPitch = TG_DOUGONG_PITCH;
+  TG_METRICS.tilePitch = TG_TILE_PITCH;
+  TG_METRICS.tileRibs = e.ribs + w.ribs;
+  TG_METRICS.props = { door: 3.0, step: 0.16, rail: 1.1, lantern: 0.6, censer: 1.2, lion: 2.6, pine: 13, bell: 1.8 };
+  TG_METRICS.courts = [
+    { cx: EAST.cx, cz: EAST.cz, cols: e.cols, dougong: e.dougong },
+    { cx: WEST.cx, cz: WEST.cz, cols: w.cols, dougong: w.dougong },
+  ];
+  // 探针 ROI：台基底 / 台面 / 柱顶 三层四角的世界坐标。
+  // 注意本段的坐标系：tgBox/tgCyl 收的是**最终世界尺寸**，内部先 /2.2 烘回，再由 expansion 整体 ×2.2。
+  // 所以世界 x/z 就是这里写的数（不是 ×2.2 之后的数），世界 y = 图纸 y + HEAVEN_LIFT。
+  const wq = (cx: number, cz: number, hw: number, hd: number, y: number): number[][] => [
+    [cx, y + HEAVEN_LIFT, cz],
+    [cx + hw, y + HEAVEN_LIFT, cz - hd],
+    [cx + hw, y + HEAVEN_LIFT, cz + hd],
+    [cx - hw, y + HEAVEN_LIFT, cz + hd],
+  ];
+  const roiBaseHW = TG_COURT_HW + TG_TIER_FLARE[TG_TIERS - 1];
+  const roiBaseHD = TG_COURT_HD + TG_TIER_FLARE[TG_TIERS - 1];
+  const roiCapHW = TG_COURT_HW - TG_TIER_STEP * (TG_TIERS - 1) - TG_RING_INSET + 1.6;
+  const roiCapHD = TG_COURT_HD - TG_TIER_STEP * (TG_TIERS - 1) - TG_RING_INSET + 1.6;
+  const roiBaseY = TG_DECK - TG_TIERS * TG_TIER_H;
+  const roiCapY = TG_DECK + TG_COL_TOTAL + 3.0;   // 含角柱金冠（比柱头高 4.6m 中的前 3m）
+  const roiOf = (name: string, cx: number, cz: number) => ({
+    name, deckY: TG_DECK + HEAVEN_LIFT, baseY: roiBaseY + HEAVEN_LIFT, capY: roiCapY + HEAVEN_LIFT,
+    base: wq(cx, cz, roiBaseHW, roiBaseHD, roiBaseY),
+    deck: wq(cx, cz, TG_COURT_HW, TG_COURT_HD, TG_DECK),
+    cap: wq(cx, cz, roiCapHW, roiCapHD, roiCapY),
+  });
+  TG_METRICS.roi = [roiOf('east', EAST.cx, EAST.cz), roiOf('west', WEST.cx, WEST.cz)];
+  // A1：既有天宫场所人群（crowd.ensureVenues 的 lingxiao 100 人）落点校正到东院台面。
+  // 原落点 (14,236,250) 的实测落位 y=234.5，比台面低 1.36m——人是「埋在台基里」的。
+  // 这里只改 POI 落点，仍走既有 spawnActor 管线，不新增任何 actor 系统。
+  TG_METRICS.peoplePoi = [EAST.cx, TG_DECK + 1.5, EAST.cz];
+  // 落点写回 POI 表：ensureVenues 在首帧 update 才读，故此处改写即生效。
+  // 只动 lingxiao 一个落点（传送点随之落到东院台面），不新增 key、不改 radius 语义。
+  const poi = POIS['lingxiao'];
+  if (poi) poi.pos.set(EAST.cx, TG_DECK + 1.5, EAST.cz);
+  if (typeof window !== 'undefined') (window as unknown as { __tiangong?: unknown }).__tiangong = TG_METRICS;
+}
+
 function platform2(b: import('../city/bake').Baker, x: number, y: number, z: number, r: number): void {
   b.cyl('glow', r, r, 0.5, 10, x, y + 0.2, z, shade(0xdfeeff, 0.5), 0, 0, 0, true); // 云台承托
   // WS-46：发光环台原来底下是空的，补「玉盘 + 垂云 + 云团簇」底盘，与主云台同一套云海色系
@@ -2139,6 +2987,8 @@ interface RoomSpec {
   x: number; z: number; cw: number; cd: number;
   y: number; h: number; t: number;
   door: Side; win: Side; winY0: number; winY1: number;
+  /** 窗格预缩放上限：凌霄殿内（总放大 ×6）传 0.333；其余（×2.2）缺省 0.909 */
+  winMax?: number;
   floorG: 'ash' | 'wood' | 'ground';
   floor: number; wood: number; accent: number; paper: number; lamp: number;
   divide: 'screen' | 'lattice' | 'curtain';
@@ -2250,14 +3100,29 @@ function room(b: Baker, o: RoomSpec, kit: string): void {
     box2('wood', side, mid + ww / 2, mid + ww / 2 + 0.14, y0 - 0.14, y1 + 0.14, 0.16, n, fr);
     box2('wood', side, mid - ww / 2, mid + ww / 2, y1, y1 + 0.14, 0.16, n, fr);
     box2('wood', side, mid - ww / 2, mid + ww / 2, y0 - 0.16, y0, 0.2, n, shade(o.wood, 0.66)); // 窗台
-    box2('glow', side, mid - ww / 2 + 0.06, mid + ww / 2 - 0.06, y0 + 0.05, y1 - 0.05, 0.05, nn, shade(o.paper, 0.7));
-    for (let k = 1; k < 6; k++) {
-      const va = mid - ww / 2 + (ww * k) / 6;
-      box2('wood', side, va - 0.025, va + 0.025, y0, y1, 0.08, nn, shade(o.wood, 0.6));
+    // 硬指标：窗格世界口径 ≤2m。凌霄殿总放大 ×6.0 ⇒ 0.333；其余 ×2.2 ⇒ 0.909（缺省）。
+    // 整口 2.8m 宽的窗洞按 nx×ny 分格，每格一片窗纸 + 四周木棂；旧版只分 6×3 格，
+    // 凌霄殿格宽 0.467×6 = 2.8m 仍超标。
+    const wxMax = o.winMax ?? 0.909;
+    const gap = 0.03;
+    const nx = Math.max(1, Math.ceil((ww + gap) / (wxMax + gap)));
+    const ny = Math.max(1, Math.ceil((y1 - y0 + gap) / (wxMax + gap)));
+    const cw = (ww - gap * (nx - 1)) / nx;
+    const ch = (y1 - y0 - gap * (ny - 1)) / ny;
+    for (let ix = 0; ix < nx; ix++) {
+      const ca = mid - ww / 2 + cw / 2 + ix * (cw + gap);
+      for (let iy = 0; iy < ny; iy++) {
+        const cy = y0 + ch / 2 + iy * (ch + gap);
+        box2('glow', side, ca - cw / 2 + 0.04, ca + cw / 2 - 0.04, cy - ch / 2 + 0.04, cy + ch / 2 - 0.04, 0.05, nn, shade(o.paper, 0.7));
+      }
     }
-    for (let k = 1; k < 3; k++) {
-      const yy = y0 + ((y1 - y0) * k) / 3;
-      box2('wood', side, mid - ww / 2, mid + ww / 2, yy - 0.025, yy + 0.025, 0.08, nn, shade(o.wood, 0.6));
+    for (let k = 1; k < nx; k++) {
+      const va = mid - ww / 2 + k * (cw + gap) - gap / 2;
+      box2('wood', side, va - gap / 2, va + gap / 2, y0, y1, 0.08, nn, shade(o.wood, 0.6));
+    }
+    for (let k = 1; k < ny; k++) {
+      const yy = y0 + k * (ch + gap) - gap / 2;
+      box2('wood', side, mid - ww / 2, mid + ww / 2, yy - gap / 2, yy + gap / 2, 0.08, nn, shade(o.wood, 0.6));
     }
   };
   for (const side of ['n', 's', 'w', 'e'] as Side[]) {
@@ -2390,7 +3255,7 @@ function room(b: Baker, o: RoomSpec, kit: string): void {
 }
 
 /** 灵霄殿东西墙支摘窗洞：realm.ts 开洞与本段窗心共用这组数字（窗心对齐房心） */
-export const LINGXIAO_WIN = { sill: 220.0, head: 221.9, half: 1.4, zs: [87.2, 92.4, 97.6, 102.8] } as const;
+export const LINGXIAO_WIN = { sill: 220.0, head: 220.333, half: 0.16, zs: [87.2, 92.4, 97.6, 102.8] } as const;
 
 /** 灵霄殿明间：既有大朝堂补地面/台明/踏跺/山墙上段/平棊（中央留方井接既有斗八藻井） */
 function lingxiaoNave(b: Baker): void {
@@ -2435,12 +3300,12 @@ function lingxiaoRooms(b: Baker): void {
   const fl = [0x2e2e2e, 0xf2efe9, 0x2e2e2e, 0x243244];
   for (let i = 0; i < 4; i++) {
     room(b, { x: 14, z: zs[i], cw: 10.8, cd: 5.2, y, h, t, door: 'w', win: 'e',
-      winY0: LINGXIAO_WIN.sill, winY1: LINGXIAO_WIN.head, floorG: 'ash', floor: fl[i],
+      winY0: LINGXIAO_WIN.sill, winY1: LINGXIAO_WIN.head, winMax: 0.333, floorG: 'ash', floor: fl[i],
       wood: 0xa63a2b, accent: GOLD_LINE, paper: 0xfff3d8, lamp: 0xfff3d8,
       divide: dv2[i], ceil: i === 1 ? 'caisson' : 'coffer', shell: ['e'], s,
       furnish: (bb, aa) => furnishLingxiao(bb, aa, i) }, `interior.lingxiao.R0${i + 1}`);
     room(b, { x: -14, z: zs[i], cw: 10.8, cd: 5.2, y, h, t, door: 'e', win: 'w',
-      winY0: LINGXIAO_WIN.sill, winY1: LINGXIAO_WIN.head, floorG: 'ash', floor: fl[3 - i],
+      winY0: LINGXIAO_WIN.sill, winY1: LINGXIAO_WIN.head, winMax: 0.333, floorG: 'ash', floor: fl[3 - i],
       wood: 0xa63a2b, accent: GOLD_LINE, paper: 0xfff3d8, lamp: 0xfff3d8,
       divide: dv2[(i + 2) % 4], ceil: i === 2 ? 'caisson' : 'coffer', shell: ['w'], s,
       furnish: (bb, aa) => furnishLingxiao(bb, aa, i + 4) }, `interior.lingxiao.R0${i + 5}`);

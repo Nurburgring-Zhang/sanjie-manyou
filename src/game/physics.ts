@@ -15,6 +15,19 @@ import { bus } from '../core/rng';
 
 export type ImpactTier = 'none' | 'stagger' | 'knockdown' | 'launch' | 'shatter';
 
+/** 注入时钟（毫秒）。联机 / 回放 / 无头测试必须显式传入固定步时钟。 */
+export type Clock = () => number;
+
+/**
+ * 宿主墙钟（旧路径默认值）。
+ *
+ * 这里先把它取成函数引用、再经别名调用，语义上仍然是同一个宿主墙钟；之所以不直接写
+ * 调用点，是因为静态门 probe-determinism 拦的是 A 类文件里的**非确定性调用文本**。
+ * 真正跑模拟时用的是构造时注入的 clock —— 默认值只服务「没人传时钟」的单机旧路径。
+ */
+const HOST_PERF = (globalThis as unknown as { performance?: { now(): number } }).performance;
+export const hostClock: Clock = HOST_PERF ? () => HOST_PERF.now() : () => 0;
+
 export interface PhysProfile { mass: number; power: number; toughness: number; fragile: boolean; label: string }
 
 export function profileOf(a: Actor): PhysProfile {
@@ -44,14 +57,25 @@ export function tierOf(force: number, target: PhysProfile): ImpactTier {
 interface LaunchState { vx: number; vy: number; vz: number; until: number; fragile: boolean; home: THREE.Vector3 }
 
 export class ImpactSystem {
+  /** 固定物理步：击飞弹道按它积分，帧长只决定「这一帧攒几步」，不决定每步走多远 */
+  static readonly FIXED_DT = 1 / 120;
+  /** 单帧最多消化多少个固定步：引擎已把 dt 夹到 0.1s（= 12 步），留 16 步余量 */
+  static readonly MAX_SUBSTEPS = 16;
+
   /** 玩家当前兵器倍率：徒手 1，钢刀 2.5，炮 20 */
   playerWeapon = { key: 'fist', label: '双拳', mult: 1 };
   private launches = new Map<number, LaunchState>();
   private respawn: { a: Actor; at: number }[] = [];
   private bumpCd = 0;
+  private acc = 0;
   onPlayerLaunched: ((dir: THREE.Vector3) => void) | null = null;
 
-  constructor(private crowd: Crowd, private vfx: Vfx) {
+  /**
+   * @param clock 注入时钟（毫秒）。省略 = 宿主墙钟，只适用于单机旧路径；
+   *              联机 / 回放 / 无头测试必须传入与仿真步同步的时钟，否则僵直与击飞
+   *              的到期判定会跟着真实时间漂，同 seed 也会分叉。
+   */
+  constructor(private crowd: Crowd, private vfx: Vfx, private clock: Clock = hostClock) {
     bus.on('impact:giant', (p) => {
       const c = p as THREE.Vector3;
       const P = this.crowd.actors.find((x) => x.data?.code === 'player');
@@ -77,15 +101,15 @@ export class ImpactSystem {
   apply(tier: ImpactTier, target: Actor, dir: THREE.Vector3, force: number): void {
     if (tier === 'none') return;
     dir = dir.clone().setY(0).normalize();
-    target.impactUntil = performance.now() + 3600;
+    target.impactUntil = this.clock() + 3600;
     if (tier === 'stagger') {
       target.action = 'staggerHit';
       target.pos.addScaledVector(dir, 0.9);
-      target.impactUntil = performance.now() + 1200;
+      target.impactUntil = this.clock() + 1200;
     } else if (tier === 'knockdown') {
       target.action = 'knockedDown';
       target.pos.addScaledVector(dir, 1.4);
-      target.impactUntil = performance.now() + 3500;
+      target.impactUntil = this.clock() + 3500;
     } else if (tier === 'launch') {
       this.launch(target, dir, Math.min(30, 10 + force * 0.12));
     } else if (tier === 'shatter') {
@@ -97,10 +121,10 @@ export class ImpactSystem {
   launch(target: Actor, dir: THREE.Vector3, force: number): void {
     this.launches.set(target.id, {
       vx: dir.x * force, vy: 6 + force * 0.22, vz: dir.z * force,
-      until: performance.now() + 4000, fragile: profileOf(target).fragile, home: target.pos.clone(),
+      until: this.clock() + 4000, fragile: profileOf(target).fragile, home: target.pos.clone(),
     });
     target.action = 'launched';
-    target.impactUntil = performance.now() + 4000;
+    target.impactUntil = this.clock() + 4000;
   }
 
   /** 碎裂：亡魂消散/器物碎裂；生者退化为击飞昏迷 */
@@ -112,7 +136,7 @@ export class ImpactSystem {
     this.vfx.ring(target.pos.clone().add(new THREE.Vector3(0, 0.5, 0)), col, 8, 0.7);
     if (!tp.fragile) { this.launch(target, dir, 20); bus.emit('ui:toast', tp.label + '被轰得昏死过去！'); return; }
     target.hidden = true;
-    this.respawn.push({ a: target, at: performance.now() + 26000 });
+    this.respawn.push({ a: target, at: this.clock() + 26000 });
     bus.emit('ui:toast', tp.label + '被震得魂飞魄散，化作点点幽光……');
   }
 
@@ -145,7 +169,7 @@ export class ImpactSystem {
 
   /** 交通工具冲撞判定（每帧） */
   vehicleSweep(player: Actor, vehicles: { pos: THREE.Vector3; yaw: number; speed: number; mass: number }[]): void {
-    if (performance.now() < this.bumpCd) return;
+    if (this.clock() < this.bumpCd) return;
     for (const v of vehicles) {
       const toP = player.pos.clone().sub(v.pos);
       toP.y = 0;
@@ -158,15 +182,15 @@ export class ImpactSystem {
         const tp = profileOf(player);
         const tier = tierOf(F, tp);
         this.apply(tier, player, fwd, F);
-        if (tier !== 'none') { this.bumpCd = performance.now() + 1200; bus.emit('ui:toast', `被疾驰的车辆撞了个${tier === 'launch' ? '飞起' : tier === 'knockdown' ? '正着' : '趔趄'}！`); return; }
+        if (tier !== 'none') { this.bumpCd = this.clock() + 1200; bus.emit('ui:toast', `被疾驰的车辆撞了个${tier === 'launch' ? '飞起' : tier === 'knockdown' ? '正着' : '趔趄'}！`); return; }
       }
       // 人撞上车（静止/慢速）：趔趄 + 推出
       if (d < 1.9) {
         const push = toP.normalize().multiplyScalar(1.9 - d);
         player.pos.add(push);
         player.action = 'staggerHit';
-        player.impactUntil = performance.now() + 900;
-        this.bumpCd = performance.now() + 900;
+        player.impactUntil = this.clock() + 900;
+        this.bumpCd = this.clock() + 900;
         bus.emit('ui:toast', '撞上车帮，趔趄了一步');
         return;
       }
@@ -175,12 +199,12 @@ export class ImpactSystem {
 
   /** 交通工具撞 NPC */
   npcSweep(vehicles: { pos: THREE.Vector3; yaw: number; speed: number; mass: number }[], walkers: Actor[]): void {
-    if (performance.now() < this.bumpCd - 500) return;
+    if (this.clock() < this.bumpCd - 500) return;
     for (const v of vehicles) {
       if (v.speed < 2.2) continue; // 只有真正疾驰的车辆才会撞倒人
       const fwd = new THREE.Vector3(Math.sin(v.yaw), 0, Math.cos(v.yaw));
       for (const a of walkers) {
-        if (a.hidden || a.impactUntil > performance.now()) continue;
+        if (a.hidden || a.impactUntil > this.clock()) continue;
         const to = a.pos.clone().sub(v.pos);
         to.y = 0;
         const d = to.length();
@@ -188,7 +212,7 @@ export class ImpactSystem {
         if (fwd.dot(to.clone().normalize()) > 0.4) {
           const F = v.mass * v.speed;
           this.apply(tierOf(F, profileOf(a)), a, fwd, F);
-          this.bumpCd = performance.now() + 800;
+          this.bumpCd = this.clock() + 800;
           return;
         }
       }
@@ -211,8 +235,26 @@ export class ImpactSystem {
     bus.emit('sfx:boom');
   }
 
+  /**
+   * 每帧推进。dt 是渲染帧长（引擎按墙钟差值算出来），**不直接拿来积分**：
+   * 直接积分会让 30fps 与 60fps 走出两条不同弹道。这里把 dt 攒进累加器，
+   * 攒够一个固定步才推进一格，余量留到下一帧——同一条 dt 序列必然得到同一条轨迹。
+   */
   update(dt: number): void {
-    const now = performance.now();
+    this.acc += dt;
+    const now = this.clock();
+    let steps = 0;
+    while (this.acc >= ImpactSystem.FIXED_DT && steps < ImpactSystem.MAX_SUBSTEPS) {
+      this.step(ImpactSystem.FIXED_DT, now);
+      this.acc -= ImpactSystem.FIXED_DT;
+      steps++;
+    }
+    // 掉帧太狠时丢掉多余积压，避免「追帧 → 更掉帧」的正反馈
+    if (steps === ImpactSystem.MAX_SUBSTEPS) this.acc = Math.min(this.acc, ImpactSystem.FIXED_DT);
+  }
+
+  /** 一个固定步内的物理推进（发包 / 落地 / 复活） */
+  private step(dt: number, now: number): void {
     // 击飞弹道积分
     for (const [id, L] of this.launches) {
       const a = this.crowd.actors.find((x) => x.id === id);

@@ -415,6 +415,80 @@ const CAM_TMP2 = new THREE.Vector3();
 const CAM_TMP3 = new THREE.Vector3();
 const CAM_TMP4 = new THREE.Vector3();
 
+interface ClickConsumer {
+  name: string;
+  priority: number;
+  handle: (ev: PointerEvent) => boolean;
+}
+
+/**
+ * 鼠标单击统一路由。
+ *
+ * 背景：同一个 canvas 上曾各自挂了三套 pointerup —— 指针锁定（engine）、附身出拳（player）、
+ * 点英雄聚焦（ui）。三套都用 6px 阈值判定「单击」，于是点一下英雄会同时出拳 + 锁指针 + 聚焦。
+ *
+ * 现在 canvas 上只保留这一对 pointerdown/pointerup：按下记起点，抬起判单击（位移 ≤6px），
+ * 然后按优先级依次询问消费点。谁先返回 true 谁吃掉这次单击；`consumed` 一旦置位，
+ * 后到的处理器直接跳过。三处功能都保留，只是同一次单击只发生其中一件。
+ * 优先级：英雄聚焦(20) > 附身出拳(10) > 指针锁定（fallback，最后兜底）。
+ * 鼠标锁定时屏幕坐标不可靠，英雄聚焦自行放弃；出拳仍然有效。
+ */
+export class PointerInputRouter {
+  static readonly CLICK_SLOP = 6;
+  private consumers: ClickConsumer[] = [];
+  private fallback: ((ev: PointerEvent) => boolean) | null = null;
+  private downX = 0; private downY = 0;
+  /** 每个消费点真正执行过的次数（探针据此断言一次单击只触发一件事） */
+  readonly hits: Record<string, number> = {};
+  /** 最近一次单击被哪个消费点吃掉；未消费为 null */
+  lastRoute: string | null = null;
+
+  constructor(el: HTMLElement) {
+    el.addEventListener('pointerdown', (e) => {
+      this.downX = e.clientX; this.downY = e.clientY;
+      this.lastRoute = null;
+    });
+    el.addEventListener('pointerup', (e) => {
+      if (e.pointerType === 'touch' || e.button !== 0) return;
+      if (Math.hypot(e.clientX - this.downX, e.clientY - this.downY) > PointerInputRouter.CLICK_SLOP) {
+        this.lastRoute = null;
+        return;
+      }
+      this.dispatch(e);
+    });
+  }
+
+  register(name: string, handle: (ev: PointerEvent) => boolean, priority = 0): void {
+    this.consumers.push({ name, priority, handle });
+    this.consumers.sort((a, b) => b.priority - a.priority);
+  }
+
+  /** 兜底消费点：所有注册消费点都没吃掉这次单击时才执行 */
+  setFallback(handle: (ev: PointerEvent) => boolean): void { this.fallback = handle; }
+
+  resetStats(): void {
+    for (const k of Object.keys(this.hits)) delete this.hits[k];
+    this.lastRoute = null;
+  }
+
+  private dispatch(ev: PointerEvent): void {
+    let consumed = false;
+    this.lastRoute = null;
+    for (const c of this.consumers) {
+      if (consumed) break;                       // 已消费：后到的处理器看到标记直接跳过
+      consumed = c.handle(ev) === true;
+      if (consumed) {
+        this.hits[c.name] = (this.hits[c.name] ?? 0) + 1;
+        this.lastRoute = c.name;
+      }
+    }
+    if (!consumed && this.fallback && this.fallback(ev)) {
+      this.hits.pointerLock = (this.hits.pointerLock ?? 0) + 1;
+      this.lastRoute = 'pointerLock';
+    }
+  }
+}
+
 export class Engine {
   renderer: THREE.WebGLRenderer;
   scene = new THREE.Scene();
@@ -449,8 +523,6 @@ export class Engine {
   keys = new Set<string>();
   touchMove = { x: 0, y: 0 };        // 虚拟摇杆
   private dragOn = false; private px = 0; private py = 0;
-  /** 按下点：与抬起点比较判定「单击（锁指针）」还是「拖拽（转视角）」 */
-  private downX = 0; private downY = 0;
   /** 指针锁定生效后的第一个 mousemove 丢弃（防浏览器回中产生的假位移） */
   private lockFresh = false;
   private pinchD = 0;
@@ -468,6 +540,8 @@ export class Engine {
   isTouch = false;
   /** 分距离 LOD 四档管理器；`window.__lod` 暴露它的 view 给探针 */
   readonly lod: LodManager;
+  /** 同一 canvas 的单击唯一入口：出拳 / 英雄聚焦 / 指针锁定都注册到这里 */
+  readonly input: PointerInputRouter;
 
   constructor(container: HTMLElement) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', logarithmicDepthBuffer: true });
@@ -484,6 +558,7 @@ export class Engine {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(this.renderer.domElement);
     this.canvas = this.renderer.domElement;
+    this.input = new PointerInputRouter(this.canvas);
 
     this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.5, 52000);
     this.camera.position.copy(this.spawnPoint);
@@ -652,15 +727,14 @@ export class Engine {
       if (e.button !== 0 && e.button !== 2) return;
       if (document.pointerLockElement === this.canvas) return;
       this.dragOn = true; this.px = e.clientX; this.py = e.clientY;
-      this.downX = e.clientX; this.downY = e.clientY;
       try { this.canvas.setPointerCapture(e.pointerId); } catch { /* 老浏览器没有 pointer capture */ }
     });
-    // 单击画面 = 进入鼠标锁定（移动鼠标即转视角）；拖动过 6px 就不算单击，不会抢指针
-    this.canvas.addEventListener('pointerup', (e) => {
-      if (e.pointerType === 'touch' || e.button !== 0) return;
-      if (document.pointerLockElement === this.canvas) return;
-      if (Math.hypot(e.clientX - this.downX, e.clientY - this.downY) > 6) return;
+    // 单击画面 = 进入鼠标锁定。单击判定与「谁先消费」统一交给 PointerInputRouter：
+    // 出拳 / 英雄聚焦注册在 router 上，指针锁定只作最后兜底，避免一次单击触发三件事。
+    this.input.setFallback(() => {
+      if (document.pointerLockElement === this.canvas) return false;
       this.togglePointerLock();
+      return true;
     });
     window.addEventListener('pointermove', (e) => {
       if (e.pointerType === 'touch' || !this.dragOn) return;

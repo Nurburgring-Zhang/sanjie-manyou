@@ -22,6 +22,8 @@ export class InteractSystem {
   private root: HTMLElement;
   private panel: HTMLElement | null = null;
   private nearest: Interactable | null = null;
+  /** 上一次写进 #interact-prompt 的文本：相同就一个 DOM 写都不发 */
+  private promptText: string | null = null;
 
   constructor(uiRoot: HTMLElement, private player: PlayerController) {
     this.root = uiRoot;
@@ -239,14 +241,21 @@ export class InteractSystem {
     draw();
   }
 
+  /** 只有文本真的变化才写 DOM：提示每帧都在算，但绝大多数帧内容不变 */
+  private setPrompt(text: string): void {
+    if (text === this.promptText) return;
+    this.promptText = text;
+    this.prompt.textContent = text;
+    this.prompt.classList.toggle('show', !!text);
+  }
+
   /** 每帧：更新提示与最近交互 */
   update(): void {
     const p = this.player;
     if (p.mode !== 'avatar' || (p.state !== 'foot' && p.state !== 'swim')) {
-      if (p.state === 'mount' && p.mounted) this.prompt.textContent = 'E · 下' + p.mounted.name;
-      else if (p.state === 'boat' && p.boat) this.prompt.textContent = 'E · 下船（W前进 A/D转舵）';
-      else this.prompt.textContent = '';
-      this.prompt.classList.toggle('show', !!this.prompt.textContent);
+      if (p.state === 'mount' && p.mounted) this.setPrompt('E · 下' + p.mounted.name);
+      else if (p.state === 'boat' && p.boat) this.setPrompt('E · 下船（W前进 A/D转舵）');
+      else this.setPrompt('');
       return;
     }
     let best: Interactable | null = null, bd = Infinity;
@@ -256,12 +265,6 @@ export class InteractSystem {
       if (d < it.r * it.r && d < bd) { bd = d; best = it; }
     }
     this.nearest = best;
-    if (best) {
-      this.prompt.textContent = 'E · ' + best.label;
-      this.prompt.classList.add('show');
-    } else {
-      this.prompt.textContent = '';
-      this.prompt.classList.remove('show');
-    }
+    this.setPrompt(best ? 'E · ' + best.label : '');
   }
 }

@@ -69,3 +69,6 @@ desktop.ini
 /.acs/
 /.moai/
 /artifacts/gates-*.txt
+artifacts/_*/
+artifacts/palace-paving/
+.acs/

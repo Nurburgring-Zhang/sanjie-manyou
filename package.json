@@ -20,7 +20,7 @@
       "electron/**/*"
     ],
     "directories": {
-      "output": "release-v11"
+      "output": "release"
     },
     "win": {
       "target": [

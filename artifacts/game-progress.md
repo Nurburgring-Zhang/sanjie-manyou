@@ -359,3 +359,35 @@ node scripts/verify-packaged.mjs "release-v79/win-unpacked/CyberQingming.exe"
 
 **新增一条**：任何"某类构件数量很多、随机放置"的系统（里坊院落、散布树木、摊位、船只），
 都必须配一条**相互干涉普查**判据。只查"单个对不对"是不够的。
+
+---
+
+## 2026-11-04 00:2x–01:0x · 会话中断续跑（ZCode 接手，收口三件事）
+
+> 背景：前会话（Kimi 三界漫游）在 H5 spike 途中中断（agent-432 状态 lost，600 帧复核因页面被导航毁掉未跑成）。
+> 本轮由 ZCode 接续，先读全量历史（475 轮 / 221 子代理）再动手。
+
+### ① H5 p95 归因 spike 收口（-1 风险验证第一个 spike）
+
+- 复用中断前留下的 4182 dev 实例，重跑 `probe-p95-attrib.mjs` 600 帧×2 轮 → `artifacts/p95-attrib-600.json`。
+- **结论推翻 200 帧初判**：dpr05 效应从 −8.25ms 缩到 −0.15ms（噪声带内），阴影/几何/HUD 全部无效应。三分支定性 = **呈现侧偶发错过 vsync（噪声）**，非 GPU 填充、非 CPU 提交持续压力。
+- 口径警示已写进清单：dev 环境（p95≈25ms）≠ 打包态（58ms）；打包态复测列为 P3-1b 第一项；P3-5 像素比档位降级为「复测通过后才排期」。
+- 完整表格与影响已落 `docs/重建-v2/全量工作清单.md` 的「H5 结论」节。
+
+### ② P0-0 determinism 两个遗留缺口全部关闭
+
+- **缺口①（中断时明说"尚未验证"）**：`npx vitest run` 补验 → **6 files / 81 tests 全绿**，`tsc --noEmit` 0 错。LEGACY_RNG 改 mulberry32 确认未破坏单测。
+- **缺口②（"无人认领红灯"的收尾）**：`player.ts` 的 4 处 `performance.now()` 全部改为注入 `clock`（默认 `legacyClock`，行为不变，照 behaviors/crowd 的注入规矩）；`player.ts` 加入 `probe-determinism.mjs` 的 `SIM_FILES` → **A 类 4 文件全部 0 命中，RESULT=PASS**（该门第一次覆盖 player 且真绿）。
+- B 类残留不变（`hells.ts:1462` / `flora.ts:778` 的 uTime uniform、`havoc.ts` Math.random×2、`boss.ts` ×1），仍待人工裁决，不影响 A 类。
+
+### ③ 存量配置修复
+
+- `package.json` 的 `build.directories.output` 从过期的 `release-v11` 改为中性的 `release`；版本化打包仍走显式 `-c.directories.output=release-vNN` 覆盖，工作流不变。
+
+### 待办（按 v3 顺序，本轮未动大项）
+
+- **-1 阶段其余 6 个 spike**：H3 龙 → H1 实体身份 → H2 碰撞预算 → H6 经济 → H4 存档 → H7 移动造物。
+- **post 臂反常**（关后处理 +8.2ms，两轮一致）：机理未明，需单独实验。
+- **SPEC-总账 1.2 分区流式**（唯一还红的账）、B8 换算副本、贴脸屋面、远景雾、云海时序。
+- 白玉台「格栅笼」根系统：**仍需用户裁**（槛墙 vs 檐口屋顶）。
+- 遗留 31 文件工作树本轮已锁 commit（见 git log）。

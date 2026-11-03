@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { UNDER } from './underworld';
+import { HEAVEN_LIFT, heavenY } from './heavenFrame';
 
 // 注意：本文件**不得** import ../actors/pools（模块级用 document.createElement，无头用例会崩），
 // 也不得 import ../city/vehicles（它转手 import pools）。
@@ -48,6 +49,22 @@ interface SpeciesDef {
   spawn?: SpawnCfg; aId?: number[];
   /** W12：八兽走自建放样（beastGeo），不再用 body/head/leg 池拼 */
   form?: BeastForm;
+}
+
+/** 兽池台账：探针 / 控制台共用（`window.__beastPool` 的只读视图） */
+export interface BeastPoolReport {
+  /** 尝试入场的兽体总数（含 form 型与 body 型） */
+  requested: number;
+  /** 真正进场（beasts.push 成功）的数量 */
+  accepted: number;
+  /** 因槽位不足被跳过的数量；行为仍是跳过，不抛异常 */
+  dropped: number;
+  /** 被丢掉的 species id，按发生顺序、保留重复（同一物种多只） */
+  droppedIds: string[];
+  droppedBySpecies: Record<string, number>;
+  droppedByPool: Record<string, number>;
+  /** 各池高水位 / 上限，用于判断还剩多少名额 */
+  pools: Record<string, { used: number; max: number }>;
 }
 
 // 37 类照 world-atoms.json 的 37 行逐条登记：小型 4 / 中型 12 / 大型 9 / 神话巨型 12
@@ -998,6 +1015,12 @@ export class CreatureSystem {
   private forms: Partial<Record<BeastForm, BeastPool>> = {};
   private bound = new Map<number, { pos: THREE.Vector3; yaw: number }>();
   private t = 0;
+  /** 兽池台账：requested / accepted / dropped + 明细；window.__beastPool 读它 */
+  private reqCount = 0;
+  private okCount = 0;
+  private droppedIds: string[] = [];
+  private droppedBySpecies: Record<string, number> = {};
+  private droppedByPool: Record<string, number> = {};
 
   constructor(private crowd: {
     spawnActor(o: Record<string, unknown>): { id: number; pos: THREE.Vector3; yaw: number; freeze: boolean; action: string };
@@ -1047,7 +1070,10 @@ export class CreatureSystem {
     }
     // 天宫 y 修正：runner pts y 用 202
     for (let k = this.runners.length - 6; k < this.runners.length; k++) {
-      for (const p of this.runners[k].pts) p.y = 202;
+      // 灵猴在蟠桃园跑：跑道点必须与整层同高（202 是缩放前口径）。
+      // 必须走 heavenY()，不能写 `202 + HEAVEN_LIFT`：几何是 2131+(y-196)*2.2，
+      // 而 +1935 只给了 2137，比台面低 7.2m，灵猴会陷进地里。
+      for (const p of this.runners[k].pts) p.y = heavenY(202);
     }
     // 骨犬/灵猴改用兽体：人类部件停写，四足骨架接管
     for (const id of [...hounds, ...monkeys]) {
@@ -1055,6 +1081,43 @@ export class CreatureSystem {
       if (a) this.bound.set(id, a as { pos: THREE.Vector3; yaw: number });
     }
     this.initBeasts(hounds, monkeys);
+    this.mountBeastDebug();
+  }
+
+  /** 兽池台账快照（window.__beastPool.report() 与探针共用） */
+  beastReport(): BeastPoolReport {
+    const pools: Record<string, { used: number; max: number }> = {};
+    for (const k of Object.keys(this.pools)) pools[k] = { used: this.pools[k].count, max: this.pools[k].max };
+    return {
+      requested: this.reqCount,
+      accepted: this.okCount,
+      dropped: this.droppedIds.length,
+      droppedIds: [...this.droppedIds],
+      droppedBySpecies: { ...this.droppedBySpecies },
+      droppedByPool: { ...this.droppedByPool },
+      pools,
+    };
+  }
+
+  /** 槽位不足：仍是跳过（不抛异常、不中断加载），但记账 + 汇总告警，不再静默 */
+  private noteDrop(sp: SpeciesDef, pool: string): void {
+    this.droppedIds.push(sp.id);
+    this.droppedBySpecies[sp.id] = (this.droppedBySpecies[sp.id] ?? 0) + 1;
+    this.droppedByPool[pool] = (this.droppedByPool[pool] ?? 0) + 1;
+  }
+
+  /** 调试出口：window.__beastPool（只读 getter + report()；无 window 的无头用例不发布） */
+  private mountBeastDebug(): void {
+    if (typeof window === 'undefined') return;
+    const api: Record<string, unknown> = {};
+    const keys: (keyof BeastPoolReport)[] = [
+      'requested', 'accepted', 'dropped', 'droppedIds', 'droppedBySpecies', 'droppedByPool', 'pools',
+    ];
+    for (const k of keys) {
+      Object.defineProperty(api, k, { enumerable: true, get: () => this.beastReport()[k] });
+    }
+    api['report'] = () => this.beastReport();
+    (window as unknown as Record<string, unknown>)['__beastPool'] = api;
   }
 
   /** 37+5 类生物分型落地：真实 Crowd（有 poolSet）才建兽体池，无头用例零开销 */
@@ -1086,9 +1149,14 @@ export class CreatureSystem {
         for (const id of bound.get(sp.key)!) this.addBeast(sp, { x: 0, z: 0, y: UNDER.y, n: 1, r: 8, speed: 0, host: 'under', scale: sp.key === 'guquan' ? 1 : 0.75 }, 0, id);
       }
     }
+    // 汇总一条告警：数量 + 被丢弃的 species id（明细同时挂在 window.__beastPool）
+    if (this.droppedIds.length > 0) {
+      console.warn(`[beasts] 兽池槽位不足，${this.droppedIds.length} 只未入场：${this.droppedIds.join(', ')}`);
+    }
   }
 
   private addBeast(sp: SpeciesDef, cfg: SpawnCfg, i: number, aId = -1): void {
+    this.reqCount++;
     const slot: Beast['slot'] = {};
     const take = (pool: string, n: number): number => {
       const p = this.pools[pool];
@@ -1098,11 +1166,13 @@ export class CreatureSystem {
     if (sp.form) {
       // 八兽：整具放样已被签名细节吃满，不再拆 body/head/leg 件
       const inst = this.forms[sp.form];
-      if (!inst) return;
+      if (!inst) { this.noteDrop(sp, 'form:' + sp.form); return; }
       slot.form = inst.alloc(1);
       slot.eye = take('eye', FORM_EYES[sp.form].at.length);
       const fly = sp.fly === true;
-      const baseY = fly ? Math.max(cfg.y, HOST_Y[cfg.host] + MIN_CLEAR[sp.group]) : cfg.y;
+      // 天宫灵兽的 cfg.y 是缩放前坐标；非天宫宿主（人间 0 / 地府 -260）保持原值。
+      const rawY = fly ? Math.max(cfg.y, HOST_Y[cfg.host] + MIN_CLEAR[sp.group]) : cfg.y;
+      const baseY = cfg.host === 'sky' ? heavenY(rawY) : rawY;
       const ang = (i / Math.max(1, cfg.n)) * Math.PI * 2 + (sp.id.charCodeAt(2) % 7) * 0.4;
       this.beasts.push({
         sp, slot, legSlot: -1, legs: 0, form: sp.form, aId,
@@ -1112,10 +1182,11 @@ export class CreatureSystem {
         color: new THREE.Color(sp.color), accent: new THREE.Color(sp.accent),
         scale: cfg.scale ?? 1,
       });
+      this.okCount++;
       return;
     }
     const body = take('body', 1);
-    if (body < 0) return;
+    if (body < 0) { this.noteDrop(sp, 'body'); return; }
     slot.body = body;
     slot.head = take('head', 1);
     const legs = sp.legs ?? 4;
@@ -1132,9 +1203,10 @@ export class CreatureSystem {
       else if (f === 'ear') slot.horn = take('horn', 2);
     }
     const fly = sp.fly === true;
-    const baseY = fly
+    const rawY2 = fly
       ? Math.max(cfg.y, HOST_Y[cfg.host] + MIN_CLEAR[sp.group])
       : cfg.y;
+    const baseY = cfg.host === 'sky' ? heavenY(rawY2) : rawY2;
     const ang = (i / Math.max(1, cfg.n)) * Math.PI * 2 + (sp.id.charCodeAt(2) % 7) * 0.4;
     this.beasts.push({
       sp, slot, legSlot, legs, aId,
@@ -1144,6 +1216,7 @@ export class CreatureSystem {
       color: new THREE.Color(sp.color), accent: new THREE.Color(sp.accent),
       scale: cfg.scale ?? 1,
     });
+    this.okCount++;
   }
 
   update(dt: number): void {

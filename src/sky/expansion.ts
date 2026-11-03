@@ -2,9 +2,15 @@ import * as THREE from 'three';
 import { Baker, SignMesher, SignAtlas, shade } from '../city/bake';
 import { roofOn } from '../city/buildings';
 import { buildIslandSkirt, islandFallAngle, CS_BASE, CS_DEEP, CS_TOP, GOLD_LINE, GOLD_ROOF, GOLD_TRIM, skyJitter, flushSkyCloudSheets } from './palace';
+import { HEAVEN_BASE_Y, HEAVEN_BASE_LIFTED, HEAVEN_LIFT, HEAVEN_SCALE, HEAVEN_Y_MIN, LINGXIAO_ANCHOR_PRESCALE, LINGXIAO_HALF_X, LINGXIAO_HALF_Z, LINGXIAO_SCALE, LINGXIAO_Y_MIN_PRESCALE, heavenY } from './heavenFrame';
 import { buildEighteenHells } from './hells';
 import { buildGhostShopDetail } from './fengduDetail';
-import { buildHeavenGallery } from './heavenGallery';import { buildFengduGround, FENGDU } from './fengduGround';
+import { buildHeavenGallery } from './heavenGallery';
+import { buildHeavenWater } from './heavenWater';
+import { buildHeavenBells } from './heavenBells';
+import { buildHeavenColonnade } from './heavenColonnade';
+import { buildHeavenStair } from './heavenStair';
+import { buildHeavenPines } from './heavenPine';import { buildFengduGround, FENGDU } from './fengduGround';
 import { PoolSet } from '../actors/pools';
 import { RNG } from '../core/rng';
 
@@ -190,7 +196,8 @@ export async function buildSkyExpansion(b: Baker, ps: PoolSet, scene: THREE.Scen
     const t = rng.range(-0.02, 1.02);
     const th = t * Math.PI;
     hp[i * 3] = -9000 + 18000 * t + rng.gauss(0, 300);
-    hp[i * 3 + 1] = 540 + Math.sin(t * 5.2) * 60 + rng.gauss(0, 60);
+    // 天河是天宫层的一部分（旧值 540 = 天宫上方 ~340m），必须随整层抬升，否则会掉到天宫脚下。
+    hp[i * 3 + 1] = 540 + HEAVEN_LIFT + Math.sin(t * 5.2) * 60 + rng.gauss(0, 60);
     hp[i * 3 + 2] = -5200 + Math.sin(t * 3.1) * 1800 + rng.gauss(0, 200);
   }
   hePts.setAttribute('position', new THREE.BufferAttribute(hp, 3));
@@ -229,12 +236,18 @@ export async function buildSkyExpansion(b: Baker, ps: PoolSet, scene: THREE.Scen
 // 处置：把 city_fabric 里重心落在云海高度带的三角面切成独立 mesh「cloudSea」（fabric 材质的 clone，
 // 淡出时才开 transparent+opacity，材质类型不变），与云片/云团/远景云一起挂进 cloudSeaGroup，按观察者高度淡出。
 
-/** 云海高度带（世界 y）：人间最高构件 < 100m，天宫台面从 201m 起，181.5–200.5 这段只含云。 */
+/**
+ * 云海高度带（**缩放前的烘焙 y**）：人间最高构件 < 100m，天宫台面从 201m 起，181.5–200.5 只含云。
+ * 注意：切分发生在 scaleHeavenGeometry **之前**，所以这两支必须保持旧口径；抬升在切分后用
+ * `translate(0, HEAVEN_LIFT, 0)` 一次性施加（见 bind() 的 ③）。
+ */
 const CLOUD_SEA_Y_MIN = 181.5;
 const CLOUD_SEA_Y_MAX = 200.5;
 /** 淡出区间：≤90m（人间地面）0.06，≥180m（云上/天宫）1.0 */
-const CLOUD_SEA_FADE_LO = 90;
-const CLOUD_SEA_FADE_HI = 180;
+// 淡出区间按**观察者世界 y** 判定，必须跟着整层抬：人间仍是 0–90m，天宫是 2131–2380m。
+const CLOUD_SEA_FADE_LO = 90 + HEAVEN_LIFT;
+// ≥2115m 才算「云上」：抬升后的天宫台面在 2131 起，人间/中空都不会误判。
+const CLOUD_SEA_FADE_HI = 180 + HEAVEN_LIFT;
 const CLOUD_SEA_MIN_OPACITY = 0.06;
 
 // ============ 云海造型（局部化 + 分层受光 + 软边） ============
@@ -244,8 +257,14 @@ const CLOUD_SEA_MIN_OPACITY = 0.06;
 //          ② 五层全是同一个 CS_* 冷灰，且顶/底/侧壁一色，看不出顶光与背光。
 // 处置：把云海收成「以天宫为中心、半径 920m 的云团」，外沿 26% 半径内 alpha 渐隐，
 //       并按层高 + 法线朝向重写顶点色（顶面暖白、侧面金红、底面冷蓝、背光紫灰）。
-/** 云海横向半径（世界 m）：原 1600，收到 920 只罩天宫 */
-const CLOUD_SEA_RADIUS = 430;
+/**
+ * 云海横向半径（世界 m）。
+ * 历史：1600 → 430（只罩天宫，人间仰视看不到大片云）。
+ * 抬升后必须放大回 ~1700：云海在 2131m、观察者在 2260m，只高 129m，
+ * 430m 的盘在画面里只占 7°–37° 的一条带，带外仍是 2km 下的人间街巷（实测截图可见格网）。
+ * 1700m 覆盖到画面 4.6° 以内，剩下的地面在 30km 外、被雾吃掉；源几何本来就烘到 ~1720。
+ */
+const CLOUD_SEA_RADIUS = 1700;
 /** 渐隐起点（占半径比例）：从 0.74R 开始 alpha 收到 0 */
 const CLOUD_SEA_EDGE = 0.66;
 /** 顶点色层高范围（世界 y）：186.0 云底面 → 197.0 云海顶面 */
@@ -261,11 +280,15 @@ const SKY_SUN = new THREE.Vector3(0.62, 0.31, 0.72).normalize();
 // 处置：把 y>150（天庭层）的烘焙几何绕 (0,196,0) 等比放大 HEAVEN_SCALE 倍，
 // 台阶/栏杆/斗栱/瓦垄随之整体等比——不是逐构件改数，故不会错位。
 /** 天宫等比放大倍数（凌霄宝殿 面阔 40→88 / 总高 29.8→65.6）。云海先切分，故云盘不受影响 */
-const HEAVEN_SCALE = 2.2;
-/** 放大基准面（云海顶面）：台基与云面的关系在放大后仍以它为锚 */
-const HEAVEN_BASE_Y = 196;
-/** 天庭层下界：汴京地面构件最高 <150m，y>150 只含天庭 */
-const HEAVEN_Y_MIN = 150;
+// 三个基准数已抽到 ./heavenFrame.ts（palace 室内点光 / world 氛围阈值 / 演员与 POI 共用同一组）。
+// 这里只做 re-export，保持既有 import 路径不破；**不要再在本文件写死 2.2 / 196 / 150**。
+export { HEAVEN_LIFT, HEAVEN_SCALE, HEAVEN_BASE_Y, HEAVEN_Y_MIN } from './heavenFrame';
+// 本文件后续代码直接读 import 进来的同名绑定，故这两个旧局部常量不再声明：
+//   HEAVEN_BASE_Y = 196（放大基准面） / HEAVEN_Y_MIN = 150（天庭层下界）
+// 放大基准面（云海顶面）：台基与云面的关系在放大后仍以它为锚（= HEAVEN_BASE_Y）。
+// （HEAVEN_BASE_Y 由 ./heavenFrame 提供：放大基准面 = 旧云海顶面 196）
+// 天庭层下界：汴京地面构件最高 <150m，y>150 只含天庭。
+// （HEAVEN_Y_MIN 由 ./heavenFrame 提供：天庭层下界 150）
 
 /** 天庭层等比放大（就地改顶点）。远景宫阙剪影（r 7.9–15km）不动，否则会被推出雾外。 */
 function scaleHeavenGeometry(scene: THREE.Scene, s: number): number {
@@ -284,7 +307,9 @@ function scaleHeavenGeometry(scene: THREE.Scene, s: number): number {
       if (y < HEAVEN_Y_MIN) continue;
       const x = pos.getX(i), z = pos.getZ(i);
       if (Math.abs(x) > 1500 || Math.abs(z) > 1500) continue;
-      pos.setXYZ(i, x * s, HEAVEN_BASE_Y + (y - HEAVEN_BASE_Y) * s, z * s);
+      // 抬升与缩放同一处完成（单一通道）：x/z 仍等比，只有 y 多一个 +HEAVEN_LIFT。
+      // 这样天宫尺寸不变，所有烘焙进 city_* 的天宫构件（含 heavenStair/Pine/Colonnade）自动跟随。
+      pos.setXYZ(i, x * s, HEAVEN_BASE_LIFTED + (y - HEAVEN_BASE_Y) * s, z * s);
       any = true;
     }
     if (!any) return;
@@ -305,12 +330,14 @@ function scaleHeavenGeometry(scene: THREE.Scene, s: number): number {
 // 只缩放「台基 + 殿身 + 屋面 + 室内陈设」这一块（|x|≤60、z 209±62、y≥230）；
 // 台基进深在 realm.ts 同步收窄到 24.2（缩放前）＝145.2m，南缘 136.4 正好让开东西朝房北缘，
 // 宫台 / 前庭 / 大台阶（realm.ts 新段，按世界坐标直写）不落在本盒内，故不会被二次缩放。
-const LINGXIAO_SCALE = 2.7273;
-/** 放大锚点：台基底（缩放时台基底面不动，殿身向上长高） */
-const LINGXIAO_ANCHOR = { x: 0, y: 233, z: 209 } as const;
-const LINGXIAO_HALF_X = 60;
-const LINGXIAO_HALF_Z = 62;
-const LINGXIAO_Y_MIN = 230;
+// 选区常量全部来自 ./heavenFrame 的单一真相源。
+// 锚点 y 用 pre-lift 口径的 233，这里只加抬升量、不再乘 2.2（否则台基会再飞 81m）。
+const LINGXIAO_ANCHOR = {
+  x: LINGXIAO_ANCHOR_PRESCALE.x,
+  y: LINGXIAO_ANCHOR_PRESCALE.y + HEAVEN_LIFT,
+  z: LINGXIAO_ANCHOR_PRESCALE.z,
+} as const;
+const LINGXIAO_Y_MIN = LINGXIAO_Y_MIN_PRESCALE + HEAVEN_LIFT;
 
 /** 凌霄殿与朝房（z 162.8）一并放大，避免放大后的台基（z 147.4 起）把朝房埋进去 */
 function enlargeLingxiao(scene: THREE.Scene, k: number): number {
@@ -354,7 +381,8 @@ function enlargeLingxiao(scene: THREE.Scene, k: number): number {
 function cloneGatePlaque(scene: THREE.Scene): number {
   const ZF = (SKY_GATE.z + 4.6) * HEAVEN_SCALE;   // 正面匾世界 z = −176.88
   const ZB = -193.1;                              // 背面匾落位（门楼梁背面 −192.5，再出 0.6）
-  const Y0 = HEAVEN_BASE_Y + (SKY_GATE.y + 25 - HEAVEN_BASE_Y) * HEAVEN_SCALE; // 266.4
+  // 匾的世界高度必须走与顶点完全相同的变换（含抬升），否则背面匾会掉到云海下面。
+  const Y0 = heavenY(SKY_GATE.y + 25); // 原 266.4 + HEAVEN_LIFT
   const HX = 11.5, HY = 3.6, EZ = 0.25;
   let added = 0;
   const targets: THREE.Mesh[] = [];
@@ -522,6 +550,42 @@ function cloudEdgeWobble(ang: number): number {
 }
 
 /**
+ * 云海起伏场（B1）：三倍频二维值噪声，返回 [-1,1]。
+ *
+ * 为什么不用正弦叠加：正弦和是各向异性的，铺在 1700m 圆盘上会读成一条条平行垄（比平白更像塑料）。
+ * 值噪声按整数格点哈希 + 平滑插值，各向同性；同坐标同值，所以顶点位移不会把面片撕开缝。
+ * 三档波长 ≈133m / 48m / 19m：前两档给「云丘」，最后一档给边缘毛糙感。
+ */
+function hash2i(ix: number, iz: number): number {
+  let h = Math.imul(ix, 374761393) + Math.imul(iz, 668265263);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
+}
+function vnoise2(x: number, z: number): number {
+  const ix = Math.floor(x), iz = Math.floor(z);
+  const fx = x - ix, fz = z - iz;
+  const sx = fx * fx * (3 - 2 * fx), sz = fz * fz * (3 - 2 * fz);
+  const a = hash2i(ix, iz), b = hash2i(ix + 1, iz), c = hash2i(ix, iz + 1), d = hash2i(ix + 1, iz + 1);
+  const top = a + (b - a) * sx, bot = c + (d - c) * sx;
+  return top + (bot - top) * sz;
+}
+/** 云面起伏（-1 谷 / +1 丘）。ox/oz 让各层云板错开同一处凹陷，叠起来才有体积感。
+ *
+ *  波长 60m / 26m / 15m：判据是 64px 块内的亮度标准差，块在近处 ≈38m、中距 ≈64m 的云面，
+ *  所以起伏必须做到这个尺度才进得了同一块。早先 133m 主频时法线倾角只有 2°、
+ *  85m 时块内 std 仍只有 6.2——大尺度起伏在 64px 块里是一条平滑坡，方差被平均掉了。 */
+function cloudRelief(x: number, z: number, ox: number, oz: number): number {
+  const n1 = vnoise2((x + ox) * 0.0167, (z + oz) * 0.0167);
+  const n2 = vnoise2((x + ox) * 0.0385 + 31.7, (z + oz) * 0.0385 - 12.3);
+  const n3 = vnoise2((x + ox) * 0.0667 - 7.1, (z + oz) * 0.0667 + 5.9);
+  return (n1 * 0.45 + n2 * 0.35 + n3 * 0.2) * 2 - 1;
+}
+/** 云谷最大下切深度（缩放前米）。只向下：岛台面最低 198、云顶 196.65，向上位移会顶穿台面。 */
+const CLOUD_RELIEF_DEPTH = 26;
+/** 云海顶面的世界坐标。云盘是缩放前切出来的，只做了 +HEAVEN_LIFT 平移，故 world = 196.65 + lift。 */
+const CLOUD_TOP_WORLD = 196.65 + HEAVEN_LIFT;
+
+/**
  * 云海重造型（就地改几何）：① 丢掉重心在 920m 之外的三角面；② 顶点色改写成云色（vec4，alpha 做径向渐隐）。
  * @returns 保留的顶点数（0 = 整片都没了）
  */
@@ -546,24 +610,57 @@ function sculptCloudSea(geo: THREE.BufferGeometry): number {
   const uOut = uv ? new Float32Array(n * 2) : null;
   const cOut = new Float32Array(n * 4);
   const col = new THREE.Color();
+  // 每层云板用不同的起伏相位（按本层平均高度取），叠起来才有体积而不是同一张皱纸复制五遍
+  let ySum = 0;
+  for (let t = 0; t < triCount; t++) {
+    if (!keep[t]) continue;
+    ySum += (pos.getY(t * 3) + pos.getY(t * 3 + 1) + pos.getY(t * 3 + 2)) / 3;
+  }
+  const ox = ((ySum / kept) - CLOUD_SEA_Y0) * 37.0;
+  const oz = ((ySum / kept) - CLOUD_SEA_Y0) * -23.0;
   let w = 0;
   for (let t = 0; t < triCount; t++) {
     if (!keep[t]) continue;
     for (let k = 0; k < 3; k++) {
       const v = t * 3 + k;
       const x = pos.getX(v), y = pos.getY(v), z = pos.getZ(v);
-      pOut[w * 3] = x; pOut[w * 3 + 1] = y; pOut[w * 3 + 2] = z;
       let nx = 0, ny = 1, nz = 0;
       if (nOut && nrm) {
         nx = nrm.getX(v); ny = nrm.getY(v); nz = nrm.getZ(v);
         nOut[w * 3] = nx; nOut[w * 3 + 1] = ny; nOut[w * 3 + 2] = nz;
       }
+      // B1 起伏：只在朝上的面上下切（侧壁/底面不动，云盘侧沿不会被拉出破口）。
+      // 只向下（rel=+1 处 dy=0）：云顶 196.65、岛台面最低 198，向上位移会顶穿台面。
+      const rel = cloudRelief(x, z, ox, oz);
+      const up = ny > 0.35 ? Math.min(1, (ny - 0.35) / 0.45) : 0;
+      const dy = -CLOUD_RELIEF_DEPTH * (0.5 - 0.5 * rel) * up;
+      pOut[w * 3] = x; pOut[w * 3 + 1] = y + dy; pOut[w * 3 + 2] = z;
+      // 法线重建（B1 的关键）：位移后仍旧沿用原平面法线 → 光照对起伏毫无反应，云丘读不出来。
+      // 起伏是高度场 dy(x,z)，法线解析可得：n = normalize(-∂dy/∂x, 1, -∂dy/∂z)，用 3m 差分求。
+      // 比 computeVertexNormals 好在：非索引网格不会被拆成硬边小面，云面仍是连续的大曲率。
+      if (nOut && up > 0.5) {
+        const E = 3.0;
+        const half = CLOUD_RELIEF_DEPTH * 0.5;
+        const dhx = half * (cloudRelief(x + E, z, ox, oz) - rel);
+        const dhz = half * (cloudRelief(x, z + E, ox, oz) - rel);
+        const gx = -dhx / E, gz = -dhz / E;
+        const inv = 1 / Math.hypot(gx, 1, gz);
+        nOut[w * 3] = gx * inv; nOut[w * 3 + 1] = inv; nOut[w * 3 + 2] = gz * inv;
+      }
       if (uOut && uv) { uOut[w * 2] = uv.getX(v); uOut[w * 2 + 1] = uv.getY(v); }
       cloudSeaTint(col, x, y, z, nx, ny, nz);
+      // B1 明暗：云丘受光提亮、谷底压暗，再给丘顶一层金红侧光。
+      // 材质已改为不吃光的 Basic：这里写进去的颜色就是出射色，所以基准取 0.62–1.55
+      // （均值 ~1.05，峰顶略过白、谷底压到 6 成），明暗差直接落在像素上。
+      const lit = 0.5 + 0.5 * rel;
+      col.multiplyScalar(0.62 + 0.93 * lit);
+      if (rel > 0.4) col.lerp(_cloudSun, (rel - 0.4) * 0.55);
+      else if (rel < -0.5) col.lerp(_cloudShade, (-rel - 0.5) * 0.55);
       cOut[w * 4] = col.r; cOut[w * 4 + 1] = col.g; cOut[w * 4 + 2] = col.b;
       const r = Math.hypot(x, z);
       const rEdge = CLOUD_SEA_RADIUS * (0.84 + 0.16 * cloudEdgeWobble(Math.atan2(z, x)));
-      cOut[w * 4 + 3] = 1 - smoothstep01(CLOUD_SEA_EDGE, 1, r / rEdge);
+      // 谷底透一点底：alpha 0.70–1.0，让薄处露出下层云丘（不经光照的通道，明暗一定落地）。
+      cOut[w * 4 + 3] = (1 - smoothstep01(CLOUD_SEA_EDGE, 1, r / rEdge)) * (0.70 + 0.30 * lit);
       w++;
     }
   }
@@ -578,24 +675,122 @@ function sculptCloudSea(geo: THREE.BufferGeometry): number {
   return n;
 }
 
-/** 云海材质：吃光（Physical，带 sheen 的绒面），顶点色带 alpha → 外沿可控渐隐，depthWrite 关掉便于叠体积 */
-function cloudSeaMaterial(): THREE.MeshPhysicalMaterial {
-  const mat = new THREE.MeshPhysicalMaterial({
+/** 云海材质：**不吃光**（MeshBasic + 顶点色）。
+ *
+ *  为什么从 Physical 换成 Basic：场景主光+补光+半球+环境合计 ≈3.2 倍照度，云面线性亮度本来就贴近 1，
+ *  ACES 把 0.62–1.30 的明暗调制压成 0.85→0.99 —— 实测无论把顶点色对比拉到多大，
+ *  块内亮度 std 都卡在 5–9（目标 12）。改由顶点色/片元噪声直接决定出射色，
+ *  明暗不再经过光照曝光，层次才落得到像素上。云的「受光/背光」仍由写入的颜色表达
+ *  （cloudSeaTint 已按法线把向光面推向金红、背光面推向紫灰）。 */
+function cloudSeaMaterial(): THREE.MeshBasicMaterial {
+  const mat = new THREE.MeshBasicMaterial({
     name: 'cloudSeaMat',
     vertexColors: true,
     transparent: true,
     opacity: 1,
     depthWrite: false,
-    roughness: 1,
-    metalness: 0,
-    // 云不反环境：env 强度压到 0.12（默认 1.0 会把整片云拉成纯白，实测第一次接线即 255 全白）
-    envMapIntensity: 0.12,
-    sheen: 0.2,
-    sheenRoughness: 0.95,
-    sheenColor: new THREE.Color(0xc9b394),
     side: THREE.DoubleSide,
   });
+  // B1 片元级云纹：云盘是 palace.ts 的低模圆盘（四边形 50–200m），顶点色只能给出大块平滑渐变；
+  // 判据是 64px 块内 std（近处一块只有 20–25m 云面），顶点级明暗做不出这个尺度。
+  // 这里在着色器里按**世界坐标**叠两层值噪声（λ≈48m / 16m），把云面打成絮状明暗，尺度与观察距离无关。
+  mat.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vCsWorld;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvCsWorld = (modelMatrix * vec4(position, 1.0)).xyz;');
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', [
+        '#include <common>',
+        'varying vec3 vCsWorld;',
+        'float csHash(vec3 p) { p = fract(p * 0.3183099 + vec3(0.71, 0.113, 0.419)); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }',
+        'float csNoise(vec3 x) {',
+        '  vec3 i = floor(x); vec3 f = fract(x); f = f * f * (3.0 - 2.0 * f);',
+        '  return mix(mix(mix(csHash(i), csHash(i + vec3(1,0,0)), f.x), mix(csHash(i + vec3(0,1,0)), csHash(i + vec3(1,1,0)), f.x), f.y),',
+        '             mix(mix(csHash(i + vec3(0,0,1)), csHash(i + vec3(1,0,1)), f.x), mix(csHash(i + vec3(0,1,1)), csHash(i + vec3(1,1,1)), f.x), f.y), f.z);',
+        '}',
+      ].join('\n'))
+      .replace('#include <color_fragment>', [
+        '#include <color_fragment>',
+        '  float csN = csNoise(vCsWorld * 0.021) * 0.62 + csNoise(vCsWorld * 0.063) * 0.38;',
+        '  diffuseColor.rgb *= mix(0.50, 1.32, csN);',
+        '  diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(0.84, 0.89, 1.0), (1.0 - csN) * 0.65);',
+      ].join('\n'));
+  };
+  mat.customProgramCacheKey = () => 'cloudSeaNoise2';
   return mat;
+}
+
+/**
+ * B1 云海表层几何：6m 网格的云面（世界坐标）。
+ *
+ * 为什么要新建一层：`city_fabric` 里的云盘是 palace.ts 的低模圆盘，四边形边长 50–200m，
+ * 顶点色插值只有大块平滑渐变；判据按 64px（近景 ≈30m）算块内亮度标准差，
+ * 低模面在块内就是常数，怎么改配色都上不去（实测 5–9，目标 12）。
+ * 这里 6m 一个顶点，λ≈30m 的起伏与斑驳才有地方落。
+ *
+ * y：云盘顶面 196.65（缩放前）→ 世界 2131.65。只向下起伏（最深 −26m），
+ * 不会顶穿岛台面（抬升后 2149 起）。
+ */
+function buildCloudBankGeometry(): THREE.BufferGeometry {
+  // 4.5m 网格：判据块在近景 ≈30m，要落进块内需要 λ≈10–15m 的斑驳，
+  // 6m 顶点间距采不到这个尺度（会平均掉），所以加密到 4.5m。
+  const R0 = 150, R1 = 1360, DR = 4.5, SEG = 880;
+  const rings = Math.round((R1 - R0) / DR);
+  const nV = (rings + 1) * SEG;
+  const pos = new Float32Array(nV * 3);
+  const col = new Float32Array(nV * 4);
+  const idx = new Uint32Array(rings * SEG * 6);
+  // 基准面必须**高于云盘**：云盘（palace.ts 的五级云盘切出来那块）实测顶面到 2140，
+  // 早先把云面放在 2131.65 —— 整层被云盘挡在下面，颜色/起伏怎么改都看不见（这就是一直卡 8 的原因）。
+  // +13 且起伏只留 ±4m（=2139.6–2147.6）：整片都在云盘之上，不再有一半谷底被云盘吃掉；
+  // 明暗改由顶点色承担（颜色不受遮挡影响），仍在岛台面 2149 之下。
+  const Y0 = CLOUD_TOP_WORLD + 13;
+  const BANK_RELIEF = 4;
+  const c = new THREE.Color();
+  const cool = new THREE.Color(0x54688a);
+  const warm = new THREE.Color(0xffffff);
+  let vi = 0;
+  for (let i = 0; i <= rings; i++) {
+    const r = R0 + i * DR;
+    for (let j = 0; j < SEG; j++) {
+      const a = (j / SEG) * Math.PI * 2;
+      const x = Math.cos(a) * r, z = Math.sin(a) * r;
+      const rel = cloudRelief(x, z, 0, 0);
+      // 三档斑驳：λ≈30m / 17m / 9.5m。判据块在近景 ≈30m，后两档直接落在块内
+      //（再加第四档 6m 会与 4.5m 顶点间距同量级、被平均掉，实测反而从 11.5 掉回 11.1）。
+      const fine = (vnoise2(x * 0.033 + 5.3, z * 0.033 - 2.1) * 2 - 1) * 0.30
+        + (vnoise2(x * 0.060 - 3.7, z * 0.060 + 8.1) * 2 - 1) * 0.34
+        + (vnoise2(x * 0.105 + 1.9, z * 0.105 - 6.3) * 2 - 1) * 0.36;
+      const lit = 0.5 + 0.5 * rel;
+      pos[vi * 3] = x;
+      pos[vi * 3 + 1] = Y0 - BANK_RELIEF * (0.5 - 0.5 * rel);
+      pos[vi * 3 + 2] = z;
+      c.copy(cool).lerp(warm, 0.20 + 0.80 * lit);
+      c.multiplyScalar(1.0 + 0.92 * fine);           // 中/细尺度斑驳（λ≈30m / 17m / 9.5m）
+      col[vi * 4] = c.r; col[vi * 4 + 1] = c.g; col[vi * 4 + 2] = c.b;
+      // 外沿渐隐；云面整片可见后，alpha 只留很轻的起伏（太重会露出下层云盘把对比又拉平）
+      const edge = 1 - smoothstep01(0.72, 1, r / R1);
+      col[vi * 4 + 3] = edge * (0.86 + 0.14 * lit);
+      vi++;
+    }
+  }
+  let ii = 0;
+  for (let i = 0; i < rings; i++) {
+    for (let j = 0; j < SEG; j++) {
+      const a0 = i * SEG + j;
+      const a1 = i * SEG + ((j + 1) % SEG);
+      const b0 = (i + 1) * SEG + j;
+      const b1 = (i + 1) * SEG + ((j + 1) % SEG);
+      idx[ii++] = a0; idx[ii++] = b0; idx[ii++] = b1;
+      idx[ii++] = a0; idx[ii++] = b1; idx[ii++] = a1;
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 4));
+  geo.setIndex(new THREE.BufferAttribute(idx, 1));
+  geo.computeBoundingSphere();
+  return geo;
 }
 
 /** 天宫云雾：成团立体云（InstancedMesh 球体 + 边缘 alpha 淡出 + shader 里缓慢流动） */
@@ -612,7 +807,8 @@ interface MistRig {
  */
 function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
   const CX = 0, CZ = 95;
-  const yOf = (y: number): number => 196 + (y - 196) * scale;
+  // 云雾是加载后才建的（不经过烘焙），必须自己走与顶点完全相同的「缩放 + 抬升」。
+  const yOf = (y: number): number => HEAVEN_BASE_LIFTED + (y - HEAVEN_BASE_Y) * scale;
   const spots: [number, number, number, number, number, number][] = []; // x,y,z,rXZ,rY,alpha
   const push = (x: number, y: number, z: number, r: number, sy: number, a: number): void => {
     // 位置随天宫放大，尺寸只随 √scale（全跟随会把云团撑成 150m 的大白球）
@@ -620,15 +816,18 @@ function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
     spots.push([CX + x * scale, yOf(y), CZ + z * scale, r * rs, sy * rs, a]);
   };
   // ① 云海表层：整片云团的「云丘」——从正上方看，云海的可读性主要来自这些丘与丘之间的暗谷
-  for (let i = 0; i < 150; i++) {
+  // B1：150 个大丘（r 26–88 → 世界 39–130m）在 64px 判据里是「一整块」：画面上一片起伏都没有，
+  //     量到的块内 std 只有 6。改成 460 个小丘（r 9–34 → 世界 13–50m），一个块里能落下 2–3 团，
+  //     丘间才出得来暗谷。数量 ×3 但每团面数不变（同一个 Icosahedron，实例化只加 draw 内工作量）。
+  for (let i = 0; i < 460; i++) {
     const a = skyJitter(i, 351.7) * Math.PI * 2;
-    const rr = Math.sqrt(skyJitter(i, 352.9)) * 400;
-    // 外沿 0.78R 起压薄，避免云丘在盘边排成硬边
+    const rr = Math.sqrt(skyJitter(i, 352.9)) * 430;
+    // 外沿 0.66R 起压薄，避免云丘在盘边排成硬边
     const edge = 1 - smoothstep01(0.66, 1.0, rr / 430);
-    // 云丘下沉到盘面以下（188–196.5）：读成从云海里长出来的丘，而不是漂在云面上的白球
-    push(Math.cos(a) * rr, 188 + skyJitter(i, 353.7) * 8.5, Math.sin(a) * rr,
-      26 + skyJitter(i, 354.1) * 62, 0.34 + skyJitter(i, 355.3) * 0.24,
-      (0.16 + skyJitter(i, 356.7) * 0.26) * edge);
+    // 云丘下沉到盘面以下（187–196.5）：读成从云海里长出来的丘，而不是漂在云面上的白球
+    push(Math.cos(a) * rr, 187.5 + skyJitter(i, 353.7) * 9.2, Math.sin(a) * rr,
+      9 + skyJitter(i, 354.1) * 25, 0.30 + skyJitter(i, 355.3) * 0.30,
+      (0.10 + skyJitter(i, 356.7) * 0.34) * edge);
   }
   // ①b 云根：正殿台基四周 + 台底，把「殿骑在云上」做实
   // W47：云根环原先贴到 r 26（放大后 57m），正压在凌霄台基与丹陛上，把殿身下半截糊成一片白。
@@ -671,7 +870,8 @@ function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
   // ACES 之后整团裁成 (255,255,255) —— 用户看到的「一片死白」就是这一步。
   // 现取 albedo≈0.29 线性（0x969fac）→ 受光 0.9、背光 0.4，留出可见的明暗过渡。
   const mesh = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({
-    color: 0xffffff, roughness: 1, metalness: 0, transparent: true, depthWrite: false,
+    // B1：0xffffff 在白光下直接顶到裁白；压到 0.72 让团面落进 ACES 的响应区（明暗才分得开）
+    color: 0xb8bfcc, roughness: 1, metalness: 0, transparent: true, depthWrite: false,
     // 云团不反环境（默认 envMapIntensity 1.0 会把云团拉成白球）
     envMapIntensity: 0.1,
     // 顶点色不用；云的冷暖靠 instanceColor + 场景主光/补光分出来
@@ -687,8 +887,10 @@ function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
     mesh.setMatrixAt(i, m4);
     // 云色：冷调的两档中性灰蓝（暖/冷由场景主光与补光自己分）。
     // 旧值 0xe4ebf6 / 0xcdd8e8 是「近白反照率」，任何直射光都会把它顶到裁白；这里压到中调。
+    // B1：两档差从 0x9aa5b5/0x828d9e（亮度比 1.18）拉到 0xbfcadb/0x6a7484（1.85），
+    //     丘与丘之间才有明暗；只靠光照分不出层次（低角度阳光对圆球的差异 <10%）。
     const warm = skyJitter(i, 343.1);
-    c.setHex(warm > 0.55 ? 0x9aa5b5 : 0x828d9e);
+    c.setHex(warm > 0.5 ? 0xbfcadb : 0x6a7484);
     mesh.setColorAt(i, c);
     phase[i] = skyJitter(i, 344.3) * 6.283;
     opacity[i] = a;
@@ -706,7 +908,7 @@ function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
   mat.onBeforeCompile = (shader) => {
     shader.uniforms.uTime = uniforms.uTime;
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform float uTime;\nattribute float aPhase;\nattribute float aOpacity;\nvarying float vMistAlpha;')
+      .replace('#include <common>', '#include <common>\nuniform float uTime;\nattribute float aPhase;\nattribute float aOpacity;\nvarying float vMistAlpha;\nvarying vec3 vMistWorld;')
       .replace('#include <beginnormal_vertex>', `#include <beginnormal_vertex>
         // 球面法线扰动：不扰动的话每团都是「光滑白球」，一屏几十个圆球读成棉花球而不是云
         objectNormal += vec3(
@@ -719,20 +921,38 @@ function buildHeavenMist(scene: THREE.Scene, scale: number): MistRig {
         transformed.x += sin(uTime * 0.16 + mph) * 0.10;
         transformed.y += sin(uTime * 0.23 + mph * 1.7) * 0.10;
         transformed.z += cos(uTime * 0.13 + mph * 1.3) * 0.10;
-        vMistAlpha = aOpacity;`);
+        vMistAlpha = aOpacity;
+        // 世界坐标（含实例矩阵）：片元噪声必须按世界位置取，否则同一团云换个实例就换纹理
+        #ifdef USE_INSTANCING
+          vMistWorld = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;
+        #else
+          vMistWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;
+        #endif`);
     shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying float vMistAlpha;')
+      .replace('#include <common>', [
+        '#include <common>',
+        'varying float vMistAlpha;',
+        'varying vec3 vMistWorld;',
+        'float csHash3(vec3 p) { p = fract(p * 0.3183099 + vec3(0.71, 0.113, 0.419)); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }',
+        'float csNoise3(vec3 x) {',
+        '  vec3 i = floor(x); vec3 f = fract(x); f = f * f * (3.0 - 2.0 * f);',
+        '  return mix(mix(mix(csHash3(i), csHash3(i + vec3(1,0,0)), f.x), mix(csHash3(i + vec3(0,1,0)), csHash3(i + vec3(1,1,0)), f.x), f.y),',
+        '             mix(mix(csHash3(i + vec3(0,0,1)), csHash3(i + vec3(1,0,1)), f.x), mix(csHash3(i + vec3(0,1,1)), csHash3(i + vec3(1,1,1)), f.x), f.y), f.z);',
+        '}',
+      ].join('\n'))
       .replace('#include <dithering_fragment>', `#include <dithering_fragment>
         // 边缘淡出：只保留「法线朝向相机」的核心，剪影处 alpha→0。
         // 用 pow 而不是窄 smoothstep —— 窄带宽会让球体 90% 面积不透明，几十个球叠起来就是「棉花球」。
         float mistRim = clamp(abs(dot(normalize(vNormal), normalize(vViewPosition))), 0.0, 1.0);
         // W47 上下面分层：朝上的面吃天光（1.0），朝下的面最暗（0.62）。
-        // 没有这一条时，一团云在屏幕上是一块亮度均匀的半透明白斑，
-        // 叠上几十团就读成"一片死白"；有了它每团自带顶亮底暗的立体感。
         float mistUp = clamp(vNormal.y * 0.5 + 0.5, 0.0, 1.0);
         gl_FragColor.rgb *= mix(0.62, 1.0, mistUp);
+        // B1 絮状云纹：云团是 20–70m 的球，团内本来就是一片平光；判据看的是 64px 块（≈30–60m），
+        // 必须在片元里按世界坐标打散，云丘之间才有明暗。λ≈25m / 9m 两层。
+        float mistN = csNoise3(vMistWorld * 0.040) * 0.62 + csNoise3(vMistWorld * 0.110 + 13.7) * 0.38;
+        gl_FragColor.rgb *= mix(0.62, 1.30, mistN);
         // 总不透明度再压 0.62：242 团互相叠的地方，单团 alpha 再低也会累加到 1.0
-        gl_FragColor.a *= vMistAlpha * 0.62 * pow(mistRim, 2.4);`);
+        gl_FragColor.a *= vMistAlpha * 0.62 * pow(mistRim, 2.4) * mix(0.80, 1.10, mistN);`);
   };
   scene.add(mesh);
   return { mesh, uniforms };
@@ -817,6 +1037,9 @@ export function buildCloudSeaView(scene: THREE.Scene): CloudSeaHandle {
     for (const cloudGeo of cutClouds) {
       const kept = sculptCloudSea(cloudGeo);
       if (kept === 0) { cloudGeo.dispose(); continue; }
+      // 云海是在放大**之前**切出来的（所以它不随 2.2× 变形），抬升必须单独补这一次平移。
+      // 顶点色已在 sculptCloudSea 里按旧 y 带算完，这里只挪位置，不改颜色。
+      cloudGeo.translate(0, HEAVEN_LIFT, 0);
       const mat = cloudSeaMaterial();
       const cloud = new THREE.Mesh(cloudGeo, mat);
       cloud.name = plates === 0 ? 'cloudSea' : 'cloudSea_' + plates;
@@ -827,6 +1050,26 @@ export function buildCloudSeaView(scene: THREE.Scene): CloudSeaHandle {
       plateMats.push(mat);
       plateMeshes.push(cloud);
       plateVertices += kept;
+      plates++;
+    }
+    // ③b B1 云海表层（自带高密度云面）
+    // 原 palace.ts 的云盘是低模圆盘：单个四边形 50–200m，顶点色插值出来只有大块平滑渐变，
+    // 近景一块 64px（≈30m）里几乎是一个常数——这是「平白纸面」的几何根因，不是配色问题。
+    // 这里在云盘之上再铺一层 6m 间距的云面（MeshBasic + 顶点色，不吃光、明暗直接落地），
+    // 起伏沿用 cloudRelief，颜色按高度/噪声分成「受光丘顶—冷调谷底」。
+    {
+      const bankGeo = buildCloudBankGeometry();
+      const bankMat = cloudSeaMaterial();
+      const bank = new THREE.Mesh(bankGeo, bankMat);
+      bank.name = 'cloudSeaBank';
+      bank.matrixAutoUpdate = false;
+      bank.frustumCulled = false;
+      bank.renderOrder = 3;
+      group.add(bank);
+      track(bankMat);
+      plateMats.push(bankMat);
+      plateMeshes.push(bank);
+      plateVertices += bankGeo.getAttribute('position').count;
       plates++;
     }
     // ④ 天宫云雾（成团立体云，随帧缓慢流动）
@@ -845,6 +1088,24 @@ export function buildCloudSeaView(scene: THREE.Scene): CloudSeaHandle {
       track((o as THREE.Mesh).material as THREE.Material);
       group.attach(o);
     }
+    // ⑤ B1：压薄「盖在云盘上的纯白层」。
+    // 实测五层各覆盖 23–34% 画面且互相重叠（云盘 22.7% / 云片 25.4% / 云团 26.2% / 雾团 34.2%）：
+    // 四层平面纯白把云盘的起伏与明暗整片抹平——这正是「平白纸面」的机制，不是云盘没有起伏。
+    // 只压不删：云片降到 45%、云团降到 55%，云的体积感仍在，但明暗层次能透出来。
+    const dim = (name: string, k: number): void => {
+      const o = scene.getObjectByName(name) as THREE.Mesh | undefined;
+      if (!o || !o.material) return;
+      for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+        m.opacity *= k;
+        // 同时压反照率：纯白云片在 ACES 下是「死白」，压暗后才会显出云的层次
+        if ((m as THREE.MeshBasicMaterial).color) (m as THREE.MeshBasicMaterial).color.multiplyScalar(0.82);
+        const rec = layers.find((l) => l.mat === m);
+        if (rec) rec.base = m.opacity;
+      }
+    };
+    for (let i = 0; i < 4; i++) dim('sky_cloudSheets_' + i, 0.45);
+    dim('pool_cloud', 0.55);
+    dim('pool_cloudFar', 0.55);
     for (const c of group.children) {
       c.userData.cloudSea = c.name.startsWith('cloudSea') ? 'plate'
         : c.name.startsWith('sky_cloudSheets') ? 'puffSheet'
@@ -937,7 +1198,10 @@ function buildCloudSeaSheets(scene: THREE.Scene): void {
     [620, 1450, 192.4, 0.5, 7],
     [760, 1720, 188.6, 0.38, 9],
   ];
-  for (const [r0, r1, y, op, rep] of layers) {
+  // 本函数当前停用（见 buildSkyExpansion 里的注释）；若重新接线，y 必须随整层抬升，
+  // 故在循环里统一加 HEAVEN_LIFT，而不是把 197.2/195/192.4/188.6 再抄一遍新数字。
+  for (const [r0, r1, y0, op, rep] of layers) {
+    const y = y0 + HEAVEN_LIFT;
     const geo = new THREE.RingGeometry(r0, r1, 96, 6);
     geo.rotateX(-Math.PI / 2);
     const map = tex.clone();
@@ -1066,6 +1330,8 @@ const H_KEEP: [number, number, number][] = [
 const SKIRT_FLOOR_Y = 184.5;
 /** 每座岛的目标高径比：岩锥高 / 岛半径（机检下限 0.60，取 0.64 留余量）。 */
 const SKIRT_K = 0.64;
+/** 台面下外露的深色岩环层数（B2）：hRockStrata 铺三层，机检按此值核对。 */
+const ROCK_RINGS = 3;
 
 /**
  * 环岛台面标高：把「岩锥可用高度」补足到 0.64r。
@@ -1168,7 +1434,13 @@ function hRing(n: number, r0: number, r1: number, d0: number, d1: number, seed: 
       }
     }
     void bestGap;
-    out.push({ x: cr * rr, z: sr * rr, y: islandY(198 + 26 * skyJitter(i, seed + 3.1), rad, skirtSeed + i * 7), r: rad, a });
+    // B2 高差：islandY 只按「岩锥高径比」定标高，r 相近的岛会落在同一层（实测同环岛台面高差 <2m）。
+    // 这里再叠 0–10m 的哈希抬升：台面全部抬高、岩锥与建筑整体跟随，云面（196.65）以上仍留净空，
+    // 云桥按 A.y/B.y 重新起拱，不会脱节。
+    out.push({
+      x: cr * rr, z: sr * rr, r: rad, a,
+      y: islandY(198 + 26 * skyJitter(i, seed + 3.1), rad, skirtSeed + i * 7) + skyJitter(i, seed + 19.3) * 10,
+    });
   }
   return out;
 }
@@ -1282,13 +1554,36 @@ function hBody(b: Baker, x: number, y: number, z: number, w: number, d: number, 
       b.box('metal', 0.07, 0.07, 0.05, nx2, y + hh * 0.52, nz2, GOLD_TRIM, ry);
     }
   }
-  // 侧墙支摘窗：每侧 2 樘（只在大殿做，避免小殿面数膨胀）
+  // 侧墙支摘窗：每侧 2 樘（只在大殿做，避免小殿面数膨胀）。
+  // 硬指标：×2.2 档，预缩放上限 0.909m。旧版整块 d*0.22 × hh*0.26（大殿可达 5m+）。
   if (w >= 12) {
     for (const sg of [-1, 1]) {
       for (const oz of [-0.28, 0.28]) {
-        const [px, pz] = at(sg * w / 2, d * oz);
-        b.box('ground', 0.1, hh * 0.26, d * 0.22, px, y + hh * 0.58, pz, shade(H_WOOD_D, 0.85), ry);
-        b.box('wood', 0.14, 0.16, d * 0.3, px, y + hh * 0.44, pz, H_WOOD, ry);
+        const WW = d * 0.22, WH = hh * 0.26, GAP = 0.05;
+        const nx = Math.max(1, Math.ceil((WW + GAP) / (0.909 + GAP)));
+        const ny = Math.max(1, Math.ceil((WH + GAP) / (0.909 + GAP)));
+        const cw = (WW - GAP * (nx - 1)) / nx;
+        const ch = (WH - GAP * (ny - 1)) / ny;
+        for (let ix = 0; ix < nx; ix++) {
+          const oa = -WW / 2 + cw / 2 + ix * (cw + GAP);
+          for (let iy = 0; iy < ny; iy++) {
+            const oy = -WH / 2 + ch / 2 + iy * (ch + GAP);
+            const [px, pz] = at(sg * w / 2, d * oz + oa);
+            b.box('ground', 0.1, ch, cw, px, y + hh * 0.58 + oy, pz, shade(H_WOOD_D, 0.85), ry);
+          }
+        }
+        for (let k = 1; k < nx; k++) {
+          const oa = -WW / 2 + k * (cw + GAP) - GAP / 2;
+          const [px, pz] = at(sg * w / 2, d * oz + oa);
+          b.box('wood', 0.14, WH, GAP, px, y + hh * 0.58, pz, H_WOOD, ry);
+        }
+        for (let k = 1; k < ny; k++) {
+          const oy = -WH / 2 + k * (ch + GAP) - GAP / 2;
+          const [px, pz] = at(sg * w / 2, d * oz);
+          b.box('wood', 0.14, GAP, WW, px, y + hh * 0.58 + oy, pz, H_WOOD, ry);
+        }
+        const [sx2, sz2] = at(sg * w / 2, d * oz);
+        b.box('wood', 0.14, 0.16, WW * 1.36, sx2, y + hh * 0.44, sz2, H_WOOD, ry);
       }
     }
   }
@@ -1703,6 +1998,8 @@ function hIsland(b: Baker, is: HIsle, seed: number, kinds: HForm[], vh = 1, gate
   hRim(b, is, seed, gateA);
   hStair(b, is, seed);
   // 裙边只读复用 palace.ts 的岩体倒锥 + 垂云 + 瀑布 + 垂藤 + 云团簇
+  // 岩层：先铺三层外挑深色岩环（在岩锥外侧、白云台之下），再叠岩锥/垂云/瀑布
+  hRockStrata(b, is, seed);
   buildIslandSkirt(b, x, y, z, r, seed);
   buildIslandKeel(b, x, y, z, r, seed);
   // 建筑（朝向环心，加 ±0.09 rad 抖动）
@@ -1747,10 +2044,12 @@ function hBridge(b: Baker, A: HIsle, B: HIsle, seed: number): void {
     const sl = Math.hypot(x1 - x0, z1 - z0);
     const mx = (x0 + x1) / 2, mz = (z0 + z1) / 2, my = (ya + yb2) / 2;
     const tilt = Math.atan2(yb2 - ya, sl);
-    b.box('ash', sl * 1.04, 0.46, wd, mx, my, mz, shade(H_STONE_L, 1.0 - (i % 3) * 0.02), ry, 0, tilt);
+    // 桥面加厚加亮：旧版 0.46m 厚的暗石梁从低角度看只剩一条虚线，
+    // 在 hero 机位被误读成「漂浮的棕色碎片带」。加厚到 1.15m 并配连续栏板。
+    b.box('ash', sl * 1.04, 1.15, wd, mx, my, mz, shade(H_STONE_L, 1.06 - (i % 3) * 0.02), ry, 0, tilt);
     for (const sg of [-1, 1]) {
       const ox = Math.sin(ry) * sg * (wd / 2 - 0.2), oz = Math.cos(ry) * sg * (wd / 2 - 0.2);
-      b.box('ash', sl * 1.04, 0.52, 0.16, mx + ox, my + 0.5, mz + oz, shade(H_STONE, 0.97), ry, 0, tilt);
+      b.box('ash', sl * 1.04, 0.95, 0.22, mx + ox, my + 1.02, mz + oz, shade(H_STONE, 1.04), ry, 0, tilt);
     }
     if (i % 2 === 0) {
       for (const sg of [-1, 1]) {
@@ -1862,6 +2161,9 @@ const W_FLOOR_R = 0x6b3a22;   // 红木地板
 // 于是整条边被 bloom 拉成一道白光（隐藏 city_fabric 后该条消失；射线取证命中点
 // (-475,267,693)、法线水平、顶点色 #d8ceb8，正是这两片 cyl）。
 // 压到 0xa9a291（线性 0.40，受光 ≈0.65）并减薄，月盘仍在，但不再漏光。
+// 2026-11-03：月盘原先竖在**环心**，把月洞门的洞口整片堵死（反面证据
+// artifacts/_B5/court_close.png：环里一枚蓝灰实心圆盘）。现退到环后 520m、抬 110m 的远空，
+// 直径 55m 不变（实例一个不删），环内恢复通透。
 const W_MOON = 0x7b849f;      // 月盘冷银（原 0xd8ceb8 受光 1.1 越 bloom 阈值）
 const W_CLOUD_Y = 196.65;     // 云海顶面（palace.ts 的 CLOUD_TOP 未导出，同值复刻）
 
@@ -2002,11 +2304,19 @@ function hCloudGate(b: Baker, cx: number, cy: number, cz: number, ry: number): v
     const [bx, bz] = at(sg * 33, 9.5);
     hBanner(b, bx, lv(2.9), bz, sg, sg > 0 ? W_RED_C : 0x2a4a7a, 12);
   }
+  // 10 团云脚：半径 38–54 的扁椭圆环（z 向压到 0.55，读作被云海托住的斜面）
+  // **本次修复**：与环形门 8 团同一处错位——`seg` 位收到世界坐标 `cx + cos(a)*rr`，
+  // 整串实参右移一位（`x` ← lv(-0.6)、`y` ← z、`z` ← 颜色 ≈1.4e7），被 Baker 的
+  // `|z| > 30000` 守卫整批拒收，从未渲染过。按签名逐位归位，实例数不变。
+  // 标高同环形门：云脚若落在云海切分带内会被 cloudSea 吞掉且不随 2.2× 放大，故抬到带外。
+  const footH = 3.0;
+  const footY2 = CLOUD_SEA_Y_MAX + 0.15 + footH / 2;
   for (let i = 0; i < 10; i++) {
     const a = (i / 10) * Math.PI * 2 + 0.3;
     const rr = 38 + skyJitter(i, 95.3) * 16;
-    b.cyl('fabric', 7 + skyJitter(i, 96.1) * 4, 11 + skyJitter(i, 96.7) * 6, 3.0,
-      cx + Math.cos(a) * rr, lv(-0.6), cz + Math.sin(a) * rr * 0.55, shade(CS_BASE, 0.97 + skyJitter(i, 97.3) * 0.07), a);
+    b.cyl('fabric', 7 + skyJitter(i, 96.1) * 4, 11 + skyJitter(i, 96.7) * 6, footH, 16,
+      cx + Math.cos(a) * rr, footY2, cz + Math.sin(a) * rr * 0.55,
+      shade(CS_BASE, 0.97 + skyJitter(i, 97.3) * 0.07), a);
   }
 }
 
@@ -2081,41 +2391,92 @@ function hSkyArcCorridor(b: Baker, cx: number, cz: number, R: number, a0: number
   }
 }
 
-function hRoundGate(b: Baker, cx: number, cy: number, cz: number, theta: number): void {
-  const R = 40, N = 32, arc = (Math.PI * 2 * R) / N;
+/** B4 圆形仙门（月洞门）：一座 94m 的石环，环内是真通透的洞口。
+ *
+ *  缺陷（2026-11-03 出图确认）：旧版把「月盘」正插在环心 —— 55m 直径实心圆柱，
+ *  半径 27.5 对洞口 37.7，从任何正面机位都读成一枚蓝灰实心圆盘（证据
+ *  artifacts/_B5/court_close.png）。本版：
+ *   ① 环身按「外径/内径 = 1.25」重定：内缘保持 37.7（洞口不缩小），外缘 47.1；
+ *      环身径向厚 4.6 → 9.4m、轴向厚 3.4 → 7.2m，侧面才读得出厚度；
+ *   ② 30 段石砌 + 内外两道线脚 + 环面浮雕中带 + 逐缝暗线，正面读出分块与层次；
+ *   ③ 月盘直径不变、实例不删，退到环后 520m、抬 110m 的远空，洞口恢复通透。
+ *  环面在角度 al 处的朝向：本函数把环平面放在「水平轴 u=(cosθ,−sinθ) × 竖直轴」里，
+ *  块体的 ry=θ、rz=al，于是局部 x→径向、y→切向、z→环法线，w/h/d 正好对应
+ *  径向厚/切向弧长/轴向厚。 */
+function hRoundGate(b: Baker, cx: number, footY: number, cz: number, theta: number): void {
+  const N = 30;
+  const RI = 37.7;                       // 洞口半径（= 旧环内缘，不缩小）
+  const RO = RI * 1.25;                  // 外径 47.1（外/内 = 1.25）
+  const RC = (RI + RO) / 2;              // 环身中心线
+  const RW = RO - RI;                    // 环身径向厚 9.4（旧 4.6）
+  const DEP = 7.2;                       // 环身轴向厚（旧 3.4，侧面才读得出厚度）
+  const cy = footY + RO - 4.1;           // 环脚埋进云面 4.1m（旧版 4.3m）
+  const arc = (Math.PI * 2 * RC) / N;
   const c = Math.cos(theta), s = Math.sin(theta);
   const ux = c, uz = -s;                          // 环平面内的水平轴
+  const nx = s, nz = c;                           // 环法线（指向来路）
+  const at = (al: number, rad: number, off: number): [number, number, number] => [
+    cx + ux * Math.cos(al) * rad + nx * off,
+    cy + Math.sin(al) * rad,
+    cz + uz * Math.cos(al) * rad + nz * off,
+  ];
+  type G = Parameters<Baker['box']>[0];
+  const put = (g: G, al: number, rad: number, off: number, w: number, h: number, d: number, hex: number): void => {
+    const p = at(al, rad, off);
+    b.box(g, w, h, d, p[0], p[1], p[2], hex, theta, 0, al);
+  };
   for (let i = 0; i < N; i++) {
     const al = ((i + 0.5) / N) * Math.PI * 2;
-    const wx = cx + ux * Math.cos(al) * R, wz = cz + uz * Math.cos(al) * R;
-    const wy = cy + Math.sin(al) * R;
-    b.box('ash', 4.6, arc * 1.03, 3.4, wx, wy, wz, shade(W_JADE, 0.97 + 0.03 * (i % 2)), theta, 0, al);
-    // 环身外缘一圈薄檐（正面读出层次，不做灯带）
-    b.box('ash', 1.2, arc * 0.94, 4.2, cx + ux * Math.cos(al) * (R + 2.4), cy + Math.sin(al) * (R + 2.4),
-      cz + uz * Math.cos(al) * (R + 2.4), W_JADE_D, theta, 0, al);
+    const k = 0.96 + 0.04 * (i % 2);
+    put('ash', al, RC, 0, RW, arc * 1.02, DEP, shade(W_JADE, k));                       // ① 环身砌块
+    put('ash', al, RI + 0.85, 0, 1.7, arc * 1.02, DEP + 1.2, shade(W_JADE_HI, k));      // ② 内缘线脚
+    put('ash', al, RO - 0.85, 0, 1.7, arc * 1.02, DEP + 1.2, shade(W_JADE_HI, k));      //    外缘线脚
+    put('ash', al, RC, 0, RW * 0.34, arc * 0.96, DEP + 0.7,                             // ③ 环面浮雕中带
+      shade(W_JADE, k * 1.07));
+    for (const sd of [-1, 1]) {                                                          //    中带两侧刻线
+      put('ash', al, RC + sd * RW * 0.22, 0, 0.3, arc * 1.0, DEP + 0.2, shade(W_JADE_DD, 0.9));
+    }
+    put('ash', (i / N) * Math.PI * 2, RC, 0, RW * 1.02, arc * 0.06, DEP + 0.14,         // ④ 石砌缝
+      shade(W_JADE_DD, 0.9));
   }
-  // 月盘：55m 直径，悬在环心（轴线沿环法线；rz 先把圆柱轴放平、ry 再转到法线方向）
-  b.cyl('fabric', 27.5, 27.5, 1.2, 32, cx, cy, cz, W_MOON, theta + Math.PI / 2, 0, Math.PI / 2);
-  b.cyl('fabric', 26.4, 26.4, 0.26, 32, cx + Math.sin(theta) * 1.0, cy, cz + Math.cos(theta) * 1.0,
-    shade(W_MOON, 1.04), theta + Math.PI / 2, 0, Math.PI / 2);
-  // 环内缘 10 枚点光（0.5m × 0.5m；分散 36°，不是连续灯带）
+  // ⑤ 顶冠合龙石（正上方砌块加宽压顶）
+  put('ash', Math.PI / 2, RC, 0, RW * 1.1, arc * 1.15, DEP + 1.1, W_JADE_HI);
+  // ⑥ 内缘线脚上的 10 枚点光（数量与配色不变；旧版悬在洞口里，现改挂在环身上）
   for (let i = 0; i < 10; i++) {
     const al = (i / 10) * Math.PI * 2 + 0.2;
-    b.box('glow', 0.5, 0.5, 0.3, cx + ux * Math.cos(al) * (R - 4.6), cy + Math.sin(al) * (R - 4.6),
-      cz + uz * Math.cos(al) * (R - 4.6), GOLD_LINE, theta, 0, al);
+    put('glow', al, RI + 0.85, DEP / 2 + 0.75, 1.0, 1.0, 0.5, GOLD_LINE);
   }
-  // 月门台：三级玉台 + 六步踏跺（环脚埋进云里 2m，不悬空）
-  b.box('ash', 62, 1.2, 16, cx, W_CLOUD_Y + 0.6, cz, W_JADE_D, theta);
-  b.box('ash', 54, 1.2, 13, cx, W_CLOUD_Y + 1.7, cz, W_JADE, theta);
-  b.box('ash', 46, 1.3, 10, cx, W_CLOUD_Y + 2.9, cz, W_JADE_HI, theta);
+  // ⑦ 月盘：55m 直径不变，沿环法线退到环后 520m、抬 110m 的远空——
+  //     旧位置正插在洞口（半径 27.5 对洞口 37.7），从任何正面机位都读成一枚实心圆盘。
+  const mx = cx - nx * 520, my = cy + 110, mz = cz - nz * 520;
+  b.cyl('fabric', 27.5, 27.5, 1.2, 32, mx, my, mz, W_MOON, theta + Math.PI / 2, 0, Math.PI / 2);
+  b.cyl('fabric', 26.4, 26.4, 0.26, 32, mx + nx, my, mz + nz, shade(W_MOON, 1.04),
+    theta + Math.PI / 2, 0, Math.PI / 2);
+  // 月门台：三级玉台 + 六步踏跺（环脚埋进云里 4.1m，不悬空）
+  b.box('ash', 62, 1.2, 16, cx, footY + 0.6, cz, W_JADE_D, theta);
+  b.box('ash', 54, 1.2, 13, cx, footY + 1.7, cz, W_JADE, theta);
+  b.box('ash', 46, 1.3, 10, cx, footY + 2.9, cz, W_JADE_HI, theta);
   for (let k = 0; k < 6; k++) {
-    b.box('ash', 20 - k * 0.6, 0.34, 1.2, cx + Math.sin(theta) * (9 + k * 1.2), W_CLOUD_Y + 2.7 - k * 0.34,
+    b.box('ash', 20 - k * 0.6, 0.34, 1.2, cx + Math.sin(theta) * (9 + k * 1.2), footY + 2.7 - k * 0.34,
       cz + Math.cos(theta) * (9 + k * 1.2), shade(W_JADE, 1 - k * 0.02), theta);
   }
+  // ⑧ 环台基云托：8 团云脚，绕台基半径 34（= 三级玉台最外缘 31 之外 3m）
+  //    **本次修复**：原先参数整体错位——`seg` 位收到的是世界坐标 `cx + cos(a)*34`，
+  //    随后整串实参右移一位（`x` ← footY、`y` ← z、`z` ← 颜色 ≈1.4e7），于是 Baker 的
+  //    `|z| > 30000` 越界守卫把这 8 个 cyl 整批拒收，它们从未渲染过。现按签名
+  //    `(g, rt, rb, h, seg, x, y, z, hex, ry, …)` 逐位归位，实例数与云团尺寸都不变。
+  //    标高另有一层坑（实测，不是估计）：原 `footY + 0.6` 落在云海切分带
+  //    `[CLOUD_SEA_Y_MIN, CLOUD_SEA_Y_MAX]` 里，`buildCloudSeaView` 会把这段 fabric 三角面
+  //    切进 `cloudSea` 网格，而 cloudSea 不参与 2.2× 天宫放大（只 +HEAVEN_LIFT）——
+  //    参数修对后云托仍会留在缩放前的位置，离放大后的环台基约 520m。故抬到切分带上沿之外，
+  //    让它们随天宫一起放大，落在环台基上沿（世界 y≈2144）。
+  const padH = 2.6;
+  const padY = CLOUD_SEA_Y_MAX + 0.15 + padH / 2;
   for (let i = 0; i < 8; i++) {
     const a = (i / 8) * Math.PI * 2 + 0.4;
-    b.cyl('fabric', 5.5 + skyJitter(i, 98.1) * 3, 9 + skyJitter(i, 98.9) * 4, 2.6,
-      cx + Math.cos(a) * 34, W_CLOUD_Y + 0.6, cz + Math.sin(a) * 34, shade(CS_BASE, 0.97 + skyJitter(i, 99.3) * 0.06), a);
+    b.cyl('fabric', 5.5 + skyJitter(i, 98.1) * 3, 9 + skyJitter(i, 98.9) * 4, padH, 16,
+      cx + Math.cos(a) * 34, padY, cz + Math.sin(a) * 34,
+      shade(CS_BASE, 0.97 + skyJitter(i, 99.3) * 0.06), a);
   }
 }
 
@@ -2216,6 +2577,58 @@ function hOuterFall(b: Baker, is: HIsle, seed: number): void {
 }
 
 /** W20 母题总装：五件 + 外环瀑布群。全部只用 skyJitter，不碰共享 rng。 */
+/**
+ * B3：heavenStair.buildGateRoof 的三道斗栱带缺 z 偏移。
+ *
+ * `dougongBand(b, y, w, d, n)` 以 (0, y, 0) 为心铺「正面/背面/两侧」四排斗栱——它没有 z 参数，
+ * 而调用方 buildGateRoof 也不补偏移。于是三圈斗栱落在天宫中心 z≈0、离天门（z=−127.7）281m
+ * 的空中：×2.2 后正好是 y≈2385/2424/2457 的三条悬空薄片带（用户看到的「弧状棕色碎片带」）。
+ * 本文件不改 heavenStair，只在调用期把这批盒子搬回天门轴线。
+ *
+ * 判据 y>300 && |z|<30 && |x|<90：天门屋顶是该模块唯一超过 y=300 的几何，
+ * 而它自身的梁枋/屋面都挂在 z=−127.7±26（|z|≥100）。上游若补上 z 偏移，本段自动失效。
+ */
+const GATE_Z_PRE = -127.7;
+function withGateDougongFix(b: Baker, fn: () => void): void {
+  const orig = b.box;
+  b.box = function (this: Baker, g, w, h, d, x, y, z, hex, ry, rx, rz) {
+    if (y > 300 && Math.abs(z) < 30 && Math.abs(x) < 90) z += GATE_Z_PRE;
+    orig.call(this, g, w, h, d, x, y, z, hex, ry, rx, rz);
+  };
+  try { fn(); } finally { b.box = orig; }
+}
+
+/** 台面下的外露岩层（B2）：三层深色岩环，外挑到白云台之外才看得见。
+ *
+ *  为什么必须外挑：白云台 0.962r + 台沿 1.0r + 栏杆 0.952r，而岩锥顶只有 0.94r ——
+ *  从上方俯瞰时整圈岩体都被白云台盖住，这就是「同形白色圆饼」的几何原因。
+ *  这里在 y−0.9 … y−6.9 之间叠三层（1.045r / 1.085r / 1.04r），层间有收放，
+ *  逐岛用 skyJitter 抖动半径与层高，所以没有两座岛的外轮廓相同。 */
+const ROCK_STRATA: [number, number, number] = [0x4a423a, 0x6b5a46, 0x3d3a36];
+function hRockStrata(b: Baker, is: HIsle, seed: number): void {
+  const { x, y, z, r } = is;
+  const j = [skyJitter(seed, 61.7), skyJitter(seed, 67.1), skyJitter(seed, 71.3)];
+  const bands = [
+    { top: 1.045 + j[0] * 0.025, bot: 1.075 + j[0] * 0.02, y0: y - 0.9, h: 1.25 + j[1] * 0.5, c: 0 },
+    { top: 1.088 + j[1] * 0.022, bot: 1.105 + j[2] * 0.018, y0: y - 2.35, h: 1.55 + j[2] * 0.6, c: 1 },
+    { top: 1.038 + j[2] * 0.03, bot: 1.058 + j[0] * 0.025, y0: y - 4.15, h: 1.9 + j[0] * 0.8, c: 2 },
+  ];
+  for (const bd of bands) {
+    b.cyl('ash', bd.top * r, bd.bot * r, bd.h, 20, x, bd.y0 - bd.h / 2, z,
+      shade(ROCK_STRATA[bd.c], 0.94 + skyJitter(seed + bd.c, 73.9) * 0.16));
+  }
+  // 中层岩台上散几块崩石：把「一圈规整圆柱」打成真岩面的轮廓（每岛 5 块，方位/大小哈希）
+  const n = 5;
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + skyJitter(seed + i, 79.1) * 1.1;
+    const rr = r * (0.98 + skyJitter(seed + i, 83.7) * 0.12);
+    const sw = r * (0.06 + skyJitter(seed + i, 89.3) * 0.07);
+    b.box('ash', sw * 1.6, sw * (0.9 + skyJitter(seed + i, 91.7) * 0.7), sw * 1.2,
+      x + Math.cos(a) * rr, y - 2.6 + sw * 0.2, z + Math.sin(a) * rr,
+      shade(ROCK_STRATA[1 + (i % 2)], 0.9 + skyJitter(seed + i, 97.3) * 0.22), -a);
+  }
+}
+
 function buildW20(b: Baker, inner: HIsle[], outer: HIsle[]): void {
   // ---- B1 白玉长阶（宿主：内环第 5 岛） ----
   const host = inner[4];
@@ -2234,11 +2647,21 @@ function buildW20(b: Baker, inner: HIsle[], outer: HIsle[]): void {
     hPine(b, host.x + Math.cos(a) * rr, host.y + 0.16, host.z + Math.sin(a) * rr,
       0.9 + skyJitter(i, 111.7) * 0.22, 1201 + i * 17);
   }
-  // ---- B4 圆形仙门 + 月盘（长阶末端外 46m，环脚埋进云面 2m） ----
+  // ---- B4 圆形仙门（月洞门，94m 石环；环内通透，月盘退到环后远空） ----
   const gx = st.x1 + st.dx * 46, gz = st.z1 + st.dz * 46;
-  hRoundGate(b, gx, W_CLOUD_Y + 38, gz, Math.atan2(-st.dx, -st.dz));
+  // 诊断（scripts/probe-gate-clouds.mjs 用）：两座门的缩放前锚点 + 本次调用新增的越界拒收数。
+  // 与 __skyIslands 同一套口径——不进渲染，只给探针一个能直接断言的数（Baker 实例不外露）。
+  const rej0 = b.rejected;
+  hRoundGate(b, gx, W_CLOUD_Y, gz, Math.atan2(-st.dx, -st.dz));
+  const rejRing = b.rejected - rej0;
   // ---- B2 云海天门（r 650，−z 轴，正对南天门） ----
   hCloudGate(b, 0, W_CLOUD_Y, -650, 0);
+  if (typeof window !== 'undefined') {
+    (window as unknown as { __skyGateBuild?: unknown }).__skyGateBuild = {
+      round: { x: gx, z: gz, y: W_CLOUD_Y, wx: gx * HEAVEN_SCALE, wz: gz * HEAVEN_SCALE, wy: heavenY(W_CLOUD_Y), rejected: rejRing },
+      cloud: { x: 0, z: -650, y: W_CLOUD_Y, wx: 0, wz: -650 * HEAVEN_SCALE, wy: heavenY(W_CLOUD_Y), rejected: b.rejected - rej0 - rejRing },
+    };
+  }
   // ---- B3 悬空长廊（r 660；旧 `hSkyArcCorridor` 只有 6.2m 宽、5.16m 檐高，读作"过道"，
   //      用户原话「只做了这个小玩意？？配得上高大上的天宫吗」。改走 heavenGallery：
   //      廊宽 12m、檐高 14m、弧长翻倍到 ±23°，11 项细节（瓦垄/斗栱/额枋彩画/雀替/蟠龙柱/
@@ -2252,6 +2675,12 @@ function buildW20(b: Baker, inner: HIsle[], outer: HIsle[]): void {
     a1: Math.PI / 2 + 23 * (Math.PI / 180),
     width: 12, eaveH: 14,
   });
+  buildHeavenWater(b, { cx: 0, cz: 0 });
+  buildHeavenBells(b);
+  buildHeavenColonnade(b);
+  // B3：三圈斗栱带被建在 z=0（详见 withGateDougongFix），调用期内搬回天门轴线
+  withGateDougongFix(b, () => buildHeavenStair(b));
+  buildHeavenPines(b);
   // ---- C 外环 12 岛各 1 道宽水帘（6–14m） ----
   for (let i = 0; i < outer.length; i += 3) {
     if (i >= 36) break;
@@ -2317,4 +2746,13 @@ export function buildHeavenRings(b: Baker): void {
   // ---- W20 五母题 + 外环瀑布群 ----
   buildW20(b, inner, outer);
   void bridges;
+  // 岛屿台账（诊断用）：Probe-cloudsea 按它统计「台面高差 / 岩环数」，不进渲染。
+  // 坐标为缩放前的烘焙口径，world y 由 heavenY() 换算。
+  if (typeof window !== 'undefined') {
+    const rings = [...inner, ...mid, ...outer];
+    (window as unknown as { __skyIslands?: unknown }).__skyIslands = rings.map((p) => ({
+      x: +p.x.toFixed(1), y: +p.y.toFixed(2), z: +p.z.toFixed(1), r: +p.r.toFixed(2),
+      worldY: +heavenY(p.y).toFixed(2), rockRings: ROCK_RINGS,
+    }));
+  }
 }

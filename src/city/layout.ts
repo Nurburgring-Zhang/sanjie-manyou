@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { RNG } from '../core/rng';
+import { heavenPoint } from '../sky/heavenFrame';
 import { inRiverFootprint, riverCenterZ, riverHalfWidth } from './riverGeom';
 
 // ============ 世界坐标与街区布局 ============
@@ -141,6 +142,19 @@ export function bridgeDeckYAt(x: number, z: number): number | null {
 
 // ============ POI ============
 export interface Poi { name: string; pos: THREE.Vector3; radius: number; sky?: boolean }
+/**
+ * 天宫 POI 一律**世界坐标**（x/z 已 ×HEAVEN_SCALE，y 已走 heavenY）。
+ *
+ * 旧账：这里写的是缩放前米（凌霄殿 0,214,95），而 `liftHeavenResiduals` 只补 +HEAVEN_LIFT ——
+ * x/z 没乘 2.2，传送到凌霄殿落在殿前约 130m 的空中。天宫几何的顶点通道
+ * （expansion.scaleHeavenGeometry）与 POI 必须同一套换算，唯一入口就是 `heavenPoint`。
+ *
+ * 换算后的 y 都在 2137 以上（≥ HEAVEN_BASE_LIFTED=2131），`liftHeavenResiduals` 的
+ * `y < HEAVEN_BASE_LIFTED` 判据因此自然不命中 —— 不会二次抬升，补丁无需另改。
+ *
+ * y 取该 host 的可站面（与 `sky/havoc.ts` 的 SKY_STAND_Y 同源），不是云台名义中心：
+ * 名义高会埋进台基（palace 214 → 台明顶 219.58）或悬在台面上方（arenaW 208 → 铺装 206.12）。
+ */
 export const POIS: Record<string, Poi> = {
   countryside: { name: '郊野柳林', pos: new THREE.Vector3(-450, 4, 78), radius: 16 },
   wharf: { name: '汴河码头', pos: new THREE.Vector3(-238, 2, 40), radius: 18 },
@@ -152,10 +166,14 @@ export const POIS: Record<string, Poi> = {
   pagoda: { name: '开宝寺塔', pos: new THREE.Vector3(540, 6, 200), radius: 20 },
   yamen: { name: '府衙', pos: new THREE.Vector3(560, 2, -74), radius: 18 },
   southbank: { name: '南岸市集', pos: new THREE.Vector3(-60, 2, -66), radius: 16 },
-  nantianmen: { name: '南天门', pos: new THREE.Vector3(0, 205, -80), radius: 30, sky: true },
-  lingxiao: { name: '凌霄宝殿', pos: new THREE.Vector3(0, 214, 95), radius: 36, sky: true },
-  pantao: { name: '蟠桃园', pos: new THREE.Vector3(-150, 202, 40), radius: 24, sky: true },
-  yaochi: { name: '天宫·瑶池水榭', pos: new THREE.Vector3(150, 208, 20), radius: 14, sky: true },
+  // 天宫：参数为缩放前米（与 realm.ts SkyCenters 同一套），落位统一走 heavenPoint
+  nantianmen: { name: '南天门', pos: new THREE.Vector3(...heavenPoint(0, 203.12, -80)), radius: 30, sky: true },
+  // 凌霄殿落点取东院台面（palace.ts buildHeavenScaleColonnade 的 EAST 院，世界 257.5/253.5）：
+  // 殿心 0,95 已被 2.7273× 的台基整片埋掉；palace.ts 的 poi.pos.set 是同一落点的二次定锚，两者必须同值。
+  lingxiao: { name: '凌霄宝殿', pos: new THREE.Vector3(...heavenPoint(117.05, 214.8, 115.23)), radius: 36, sky: true },
+  pantao: { name: '蟠桃园', pos: new THREE.Vector3(...heavenPoint(-150, 201.12, 40)), radius: 24, sky: true },
+  // 瑶池：落点在水榭水中台上（palace.ts buildYaochi：台面 208.26），不是水面 206.25
+  yaochi: { name: '天宫·瑶池水榭', pos: new THREE.Vector3(...heavenPoint(150, 208.26, 20)), radius: 14, sky: true },
 };
 
 // ============ 寻路路网 ============

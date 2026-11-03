@@ -21,7 +21,6 @@ export interface EaveSpec {
   d: number;
   ry: number;
   roofC: number;
-  neon?: number;
   tier: DetailTier;
 }
 
@@ -111,11 +110,6 @@ export function buildDetailedEave(b: Baker, o: EaveSpec): void {
     b.box('wood', 0.08, 0.36, 0.08, wx, eaveY - 0.35, wz, DARK, o.ry);
     b.cyl('metal', 0.11, 0.15, 0.24, 8, wx, eaveY - 0.62, wz, METAL);
     b.kit('eave.windBell');
-  }
-
-  if (o.neon !== undefined) {
-    const [fx, fz] = worldAt(o.x, o.z, o.ry, 0, hd + 0.62);
-    b.box('glow', o.w * 0.9, 0.08, 0.08, fx, eaveY + 0.32, fz, o.neon, o.ry);
   }
 }
 

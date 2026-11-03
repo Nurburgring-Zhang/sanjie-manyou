@@ -16,7 +16,10 @@ import { Baker, shade, roofProfile, type BGroup } from '../city/bake';
  *   脊：正脊 + 宝顶脊饰 + 两端山花/博风/垂脊/走兽。
  *
  * 组织：一次 build 内先「干跑」计数，再按预算选档实建——三角面随弧长自适应，
- *       细节项一项不删，只降重复密度（瓦垄间距 / 缠龙圈数 / 椽数 / 挂落棂条）。
+ *       0–3 档 11 项细节全做；4–5 是长弧档，只降重复密度（5 档不铺望板，其余 10 项仍在）。
+ *
+ * 长弧：minHalfSpanDeg（默认 90）会把调用方给的窄跨度以中点为中心补齐到 ±90°，
+ *       r=660 时弧长 2073m / 432 间 / 866 柱；expansion.ts 的调用不需要改。
  *
  * 落位约定（与旧 hSkyArcCorridor 一致）：
  *   o = 径向偏移（+ 为弧外侧，− 为内侧靠殿），t = 极角，y = 廊面标高。
@@ -37,8 +40,14 @@ export interface HeavenGalleryOpts {
   width?: number;
   /** 檐高 12–16m，默认 14 */
   eaveH?: number;
-  /** 三角面上限（默认 380k），超预算自动降档；最低档仍超则如实记 overBudget */
+  /** 三角面上限（默认 660k），超预算自动降档；最低档仍超则如实记 overBudget */
   maxTris?: number;
+  /**
+   * 弧长下限（半角，度）：调用方给的跨度不足时，以中点为中心自动扩到该半角，默认 90。
+   * ±90° @r660 = 2073m 弧长；expansion.ts 的调用仍传 ±23°，由本模块内部补齐。
+   * 传 0 可关闭（按调用方给的 a0/a1 原样建）。
+   */
+  minHalfSpanDeg?: number;
 }
 
 export interface HeavenGalleryStats {
@@ -53,6 +62,9 @@ export interface HeavenGalleryStats {
   goldBricks: number;
   arcLength: number;
   bayLength: number;
+  /** 实建跨度（度）与调用方请求的跨度（度）——请求窄于 minHalfSpanDeg 时会被内部补齐 */
+  spanDeg: number;
+  requestedSpanDeg: number;
   width: number;
   eaveH: number;
   ridgeY: number;
@@ -64,7 +76,8 @@ export interface HeavenGalleryStats {
 /** 最近一次 build 的实建统计（探针/验收用） */
 export const heavenGalleryStats: HeavenGalleryStats = {
   tier: 0, bays: 0, columns: 0, dougong: 0, tileRibs: 0, lanterns: 0,
-  railPosts: 0, goldBricks: 0, arcLength: 0, bayLength: 0, width: 0, eaveH: 0,
+  railPosts: 0, goldBricks: 0, arcLength: 0, bayLength: 0, spanDeg: 0, requestedSpanDeg: 0,
+  width: 0, eaveH: 0,
   ridgeY: 0, tris: 0, overBudget: false,
 };
 
@@ -196,16 +209,44 @@ interface Tier {
   capEvery: number;
   /** 脊饰间隔（间数） */
   ridgeEvery: number;
+  /** 金砖分格：0 = 按旧公式自适应（bayLen/1.55 × W/1.55），>0 = 固定列数（长弧档用） */
+  brickU: number;
+  brickO: number;
+  /** 每间隔扇数 */
+  panels: number;
+  /** 隔扇精细度：2 = 棂条+裙板+金饰（现行），1 = 边框+裙板，0 = 整面板 + 金线 */
+  panelDetail: number;
+  /** 额枋彩画分段数（0 = 不画） */
+  fasciaSeg: number;
+  /** 额枋彩画面数：2 = 内外两面 */
+  fasciaFaces: number;
+  /** 宫灯间距（米） */
+  lampPitch: number;
+  /** 望柱间距（米） */
+  postPitch: number;
+  /** 望板沿坡细分（0 = 不落望板，只留檐口封边） */
+  boardSub: number;
+  /** 柱础精细度：2 = 须弥座三层，1 = 两层，0 = 一层 */
+  colBase: number;
+  /** 雀替每侧分段（0 = 不做雀替） */
+  bracketSteps: number;
 }
 
+/**
+ * 档位表。0–3 是既有短弧档（逐值不动）；4–5 是长弧档：
+ *   弧长 ≥1km 时 432 间 × 满档会到 129 万面，只能靠「降重复密度、不放大构件」压回预算。
+ *   柱距、柱径、檐高、钟/砖/瓦的单件尺寸全部不变，改的只是每间的重复件数。
+ */
 const TIERS: Tier[] = [
-  { ribPitch: 0.33, slopeSeg: 5, dgPerBay: 4, dgSimple: false, dragonTurns: 2.4, mullions: 3, hRails: 4, hangerSlats: 13, rafters: 5, capEvery: 1, ridgeEvery: 3 },
-  { ribPitch: 0.42, slopeSeg: 4, dgPerBay: 4, dgSimple: false, dragonTurns: 1.8, mullions: 3, hRails: 3, hangerSlats: 10, rafters: 4, capEvery: 1, ridgeEvery: 4 },
-  { ribPitch: 0.52, slopeSeg: 3, dgPerBay: 4, dgSimple: true, dragonTurns: 1.2, mullions: 2, hRails: 2, hangerSlats: 7, rafters: 2, capEvery: 2, ridgeEvery: 5 },
-  { ribPitch: 0.64, slopeSeg: 2, dgPerBay: 4, dgSimple: true, dragonTurns: 0.8, mullions: 2, hRails: 2, hangerSlats: 5, rafters: 0, capEvery: 2, ridgeEvery: 6 },
+  { ribPitch: 0.33, slopeSeg: 5, dgPerBay: 4, dgSimple: false, dragonTurns: 2.4, mullions: 3, hRails: 4, hangerSlats: 13, rafters: 5, capEvery: 1, ridgeEvery: 3, brickU: 0, brickO: 0, panels: 2, panelDetail: 2, fasciaSeg: 5, fasciaFaces: 2, lampPitch: 9.5, postPitch: 2.0, boardSub: 2, colBase: 2, bracketSteps: 4 },
+  { ribPitch: 0.42, slopeSeg: 4, dgPerBay: 4, dgSimple: false, dragonTurns: 1.8, mullions: 3, hRails: 3, hangerSlats: 10, rafters: 4, capEvery: 1, ridgeEvery: 4, brickU: 0, brickO: 0, panels: 2, panelDetail: 2, fasciaSeg: 5, fasciaFaces: 2, lampPitch: 9.5, postPitch: 2.0, boardSub: 2, colBase: 2, bracketSteps: 4 },
+  { ribPitch: 0.52, slopeSeg: 3, dgPerBay: 4, dgSimple: true, dragonTurns: 1.2, mullions: 2, hRails: 2, hangerSlats: 7, rafters: 2, capEvery: 2, ridgeEvery: 5, brickU: 0, brickO: 0, panels: 2, panelDetail: 2, fasciaSeg: 5, fasciaFaces: 2, lampPitch: 9.5, postPitch: 2.0, boardSub: 2, colBase: 2, bracketSteps: 4 },
+  { ribPitch: 0.64, slopeSeg: 2, dgPerBay: 4, dgSimple: true, dragonTurns: 0.8, mullions: 2, hRails: 2, hangerSlats: 5, rafters: 0, capEvery: 2, ridgeEvery: 6, brickU: 0, brickO: 0, panels: 2, panelDetail: 2, fasciaSeg: 5, fasciaFaces: 2, lampPitch: 9.5, postPitch: 2.0, boardSub: 2, colBase: 2, bracketSteps: 4 },
+  { ribPitch: 0.84, slopeSeg: 2, dgPerBay: 3, dgSimple: true, dragonTurns: 0, mullions: 2, hRails: 2, hangerSlats: 6, rafters: 0, capEvery: 3, ridgeEvery: 8, brickU: 2, brickO: 3, panels: 1, panelDetail: 1, fasciaSeg: 3, fasciaFaces: 1, lampPitch: 14, postPitch: 2.7, boardSub: 1, colBase: 1, bracketSteps: 2 },
+  { ribPitch: 1.28, slopeSeg: 1, dgPerBay: 2, dgSimple: true, dragonTurns: 0.6, mullions: 1, hRails: 1, hangerSlats: 3, rafters: 0, capEvery: 5, ridgeEvery: 12, brickU: 1, brickO: 2, panels: 1, panelDetail: 0, fasciaSeg: 2, fasciaFaces: 1, lampPitch: 21, postPitch: 3.4, boardSub: 0, colBase: 0, bracketSteps: 1 },
 ];
 
-const DEFAULT_MAX_TRIS = 398_000;
+const DEFAULT_MAX_TRIS = 660_000;
 
 /**
  * 建一条天宫弧形回廊。
@@ -216,8 +257,15 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
   const cz = opts.cz;
   const y0 = opts.y;
   const r = Math.max(8, Math.abs(opts.r));
-  const aA = Math.min(opts.a0, opts.a1);
-  const aB = Math.max(opts.a0, opts.a1);
+  const reqA0 = Math.min(opts.a0, opts.a1);
+  const reqA1 = Math.max(opts.a0, opts.a1);
+  const reqSpan = Math.max(1e-4, reqA1 - reqA0);
+  // 长弧补齐：调用方仍传 ±23°（expansion.ts 归 lead，不改），本模块内部以中点为中心扩到 ±90°。
+  const minHalf = Math.max(0, opts.minHalfSpanDeg ?? 90) * (Math.PI / 180);
+  const mid = (reqA0 + reqA1) * 0.5;
+  const half = Math.max(reqSpan * 0.5, minHalf);
+  const aA = mid - half;
+  const aB = mid + half;
   const W = clamp(opts.width ?? 12, 8, 16);
   const eaveH = clamp(opts.eaveH ?? 14, 9, 22);
   const maxTris = opts.maxTris ?? DEFAULT_MAX_TRIS;
@@ -227,7 +275,6 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
   const nBay = Math.max(3, Math.round(arcLen / 4.8));
   const dA = span / nBay;
   const bayLen = dA * r;
-  const dgPitch = bayLen / 4;
 
   // 断面（o = 径向，+ 外）
   const halfW = W / 2;
@@ -263,14 +310,13 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
     return clamp(1 - d / cornerSpan, 0, 1);
   };
 
-  // 望柱 / 宫灯按弧长均布（间距锁在 1.8–2.2m / 8–10m）
-  const nPost = Math.max(6, Math.round(arcLen / 2.0));
-  const postDA = span / nPost;
-  const nLampStation = Math.max(2, Math.round(arcLen / 9.5));
-  const lampDA = span / nLampStation;
-
+  // 望柱 / 宫灯按弧长均布；间距由档位决定（默认 2.0m / 9.5m，长弧档放宽），在 run 内按档算
   const run = (tier: number, dry: boolean): number => {
     const T = TIERS[tier];
+    const nPost = Math.max(6, Math.round(arcLen / T.postPitch));
+    const postDA = span / nPost;
+    const nLampStation = Math.max(2, Math.round(arcLen / T.lampPitch));
+    const lampDA = span / nLampStation;
     const sf = new Surf(dry);    // 屋面组（瓦/脊/山花/瓦当/滴水）
     const sfw = new Surf(dry);   // 木作组（椽/望板/雀替/博风/缠龙）
     let tris = 0;
@@ -339,9 +385,9 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
         put('wood', bayLen * 1.01, 0.05, 0.3, tm, sg * (halfW - 0.02), -0.14, GOLD_D);
       }
 
-      // ② 金砖地面：5 列 × 2 行，砖缝露暗底（砖面顶 = 廊面标高 y0）
-      const nBrickU = Math.max(2, Math.round(bayLen / 1.55));
-      const nBrickO = Math.max(4, Math.round(W / 1.55));
+      // ② 金砖地面：列数由档位定（长弧档只留 1×2，靠砖缝与压边石读铺装）
+      const nBrickU = T.brickU > 0 ? T.brickU : Math.max(2, Math.round(bayLen / 1.55));
+      const nBrickO = T.brickO > 0 ? T.brickO : Math.max(4, Math.round(W / 1.55));
       const bw = bayLen / nBrickU;
       const bd = W / nBrickO;
       put('ash', bayLen * 1.01, 0.06, W, tm, 0, -0.08, BRICK_D);
@@ -350,29 +396,60 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
           const tu = t0 + dA * ((iu + 0.5) / nBrickU);
           const oo = -halfW + bd * (io + 0.5);
           const k = 0.86 + jit(i * 31 + iu, io * 13 + 7) * 0.26;
-          put('ash', bw - 0.055, 0.05, bd - 0.055, tu, oo, -0.025, shade(BRICK, k));
+          // 砖面比砖缝层高 5mm：两个面同高会共面 z-fighting，远看是一地黑三角
+          put('ash', bw - 0.055, 0.05, bd - 0.055, tu, oo, -0.02, shade(BRICK, k));
           nBrick++;
         }
       }
-      put('lacquer', bayLen * 1.01, 0.06, W, tm, 0, -0.03, BRICK_D);
+      put('lacquer', bayLen * 1.01, 0.06, W, tm, 0, -0.032, BRICK_D);
       // 两沿的压边石 + 金线（不是两条孤零零的黄线，而是贴着墙根/栏根的收边）
       put('ash', bayLen * 1.01, 0.12, 0.24, tm, -halfW + 0.12, 0.06, JADE_D);
       put('ash', bayLen * 1.01, 0.12, 0.24, tm, halfW - 0.12, 0.06, JADE_D);
       put('wood', bayLen * 1.01, 0.035, 0.06, tm, halfW - 0.26, 0.115, GOLD_D);
 
-      // ③ 内侧廊墙：下碱 + 隔扇（槛窗）＋走马板
+      // ③ 内侧廊墙：下碱 + 隔扇（槛窗）＋走马板（长弧档 panelDetail 0/1 只降棂条与裙板密度）
       put('ash', bayLen * 1.01, 0.35, 0.56, tm, wallO, 0.175, JADE_D);
       put('wood', bayLen * 1.01, 0.72, 0.5, tm, wallO, 0.71, RED_DD);
       const panelTop = 9.85;
       const panelBot = 1.07;
       const pH = panelTop - panelBot;
-      put('wood', bayLen * 1.01, panelTop - panelBot, 0.34, tm, wallO, panelBot + pH / 2, PAPER);
-      const nPanel = 2;
+      // 硬指标：回廊只吃 scaleHeavenGeometry 的 ×2.2，预缩放上限 2/2.2 = 0.909m。
+      // 旧版整条暗板 bayLen×pH ≈4.9×8.8 ⇒ 世界 10.7×19.3m（探针最大超标源，436 簇）。
+      // 本版按 0.909m 分频：每格 0.783×0.842 ×2.2 = 1.72×1.85m ≤2 ✔。
+      // 必须真实拆成独立盒体：压棂条不改变暗板的几何连通性，探针仍会读成一整樘巨窗。
+      const gx = Math.max(1, Math.ceil((bayLen * 1.01 + 0.04) / (0.909 + 0.04)));
+      const gy = Math.max(1, Math.ceil((pH + 0.04) / (0.909 + 0.04)));
+      const gW = (bayLen * 1.01 - 0.04 * (gx - 1)) / gx;
+      const gH = (pH - 0.04 * (gy - 1)) / gy;
+      for (let ix = 0; ix < gx; ix++) {
+        const ox = -(bayLen * 1.01) / 2 + gW / 2 + ix * (gW + 0.04);
+        for (let iy = 0; iy < gy; iy++) {
+          const oy = panelBot + gH / 2 + iy * (gH + 0.04);
+          put('wood', gW, gH, 0.34, tm + ox / r, wallO, oy, PAPER);
+        }
+      }
+      // 格间木棂（朱漆）：压住分格缝，避免透出廊外。0.04 预缩放 ×2.2 = 0.088m。
+      for (let ix = 1; ix < gx; ix++) {
+        const ox = -(bayLen * 1.01) / 2 + ix * (gW + 0.04) - 0.02;
+        put('wood', 0.04, pH, 0.05, tm + ox / r, wallO + 0.18, panelBot + pH / 2, RED_DD);
+      }
+      for (let iy = 1; iy < gy; iy++) {
+        const oy = panelBot + iy * (gH + 0.04) - 0.02;
+        put('wood', bayLen * 1.01, 0.04, 0.05, tm, wallO + 0.18, oy, RED_DD);
+      }
+      const nPanel = Math.max(1, T.panels);
       const pw = bayLen / nPanel - 0.16;
       for (let k = 0; k < nPanel; k++) {
         const so = (k + 0.5 - nPanel / 2) * (bayLen / nPanel);
         const tp = tm + so / r;
         const po = wallO + 0.19;
+        if (T.panelDetail <= 0) {
+          // 整面朱漆板 + 一道金线（远看仍是「深色木隔扇带」，只是不再逐根棂条）
+          put('wood', pw, pH - 0.26, 0.12, tp, po, panelBot + pH / 2, shade(RED_DD, 1.08));
+          put('wood', pw * 0.96, 0.1, 0.16, tp, po + 0.03, panelTop - 0.2, GOLD_D);
+          put('wood', pw * 0.96, 0.08, 0.16, tp, po + 0.03, panelBot + 0.24, GOLD_D);
+          continue;
+        }
         // 边框
         put('wood', 0.13, pH, 0.13, tp + (pw / 2 - 0.065) / r, po, panelBot + pH / 2, RED);
         put('wood', 0.13, pH, 0.13, tp - (pw / 2 - 0.065) / r, po, panelBot + pH / 2, RED);
@@ -381,6 +458,10 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
         // 裙板
         put('wood', pw - 0.2, 1.35, 0.1, tp, po + 0.06, panelBot + 0.85, RED_D);
         put('wood', Math.min(0.9, pw * 0.5), 0.42, 0.06, tp, po + 0.13, panelBot + 0.86, GOLD);
+        if (T.panelDetail <= 1) {
+          put('glow', pw * 0.6, 0.05, 0.04, tp, po - 0.03, panelBot + 2.0, 0x6b4a1e);
+          continue;
+        }
         // 棂条（竖 + 横）
         const latBot = panelBot + 1.62;
         const latTop = panelTop - 0.2;
@@ -405,8 +486,10 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
         const o = side * (halfW - 0.95);
         put('wood', bayLen * 1.02, archTop - archBot, 0.5, tm, o, (archTop + archBot) / 2, RED_DD);
         // 外檐枋两面都上彩画；内檐枋靠墙那面看不见，只画朝廊的一面
-        const faceSigns = side > 0 ? [1, -1] : [-1];
-        const segN = 5;
+        const faceSigns = T.fasciaFaces >= 2
+          ? (side > 0 ? [1, -1] as const : [-1] as const)
+          : (side > 0 ? [1] as const : [-1] as const);
+        const segN = Math.max(1, T.fasciaSeg);
         for (const fs of faceSigns) {
           const oo = o + side * fs * 0.27;
           for (let s = 0; s < segN; s++) {
@@ -557,10 +640,10 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
             else sf.tri(a, c, b, dripCol, dripCol, dripCol);
           }
         }
-        // 望板（顺瓦面铺的木板顶棚，朝下）+ 椽 + 檩
-        {
+        // 望板（顺瓦面铺的木板顶棚，朝下）+ 椽 + 檩；长弧档 boardSub=0 时不铺望板（只留檐口封边）
+        if (T.boardSub > 0) {
           const cc = lin(0x6b4026);
-          const nSub = 2;
+          const nSub = T.boardSub;
           for (let u = 0; u < nu; u++) {
             const tu0 = t0 + (dA * u) / nu;
             const tu1 = t0 + (dA * (u + 1)) / nu;
@@ -621,11 +704,18 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
       const t = aA + dA * i;
       for (const o of [outerColO, innerColO]) {
         const p = pt(t, o, 0);
-        // 须弥座柱础
-        put('ash', 1.98, 0.3, 1.98, t, o, 0.15, JADE_D);
-        put('ash', 1.56, 0.42, 1.56, t, o, 0.51, JADE);
-        put('ash', 2.08, 0.26, 2.08, t, o, 0.85, JADE_HI);
-        cy('ash', 0.72, 0.62, 0.18, 8, p[0], p[1] + 1.08, p[2], shade(JADE, 1.02), 0, true);
+        // 须弥座柱础（长弧档只留一层方础 + 柱脚弧线）
+        if (T.colBase >= 2) {
+          put('ash', 1.98, 0.3, 1.98, t, o, 0.15, JADE_D);
+          put('ash', 1.56, 0.42, 1.56, t, o, 0.51, JADE);
+          put('ash', 2.08, 0.26, 2.08, t, o, 0.85, JADE_HI);
+          cy('ash', 0.72, 0.62, 0.18, 8, p[0], p[1] + 1.08, p[2], shade(JADE, 1.02), 0, true);
+        } else if (T.colBase === 1) {
+          put('ash', 1.72, 0.62, 1.72, t, o, 0.31, JADE);
+          put('ash', 1.98, 0.2, 1.98, t, o, 0.72, JADE_HI);
+        } else {
+          put('ash', 1.52, 0.44, 1.52, t, o, 0.22, JADE);
+        }
         // 柱身（上下略有收分，φ0.9–1.2，柱顶直抵额枋底）
         const shaftH = colTop - 1.05;
         cy('wood', colR * 0.92, colR, shaftH, 10, p[0], p[1] + 1.05 + shaftH / 2, p[2], RED, 0, true);
@@ -687,7 +777,7 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
       for (const o of [outerColO, innerColO]) {
         for (const sg of [-1, 1] as const) {
           const reach = 0.95;
-          const steps = 4;
+          const steps = T.bracketSteps;
           const thick = 0.16;
           for (let s = 0; s < steps; s++) {
             const s0 = (s / steps) * reach;
@@ -877,6 +967,8 @@ export function buildHeavenGallery(b: Baker, opts: HeavenGalleryOpts): void {
   heavenGalleryStats.goldBricks = countBox.bricks;
   heavenGalleryStats.arcLength = arcLen;
   heavenGalleryStats.bayLength = bayLen;
+  heavenGalleryStats.spanDeg = (span * 180) / Math.PI;
+  heavenGalleryStats.requestedSpanDeg = (reqSpan * 180) / Math.PI;
   heavenGalleryStats.width = W;
   heavenGalleryStats.eaveH = eaveH;
   heavenGalleryStats.ridgeY = ridgeY;

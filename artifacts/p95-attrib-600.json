@@ -1,0 +1,823 @@
+{
+  "generatedAt": "2026-11-03T16:52:08.955Z",
+  "url": "http://127.0.0.1:4182/",
+  "chrome": "C:\\Users\\Administrator\\AppData\\Local\\ms-playwright\\chromium-1243\\chrome-win64\\chrome.exe",
+  "protocol": {
+    "framesPerArm": 600,
+    "settleMs": 3000,
+    "reps": 2,
+    "warmupMs": 8000,
+    "orderNote": "rep1 正序 / rep2 逆序，抵消漂移",
+    "percentile": "asc[round(p*(n-1))]，n=200 时 p95 即第 11 大（与 verify-packaged 的降序 index 一致）",
+    "maxClampNote": "engine dt 被 Math.min(0.1, …) 截断，max 的理论上限是 100ms",
+    "renderMsNote": "frameRenderMs = composer.render() 的 CPU 提交耗时，不是 GPU 完成时间",
+    "injectedOnly": "全部消融经 page.evaluate 运行时注入，src/ 未改动"
+  },
+  "view": {
+    "name": "spawn-city-centre",
+    "p": [
+      0,
+      30,
+      130
+    ],
+    "t": [
+      0,
+      4,
+      0
+    ]
+  },
+  "viewport": {
+    "css": [
+      1980,
+      1080
+    ],
+    "dpr": 1,
+    "canvas": [
+      1980,
+      1080
+    ]
+  },
+  "backend": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4090 (0x00002684) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+  },
+  "camera": {
+    "position": [
+      0,
+      30,
+      130
+    ],
+    "yaw": 0,
+    "pitch": -0.1974,
+    "lookTarget": [
+      0,
+      24.12,
+      100
+    ],
+    "camMode": "fly"
+  },
+  "quality": {
+    "forced": "high",
+    "pixelRatio": 1,
+    "natural": {
+      "name": "high",
+      "qualityChanges": 0,
+      "qualityAuto": true
+    }
+  },
+  "passChain": [
+    "RenderPass",
+    "_UnrealBloomPass",
+    "ShaderPass",
+    "OutputPass"
+  ],
+  "world": {
+    "live": 4493,
+    "heroes": 165
+  },
+  "warmup": {
+    "frames": 457,
+    "p50": 16.7,
+    "max": 58.3
+  },
+  "noiseBandP95Ms": 0,
+  "baseline": {
+    "p50": 16.7,
+    "p95": 25.1
+  },
+  "arms": [
+    {
+      "id": "baseline",
+      "label": "baseline 原样",
+      "what": "不做任何消融",
+      "primary": {
+        "p50": 16.7,
+        "p95": 25.1,
+        "p99": 33.349999999999994,
+        "max": 33.5,
+        "drawCalls": 507,
+        "trianglesM": 68.3,
+        "jsP50": 16.3,
+        "jsP95": 26.700000000000003,
+        "renderP50": 12.55,
+        "renderP95": 22.6,
+        "over16": 205.5,
+        "over33": 4,
+        "over50": 0,
+        "over66": 0
+      },
+      "deltaVsBaseline": null,
+      "reps": [
+        {
+          "rep": 1,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 33.3,
+          "max": 33.5,
+          "calls": 507,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 3,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 26.1,
+          "renderP95": 21.7
+        },
+        {
+          "rep": 2,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 33.4,
+          "max": 33.5,
+          "calls": 507,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 5,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 27.3,
+          "renderP95": 23.5
+        }
+      ],
+      "consistency": {
+        "reps": 2,
+        "p95SpreadMs": 0,
+        "p95SpreadPct": 0,
+        "sameDirectionAsBaseline": null,
+        "exceedsNoiseBand": false
+      },
+      "effect": {
+        "applied": true,
+        "detail": "no-op"
+      },
+      "canvas": {
+        "before": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1
+        },
+        "after": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1,
+          "shadow": true,
+          "passes": 4,
+          "cam": [
+            0,
+            30,
+            130
+          ]
+        }
+      },
+      "significant": null
+    },
+    {
+      "id": "hud",
+      "label": "A 关 HUD",
+      "what": "#ui/#bossbar/#interact-prompt display:none（隔离 DOM 布局与合成）",
+      "primary": {
+        "p50": 16.7,
+        "p95": 25.1,
+        "p99": 33.4,
+        "max": 33.4,
+        "drawCalls": 507,
+        "trianglesM": 68.3,
+        "jsP50": 16.55,
+        "jsP95": 26.75,
+        "renderP50": 12.75,
+        "renderP95": 22.75,
+        "over16": 206,
+        "over33": 6.5,
+        "over50": 0,
+        "over66": 0
+      },
+      "deltaVsBaseline": {
+        "p95Ms": 0,
+        "p95Pct": 0,
+        "p50Ms": 0,
+        "jsP95Ms": 0.05,
+        "renderP95Ms": 0.15,
+        "callsDelta": 0,
+        "trianglesDeltaM": 0
+      },
+      "reps": [
+        {
+          "rep": 1,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 33.4,
+          "max": 33.4,
+          "calls": 507,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 9,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 26.3,
+          "renderP95": 21.9
+        },
+        {
+          "rep": 2,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 33.4,
+          "max": 33.4,
+          "calls": 507,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 4,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 27.2,
+          "renderP95": 23.6
+        }
+      ],
+      "consistency": {
+        "reps": 2,
+        "p95SpreadMs": 0,
+        "p95SpreadPct": 0,
+        "sameDirectionAsBaseline": null,
+        "exceedsNoiseBand": false
+      },
+      "effect": {
+        "applied": true,
+        "detail": "4 node(s) display:none"
+      },
+      "canvas": {
+        "before": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1
+        },
+        "after": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1,
+          "shadow": true,
+          "passes": 4,
+          "cam": [
+            0,
+            30,
+            130
+          ]
+        }
+      },
+      "significant": false
+    },
+    {
+      "id": "shadow",
+      "label": "B 关阴影",
+      "what": "renderer.shadowMap.enabled=false + sun.castShadow=false",
+      "primary": {
+        "p50": 16.7,
+        "p95": 25.1,
+        "p99": 33.349999999999994,
+        "max": 100,
+        "drawCalls": 370,
+        "trianglesM": 48.23,
+        "jsP50": 16.200000000000003,
+        "jsP95": 26.549999999999997,
+        "renderP50": 12.75,
+        "renderP95": 23.05,
+        "over16": 150.5,
+        "over33": 5,
+        "over50": 1.5,
+        "over66": 1
+      },
+      "deltaVsBaseline": {
+        "p95Ms": 0,
+        "p95Pct": 0,
+        "p50Ms": 0,
+        "jsP95Ms": -0.15,
+        "renderP95Ms": 0.45,
+        "callsDelta": -137,
+        "trianglesDeltaM": -20.07
+      },
+      "reps": [
+        {
+          "rep": 1,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 33.4,
+          "max": 100,
+          "calls": 370,
+          "trisM": 48.23,
+          "n": 600,
+          "timedOut": false,
+          "over33": 9,
+          "over50": 3,
+          "over66": 2,
+          "jsP95": 26.4,
+          "renderP95": 23
+        },
+        {
+          "rep": 2,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 33.3,
+          "max": 33.5,
+          "calls": 370,
+          "trisM": 48.23,
+          "n": 600,
+          "timedOut": false,
+          "over33": 1,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 26.7,
+          "renderP95": 23.1
+        }
+      ],
+      "consistency": {
+        "reps": 2,
+        "p95SpreadMs": 0,
+        "p95SpreadPct": 0,
+        "sameDirectionAsBaseline": null,
+        "exceedsNoiseBand": false
+      },
+      "effect": {
+        "applied": true,
+        "detail": "sun=sun"
+      },
+      "canvas": {
+        "before": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1
+        },
+        "after": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1,
+          "shadow": false,
+          "passes": 4,
+          "cam": [
+            0,
+            30,
+            130
+          ]
+        }
+      },
+      "significant": false
+    },
+    {
+      "id": "post",
+      "label": "C 关后处理",
+      "what": "composer 只留 RenderPass（关 bloom/grade/output）",
+      "primary": {
+        "p50": 16.7,
+        "p95": 33.3,
+        "p99": 33.4,
+        "max": 100,
+        "drawCalls": 492,
+        "trianglesM": 68.3,
+        "jsP50": 17.3,
+        "jsP95": 28.1,
+        "renderP50": 13.7,
+        "renderP95": 24.4,
+        "over16": 252,
+        "over33": 7.5,
+        "over50": 1,
+        "over66": 1
+      },
+      "deltaVsBaseline": {
+        "p95Ms": 8.2,
+        "p95Pct": 32.7,
+        "p50Ms": 0,
+        "jsP95Ms": 1.4,
+        "renderP95Ms": 1.8,
+        "callsDelta": -15,
+        "trianglesDeltaM": 0
+      },
+      "reps": [
+        {
+          "rep": 1,
+          "p50": 16.7,
+          "p95": 33.3,
+          "p99": 33.4,
+          "max": 100,
+          "calls": 492,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 10,
+          "over50": 2,
+          "over66": 2,
+          "jsP95": 28.1,
+          "renderP95": 24.4
+        },
+        {
+          "rep": 2,
+          "p50": 16.7,
+          "p95": 33.3,
+          "p99": 33.4,
+          "max": 33.5,
+          "calls": 492,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 5,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 28.1,
+          "renderP95": 24.4
+        }
+      ],
+      "consistency": {
+        "reps": 2,
+        "p95SpreadMs": 0,
+        "p95SpreadPct": 0,
+        "sameDirectionAsBaseline": null,
+        "exceedsNoiseBand": false
+      },
+      "effect": {
+        "applied": true,
+        "detail": "RenderPass:on,_UnrealBloomPass:off,ShaderPass:off,OutputPass:off"
+      },
+      "canvas": {
+        "before": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1
+        },
+        "after": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1,
+          "shadow": true,
+          "passes": 1,
+          "cam": [
+            0,
+            30,
+            130
+          ]
+        }
+      },
+      "significant": true
+    },
+    {
+      "id": "dpr1",
+      "label": "D 像素比 1.0",
+      "what": "renderer.setPixelRatio(1.0)（DPR=1 时为 no-op，如实标注）",
+      "primary": {
+        "p50": 16.7,
+        "p95": 25.1,
+        "p99": 33.4,
+        "max": 33.4,
+        "drawCalls": 507,
+        "trianglesM": 68.3,
+        "jsP50": 16.4,
+        "jsP95": 26.7,
+        "renderP50": 13.1,
+        "renderP95": 23,
+        "over16": 224,
+        "over33": 0.5,
+        "over50": 0,
+        "over66": 0
+      },
+      "deltaVsBaseline": {
+        "p95Ms": 0,
+        "p95Pct": 0,
+        "p50Ms": 0,
+        "jsP95Ms": 0,
+        "renderP95Ms": 0.4,
+        "callsDelta": 0,
+        "trianglesDeltaM": 0
+      },
+      "reps": [
+        {
+          "rep": 1,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 33.4,
+          "max": 33.4,
+          "calls": 507,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 0,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 26.5,
+          "renderP95": 22.9
+        },
+        {
+          "rep": 2,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 33.4,
+          "max": 33.4,
+          "calls": 507,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 1,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 26.9,
+          "renderP95": 23.1
+        }
+      ],
+      "consistency": {
+        "reps": 2,
+        "p95SpreadMs": 0,
+        "p95SpreadPct": 0,
+        "sameDirectionAsBaseline": null,
+        "exceedsNoiseBand": false
+      },
+      "effect": {
+        "applied": true,
+        "effective": false,
+        "detail": "pixelRatio 1→1, canvas 1980x1080→1980x1080",
+        "note": "NO-OP：基线 DPR 已为 1，此档无法单变量地验证填充率；见 D′ 0.5"
+      },
+      "canvas": {
+        "before": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1
+        },
+        "after": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1,
+          "shadow": true,
+          "passes": 4,
+          "cam": [
+            0,
+            30,
+            130
+          ]
+        }
+      },
+      "significant": false
+    },
+    {
+      "id": "dpr05",
+      "label": "D′ 像素比 0.5",
+      "what": "setPixelRatio(0.5)，像素数 ÷4 —— D 档失效时验证填充率的替代档",
+      "primary": {
+        "p50": 16.6,
+        "p95": 24.95,
+        "p99": 25.05,
+        "max": 25.1,
+        "drawCalls": 507,
+        "trianglesM": 68.3,
+        "jsP50": 13.05,
+        "jsP95": 18.2,
+        "renderP50": 9.55,
+        "renderP95": 14.899999999999999,
+        "over16": 45,
+        "over33": 0,
+        "over50": 0,
+        "over66": 0
+      },
+      "deltaVsBaseline": {
+        "p95Ms": -0.15,
+        "p95Pct": -0.6,
+        "p50Ms": -0.1,
+        "jsP95Ms": -8.5,
+        "renderP95Ms": -7.7,
+        "callsDelta": 0,
+        "trianglesDeltaM": 0
+      },
+      "reps": [
+        {
+          "rep": 1,
+          "p50": 16.6,
+          "p95": 24.9,
+          "p99": 25.1,
+          "max": 25.1,
+          "calls": 507,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 0,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 18,
+          "renderP95": 14.6
+        },
+        {
+          "rep": 2,
+          "p50": 16.6,
+          "p95": 25,
+          "p99": 25,
+          "max": 25.1,
+          "calls": 507,
+          "trisM": 68.3,
+          "n": 600,
+          "timedOut": false,
+          "over33": 0,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 18.4,
+          "renderP95": 15.2
+        }
+      ],
+      "consistency": {
+        "reps": 2,
+        "p95SpreadMs": 0.1,
+        "p95SpreadPct": 0.4,
+        "sameDirectionAsBaseline": null,
+        "exceedsNoiseBand": true
+      },
+      "effect": {
+        "applied": true,
+        "effective": true,
+        "detail": "pixelRatio 1→0.5, canvas 1980x1080→990x540",
+        "note": ""
+      },
+      "canvas": {
+        "before": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1
+        },
+        "after": {
+          "canvas": [
+            990,
+            540
+          ],
+          "pr": 0.5,
+          "shadow": true,
+          "passes": 4,
+          "cam": [
+            0,
+            30,
+            130
+          ]
+        }
+      },
+      "significant": true
+    },
+    {
+      "id": "geom",
+      "label": "E 降几何 top3",
+      "what": "隐藏三角面最多的 3 个可见 mesh",
+      "primary": {
+        "p50": 16.7,
+        "p95": 25.1,
+        "p99": 25.1,
+        "max": 33.5,
+        "drawCalls": 498,
+        "trianglesM": 55.23,
+        "jsP50": 15.149999999999999,
+        "jsP95": 25.200000000000003,
+        "renderP50": 11.8,
+        "renderP95": 21.5,
+        "over16": 168.5,
+        "over33": 1.5,
+        "over50": 0,
+        "over66": 0
+      },
+      "deltaVsBaseline": {
+        "p95Ms": 0,
+        "p95Pct": 0,
+        "p50Ms": 0,
+        "jsP95Ms": -1.5,
+        "renderP95Ms": -1.1,
+        "callsDelta": -9,
+        "trianglesDeltaM": -13.07
+      },
+      "reps": [
+        {
+          "rep": 1,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 25.1,
+          "max": 33.5,
+          "calls": 498,
+          "trisM": 55.23,
+          "n": 600,
+          "timedOut": false,
+          "over33": 2,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 25.1,
+          "renderP95": 21.4
+        },
+        {
+          "rep": 2,
+          "p50": 16.7,
+          "p95": 25.1,
+          "p99": 25.1,
+          "max": 33.4,
+          "calls": 498,
+          "trisM": 55.23,
+          "n": 600,
+          "timedOut": false,
+          "over33": 1,
+          "over50": 0,
+          "over66": 0,
+          "jsP95": 25.3,
+          "renderP95": 21.6
+        }
+      ],
+      "consistency": {
+        "reps": 2,
+        "p95SpreadMs": 0,
+        "p95SpreadPct": 0,
+        "sameDirectionAsBaseline": null,
+        "exceedsNoiseBand": false
+      },
+      "effect": {
+        "applied": true,
+        "detail": "city_roof_9:1.82M + city_wood_11:1.3M + city_wood_17:1.23M",
+        "top": [
+          {
+            "name": "city_roof_9",
+            "tris": 1824314
+          },
+          {
+            "name": "city_wood_11",
+            "tris": 1298856
+          },
+          {
+            "name": "city_wood_17",
+            "tris": 1231316
+          }
+        ],
+        "named": {
+          "city_roof_9": {
+            "rank": 1,
+            "tris": 1824314
+          },
+          "city_wood_11": {
+            "rank": 2,
+            "tris": 1298856
+          }
+        },
+        "candidateMeshes": 278
+      },
+      "canvas": {
+        "before": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1
+        },
+        "after": {
+          "canvas": [
+            1980,
+            1080
+          ],
+          "pr": 1,
+          "shadow": true,
+          "passes": 4,
+          "cam": [
+            0,
+            30,
+            130
+          ]
+        }
+      },
+      "significant": false
+    }
+  ],
+  "conclusion": {
+    "primarySource": "dpr05",
+    "primaryLabel": "D′ 像素比 0.5",
+    "p95DropMs": 0.15,
+    "p95DropPctOfBaseline": 0.6,
+    "shareOfMeasuredGainPct": 100,
+    "method": "单变量消融的归一化占位，不是可加分解；未超过噪声带的档位不参与占比",
+    "allGains": [
+      {
+        "id": "dpr05",
+        "label": "D′ 像素比 0.5",
+        "gainMs": 0.15,
+        "pct": 0.6,
+        "sharePct": 100
+      }
+    ]
+  },
+  "pageErrors": []
+}

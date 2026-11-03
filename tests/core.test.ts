@@ -5,6 +5,7 @@ import { SHUIHU_ALL, TIAN_GANG, DI_SHA, STATION } from '../src/data/shuihu';
 import { HERO_CARDS } from '../src/data/shuihuCards';
 import { POINTS, POINTS_BY_KIND } from '../src/data/interactPoints';
 import { CreatureSystem } from '../src/sky/creatures';
+import { heavenPoint, heavenY } from '../src/sky/heavenFrame';
 import { buildGhostFlora, buildCelestialFlora } from '../src/sky/flora';
 import { PEACH_GRANT } from '../src/data/interactPoints';
 import { DEITIES } from '../src/data/deities';
@@ -57,7 +58,9 @@ describe('汴京路网与布局', () => {
   });
   it('瑶池水榭存在可传送 POI', () => {
     expect(POIS.yaochi).toBeDefined();
-    expect(POIS.yaochi.pos.toArray()).toEqual([150, 208, 20]);
+    // 天宫 POI 存世界口径（x/z ×HEAVEN_SCALE、y 走 heavenY）：期望值由 heavenPoint 现算，
+    // 不再抄一份常数——否则改了换算基准这里会静默漂移
+    expect(POIS.yaochi.pos.toArray()).toEqual(heavenPoint(150, 208.26, 20));
     expect(POIS.yaochi.sky).toBe(true);
   });
 });
@@ -311,7 +314,7 @@ describe('B9 生物行为与三币（43/10 卷）', () => {
     const cs = new CreatureSystem(fakeCrowd as never);
     expect(cs.runners.length).toBe(13);
     expect(cs.runners[0].pts.length).toBe(6);                 // 牛头殿前→引道→桥头
-    expect(cs.runners[12].pts.every((p) => p.y === 202)).toBe(true); // 灵猴天宫层
+    expect(cs.runners[12].pts.every((p) => p.y === heavenY(202))).toBe(true); // 灵猴天宫层（抬升后须走 heavenY，不能写 202+HEAVEN_LIFT）
     const p0 = actors[0].pos.clone();
     for (let i = 0; i < 150; i++) cs.update(1 / 30);          // 5 秒
     expect(actors[0].pos.distanceTo(p0)).toBeGreaterThan(3);

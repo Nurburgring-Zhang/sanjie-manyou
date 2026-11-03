@@ -7,7 +7,7 @@ export interface PhaseKey { dusk: number; night: number; deep: number; dawn: num
 
 interface Stop {
   at: number;
-  skyTop: number; skyBot: number; fog: number; fogDensity: number;
+  skyTop: number; skyMid: number; skyBot: number; fog: number; fogDensity: number;
   sun: number; sunColor: number; sunI: number; fillI: number;
   hemiSky: number; hemiGround: number; hemiI: number;
   neon: number;       // 霓虹/发光体亮度系数
@@ -15,12 +15,17 @@ interface Stop {
   ambient: number;    // 环境加亮
 }
 
+// skyMid 是「地平线暖光 → 天顶冷蓝」之间那一档：旧版只给两色，mix() 在线性空间
+// 直接对插，橙(196,118,74) 与蓝(46,64,102) 在中点几乎互补 ⇒ 低仰角稳定落进中性灰紫
+// (实测 c_air 天空 ROI 均值 85,62,80 / H=315)，就是「浑浊紫褐」的来源。
+// 改成三段：地平暖橙 → 亮蓝灰霾带 → 天顶蓝，暖冷之间永远经过一个高亮度色，
+// 不再停在低亮度中性紫。
 const STOPS: Stop[] = [
-  { at: 0.00, skyTop: 0x2e4066, skyBot: 0xc4764a, fog: 0xb07a55, fogDensity: 0.00016, sun: 0xff8a3c, sunColor: 0xff9a4a, sunI: 1.35, hemiSky: 0x6a80c0, hemiGround: 0x4a3a32, hemiI: 0.68, fillI: 0.2, neon: 0.85, bloom: 0.78, ambient: 0.24 },
-  { at: 0.30, skyTop: 0x121a33, skyBot: 0x1c2547, fog: 0x1a2438, fogDensity: 0.00019, sun: 0x8fb2ff, sunColor: 0x9db8ff, sunI: 0.5, hemiSky: 0x28336e, hemiGround: 0x141220, hemiI: 0.5, fillI: 0.12, neon: 1.12, bloom: 0.85, ambient: 0.25 },
-  { at: 0.55, skyTop: 0x0e1426, skyBot: 0x18203c, fog: 0x141c30, fogDensity: 0.00021, sun: 0x7c96e8, sunColor: 0x8aa4f0, sunI: 0.3, hemiSky: 0x1c244c, hemiGround: 0x0e0e1a, hemiI: 0.45, fillI: 0.1, neon: 1.22, bloom: 0.9, ambient: 0.22 },
-  { at: 0.80, skyTop: 0x33476e, skyBot: 0xd08a58, fog: 0xb98460, fogDensity: 0.00016, sun: 0xffc98a, sunColor: 0xffbe7a, sunI: 1.28, hemiSky: 0x7a8ac2, hemiGround: 0x54433c, hemiI: 0.66, fillI: 0.18, neon: 0.7, bloom: 0.74, ambient: 0.24 },
-  { at: 1.00, skyTop: 0x2e4066, skyBot: 0xc4764a, fog: 0xb07a55, fogDensity: 0.00016, sun: 0xff8a3c, sunColor: 0xff9a4a, sunI: 1.35, hemiSky: 0x6a80c0, hemiGround: 0x4a3a32, hemiI: 0.68, fillI: 0.2, neon: 0.85, bloom: 0.78, ambient: 0.24 },
+  { at: 0.00, skyTop: 0x2f5f9e, skyMid: 0xa9c6e0, skyBot: 0xe8924e, fog: 0xa8927e, fogDensity: 0.00009, sun: 0xff8a3c, sunColor: 0xff9a4a, sunI: 1.35, hemiSky: 0x6a80c0, hemiGround: 0x4a3a32, hemiI: 0.68, fillI: 0.2, neon: 0.85, bloom: 0.78, ambient: 0.24 },
+  { at: 0.30, skyTop: 0x121a33, skyMid: 0x1c2946, skyBot: 0x243154, fog: 0x1a2438, fogDensity: 0.00012, sun: 0x8fb2ff, sunColor: 0x9db8ff, sunI: 0.5, hemiSky: 0x28336e, hemiGround: 0x141220, hemiI: 0.5, fillI: 0.12, neon: 1.12, bloom: 0.85, ambient: 0.25 },
+  { at: 0.55, skyTop: 0x0e1426, skyMid: 0x18213a, skyBot: 0x1f2942, fog: 0x141c30, fogDensity: 0.00013, sun: 0x7c96e8, sunColor: 0x8aa4f0, sunI: 0.3, hemiSky: 0x1c244c, hemiGround: 0x0e0e1a, hemiI: 0.45, fillI: 0.1, neon: 1.22, bloom: 0.9, ambient: 0.22 },
+  { at: 0.80, skyTop: 0x33538c, skyMid: 0xaec9e2, skyBot: 0xec9a5e, fog: 0xae9884, fogDensity: 0.00009, sun: 0xffc98a, sunColor: 0xffbe7a, sunI: 1.28, hemiSky: 0x7a8ac2, hemiGround: 0x54433c, hemiI: 0.66, fillI: 0.18, neon: 0.7, bloom: 0.74, ambient: 0.24 },
+  { at: 1.00, skyTop: 0x2f5f9e, skyMid: 0xa9c6e0, skyBot: 0xe8924e, fog: 0xa8927e, fogDensity: 0.00009, sun: 0xff8a3c, sunColor: 0xff9a4a, sunI: 1.35, hemiSky: 0x6a80c0, hemiGround: 0x4a3a32, hemiI: 0.68, fillI: 0.2, neon: 0.85, bloom: 0.78, ambient: 0.24 },
 ];
 
 const _cA = new THREE.Color(), _cB = new THREE.Color();
@@ -31,6 +36,7 @@ export class TimeOfDay {
   paused = true;             // 默认停在黄昏，玩家可开启循环
   neon = 1; bloom = 1; ambient = 0.3;
   readonly skyTop = new THREE.Color();
+  readonly skyMid = new THREE.Color();
   readonly skyBot = new THREE.Color();
   readonly fogColor = new THREE.Color();
   fogDensity = 0.002;
@@ -48,6 +54,7 @@ export class TimeOfDay {
     const e = k * k * (3 - 2 * k);
     this.cur = a; this.nxt = b;
     this.skyTop.copy(_cA.setHex(a.skyTop).lerp(_cB.setHex(b.skyTop), e));
+    this.skyMid.copy(_cA.setHex(a.skyMid).lerp(_cB.setHex(b.skyMid), e));
     this.skyBot.copy(_cA.setHex(a.skyBot).lerp(_cB.setHex(b.skyBot), e));
     this.fogColor.copy(_cA.setHex(a.fog).lerp(_cB.setHex(b.fog), e));
     this.fogDensity = THREE.MathUtils.lerp(a.fogDensity, b.fogDensity, e);

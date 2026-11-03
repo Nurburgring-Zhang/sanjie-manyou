@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { PoolSet } from '../actors/pools';
 import type { Rideable } from '../game/player';
 import type { Crowd } from '../actors/crowd';
+import { heavenPoint } from '../sky/heavenFrame';
 
 // ============ 坐骑：马 / 仙鹤 / 龙（多节跟随体）/ 麒麟 ============
 const M = Array.from({ length: 10 }, () => new THREE.Matrix4());
@@ -53,7 +54,9 @@ export class MountSystem {
     this.mk('crane', '仙鹤', new THREE.Vector3(-262, 0.95, 34), true, 1.35);
     // 龙 ×2（佛塔广场 / 凌霄殿）
     this.mk('dragon', '金龙', new THREE.Vector3(516, 0, 172), true, 2.1);
-    this.mk('dragon', '云龙', new THREE.Vector3(-36, 214.5, 60), true, 2.1);
+    // 云龙停在天宫（旧 (−36,214.5,60) 是缩放前坐标）：走与几何相同的 2.2× + 抬升，
+    // 否则抬升后它留在 214m 空中，玩家在天宫再也找不到这匹飞行坐骑。
+    this.mk('dragon', '云龙', new THREE.Vector3(...heavenPoint(-36, 214.5, 60)), true, 2.1);
     // 麒麟 ×2（府衙/虹桥头）
     this.mk('qilin', '麒麟', new THREE.Vector3(544, 0, -2), false, 1.55);
     this.mk('qilin', '麒麟', new THREE.Vector3(-70, 0, 40), false, 1.55);

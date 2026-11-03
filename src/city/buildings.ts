@@ -39,6 +39,99 @@ const WALL_TONES = [C.plaster, C.plaster2, shade(C.plaster, 0.86), shade(C.plast
 const WOOD_TONES = [C.woodRed, shade(C.woodRed, 0.68), C.wood, shade(C.wood, 1.35), C.woodDark];
 const ROOF_TONES = [C.tile, C.tile2, shade(C.tile2, 1.35), shade(C.tile, 0.78), shade(C.ridge, 2.4)];
 
+// ============ 业态 → 霓虹色板 ============
+/**
+ * 用户判词：「普通铺面不许出电紫/品红」「品红/电紫只出现在指定业态门口」。
+ *
+ * 旧实现是一个全局池子按 55% 抽色，紫/桃红因此会落到任意一间铺子上——这是街面截图里
+ * 品红横条的直接来源（像素归因：city_glow @(-298.6,4.3,37.8) 命中 roofOn 的檐口灯管）。
+ * 现在把色板按业态钉死：抽色只在业态允许集合内发生，越权颜色在结构上不可能出现。
+ * 颜色语义仍按调色板（C 常量注释）：NH-01 官青 / NH-02 商霓桃红 / NH-03 玄霓电紫 /
+ * NH-04 工霓黄绿 / NH-05 食霓琥珀。
+ */
+export type Trade =
+  | 'tavern' | 'teahouse' | 'food' | 'silk' | 'medicine' | 'books'
+  | 'pawn' | 'incense' | 'paper' | 'temple' | 'theater' | 'house' | 'shop';
+
+/** 业态 → 允许的霓虹色（空数组 = 该业态不挂霓虹） */
+export const TRADE_NEON: Record<Trade, readonly number[]> = {
+  tavern: [C.neonOrange, C.neonGold],           // 酒楼/正店/脚店：食霓琥珀
+  teahouse: [C.neonGold],                       // 茶坊：只挂主灯金
+  food: [C.neonOrange, C.neonGold],             // 饭铺/果子/馒头
+  silk: [C.neonMag],                            // NH-02 商霓桃红：仅绸缎/成衣/靴帽
+  medicine: [C.neonCyan],                       // 药铺/医家：冷青
+  books: [C.neonCyan],                          // 书坊/纸墨/斋号
+  pawn: [C.neonGold],                           // 钱铺/当铺
+  incense: [C.neonCyan, C.neonGold],            // 香药铺
+  paper: [C.neonPurple],                        // NH-03 玄霓电紫：仅纸马/冥器
+  temple: [C.neonPurple, C.neonCyan],           // 玄门/观宇
+  theater: [C.neonMag, C.neonGold],             // 勾栏瓦舍（商业演出，桃红是本场主色）
+  house: [C.neonGold],                          // 民居：池子留一个占位色，概率 0（不挂霓虹）
+  shop: [C.neonGold, C.neonCyan, C.neonGreen],  // 杂货：暖金/官青/工绿
+};
+
+/** 业态挂霓虹的概率。民居 0 = 只留窗光与灯笼。 */
+export const TRADE_NEON_CHANCE: Record<Trade, number> = {
+  tavern: 0.9, teahouse: 0.8, food: 0.7, silk: 0.8, medicine: 0.6, books: 0.55,
+  pawn: 0.7, incense: 0.7, paper: 1, temple: 1, theater: 1, house: 0, shop: 0.5,
+};
+
+/** 门头色（桃红/电紫）只许落在门口竖管上，不许沿檐口通铺 */
+export const DOOR_ONLY_NEON: ReadonlySet<number> = new Set([C.neonMag, C.neonPurple]);
+
+// ============ 夜巡台账：街面灯笼 / 招幌的真实落位 ============
+// 灯笼与招幌都与窗光合并在 city_glow / city_fabric 两个烘焙组里，运行时无法按名字数件。
+// 这里在**发几何的同一行**登记世界坐标，探针（scripts/probe-roof-from-air.mjs）拿它做
+// 距离带计数与逐件投影；台账不参与绘制，与 window.__palaceAudit / __infillDrop 同一种约定。
+export interface StreetFurniture { kind: 'lantern' | 'banner'; x: number; y: number; z: number; s: number; src: string }
+const streetFurniture: StreetFurniture[] = [];
+function noteStreet(kind: StreetFurniture['kind'], x: number, y: number, z: number, s: number, src: string): void {
+  streetFurniture.push({ kind, x: +x.toFixed(2), y: +y.toFixed(2), z: +z.toFixed(2), s: +s.toFixed(2), src });
+}
+
+/**
+ * 临街立面台账：每座街屋一行（形制 / 立面型 / 朝向 / 面阔进深）。
+ * 机检探针（scripts/probe-street-facade.mjs）用它把画面里的建筑归到左右两半，
+ * 再逐件核对立面上真实可见的门 / 窗 / 灯，避免只看全局像素比例。
+ * 与 __w2Street 同一约定：只读、不参与绘制。
+ */
+export interface BuildingRecord {
+  x: number; z: number; ry: number; w: number; d: number; floors: number;
+  kind: string; form: string; facade: string;
+}
+const buildingLedger: BuildingRecord[] = [];
+
+/**
+ * 临街立面构件台账：门洞 / 窗格 / 灯点三类，逐件记世界坐标与尺寸。
+ * 探针（scripts/probe-street-facade.mjs）把每件投影到屏幕后**再回采像素**判定是否真的看得见，
+ * 因此台账里多记一件不会自动加分：被院墙、柜台或别的房子挡住的构件在像素上过不了。
+ * lit 只对窗有意义（夜里靠窗心暖光判可见），灯的可见性走 __w2Street（灯笼已在发几何处登记）。
+ */
+export interface FacadeFeature {
+  cls: 'door' | 'window'; x: number; y: number; z: number; w: number; h: number; lit: boolean; src: string;
+}
+const facadeFeatures: FacadeFeature[] = [];
+function noteFacade(cls: FacadeFeature['cls'], x: number, y: number, z: number, w: number, h: number, lit: boolean, src: string): void {
+  facadeFeatures.push({ cls, x: +x.toFixed(2), y: +y.toFixed(2), z: +z.toFixed(2), w: +w.toFixed(2), h: +h.toFixed(2), lit, src });
+}
+
+/** 招牌文字 → 业态。先判纸马/玄门（它们的字面与书坊/药铺重叠），再判其余。 */
+export function tradeOf(kind: string, sign?: string): Trade {
+  const s = sign ?? '';
+  if (/紙馬|纸马|冥器|冥|紙紮|纸扎/.test(s)) return 'paper';
+  if (/觀|观|寺|廟|庙|玄門|玄门|道院/.test(s)) return 'temple';
+  if (/酒|正店|腳店|脚店|酒店/.test(s) || kind === 'tavern') return 'tavern';
+  if (/茶/.test(s) || kind === 'teahouse') return 'teahouse';
+  if (/飯|饭|食|果子|饅頭|馒头|餅|饼|肉/.test(s)) return 'food';
+  if (/綢|绸|緞|缎|布|衣|靴|巾|帽/.test(s)) return 'silk';
+  if (/藥|药|醫|医|堂/.test(s)) return 'medicine';
+  if (/書|书|齋|斋|墨|筆|笔|紙|纸/.test(s)) return 'books';
+  if (/當|当|錢|钱|銀|银|金|質|质/.test(s)) return 'pawn';
+  if (/香/.test(s)) return 'incense';
+  if (kind === 'house' || kind === 'manor') return 'house';
+  return 'shop';
+}
+
 // ============ 单体宋式建筑 ============
 interface BuildOpt {
   x: number; z: number; ry: number; w: number; d: number;
@@ -149,15 +242,18 @@ function hipRibbonOn(b: Baker, x: number, y: number, z: number, ry: number, SW: 
 /**
  * 瓦垄灯带：把一整条通长发光条切成「灯管 + 暗段」。
  * 旧实现是 o.w*0.9 一根不断开的条，远看是一条横贯整栋的紫/绿绸带（用户三次投诉的那条）。
- * 宋式檐灯本来就是逐盏挂的，段长 2.6m、间距 3.2m 才是灯。
+ * 上一轮改成 2.6m 管 / 0.6m 暗段——街面距离上 0.6m 的暗段被泛光糊掉，八根拼起来仍是一条线
+ * （本轮街面机位复核：`roofOn` 的 2.6m 管在 y=4.3 处依旧读成连续竖/横条）。
+ * 现在 1.2m 管 / 3.0m 暗段：任一开间内最多一段，相邻构件之间至少隔一个开间。
+ * tube/pitch 可覆盖：城墙那种长跑用更长的管、更稀的间距，避免「一根 341m 的光束」。
  */
-function lampRun(b: Baker, len: number, at: (lx: number) => [number, number], y: number, color: number, ry: number, axis: 'x' | 'z'): void {
-  const TUBE = 2.6, PITCH = 3.2;
+function lampRun(b: Baker, len: number, at: (lx: number) => [number, number], y: number, color: number, ry: number, axis: 'x' | 'z', tube = 1.2, pitch = 4.2): void {
+  const TUBE = tube, PITCH = pitch;
   const n = Math.max(1, Math.floor(len / PITCH));
   const span = n * PITCH - (PITCH - TUBE);
   if (span > len) {
     const [gx, gz] = at(0);
-    const L = Math.max(0.8, len * 0.86);
+    const L = Math.min(TUBE, Math.max(0.8, len * 0.86));
     b.box('glow', axis === 'x' ? L : 0.08, 0.08, axis === 'x' ? 0.08 : L, gx, y, gz, color, ry);
     return;
   }
@@ -227,19 +323,20 @@ export function roofOn(b: Baker, w: number, d: number, y: number, x: number, z: 
   }
   // 檐口封板已移除（建筑密集时呈线状噪声）；墙顶延伸已保证结构连续
   // 檐口霓虹灯带（四边，贴檐口外缘）
-  if (neon !== undefined) {
-    // 灯管化：整条通长的 0.1m 方条在 20m 以上的檐口上远看是一条"绿绸带"。改成每 3.2m 一段、
-    // 段长 2.6m 的短灯管，两端各坐一个 0.18m 灯座（metal 深色）；两灯管之间正好 0.6m 暗段
-    //（0.18 灯座 + 0.24 空隙 + 0.18 灯座），灯管才读成"灯"而不是"带"。
+  // 桃红/电紫是「门头色」，只许落在门口竖管（buildBuilding 的 facade.doorNeon），不沿檐口通铺。
+  if (neon !== undefined && !DOOR_ONLY_NEON.has(neon)) {
+    // 灯管化：整条通长的 0.1m 方条在 20m 以上的檐口上远看是一条"绿绸带"。
+    // 上一轮 2.6m 管 / 0.6m 暗段在街面距离上仍被泛光糊成一条线（本轮像素归因复现），
+    // 现在 1.2m 管 / 2.4m 暗段：任一开间最多一段，灯与灯之间至少隔 2.4m。
     // 对位曲面檐口外缘（曲面底面 y=0，边长 sw×sd）
     const exF = (sd / 2) * 0.99, exS = (sw / 2) * 0.99, ln = 0.1;
-    const TUBE = 2.6, PITCH = 3.2, CAP = 0.18, CAP_W = ln * 1.35;
+    const TUBE = 1.2, PITCH = 3.6, CAP = 0.12, CAP_W = ln * 1.35;
     const at = (lx: number, lz: number): [number, number] => [x + lx * cosr + lz * sinr, z - lx * sinr + lz * cosr];
     // 沿一条檐边均布灯管，返回每段的 [起点, 长度]（起点以边中点为 0）
     const runs = (L: number): [number, number][] => {
       const n = Math.max(1, Math.floor(L / PITCH));
-      const span = n * PITCH - (PITCH - TUBE); // n 段灯管 + (n-1) 个 0.6m 暗段
-      if (span > L) return [[0, Math.max(0.8, L * 0.86)]]; // 短檐不足一段：单段居中收短
+      const span = n * PITCH - (PITCH - TUBE); // n 段灯管 + (n-1) 个 2.4m 暗段
+      if (span > L) return [[0, Math.min(TUBE, Math.max(0.8, L * 0.86))]]; // 短檐不足一段：单段居中收短
       const off = (L - span) / 2, out: [number, number][] = [];
       for (let i = 0; i < n; i++) out.push([off + i * PITCH - L / 2, TUBE]);
       return out;
@@ -278,10 +375,8 @@ export function roofOn(b: Baker, w: number, d: number, y: number, x: number, z: 
   }
   buildDetailedEave(b, {
     x, y, z, w, d, ry, roofC: tileC,
-    // neon 不再传给 detailKit：roofOn 自己已经在四条檐边各铺了「2.6m 灯管 + 0.6m 暗段」，
-    // detailKit 的 neon 是**一条 0.9w 通长不间断的条**，两条叠在同一檐口上，
-    // 结果通长条盖住灯管间隙，整栋读成一条紫/绿绸带。只保留分段灯管这一条真源。
-    neon: undefined,
+    // detailKit 的 `neon` 通长条已删除（它不是分段灯管，会在同一檐口叠出一条 0.9w 不间断的亮带）。
+    // 檐灯只保留上面 lampRun 这一条真源。
     tier: w * d >= 150 || neon !== undefined ? 'near' : 'mid',
   });
 }
@@ -417,7 +512,7 @@ function gableRoofOn(b: Baker, w: number, d: number, y: number, x: number, z: nu
     gableFillOn(b, 'wall', x, z, ry, sx * (w / 2 - 0.09), y + 0.12, h - 0.12,
       (f) => Math.min(d / 2 - 0.2, hd * (1 - f)), shade(wallC, 0.94));
   }
-  if (neon !== undefined) {
+  if (neon !== undefined && !DOOR_ONLY_NEON.has(neon)) {
     // 檐灯分段（旧版 w*0.9 一根通长条，街面看是一条横贯整栋的绸带）
     lampRun(b, w * 0.94, (lx) => at(lx, hd + 0.02), y + 0.02, neon, ry, 'x');
   }
@@ -465,14 +560,14 @@ function hipHallRoofOn(b: Baker, w: number, d: number, y: number, x: number, z: 
     const [px, pz] = at(ox, oz);
     b.box('roof', 0.5, 0.14, 0.24, px, y + 0.16, pz, C.ridge, ry + dir * 0.39, 0, dir * 0.5);
   }
-  if (neon !== undefined) {
-    // 檐灯按段挂（2.6m 灯管 + 0.6m 暗段），旧版是 sw*0.9 一根通长条——远看就是一条绸带。
+  if (neon !== undefined && !DOOR_ONLY_NEON.has(neon)) {
+    // 檐灯按段挂（1.2m 灯管 + 3.0m 暗段），旧版是 sw*0.9 一根通长条——远看就是一条绸带。
     for (const s of [-1, 1] as const) {
       lampRun(b, sw * 0.94, (lx) => at(lx, s * sd * 0.495), y + H * 0.16 + 0.02, neon, ry, 'x');
     }
   }
-  // detailKit 的通长 neon 条不再叠（roofOn/hipHallRoofOn 已有分段灯管，两条叠一起会读成绸带）
-  buildDetailedEave(b, { x, y, z, w, d, ry, roofC: tileC, neon: undefined, tier: 'near' });
+  // detailKit 的 `neon` 通长条已删除；檐灯只保留上面 lampRun 的分段灯管这一条真源
+  buildDetailedEave(b, { x, y, z, w, d, ry, roofC: tileC, tier: 'near' });
 }
 
 /**
@@ -551,7 +646,7 @@ function shopfrontRoofOn(b: Baker, o: BuildOpt, bodyTop: number, roofC: number, 
     const [rx2, rz2] = at((-0.6 + 0.4 * i) * (w / 2), z1 - 0.24);
     b.box('wood', 0.14, 0.14, 0.44, rx2, highY - drop - 0.08, rz2, shade(C.woodDark, 1.06), ry);
   }
-  if (neon !== undefined) lampRun(b, w * 0.9, (lx) => at(lx, eaveZ), highY - drop + 0.03, neon, ry, 'x');
+  if (neon !== undefined && !DOOR_ONLY_NEON.has(neon)) lampRun(b, w * 0.9, (lx) => at(lx, eaveZ), highY - drop + 0.03, neon, ry, 'x');
   // ② 后段升高：三面矮墙（后 + 左右）+ 接缝矮墙，抬到 backTop
   const backTop = bodyTop + 1.05;
   const wallH = backTop - (bodyTop + 0.12);
@@ -611,10 +706,8 @@ function gateFrameOn(b: Baker, sg: SignMesher, atlas: SignAtlas, o: BuildOpt, id
   // 楼顶：小悬山压在额枋上
   const rd = Math.min(3.4, Math.max(2.2, d));
   gableRoofOn(b, w + 1.0, rd, H + 0.02, x, z, ry, roofC, o.wallC ?? C.plaster, o.neon, 1.15);
-  if (o.neon !== undefined) {
-    const [gx2, gz2] = at(0, rd / 2 + 0.6);
-    lampRun(b, w * 0.86, (lx) => at(lx, rd / 2 + 0.6), H - 0.02, o.neon, ry, 'x');
-  }
+  // 旧版在 gableRoofOn 已经铺过檐灯之后，又在 H−0.02 处补了同一跨度的第二排灯管
+  //（两排相距 0.04–0.06m，叠成一根加粗亮条）。檐灯只保留屋顶自带的那一排真源。
 }
 
 /** 草棚：单坡顶 + 三面席墙 + 无窗，屋面用 fabric 组苇席色 0xd4b76a */
@@ -853,9 +946,72 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
     const [wx, wz] = lat(lx, lz);
     b.box(g, w2, h2, d2, wx, ly, wz, hex, ry + extraRy, rx, rz);
   };
+  // 檐下灯笼：吊绳 + 灯身 + 灯坠，三件一套。s = 灯身宽（m），灯身高 1.3s。
+  // 旧版 tavern 只有一盏 0.3×0.4 的方块吊在 6.55m，对 6.4–10m 的檐口只有 1/20 高，夜景里读成一个像素。
+  const lanternAt = (lx: number, ly: number, lz: number, s: number, src = 'street'): void => {
+    const [wx, wz] = lat(lx, lz);
+    boxAt('wood', 0.05, 0.46, 0.05, lx, ly + s * 0.85 + 0.2, lz, C.woodDark);
+    boxAt('glow', s, s * 1.3, s, lx, ly, lz, C.lantern);
+    boxAt('fabric', 0.07, 0.22, 0.07, lx, ly - s * 0.78, lz, 0xb03030);
+    noteStreet('lantern', wx, ly, wz, s * 1.3, src);
+  };
+  // 招幌：一块挂在挑竿下的布幅（旧版只有匾额；匾是暗底金字，夜里不发光也读不出"这家在卖什么"）
+  const bannerAt = (lx: number, ly: number, lz: number, bw: number, bh2: number, hex: number, src = 'street'): void => {
+    const [wx, wz] = lat(lx, lz);
+    boxAt('fabric', bw, bh2, 0.05, lx, ly, lz, hex);
+    noteStreet('banner', wx, ly, wz, bh2, src);
+  };
+  /**
+   * 临街店面构件 —— 全城街屋共用一套，不看左右、不看朝向：
+   *   ① 板门双扇（门框 + 门簪 + 门楣），替掉旧版贴在墙上的 0.12m 暗板；
+   *   ② 门洞两侧各一樘槛窗（直棂 + 暖光 + 石窗台）；
+   *   ③ 檐廊柱一对 + 檐枋，把 2.5m 素墙压出进深；
+   *   ④ 门楣正中一盏门灯（民居原有的门旁一对保留）。
+   * 只加构件、不改墙体：盒子全部贴在 frontZ 外皮 0.1–0.7m 内，不新增墙、不新增材质组。
+   */
+  const streetFrontOn = (frontZ: number, usable: number, gateW: number, gateH: number, wallTop: number): void => {
+    const leafW = gateW / 2 - 0.05;
+    // ① 门框 + 双扇板门 + 门簪
+    for (const s2 of [-1, 1] as const) {
+      boxAt('wood', 0.16, gateH + 0.24, 0.26, s2 * (gateW / 2 + 0.02), (gateH + 0.24) / 2, frontZ + 0.2, shade(C.woodDark, 0.92));
+      boxAt('lacquer', leafW, gateH - 0.02, 0.1, s2 * (leafW / 2 + 0.04), gateH / 2 + 0.01, frontZ + 0.24, shade(C.woodRed, 0.62));
+      boxAt('wood', 0.24, 0.18, 0.3, s2 * (gateW / 2 - 0.22), gateH + 0.4, frontZ + 0.26, shade(C.woodRed, 0.92));
+      const [dx, dz] = lat(s2 * (leafW / 2 + 0.04), frontZ + 0.3);
+      noteFacade('door', dx, gateH / 2, dz, leafW, gateH, false, 'house');
+    }
+    boxAt('wood', gateW + 0.5, 0.22, 0.3, 0, gateH + 0.22, frontZ + 0.2, shade(C.woodDark, 0.95));
+    // ② 槛窗两樘：门洞两侧，宽度按可用墙面收（窄宅只放一樘）
+    const winW = 1.25, winH = 1.15, winC = 1.72;
+    const winX = gateW / 2 + 0.58 + winW / 2;
+    const pair = winX + winW / 2 < usable / 2 - 0.15;
+    const slots = pair ? [-1, 1] as const : [-1] as const;
+    for (const s2 of slots) {
+      boxAt('wood', winW + 0.16, winH + 0.16, 0.1, s2 * winX, winC, frontZ + 0.26, shade(C.woodDark, 0.95));
+      boxAt('glow', winW - 0.14, winH - 0.14, 0.05, s2 * winX, winC, frontZ + 0.33, C.winGlow);
+      for (let k = 1; k < 3; k++) {
+        boxAt('wood', 0.05, winH - 0.1, 0.05, s2 * winX - winW / 2 + (winW * k) / 3, winC, frontZ + 0.36, shade(C.woodDark, 0.7));
+      }
+      boxAt('ash', winW + 0.34, 0.12, 0.22, s2 * winX, winC - winH / 2 - 0.08, frontZ + 0.3, 0x9a9282);
+      const [dx, dz] = lat(s2 * winX, frontZ + 0.36);
+      noteFacade('window', dx, winC, dz, winW, winH, true, 'house');
+    }
+    // ③ 檐廊：两根檐柱 + 檐枋（柱顶与院墙同高，压在连续披檐下）
+    const postX = usable / 2 - 0.3;
+    for (const s2 of [-1, 1] as const) {
+      boxAt('wood', 0.2, wallTop - 0.1, 0.2, s2 * postX, 0.1 + (wallTop - 0.1) / 2, frontZ + 0.62, shade(C.woodRed, 0.7));
+    }
+    boxAt('wood', usable - 0.36, 0.16, 0.2, 0, wallTop - 0.08, frontZ + 0.62, shade(C.woodDark, 0.9));
+    // ④ 门灯：门楣正中一盏，替下旧版只挂在门旁的一对（那对仍保留，不改既有实例）
+    lanternAt(0, gateH + 0.78, frontZ + 0.5, 0.42, 'door');
+  };
+  const eaveY = 0.6 + bodyH;
   const faceZ = d / 2 + 0.1;
   const floorH = bodyH / floors;
   const facadeType = (idx % 4) + 1;
+  buildingLedger.push({
+    x: +x.toFixed(2), z: +z.toFixed(2), ry: +ry.toFixed(3), w: +w.toFixed(2), d: +d.toFixed(2),
+    floors, kind, form, facade: 'f' + facadeType,
+  });
   const baysOf = (f: number): number[] => {
     const n = Math.max(1, Math.min(3, Math.round((w - 1.4) / 3.2)));
     const span = Math.max(1, w - 3.0);
@@ -927,6 +1083,8 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
 
   if (frontOpen) {
     // 前店后宅：铺面敞开，立面不放板壁 / 灰泥 / 格窗 / 门扇——檐柱、柜台与挑檐由 3b 的 shop 段承担
+    const [dx2, dz2] = lat(0, faceZ);
+    noteFacade('door', dx2, 1.6, dz2, openW, openH, false, 'shopfront');
   } else if (facadeType === 4) {
     // 型 4 门第：双开板门（门钉 3×6）+ 门簪 + 两侧槛墙
     const gw = Math.min(2.8, w * 0.36), gw2 = gw / 2, lw2 = gw2 - 0.04, leafZ = d / 2 + 0.02;
@@ -947,6 +1105,10 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
       }
     }
     b.kit('facade.gateWall', 2);
+    {
+      const [dx2, dz2] = lat(0, faceZ + 0.1);
+      noteFacade('door', dx2, 1.95, dz2, gw, 2.7, false, 'facade4');
+    }
     b.kit('facade.gateStud', 18, 1.9);
     for (const s2 of [-1, 1]) boxAt('wood', 0.22, 0.22, 0.32, (s2 * gw) / 3, 3.34, faceZ + 0.14, C.woodDark);
     b.kit('facade.gatePin', 2, 3.34);
@@ -954,13 +1116,19 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
       const wy = 0.6 + f * floorH + floorH * 0.5;
       for (const [i, lx] of baysOf(f).entries()) {
         const [wx, wz] = lat(lx, faceZ + 0.14);
-        zhilingWindow(b, wx, wy, wz, 1.05, 1.2, ry, litOf(i, f));
+        const litW = litOf(i, f);
+        zhilingWindow(b, wx, wy, wz, 1.05, 1.2, ry, litW);
+        noteFacade('window', wx, wy, wz, 1.05, 1.2, litW, 'facade4');
       }
     }
   } else {
     // 单开正门（型 4 自带双开板门）：原为贴在 faceZ 的暗色「假门洞」平板，壳体开洞后必须让开通路，
     // 改铰在门扇右边缘、向室内开 88°（宽/高/材质/数量不变，只改姿态）
     leafAt('wood', Math.min(2.0, doorW) / 2, d / 2 - 0.02, Math.min(2.0, doorW), 2.4, 1.8, 0x2a1c12, 1, 1);
+    {
+      const [dx2, dz2] = lat(0, faceZ);
+      noteFacade('door', dx2, 1.8, dz2, Math.min(2.0, doorW), 2.4, false, 'facade');
+    }
     if (facadeType === 1) {
       // 型 1 板壁铺面：深色木板墙 + 直棂窗（整幅板壁按门洞切成左右两段 + 门楣上方一条）
       facePanel('wood', w - 1.0, 0.6, 0.6 + bodyH - 0.9, faceZ + 0.02, shade(woodC, 0.66), 0.1);
@@ -977,7 +1145,9 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
         const wy = 0.6 + f * floorH + floorH * 0.55;
         for (const [i, lx] of baysOf(f).entries()) {
           const [wx, wz] = lat(lx, faceZ + 0.14);
-          zhilingWindow(b, wx, wy, wz, 1.05, 1.25, ry, litOf(i, f));
+          const lit = litOf(i, f);
+          zhilingWindow(b, wx, wy, wz, 1.05, 1.25, ry, lit);
+          noteFacade('window', wx, wy, wz, 1.05, 1.25, lit, 'facade1');
         }
       }
     } else if (facadeType === 2) {
@@ -991,7 +1161,12 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
         const bays = baysOf(f);
         for (const [i, lx] of bays.entries()) {
           boxAt('wood', 1.15, 0.9, 0.1, lx, wy - 0.42, faceZ + 0.09, shade(woodC, 0.72));
-          if (litOf(i, f)) boxAt('glow', 0.98, 0.72, 0.06, lx, wy - 0.42, faceZ + 0.15, C.winGlow);
+          const lit = litOf(i, f);
+          if (lit) boxAt('glow', 0.98, 0.72, 0.06, lx, wy - 0.42, faceZ + 0.15, C.winGlow);
+          {
+            const [wx2, wz2] = lat(lx, faceZ + 0.15);
+            noteFacade('window', wx2, wy - 0.42, wz2, 1.15, 0.9, lit, 'facade2');
+          }
           boxAt('wood', 1.15, 0.85, 0.07, lx, wy + 0.5, faceZ + 0.3, shade(woodC, 0.9), 0, tilt, 0);
         }
         b.kit('facade.propWindow', bays.length, wy);
@@ -1008,7 +1183,12 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
         const bays = baysOf(f);
         for (const [i, lx] of bays.entries()) {
           boxAt('wood', 1.25, 0.95, 0.1, lx, wy, faceZ + 0.09, shade(woodC, 0.8));
-          if (litOf(i, f)) boxAt('glow', 1.05, 0.75, 0.06, lx, wy, faceZ + 0.15, C.winGlow);
+          const lit = litOf(i, f);
+          if (lit) boxAt('glow', 1.05, 0.75, 0.06, lx, wy, faceZ + 0.15, C.winGlow);
+          {
+            const [wx2, wz2] = lat(lx, faceZ + 0.15);
+            noteFacade('window', wx2, wy, wz2, 1.25, 0.95, lit, 'facade3');
+          }
           for (let k = 1; k < 3; k++) boxAt('wood', 0.05, 0.9, 0.05, lx - 0.28 + (0.56 * k), wy, faceZ + 0.18, shade(woodC, 0.5));
         }
         b.kit('facade.counterLattice', bays.length, wy);
@@ -1046,14 +1226,23 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
     const segW = Math.max(1.2, (w + 1.2 - gateW) / 2);
     for (const s2 of [-1, 1]) {
       boxAt('wall', segW, 2.5, 0.42, s2 * (gateW / 2 + segW / 2), 1.25, wallZ, shade(C.plaster, 0.93));
-      boxAt('roof', segW + 0.2, 0.24, 0.9, s2 * (gateW / 2 + segW / 2), 2.56, wallZ, C.tile);
     }
+    // 连续披檐：旧版是两段各一块 0.9m 深的瓦帽，门口上方断开；改成一条通长檐口压住檐廊柱
+    boxAt('roof', w + 1.6, 0.22, 1.2, 0, 2.58, wallZ + 0.24, C.tile);
+    boxAt('wood', w + 1.4, 0.1, 0.12, 0, 2.44, wallZ + 0.8, shade(C.woodDark, 0.86));
     boxAt('wood', 0.32, 3.4, 0.32, -gateW / 2, 1.7, wallZ, C.woodDark);
     boxAt('wood', 0.32, 3.4, 0.32, gateW / 2, 1.7, wallZ, C.woodDark);
     boxAt('wood', gateW, 0.28, 0.5, 0, 3.5, wallZ, C.woodDark);
     boxAt('roof', gateW + 1.4, 0.3, 1.4, 0, 3.76, wallZ, shade(C.tile, 1.05));
-    boxAt('wood', gateW * 0.7, 2.2, 0.12, 0, 1.1, wallZ + 0.22, 0x2a1c12);
     boxAt('wall', gateW * 0.8, 0.22, 0.6, 0, 0.11, wallZ + 0.36, C.stone);
+    // 店面构件（共用一套）：板门 / 槛窗 / 檐廊柱 / 门灯
+    streetFrontOn(wallZ, w + 1.2, gateW, 2.2, 2.5);
+    // 山墙侧窗：搬到本文件自己发（detailKit 的整幅立面在院墙后看不见，见文件末的调用处说明）
+    for (const s2 of [-1, 1] as const) {
+      const [wx, wz] = lat(s2 * (w / 2 + 0.16), 0.8);
+      b.box('wood', 0.1, 1.2, 1.5, wx, 2.2, wz, shade(C.woodDark, 0.86), ry);
+      b.box('glow', 0.06, 1.0, 1.25, wx + s2 * 0.05, 2.2, wz, C.winGlow, ry);
+    }
     // 影壁
     boxAt('wall', gateW * 1.2, 2.2, 0.3, 0, 1.1, wallZ - 2.6, shade(C.plaster2, 0.92));
     boxAt('roof', gateW * 1.3, 0.2, 0.6, 0, 2.3, wallZ - 2.6, C.tile);
@@ -1063,6 +1252,8 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
         boxAt('wall', 0.72, 0.7, 0.66, s2 * (gateW / 2 + 1.1), 1.42, wallZ + 0.7, C.stone);
       }
     }
+    // 门灯一对：宅门两侧 0.38m 灯身。旧版民居夜里只有一块匾，整条街读不出"住着人"
+    for (const s2 of [-1, 1]) lanternAt(s2 * (gateW / 2 + 0.62), 2.55, wallZ + 0.5, 0.38, 'door');
     b.kit('building.courtyardGate', 1);
   } else if (kind === 'shop') {
     const cz2 = d / 2 + 0.6;
@@ -1075,14 +1266,40 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
     // 挑檐 + 檐柱
     boxAt('roof', w * 0.92, 0.14, 1.5, 0, 3.34, d / 2 + 0.85, shade(roofC, 1.12));
     for (const s2 of [-1, 1]) boxAt('wood', 0.14, 3.2, 0.14, s2 * w * 0.42, 1.6, d / 2 + 1.45, C.woodDark);
+    // 铺面：檐下一对灯笼 + 一块招幌（旧版只有柜台与匾额，夜里整排铺面是黑的门洞）
+    for (const s2 of [-1, 1]) lanternAt(s2 * Math.min(w * 0.34, 2.6), 2.62, d / 2 + 0.98, 0.44, 'shop');
+    {
+      const bw = 1.15, bh2 = Math.min(2.4, Math.max(1.6, eaveY * 0.42));
+      const bx = -(w / 2 - 0.35), bz = d / 2 + 1.5;
+      boxAt('wood', 0.12, 3.0, 0.12, bx, 1.5, bz, C.woodDark);
+      boxAt('wood', 0.12, 0.12, 1.15, bx, 3.0, bz + 0.55, C.woodDark);
+      bannerAt(bx, 3.0 - bh2 / 2 - 0.06, bz + 0.55, bw, bh2, [0x9d2933, 0x2a5c42, 0x3a4a7a][idx % 3], 'shop');
+    }
     b.kit('building.shopCounter', 1);
   } else if (kind === 'tavern' || kind === 'teahouse') {
+    // 酒旗：布幅 1.15×2.4 → 1.55×3.0，挂点外移；檐下灯笼 0.3×0.4 单盏 → 0.50×0.65 一对。
+    // 6.4–10m 的檐口下，0.3m 的灯只有 1/20，夜里读成一个像素；0.65m 才够一个灯笼的轮廓。
     const px2 = w / 2 - 0.7;
-    boxAt('wood', 0.16, 6.4, 0.16, px2, 3.2, d / 2 + 1.3, C.woodDark);
-    boxAt('fabric', 1.15, 2.4, 0.06, px2 + 0.1, 4.7, d / 2 + 1.85, kind === 'tavern' ? 0x9d2933 : 0x2a5c42);
-    boxAt('wood', 0.1, 0.1, 1.3, px2, 5.92, d / 2 + 1.85, C.woodDark);
-    boxAt('glow', 0.3, 0.4, 0.3, px2, 6.55, d / 2 + 1.3, C.lantern);
+    const poleH = Math.max(3.4, eaveY - 0.25);
+    const bh2 = Math.min(3.0, Math.max(1.8, eaveY * 0.46));
+    boxAt('wood', 0.16, poleH, 0.16, px2, poleH / 2, d / 2 + 1.3, C.woodDark);
+    boxAt('fabric', 1.55, bh2, 0.06, px2 + 0.12, poleH - bh2 / 2 - 0.28, d / 2 + 1.95, kind === 'tavern' ? 0x9d2933 : 0x2a5c42);
+    boxAt('wood', 0.1, 0.1, 1.5, px2, poleH - 0.16, d / 2 + 1.95, C.woodDark);
+    bannerAt(px2 + 0.12, poleH - bh2 / 2 - 0.28, d / 2 + 1.95, 1.55, bh2, kind === 'tavern' ? 0x9d2933 : 0x2a5c42, 'tavern');
+    for (const s3 of [-1, 1]) lanternAt(px2 + s3 * 1.45, poleH - 0.72, d / 2 + 1.24, 0.5, 'tavern');
     b.kit('building.wineFlag', 1);
+  }
+
+  // 3b) 门头色（桃红/电紫）：只在门洞两侧各挂一根竖灯管 + 上下灯座。
+  // 这两色按调色板是「门头色」——用户判据是「品红/电紫只出现在指定业态门口」，
+  // 所以檐口那圈通长灯带对它们整体让位（见 roofOn / gableRoofOn 的 DOOR_ONLY_NEON 拦截）。
+  if (neon !== undefined && DOOR_ONLY_NEON.has(neon)) {
+    for (const s of [-1, 1] as const) {
+      boxAt('metal', 0.16, 0.1, 0.16, s * (openW / 2 + 0.2), 2.32, d / 2 + 0.24, 0x4a4e54);
+      boxAt('glow', 0.09, 1.4, 0.09, s * (openW / 2 + 0.2), 1.55, d / 2 + 0.24, neon);
+      boxAt('metal', 0.16, 0.1, 0.16, s * (openW / 2 + 0.2), 0.8, d / 2 + 0.24, 0x4a4e54);
+    }
+    b.kit('facade.doorNeon', 2, 1.55);
   }
 
   // 4) 屋顶：按形制分派（roofOn 的签名与既有行为原样保留，只在这里决定给谁用）
@@ -1159,11 +1376,12 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
       // 斜置立方体的轮廓就是一枚菱形（远看像被拉长的「卐/文字」），下面只接一根 0.16m 细杆、
       // 杆顶还差 0.1m 断开，于是读成「一排悬空、朝不同方向斜指的黄片」。
       // 宋式檐灯本来就是竖着挂的，不该有滚转。
-      b.box('wood', 0.05, 0.5, 0.05, lxx, gh + 0.72, lzz, C.woodDark, ry);
-      b.box('ceramic', 0.3, 0.1, 0.3, lxx, gh + 0.43, lzz, shade(0x6b2c20, 1.0), ry);
-      b.box('glow', 0.26, 0.34, 0.26, lxx, gh + 0.21, lzz, neon ?? C.neonGold, ry);
-      b.box('ceramic', 0.22, 0.06, 0.22, lxx, gh + 0.01, lzz, shade(0x6b2c20, 0.9), ry);
-      b.box('fabric', 0.05, 0.24, 0.05, lxx, gh - 0.16, lzz, 0xb03030, ry);
+      b.box('wood', 0.05, 0.55, 0.05, lxx, gh + 0.78, lzz, C.woodDark, ry);
+      b.box('ceramic', 0.4, 0.12, 0.4, lxx, gh + 0.46, lzz, shade(0x6b2c20, 1.0), ry);
+      b.box('glow', 0.34, 0.45, 0.34, lxx, gh + 0.2, lzz, neon ?? C.neonGold, ry);
+      b.box('ceramic', 0.3, 0.07, 0.3, lxx, gh - 0.03, lzz, shade(0x6b2c20, 0.9), ry);
+      b.box('fabric', 0.06, 0.26, 0.06, lxx, gh - 0.2, lzz, 0xb03030, ry);
+      noteStreet('lantern', lxx, gh + 0.2, lzz, 0.45, 'ornate');
     }
     for (const s of [-1, 1]) {
       const lx = s * (gw / 2 - 0.6);
@@ -1175,10 +1393,14 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
   // 7) 通用室内衬：门洞看进去不再是纯黑空腔（9 座手工室内壳由 o.hasInterior 跳过）
   if (!hasInterior) genericInteriorOn(b, o, wallC, woodC, kind);
 
+  // 院墙民居的整幅立面（门扇 / 门槛 / 窗楣 / 抱框 / 柱列）全部落在 2.5m 院墙后面，街面看不见；
+  // 真正露在外面的只有两道山墙侧窗——侧窗已在 3b 的 house 段按同一尺寸/位置自己发了一遍。
+  // 所以这里对 house/manor 直接跳过（616 面/座），腾出的预算正好付临街店面构件。
+  const hasCourtyard = kind === 'house' || kind === 'manor';
   buildDetailedFacade(b, {
     x, z, ry, w, d, floors, lit: !!o.winGlow, windows: false,
-    door: !frontOpen && facadeType !== 4,   // 敞开铺面不放门扇（柜台与檐柱由 shop 段承担）
-    tier: o.ornate || w >= 14 || floors >= 3 ? 'near' : 'mid',
+    door: !frontOpen && facadeType !== 4 && !hasCourtyard,
+    tier: hasCourtyard ? 'far' : (o.ornate || w >= 14 || floors >= 3 ? 'near' : 'mid'),
   });
 }
 
@@ -1280,8 +1502,10 @@ export function buildCityWall(b: Baker, sg: SignMesher, atlas: SignAtlas): void 
       }
     }
     if (ribCaps > 0) b.kit('wall.ribCap', ribCaps, 11.33);
-    b.box('glow', 0.1, 0.08, len, WALL_X + 3.3, 9.9, zc, C.neonCyan);
-    b.box('glow', 0.1, 0.08, len, WALL_X - 3.3, 9.9, zc, C.neonCyan);
+    // 城墙灯带：旧版是单根 len=341m 的连续 glow 方条，整面城墙读成一道贯穿全城的光束。
+    // 改成分段灯管（2.6m 管 / 4.0m 暗段）：远看是「一串灯」，不再是一条线。
+    lampRun(b, len, (lz) => [WALL_X + 3.3, zc + lz], 9.9, C.neonCyan, 0, 'z', 2.6, 6.6);
+    lampRun(b, len, (lz) => [WALL_X - 3.3, zc + lz], 9.9, C.neonCyan, 0, 'z', 2.6, 6.6);
     // 内侧女墙：连续 1.1m 矮墙 + 0.25m 压脊
     b.box('ash', 1.0, PARAPET_H, len, WALL_X + 3.15, WALL_DECK + PARAPET_H / 2, zc, 0x8d9094);
     b.box('roof', 1.14, COPE_H, len, WALL_X + 3.15, WALL_DECK + PARAPET_H + COPE_H / 2, zc, C.ridge);
@@ -1298,7 +1522,7 @@ export function buildCityWall(b: Baker, sg: SignMesher, atlas: SignAtlas): void 
       b.kit('wall.merlon', merlons, WALL_DECK + PARAPET_H / 2);
       b.kit('wall.merlonCope', merlons, WALL_DECK + PARAPET_H + COPE_H / 2);
     }
-    b.box('glow', 0.05, 0.06, len, WALL_X - 3.69, WALL_DECK - 0.12, zc, C.neonCyan);
+    lampRun(b, len, (lz) => [WALL_X - 3.69, zc + lz], WALL_DECK - 0.12, C.neonCyan, 0, 'z', 2.0, 5.4);
     b.kit('wall.parapetGlow', 1, WALL_DECK - 0.12);
     // 马道：内侧 3m 走道，0.75% 找坡，逐 6m 一段铺石（两侧牙石）
     let decks = 0;
@@ -1344,10 +1568,11 @@ export function buildCityWall(b: Baker, sg: SignMesher, atlas: SignAtlas): void 
   b.box('ash', 7.3, 0.16, 6.9, WALL_X, 0.08, GATE_Z, 0x8d8a80);
   b.kit('gateTower.threshold', 1, 0.08);
   // 门道照明：原为一道 6.4m 长的品红 glow 横杆横在门洞正中（贯通后被读成"封条"），
-  // 改成两侧门柱壁灯 + 门额下一道细灯带
+  // 改成两侧门柱壁灯 + 门额下一道细灯带。壁灯原用 NH-02 桃红——城门是官府不是商铺，
+  // 桃红是「商霓」，按业态色板改回 NH-01 官霓·电青。
   for (const s of [-1, 1]) {
     b.box('metal', 0.3, 0.46, 0.3, WALL_X + 0.1, 4.6, GATE_Z + s * 3.15, 0x4a4e54);
-    b.box('glow', 0.2, 0.3, 0.2, WALL_X + 0.26, 4.6, GATE_Z + s * 3.15, C.neonMag);
+    b.box('glow', 0.2, 0.3, 0.2, WALL_X + 0.26, 4.6, GATE_Z + s * 3.15, C.neonCyan);
   }
   b.box('glow', 0.1, 0.1, 5.4, WALL_X + 0.12, 8.9, GATE_Z, C.neonGold);
   // 千斤闸（C-ITM-0011 / C-ITM-0297 / D-ITM-0070）：本城只有东门一处门洞，故三件同名条目各落一处
@@ -1836,9 +2061,10 @@ export function buildGoulan(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   // 顶饰（宝顶）
   b.cyl('wood', 0.16, 0.5, 1.2, 8, x, 14.7, z, C.woodDark);
   b.box('glow', 0.5, 0.5, 0.5, x, 15.4, z, C.neonMag, 0, 0, Math.PI / 4);
-  // 檐口霓虹灯管（赛博层）
-  b.box('glow', 30, 0.12, 0.12, x, 8.35, z + 13.2, C.neonMag);
-  b.box('glow', 30, 0.12, 0.12, x, 8.35, z - 13.2, C.neonMag);
+  // 檐口霓虹灯管（赛博层）：旧版是两根 30m 不断的品红横杆（跨 8 个开间的连续亮条）。
+  // 改成分段灯管，品牌色仍是桃红，但读成「一串灯」而不是「一根光带」。
+  lampRun(b, 30, (lx) => [x + lx, z + 13.2], 8.35, C.neonMag, 0, 'x', 2.2, 5.4);
+  lampRun(b, 30, (lx) => [x + lx, z - 13.2], 8.35, C.neonMag, 0, 'x', 2.2, 5.4);
   // 戏台
   b.box('wood', 12, 1.6, 9, x - 8, 0.8, z, C.wood);
   b.box('wood', 13, 0.3, 10, x - 8, 1.7, z, C.woodDark);
@@ -2363,10 +2589,6 @@ const yieldFrameB = (): Promise<void> => new Promise((r) => { if (typeof request
  */
 export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: SignAtlas, rng: RNG): Promise<void> {
   const shopSigns = ['綢緞莊', '香藥鋪', '解當鋪', '紙馬鋪', '明家靴店', '劉家上色沉檀揀香', '王家紙馬', '果子鋪', '飯鋪', '唐家酒店', '久住王員外家', '積善堂', '守拙齋', '萬貨全'];
-  // NH-03 玄霓·电紫（0x8a2be2）按调色板只属于「玄门 / 纸马铺」，不参与街屋随机轮转：
-  // 旧池子里 55% 的普通铺面会随机拿到紫色檐灯，配合 detailKit 的通长条读成「紫色发光横带」。
-  // 紫色仍保留给显式指定的 王家紙馬（见下方的落位表）。
-  const shopNeon = [C.neonMag, C.neonCyan, C.neonGreen, C.neonGold, C.neonOrange];
   let idx = 0;
   const emit = async (plots: Plot[], opt: { floors: [number, number]; ornateChance?: number }): Promise<void> => {
     // 街墙与后院：把"一排孤立房子"补成连续街墙 + 进深院落
@@ -2386,6 +2608,35 @@ export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: Sig
           b.box('wood', gap, 0.14, 0.6, p.x + p.w / 2 + gap / 2, 0.2, frontZ, C.stone);
         }
       }
+      // 尽端山墙：相邻地块间距 ≥9m 时没有院墙补缝，整面山墙裸露在街口/路口。
+      // 旧版这面墙是纯灰泥——本机位左半近景那块"未完成的灰盒子"就是它。
+      // 规则只看间距，不看左右/朝向：披檐 + 两扇高窗（暖光）+ 一盏壁灯。
+      const prev = sorted[i - 1];
+      const gapPrev = prev ? (p.x - p.w / 2) - (prev.x + prev.w / 2) : 99;
+      const gapNext = next ? (next.x - next.w / 2) - (p.x + p.w / 2) : 99;
+      for (const side of [-1, 1] as const) {
+        const gap = side < 0 ? gapPrev : gapNext;
+        if (gap < 9) continue;
+        const ex = p.x + side * (p.w / 2 + 0.02);
+        const out = side * (p.w / 2 + 0.5);
+        // 批檐（沿进深通长）+ 压边 + 两根挑梁
+        b.box('roof', 1.1, 0.16, p.d + 0.4, p.x + out, 3.06, p.z, shade(C.tile, 0.96));
+        b.box('wood', 0.12, 0.2, p.d + 0.4, p.x + out + side * 0.48, 2.94, p.z, C.woodDark);
+        for (const sz of [-1, 1] as const) {
+          b.box('wood', 0.9, 0.14, 0.18, p.x + out - side * 0.1, 2.86, p.z + sz * p.d * 0.26, C.woodDark);
+        }
+        // 山墙高窗两扇（窗心朝 ±x，暖光）
+        for (const sz of [-1, 1] as const) {
+          b.box('wood', 0.1, 1.0, 1.1, ex + side * 0.03, 2.0, p.z + sz * p.d * 0.24, shade(C.woodDark, 0.9), Math.PI / 2);
+          b.box('glow', 0.06, 0.82, 0.9, ex + side * 0.08, 2.0, p.z + sz * p.d * 0.24, C.winGlow, Math.PI / 2);
+        }
+        // 壁灯：铁挑杆 + 灯身 + 坠（与檐下灯笼同一套色）
+        b.box('metal', 0.5, 0.06, 0.06, ex + side * 0.26, 2.62, p.z, 0x4a4e54);
+        b.box('glow', 0.34, 0.44, 0.34, ex + side * 0.5, 2.36, p.z, C.lantern);
+        b.box('fabric', 0.06, 0.2, 0.06, ex + side * 0.5, 2.1, p.z, 0xb03030);
+        noteStreet('lantern', ex + side * 0.5, 2.36, p.z, 0.44, 'flank');
+        b.kit('block.flankEave', 1);
+      }
       // 后院：后墙 + 两侧山墙 + 两间厢房
       const backZ = p.z - facing * (p.d / 2 + 7.2);
       b.box('wall', p.w + 1.2, 2.6, 0.5, p.x, 1.3, backZ, shade(C.plaster2, 0.92));
@@ -2404,19 +2655,28 @@ export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: Sig
         b.box('glow', 0.7, 0.8, 0.06, wx2, 1.5, wz2 - facing * 1.75, C.winGlow);
       }
       b.kit('block.courtyard', 1);
-      // 沿河铺面：幌子 + 灯笼串 + 檐下酒旗（河岸带 40m 内才加，避免全城泛滥）
-      if (Math.abs(p.z) > 38 && Math.abs(p.z) < 62) {
+      // 沿河铺面：幌子 + 灯笼串 + 檐下酒旗
+      // 判据改成「离岸线多远」而不是 |z| 的绝对值：旧版写死 38 < |z| < 62，只罩住 z=±39.5 那一排；
+      // 同一条街另一侧（z=±64.5）被整排漏掉——一侧有幌子串灯、另一侧光板，街面品质差一个档。
+      // 岸坡外缘 BANK_OUT=42，河岸带 40m → |z| < 82；两侧、两岸同一条规则。
+      if (Math.abs(p.z) > 38 && Math.abs(p.z) < 82) {
         const fx2 = p.x + p.w * 0.34;
         const fz2 = frontZ + facing * 0.9;
-        b.box('wood', 0.16, 7.0, 0.16, fx2, 3.5, fz2, C.woodDark);
+        b.box('wood', 0.18, 7.2, 0.18, fx2, 3.6, fz2, C.woodDark);
         const bannerC = [0x9d2933, 0x2a5c42, 0x3a4a7a][Math.abs(Math.round(p.x)) % 3];
-        b.box('fabric', 1.7, 3.1, 0.05, fx2 + 0.9, 5.1, fz2, bannerC);
-        b.box('wood', 1.85, 0.1, 0.1, fx2 + 0.86, 6.68, fz2, C.woodDark);
-        b.box('glow', 0.3, 0.4, 0.3, fx2, 7.15, fz2, C.lantern);
-        // 檐下两盏串灯
+        // 幌子 1.7×3.1 → 2.0×3.5：这是整条街最醒目的招幌，夜里靠它读"这是一排铺面"
+        b.box('fabric', 2.0, 3.5, 0.06, fx2 + 1.0, 5.1, fz2, bannerC);
+        b.box('wood', 2.15, 0.12, 0.12, fx2 + 1.0, 6.9, fz2, C.woodDark);
+        noteStreet('banner', fx2 + 1.0, 5.1, fz2, 3.5, 'riverside');
+        // 挑竿下挂灯 0.3×0.4 → 0.52×0.68
+        b.box('wood', 0.06, 0.6, 0.06, fx2, 7.4, fz2, C.woodDark);
+        b.box('glow', 0.52, 0.68, 0.52, fx2, 7.0, fz2, C.lantern);
+        noteStreet('lantern', fx2, 7.0, fz2, 0.68, 'riverside');
+        // 檐下两盏串灯：0.22×0.3 → 0.34×0.46，并补上吊绳（旧版是一颗悬空的黄方块）
         for (const s3 of [-1, 1]) {
-          b.box('glow', 0.22, 0.3, 0.22, p.x + s3 * p.w * 0.28, 3.5, frontZ + facing * 0.6, C.lantern);
-          b.box('wood', 0.04, 0.5, 0.04, p.x + s3 * p.w * 0.28, 3.9, frontZ + facing * 0.6, C.woodDark);
+          b.box('glow', 0.34, 0.46, 0.34, p.x + s3 * p.w * 0.28, 3.55, frontZ + facing * 0.6, C.lantern);
+          b.box('wood', 0.05, 0.6, 0.05, p.x + s3 * p.w * 0.28, 4.05, frontZ + facing * 0.6, C.woodDark);
+          noteStreet('lantern', p.x + s3 * p.w * 0.28, 3.55, frontZ + facing * 0.6, 0.46, 'riverside');
         }
         b.kit('riverside.banner', 1);
       }
@@ -2425,7 +2685,13 @@ export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: Sig
       const pr = Math.max(p.w, p.d) / 2; // 包络检测：任一角入禁入区即让位
       if (inLandmarkKeepout(p.x, p.z) || inLandmarkKeepout(p.x - pr, p.z) || inLandmarkKeepout(p.x + pr, p.z) || inLandmarkKeepout(p.x, p.z - pr) || inLandmarkKeepout(p.x, p.z + pr)) continue;
       const floors = rng.int(opt.floors[0], opt.floors[1]);
-      const neon = rng.chance(0.55) ? rng.pick(shopNeon) : undefined;
+      // RNG 消费序列与旧版逐位一致：chance 恒一次、pick 仅在 roll 真时一次。
+      // 下游地块尺寸/层数共用同一条 rng 链，少抽一次整座城都会换位，前后同机位对比就失去意义。
+      const trade = tradeOf(p.kind, p.sign);
+      const roll = rng.chance(0.55);
+      const picked = roll ? rng.pick(TRADE_NEON[trade]) : undefined;
+      // 业态概率走坐标 hash 而不是 rng：不动 rng 链，又保证民居（概率 0）永远不挂霓虹
+      const neon = picked !== undefined && h01(p.x, p.z, 9071) < TRADE_NEON_CHANCE[trade] ? picked : undefined;
       buildBuilding(b, sg, atlas, {
         x: p.x, z: p.z, ry: p.ry, w: p.w, d: p.d, floors, neon,
         signText: p.sign, signGlow: neon !== undefined ? '#' + neon.toString(16).padStart(6, '0') : undefined,
@@ -2447,9 +2713,11 @@ export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: Sig
   await emit(streetPlots(H_STREETS[3], 1, rng, ['manor', 'house', 'shop'], { gapMin: 4, gapMax: 9, wMin: 8, wMax: 15, dMin: 7, dMax: 11, signChance: 0.3, signs: shopSigns }), { floors: [1, 2] });
 
   // 手工地标：孙羊正店/十千脚店/府衙大堂 = 可进入内饰版（B1，47 卷逐间表）
+  // 色板与 TRADE_NEON 对齐：趙太丞家=医家（青）、解當鋪=当铺（金）、王家紙馬=纸马（电紫）、
+  // 香藥鋪=香药（青）、茶坊=茶坊（金）、上清觀=玄门（青）。
   buildLandmarkInteriors(b, sg, atlas);
-  buildBuilding(b, sg, atlas, { x: 168, z: 64, ry: 0, w: 9, d: 8, floors: 1, signText: '趙太丞家', signGlow: '#3dff9c', neon: C.neonGreen, signColor: '#d9ffe9', hasInterior: true }, 63);
-  buildBuilding(b, sg, atlas, { x: 258, z: 64, ry: 0, w: 10, d: 8, floors: 1, signText: '解', signGlow: '#ff2d95', neon: C.neonMag, signColor: '#ffe9c8', hasInterior: true }, 64);
+  buildBuilding(b, sg, atlas, { x: 168, z: 64, ry: 0, w: 9, d: 8, floors: 1, signText: '趙太丞家', signGlow: '#00e5ff', neon: C.neonCyan, signColor: '#d9ffe9', hasInterior: true }, 63);
+  buildBuilding(b, sg, atlas, { x: 258, z: 64, ry: 0, w: 10, d: 8, floors: 1, signText: '解', signGlow: '#ffb300', neon: C.neonGold, signColor: '#ffe9c8', hasInterior: true }, 64);
   buildBuilding(b, sg, atlas, { x: 352, z: 66, ry: 0, w: 12, d: 9, floors: 1, signText: '王家紙馬', signGlow: '#b26bff', neon: C.neonPurple, hasInterior: true }, 65);
   buildBuilding(b, sg, atlas, { x: 40, z: 62, ry: 0, w: 10, d: 8, floors: 2, signText: '香藥鋪', signGlow: '#00e5ff', neon: C.neonCyan, hasInterior: true }, 66);
   buildBuilding(b, sg, atlas, { x: -36, z: 62, ry: 0, w: 11, d: 9, floors: 2, signText: '茶坊', signGlow: '#ffb300', neon: C.neonGold, hasInterior: true }, 67);
@@ -2468,6 +2736,12 @@ export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: Sig
   buildStreetPaifangs(b, sg, atlas);
   buildWardSheds(b);
   buildW15StreetMarks(b, sg, atlas);
+  // 探针读点：街面灯笼 / 招幌的逐件落位（见文件头 streetFurniture 注释）
+  if (typeof window !== 'undefined') {
+    (window as unknown as { __w2Street?: unknown }).__w2Street = streetFurniture;
+    (window as unknown as { __w2Buildings?: unknown }).__w2Buildings = buildingLedger;
+    (window as unknown as { __w2Facade?: unknown }).__w2Facade = facadeFeatures;
+  }
 }
 
 // ============ 平民屋顶：三档距离剪影 + 定向法线瓦垄 + 按坊分片色板 ============

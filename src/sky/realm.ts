@@ -4,7 +4,7 @@ import { roofOn, C } from '../city/buildings';
 import { PoolSet, MAX_CLOUDS } from '../actors/pools';
 import { buildWindFlora } from './flora';
 import { RNG } from '../core/rng';
-import { LINGXIAO_WIN, buildCloudTerrace, buildIslandSkirt, islandFallAngle, skyJitter, skyRoofOn, skyStackedRoof, skyDougongRing, skyCaihuaBand, cloudBall, CS_BASE, CS_DEEP, CS_TOP, GOLD_LINE, GOLD_ROOF, GOLD_TRIM } from './palace';
+import { LINGXIAO_WIN, paneGrid, buildCloudTerrace, buildIslandSkirt, islandFallAngle, skyJitter, skyRoofOn, skyStackedRoof, skyDougongRing, skyCaihuaBand, cloudBall, CS_BASE, CS_DEEP, CS_TOP, GOLD_LINE, GOLD_ROOF, GOLD_TRIM } from './palace';
 import { buildIslandKeel } from './expansion';
 
 // ============ 天宫：云海/南天门/凌霄殿/蟠桃园/丹房/莲台/广寒/星河 ============
@@ -41,10 +41,9 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
     b.cyl('wall', r * 0.975, r * 0.93, 3.0, 28, x, y - 1.5, z, stone);
     b.cyl('wall', r * 0.93, r * 0.88, 2.2, 28, x, y - 4.1, z, shade(stone, 0.86));
     b.cyl('wall', r * 0.88, r * 0.83, 1.8, 28, x, y - 6.1, z, shade(stone, 0.74));
-    // 台面铺砖：深一档石色，压住大片浅色圆顶
-    // 金台台面旧值 0x6e5e40 是土褐色，从空中看整座岛就是一块"棕色饼干"。
-    // 改成暖灰石 0x6f6656（线性 0.16×3.2≈0.5，不裁白），与环岛的石铺装统一。
-    b.cyl('ground', r * 0.965, r * 0.965, 0.12, 28, x, y + 0.06, z, gold ? 0x6f6656 : 0x565264);
+    // 台面铺砖：金台改**深色抛光石**（近黑，带冷调），替掉旧的土褐 0x6f6656——
+    // 旧色从空中看整座岛读成"棕色饼干"，与参考图 R1 的深色镜面地完全相反。
+    b.cyl('ground', r * 0.965, r * 0.965, 0.12, 28, x, y + 0.06, z, gold ? 0x2e2c33 : 0x565264);
     // 台沿石带
     b.cyl('wall', r * 1.01, r * 1.01, 0.3, 28, x, y - 0.05, z, shade(stone, 1.12));
     // 望柱与横栏：28 根柱 + 两道压栏
@@ -183,22 +182,41 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
     // W48：墙身由 'wall' 改 'wood'。wall 组是 MeshLambertMaterial + emissive 0x3a3d48（冷灰自发光），
     //   天宫主殿朝南的立面常年背光，冷灰 emissive 把朱红拉成紫褐；wood 组无 emissive，红能站住。
     const WG = 'wood' as const;
-    const ySill = (HY0 + HWIN.sill) / 2, yHead = (HWIN.head + HY1) / 2, yMid = (HWIN.sill + HWIN.head) / 2;
+    // 山墙（东西两侧）必须是**实心朱墙**：中式宫殿的山墙本不开窗，窗在檐面的隔扇上。
+    // 旧版按 LINGXIAO_WIN 在此开 4 樘窗洞，被 enlargeLingxiao 的 2.7273× 顶点缩放后
+    // 变成 7.6m × 5.2m 的黑洞（用户原话「天宫变大了，窗户不要跟着变大」）。
+    // 室内房间自身的窗由 palace.ts 室内壳负责，不受此处影响。
     for (const sx of [-1, 1]) {
-      const wx = palace.x + sx * 19.7;
-      b.box(WG, 0.6, HWIN.sill - HY0, 20.8, wx, ySill, palace.z, WC);
-      b.box(WG, 0.6, HY1 - HWIN.head, 20.8, wx, yHead, palace.z, WC);
-      let zp = palace.z - 10.4;
-      for (const zc of HWIN.zs) {
-        const z0 = zc - HWIN.half, z1 = zc + HWIN.half;
-        if (z0 - zp > 0.06) b.box(WG, 0.6, HWIN.head - HWIN.sill, z0 - zp, wx, yMid, (zp + z0) / 2, WC);
-        zp = z1;
-      }
-      if (palace.z + 10.4 - zp > 0.06) b.box(WG, 0.6, HWIN.head - HWIN.sill, palace.z + 10.4 - zp, wx, yMid, (zp + palace.z + 10.4) / 2, WC);
+      b.box(WG, 0.6, HY1 - HY0, 20.8, palace.x + sx * 19.7, (HY0 + HY1) / 2, palace.z, WC);
     }
     b.box(WG, 40, HY1 - HY0, 0.6, palace.x, (HY0 + HY1) / 2, palace.z + 10.7, WC);
     for (const sx of [-1, 1]) b.box(WG, 14, HY1 - HY0, 0.6, palace.x + sx * 13, (HY0 + HY1) / 2, palace.z - 10.7, WC);
     b.box(WG, 12, HY1 - 221.7, 0.6, palace.x, (221.7 + HY1) / 2, palace.z - 10.7, WC);
+    // 正檐满布六抹隔扇：中式宫殿的「窗」是檐面隔扇上的菱花格心，不是山墙上的洞。
+    // 旧版檐面只有两片 14m 朱红平板，放大 2.7273× 后整面读成一块红板。
+    // 这里按五开间逐间铺隔扇：竖梃分扇、三道抹头、格心加密菱花线、下段裙板。
+    {
+      const fz = palace.z - 11.06;
+      const yBot = HY0 + 0.6, yTop = HWIN.head + 1.25;
+      const bays: [number, number][] = [[-20, -13.25], [-13.25, -6.5], [-6.5, 6.5], [6.5, 13.25], [13.25, 20]];
+      for (const [x0, x1] of bays) {
+        const w = x1 - x0, mx = (x0 + x1) / 2;
+        // 隔扇扇宽同样受 ×6.0 影响：世界 ≤2m ⇒ 扇宽 ≤0.333m 预缩放（旧 1.1 会到 6.6m）
+        const leaves = Math.max(8, Math.round(w / 0.32));
+        for (let i = 0; i <= leaves; i++) {
+          b.box('wood', 0.045, yTop - yBot, 0.12, x0 + (w * i) / leaves, (yBot + yTop) / 2, fz, GOLD_TRIM);
+        }
+        for (const yy of [yBot, yBot + (yTop - yBot) * 0.62, yTop]) {
+          b.box('wood', w, 0.13, 0.14, mx, yy, fz, GOLD_TRIM);
+        }
+        const gy0 = yBot + (yTop - yBot) * 0.12, gy1 = yBot + (yTop - yBot) * 0.62;
+        const n = Math.max(5, Math.round(w / 0.34));
+        for (let i = 0; i < n; i++) {
+          b.box('wood', 0.055, gy1 - gy0, 0.1, x0 + (w * (i + 0.5)) / n, (gy0 + gy1) / 2, fz, shade(GOLD_TRIM, 1.16));
+        }
+        b.box('wood', w, gy0 - yBot, 0.12, mx, (yBot + gy0) / 2, fz + 0.01, shade(0xa82c18, 0.95));
+      }
+    }
   }
   // 墙面金色装饰线（走马板下沿；上沿那条由匾额压住，已删）
   b.box('wood', 40, 0.5, 0.3, palace.x, palace.y + 8, palace.z - 11.2, GOLD_TRIM);
@@ -247,13 +265,19 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
   b.box('wood', 34, 3.86, 20, palace.x, 233.48, palace.z, shade(0xd2381f, 1.0));
   b.box('wood', 34.5, 0.34, 20.5, palace.x, 235.75, palace.z, PAINT);              // 上层额枋
   b.box('wood', 34.6, 0.14, 20.6, palace.x, 235.97, palace.z, GOLD_TRIM);          // 上金线
-  for (let i = 0; i < 7; i++) {                                                     // 上层支摘窗
-    const wx = palace.x - 15 + i * 5;
-    for (const sz of [-1, 1]) b.box('wood', 1.4, 1.5, 0.2, wx, 233.4, palace.z + sz * 10, 0x2a1a10);
+  // 上层支摘窗：**硬指标 —— 世界口径 ≤2m**。
+  // 凌霄殿整块选区被 2.2× 与 2.7273× 连乘 = **×6.0**，所以预缩放尺寸必须 ≤ 2/6 = 0.333m。
+  // 旧版 7 扇 ×1.4m（世界 8.4m）→ 上一版改到 0.92m（世界 5.5m）都仍然超标，本版收到 0.32m。
+  const WIN = 0.32;
+  const NP = 53;   // 34m 面阔 / 0.64m 轴距
+  for (let i = 0; i < NP; i++) {
+    const wx = palace.x - 17 + (i + 0.5) * (34 / NP);
+    for (const sz of [-1, 1]) b.box('wood', WIN, WIN, 0.2, wx, 233.4, palace.z + sz * 10, 0x2a1a10);
   }
-  for (let i = 0; i < 4; i++) {
-    const wz = palace.z - 7.5 + i * 5;
-    for (const sx of [-1, 1]) b.box('wood', 0.2, 1.5, 1.4, palace.x + sx * 17, 233.4, wz, 0x2a1a10);
+  const NPZ = 31;  // 20m 进深 / 0.64m 轴距
+  for (let i = 0; i < NPZ; i++) {
+    const wz = palace.z - 10 + (i + 0.5) * (20 / NPZ);
+    for (const sx of [-1, 1]) b.box('wood', 0.2, WIN, WIN, palace.x + sx * 17, 233.4, wz, 0x2a1a10);
   }
   // ⑨ 上檐已由 ⑦ 的 skyStackedRoof 顶层一次出齐（庑殿 40×25.2、正脊 12.6m、鸱吻 1.2m、
   //   w≥18 的脊兽），此段不再单开一层屋顶；正脊顶 239.78+0.31 = 240.09，宝顶座 240.04 正好压上。
@@ -624,12 +648,20 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
   // 南沿 z=−61.9 距环绕圈 1.9m；桂树在 (45,−58) 与阁东沿 44.3 让开 0.7m，不压树也不挡匾。
   {
     const GX = 40, GZ = -66, GB = moon.y + 0.12;   // 台面 209.12
-    const WALL = shade(0xb8b2a6, 0.98), DOOR = 0x2a1a10;   // 白玉（清单内的合规白）不改新色
+    // 门/窗同色是旧版遗留：门用 0x241a18（与武库/将台门一致），窗才用窗洞暗色 0x2a1a10。
+    const WALL = shade(0xb8b2a6, 0.98), DOOR = 0x241a18;   // 白玉（清单内的合规白）不改新色
     b.box('ash', 9.4, 0.55, 8.2, GX, GB + 0.275, GZ, shade(0xb8b2a6, 0.9));
     b.box('wall', 8, 3, 6.8, GX, GB + 2.05, GZ, WALL);
     b.box('wood', 8.6, 0.85, 7.4, GX, GB + 3.35, GZ, shade(0x2f5f5a, 1.04));     // 额枋（和玺彩画底）
     b.box('wood', 2.4, 2.6, 0.2, GX, GB + 1.6, GZ + 3.46, DOOR);                 // 南面门
-    for (const s of [-1, 1]) b.box('wood', 1.3, 1.1, 0.18, GX + s * 2.9, GB + 2.2, GZ + 3.46, DOOR);
+    // 两侧窗：×2.2 档，预缩放上限 0.909m。旧版整块 1.3×1.1 会到 2.86×2.42m；
+    // 本版 2×2 分格，每格 0.63×0.53 ×2.2 = 1.39×1.17m ≤2 ✔，格间 0.04（0.09m）木棂。
+    for (const s of [-1, 1]) {
+      const wx = GX + s * 2.9, wz = GZ + 3.46;
+      paneGrid(b, 'wood', 'z', wx, GB + 2.2, wz, 1.3, 1.1, 0.18, 2, 2, 0.04, 0x2a1a10);
+      b.box('wood', 0.04, 1.1, 0.05, wx, GB + 2.2, wz + 0.10, shade(0x4a3220, 1.0));
+      b.box('wood', 1.3, 0.04, 0.05, wx, GB + 2.2, wz + 0.10, shade(0x4a3220, 1.0));
+    }
     skyDougongRing(b, GX, GB + 3.78, GZ, 8.4, 7.2, 0, 1.2, GOLD_TRIM);           // 26 攒
     skyCaihuaBand(b, GX, GB + 3.35, GZ, 8.6, 7.4, 0);
     // 叠顶：下檐 11.4×9.6（檐口 5.26/4.43，斗栱昂嘴 5.05/4.45 都在檐内）→ 上檐 8.44×6.91 攒尖 + 宝顶
@@ -1855,9 +1887,32 @@ function buildCourtRoom(b: Baker, sg: SignMesher, atlas: SignAtlas, cx: number, 
     const [px, pz] = at(uc, D / 2);
     b.box('wall', (W - dw) / 2, H, 0.42, px, fy + H / 2, pz, wallC, ry);
     for (const o of [-1, 1]) {
-      const [wx, wz] = at(uc + o * (W - dw) / 5.2, D / 2 + 0.24);
-      b.box('ground', 2.3, Math.min(1.7, H * 0.34), 0.08, wx, fy + H * 0.58, wz, shade(W18_WOOD_D, 0.85), ry);
-      b.box('wood', 2.6, 0.16, 0.22, wx, fy + H * 0.42, wz, shade(W18_WOOD, 1.06), ry);
+      // 支摘窗：朝房只吃 ×2.2，预缩放上限 0.909m。旧版整块 2.3×1.7 会到 5.06×3.74m。
+      // 本版 3×2 分格：每格 0.733×0.825 ×2.2 = 1.61×1.82m ≤2 ✔，格间 0.05（0.11m）朱漆棂。
+      const uc2 = uc + (o * (W - dw)) / 5.2;
+      const WW = 2.3, WH = Math.min(1.7, H * 0.34), GAP = 0.05;
+      const nx = 3, ny = 2;
+      const cw = (WW - GAP * (nx - 1)) / nx, ch = (WH - GAP * (ny - 1)) / ny;
+      for (let ix = 0; ix < nx; ix++) {
+        const ox = -WW / 2 + cw / 2 + ix * (cw + GAP);
+        for (let iy = 0; iy < ny; iy++) {
+          const oy = -WH / 2 + ch / 2 + iy * (ch + GAP);
+          const [wx, wz] = at(uc2 + ox, D / 2 + 0.24);
+          b.box('ground', cw, ch, 0.08, wx, fy + H * 0.58 + oy, wz, shade(W18_WOOD_D, 0.85), ry);
+        }
+      }
+      for (let k = 1; k < nx; k++) {
+        const ox = -WW / 2 + k * (cw + GAP) - GAP / 2;
+        const [mx, mz] = at(uc2 + ox, D / 2 + 0.29);
+        b.box('wood', GAP, WH, 0.10, mx, fy + H * 0.58, mz, shade(W18_WOOD, 1.06), ry);
+      }
+      for (let k = 1; k < ny; k++) {
+        const oy = -WH / 2 + k * (ch + GAP) - GAP / 2;
+        const [mx, mz] = at(uc2, D / 2 + 0.29);
+        b.box('wood', WW, GAP, 0.10, mx, fy + H * 0.58 + oy, mz, shade(W18_WOOD, 1.06), ry);
+      }
+      const [sx, sz] = at(uc2, D / 2 + 0.24);
+      b.box('wood', 2.6, 0.16, 0.22, sx, fy + H * 0.42, sz, shade(W18_WOOD, 1.06), ry);
     }
   }
   // 门框门扇（朱漆）+ 门钉
@@ -2236,8 +2291,30 @@ function starHall(b: Baker, sg: SignMesher, atlas: SignAtlas, x: number, y: numb
     b.box('wall', 0.5, H, D, px, fy + H / 2, pz, shade(wallC, 0.86), ry);
     const [qx, qz] = at(s * (1.6 + (W - 3.2) / 4), D / 2);
     b.box('wall', (W - 3.2) / 2, H, 0.42, qx, fy + H / 2, qz, wallC, ry);
-    const [wx, wz] = at(s * (1.6 + (W - 3.2) / 4), D / 2 + 0.24);
-    b.box('ground', Math.min(2.6, (W - 3.2) / 3), 1.3, 0.08, wx, fy + H * 0.58, wz, shade(W18_WOOD_D, 0.86), ry);
+    // 星宿支摘窗：×2.2 档，预缩放上限 0.909m。旧版整块 2.6×1.3 → 5.72×2.86m。
+    // 本版 3×2 分格：每格 0.833×0.625 ×2.2 = 1.83×1.38m ≤2 ✔，格间 0.05（0.11m）木棂。
+    const uc = s * (1.6 + (W - 3.2) / 4);
+    const WW = Math.min(2.6, (W - 3.2) / 3), WH = 1.3, GAP = 0.05;
+    const nx = 3, ny = 2;
+    const cw = (WW - GAP * (nx - 1)) / nx, ch = (WH - GAP * (ny - 1)) / ny;
+    for (let ix = 0; ix < nx; ix++) {
+      const ox = -WW / 2 + cw / 2 + ix * (cw + GAP);
+      for (let iy = 0; iy < ny; iy++) {
+        const oy = -WH / 2 + ch / 2 + iy * (ch + GAP);
+        const [wx, wz] = at(uc + ox, D / 2 + 0.24);
+        b.box('ground', cw, ch, 0.08, wx, fy + H * 0.58 + oy, wz, shade(W18_WOOD_D, 0.86), ry);
+      }
+    }
+    for (let k = 1; k < nx; k++) {
+      const ox = -WW / 2 + k * (cw + GAP) - GAP / 2;
+      const [mx, mz] = at(uc + ox, D / 2 + 0.29);
+      b.box('wood', GAP, WH, 0.10, mx, fy + H * 0.58, mz, shade(W18_WOOD, 1.04), ry);
+    }
+    for (let k = 1; k < ny; k++) {
+      const oy = -WH / 2 + k * (ch + GAP) - GAP / 2;
+      const [mx, mz] = at(uc, D / 2 + 0.29);
+      b.box('wood', WW, GAP, 0.10, mx, fy + H * 0.58 + oy, mz, shade(W18_WOOD, 1.04), ry);
+    }
   }
   for (const s of [-1, 1]) { const [px, pz] = at(s * 1.6, D / 2 + 0.06); b.cyl('wood', 0.18, 0.24, H, 7, px, fy + H / 2, pz, shade(W18_RED, 1.1), ry); }
   { const [px, pz] = at(0, D / 2 + 0.06); b.box('wood', 3.5, 0.3, 0.3, px, fy + H - 0.18, pz, GOLD_TRIM, ry); }

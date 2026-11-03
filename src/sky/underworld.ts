@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Baker, SignMesher, SignAtlas, shade } from '../city/bake';
 import { roofOn, dougongBand } from '../city/buildings';
+import { roofEndHips } from '../city/palaceDetail';
 import { Crowd } from '../actors/crowd';
 import { RNG } from '../core/rng';
 import { Vfx } from '../fx/vfx';
@@ -1172,7 +1173,17 @@ export function buildUnderworld(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
   // roofOn 自带反宇曲面、0.34m 瓦垄顶点色条纹、垂脊、正脊鸱吻、瓦当滴水与檐口连檐。
   // 举高按「檐口起 1/3.5 坡度」定：84m 檐口 11.5m 举高 ≈ 15°（旧版 6.6m 只有 9°，远看是一条平盖）。
   const EAVE1 = FLR + 23.8, EAVE2 = FLR + 39.9, EAVE3 = FLR + 54.8;
-  roofOn(b, 84, 52, EAVE1, px, HZ, 0, TILE, 0x2e8a62, 11.5);
+  // 三重檐的端头封口（R27）：roofOn 只造 ±Z 两坡，±X 两端从脊端到檐角是敞口，
+  // 斜上方看进去是「开盖的盒子」。roofEndHips 用同一套 RIDGE_HALF/KICK/CORNER 参数
+  // 逐环取 h(t)/y(t)，把两条戗脊线之间补成真正的端坡面（12 环 × 2 三角 × 2 端）。
+  const roofEnded = (w: number, d: number, y: number, tileC: number, hOverride: number): void => {
+    roofOn(b, w, d, y, px, HZ, 0, tileC, 0x2e8a62, hOverride);
+    roofEndHips(b, {
+      x: px, y, z: HZ, ry: 0,
+      sx: w * 0.905 * 1.02, rise: hOverride * 1.06, sz: d * 0.905 * 1.02, hex: tileC,
+    });
+  };
+  roofEnded(84, 52, EAVE1, TILE, 11.5);
   // 二层殿身（围脊墙）：下檐正脊藏在这层里面，「重檐」的重就在这一圈
   b.box('lacquer', 60, 12.6, 34, px, EAVE1 + 6.4, HZ, shade(LACQ, 1.4));
   b.box('ash', 60.6, 0.6, 34.6, px, EAVE1 + 0.3, HZ, shade(MB, 0.8));      // 围脊
@@ -1191,7 +1202,7 @@ export function buildUnderworld(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
   dougongBand(b, px, EAVE1 + 13.6, HZ + 17.2, 60, 0, 0x4a2434);
   dougongBand(b, px, EAVE1 + 13.6, HZ - 17.2, 60, Math.PI, 0x4a2434);
   b.kit('yanluo.bracket2', 2 * (Math.round(60 / 1.6) + 1), EAVE1 + 13.6);
-  roofOn(b, 72, 46, EAVE2, px, HZ, 0, TILE, 0x2e8a62, 10.5);
+  roofEnded(72, 46, EAVE2, TILE, 10.5);
   // 三层殿身
   b.box('lacquer', 42, 11.4, 24, px, EAVE2 + 5.75, HZ, shade(LACQ, 1.4));
   b.box('ash', 42.6, 0.5, 24.6, px, EAVE2 + 0.25, HZ, shade(MB, 0.8));
@@ -1207,7 +1218,7 @@ export function buildUnderworld(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
   dougongBand(b, px, EAVE2 + 13.1, HZ + 12.2, 42, 0, 0x4a2434);
   dougongBand(b, px, EAVE2 + 13.1, HZ - 12.2, 42, Math.PI, 0x4a2434);
   b.kit('yanluo.bracket3', 2 * (Math.round(42 / 1.6) + 1), EAVE2 + 13.1);
-  roofOn(b, 56, 36, EAVE3, px, HZ, 0, TILE, 0x2e8a62, 9.5);
+  roofEnded(56, 36, EAVE3, TILE, 9.5);
   // 宝顶：鎏铜葫芦，压在上檐正脊
   const RIDGE = EAVE3 + 9.5 * 1.06;
   b.cyl('metal', 1.0, 1.15, 0.5, 10, px, RIDGE + 0.55, HZ, shade(CU, 0.72));

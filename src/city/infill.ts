@@ -1073,6 +1073,21 @@ function boxUnit5(): THREE.BufferGeometry {
   return g.translate(0, 0.5, 0);
 }
 
+/** 居中锚点的五面盒：窗光方片用。窗框嵌在墙里，底面永远不可见，砍掉 −y 面省 2 面/件；
+ *  本路窗光 20 万件以上，这一刀把 A5/A3' 新增的灯笼与陈设面数全部挣回来。 */
+function boxUnit5c(w: number, h: number, d: number): THREE.BufferGeometry {
+  const g = new THREE.BoxGeometry(w, h, d);
+  const idx = g.getIndex();
+  if (idx) {
+    const a = idx.array as Uint16Array | Uint32Array;
+    const keep = a instanceof Uint16Array ? new Uint16Array(30) : new Uint32Array(30);
+    keep.set(a.subarray(0, 18), 0);
+    keep.set(a.subarray(24), 18);
+    g.setIndex(new THREE.BufferAttribute(keep, 1));
+  }
+  return g;
+}
+
 /** 树冠球单元：直径 1 的球（半径 0.5）。近档 7×4 段 = 42 面、中档 5×3 段 = 20 面。
  *  三种形态全靠实例非等比缩放做出来（宽扁柳冠 / 锥状松层 / 圆球阔叶），**不再用单圆锥**。 */
 let _leafNear: THREE.BufferGeometry | null = null;
@@ -1209,6 +1224,35 @@ function roofFluteHook(m: THREE.MeshLambertMaterial): void {
     }
   }
 }`);
+  };
+}
+
+/**
+ * 夜间瓦色色调：MeshLambert 的 emissive 是材质级常量——午夜时八档瓦色被同一层 0x2a323e 抬成同一亮度，
+ * 俯视就是一块蓝灰平板（A1 的"夜里吞掉 8 档瓦色差"）。
+ * 这里把自发光乘上实例色（vColor = 顶点色 × instanceColor，线性空间）：
+ *   ① 色相跟着瓦色走（青灰发冷、板瓦褐发暖、草顶发黄）；
+ *   ② 强度按瓦色明度分三档（暗瓦少抬、亮瓦多抬），均值仍落在原常量附近，不整体提亮。
+ * 与 roofFluteHook 组合，不覆盖已有的 onBeforeCompile。
+ */
+function roofEmissiveTint(m: THREE.MeshLambertMaterial): void {
+  const prev = m.onBeforeCompile;
+  m.onBeforeCompile = (sh, renderer) => {
+    prev.call(m, sh, renderer);
+    sh.fragmentShader = sh.fragmentShader.replace(
+      '#include <emissivemap_fragment>',
+      `#include <emissivemap_fragment>
+#ifdef USE_COLOR
+{
+  vec3 tileC = max( vColor.rgb, vec3( 1e-4 ) );
+  float tileL = dot( tileC, vec3( 0.2126, 0.7152, 0.0722 ) );
+  vec3 hue = tileC / max( tileL, 1e-4 );
+  // 明度档拉成 ~2.2×（暗瓦 0.30 / 亮瓦 1.75），色相用瓦色本身；均值压到原常量附近，不整体提亮
+  float level = clamp( 0.18 + 3.10 * tileL, 0.30, 1.75 );
+  totalEmissiveRadiance *= hue * level * 0.86;
+}
+#endif`,
+    );
   };
 }
 
@@ -1425,8 +1469,25 @@ const W9_CUT = 25 * Math.PI / 180;     // 切线相对父地块主轴的随机�
 const W9_CUT_FIELD = 42 * Math.PI / 180;
 const W9_RATIO: [number, number] = [0.30, 0.70];
 const W9_RATIO_FIELD = 0.08;           // 切缝位置也随低频场偏移：相邻切缝不再等距
-const W9_LOT: [number, number] = [260, 420];   // 地块停切面积（每块现抽）
-const W9_DEPTH = 5;                    // 地块深度上限（从跌进 W9_BLOCK 那一层起计）
+// 地块停切面积：旧版逐节点独立抽「均匀 260–420㎡ + 10% 抽 22–64㎡」。
+// 每个父地块都切到同一档 ⇒ 地块密度在平面上是常数 ⇒ 最近邻间距 CV 卡在 0.20（探针实测）。
+// 远景（tier1/2）改为**密度场 + 几何长尾**：一片街区共用一个目标面积（50–1400㎡），
+// 有的街段一路切到 7m 独户，有的停在 37m 大宅；近景（tier0）保留旧分布——
+// 近景的 CV 本来就够（0.79–0.84），改成小院只会让空院与院墙段数暴涨、面数超预算。
+const W9_LOT: [number, number] = [260, 420];   // 近景停切面积（旧口径，保持逐块现抽）
+const W9_LOT_TAIL: [number, number] = [50, 1400]; // 远景几何长尾的两端（7m 独户 ↔ 37m 大宅）
+const W9_LOT_JIT = 0.16;               // 远景每节点再 ±16% 细抖：同一片里也不会精确同尺寸
+// tier1/2 的「院组」比例：一院里再出一栋厢房（相距 4.4–6.0m），让远景的最近邻不再只有一个间距。
+const W9_PAIR_LOD = 0.9;
+// tier1/2 的地块放大系数：远景一院出两栋（W9_PAIR_LOD），宅基就少一些，
+// 建筑总件数不变、院墙/门窗不再随宅基一起膨胀，面数才守得住 ≤ 基线。
+const W9_LOT_LOD = 2.42;
+// 地块深度上限：从跌进 W9_BLOCK 那一层起计。深度 5 时最小地块 = 4200/2^5 ≈ 131㎡，
+// 旧版「10% 抽 22–64㎡ 小院」因此**从未真正落地**（被深度截断），地块尺寸全挤在同一档。
+// 远景放到 6 层才能切到 66㎡ 级（4200/2^6），小院 ↔ 大宅的疏密差才成立；
+// 近景保持 5 层（基线口径），否则空院与院墙段数会把面数顶出预算。
+const W9_DEPTH = 6;
+const W9_DEPTH_NEAR = 5;
 const W9_BLOCK = 4200;                 // 地块深度起算尺度：比它大的层只算「切街」，不计深度
 // 56% 的边界留巷，其余 0.4m 共墙。巷宽从 1.7m 抬到 2.2–4.5m 后建成面被挤掉一截，
 // 再把留巷比例从 0.65 收到 0.56：巷加宽但条数减少，覆盖率仍守在 0.78 上下（仍是密集街区）。
@@ -1444,9 +1505,9 @@ const W9_SIZE: { w: [number, number]; d: [number, number]; h: [number, number]; 
   { w: [9.5, 13.5], d: [5.6, 7.6], h: [3.4, 5.4], wing: 0.78, ww: [2.4, 4.2] },
   { w: [17.0, 23.0], d: [6.8, 9.2], h: [4.4, 6.6], wing: 1.0, ww: [2.6, 3.6] },
 ];
-const W9_YAW = 14 * Math.PI / 180;     // 主屋朝向 = 本地块主轴 ±14°
+const W9_YAW = 45 * Math.PI / 180;     // 主屋朝向 = 本地块主轴 ±45°（原 ±14° 太窄，同排屋脊几乎平行）
 const W9_YAW_FIELD = 10 * Math.PI / 180; // 低频场再给 ±10°：同排屋脊不再平行
-const W9_WING_A = 20 * Math.PI / 180;  // 厢房与主屋成 90°±20°
+const W9_WING_A = 45 * Math.PI / 180;  // 厢房与主屋成 90°±45°
 const W9_WALL_H: [number, number] = [0.9, 2.2];
 // 院落整体漂移的幅值区间（m）：方向与幅值各取一个低频场（极坐标），所以请求的偏移量
 // 一定落在 1.5–3.0m，而不是「两个 0 均值分量相加」那种大半小于 1m 的分布。
@@ -1749,15 +1810,24 @@ function layoutYard(poly: Poly, c: V2, area: number, q: (j: number) => number, r
   const size = W9_SIZE[cls];
   // 同档内部再 ±10%：相邻两院不会因为同档就一样大（大院的 ±10% 已是 2m 级）
   const vary = 0.90 + 0.20 * (0.5 + 0.5 * fieldN(c.x, c.z, 9760));
-  // 朝向 = 地块主轴 ±14° + 低频场 ±10°：同排屋脊不再平行。
-  // base 保留「不带场」的朝向，大院在窄条地块里放不下时退回它再试一轮。
+  // 朝向 = 地块主轴 ±45° + 低频场 ±10°：同排屋脊不再平行。
+  // base 保留「不带场」的朝向，axisT 是不带任何抖动的纯地块主轴——两级兜底，
+  // 大角度抖动把四角顶出界时可逐级退回，房子不会因为朝向抖而消失。
+  const axisRaw = -edgeDir(poly);
+  let axisT = axisRaw;
   const yawBase = -(edgeDir(poly) + (q(4) - 0.5) * 2 * W9_YAW);
   let yaw = yawBase - W9_YAW_FIELD * fieldN(c.x, c.z, 9750);
   let base = yawBase;
   let [u0, u1] = proj(yaw);
   let [v0, v1] = proj(yaw + Math.PI / 2);
   let hu = Math.min(-u0, u1), hv = Math.min(-v0, v1);
-  if (hu < hv) { yaw += Math.PI / 2; base += Math.PI / 2; const t = hu; hu = hv; hv = t; }
+  if (hu < hv) { yaw += Math.PI / 2; base += Math.PI / 2; axisT += Math.PI / 2; const t = hu; hu = hv; hv = t; }
+  // 正交偏转：近方形地块里，另一半宅子改用与地块主轴正交的朝向 —— 同一坊里因此有两族朝向，
+  // 不再是「全坊屋脊跟着同一条主轴排队」。只在近方形地块上做，长条地块转 90° 会放不下正房。
+  if (Math.min(hu, hv) >= 0.72 * Math.max(hu, hv) && q(52) < 0.5) {
+    yaw += Math.PI / 2; base += Math.PI / 2; axisT += Math.PI / 2;
+    const t = hu; hu = hv; hv = t;
+  }
 
   // ---- 主屋：小院 6–8m / 中院 9.5–13.5m / 大院 17–23m（长向面阔）----
   // 商铺同档取面阔（大棚瓦舍仍走 8–14m），三档比例因此不会被店面稀释。
@@ -1799,9 +1869,10 @@ function layoutYard(poly: Poly, c: V2, area: number, q: (j: number) => number, r
       : cls === 2
         ? [[1, 1], [1, 0.86], [1, 0.74], [0.92, 0.88], [0.84, 0.78], [0.76, 0.72], [0.68, 0.68]]
         : [[1, 1], [0.9, 0.9], [0.79, 0.79], [0.68, 0.68]];
-    // 大院额外试 base±8°：窄梯形地块的「最长边方向」未必是能塞下 17m 正房的方向
+    // 大院额外试 base±8°：窄梯形地块的「最长边方向」未必是能塞下 17m 正房的方向。
+    // 小/中院也试 base（不带朝向场）：±45° 抖在大地块上常把四角顶出界，退一步保住房子。
     const yawTry = 8 * Math.PI / 180;
-    const yaws = cls === 2 && !isShop ? [yaw, base, base + yawTry, base - yawTry] : [yaw];
+    const yaws = isShop ? [yaw] : cls === 2 ? [yaw, base, axisT, base + yawTry, base - yawTry] : [yaw, base, axisT];
     outer: for (const yy of yaws) {
       const ca = Math.cos(yy), sa = Math.sin(yy);
       for (const [fw, fd] of dims) {
@@ -1963,6 +2034,7 @@ function blockReserved(p: Poly, c: V2, reserved: (x: number, z: number) => boole
 function planRegion(
   root: Poly, axis0: number, h: (k: number) => number,
   reserved: (x: number, z: number) => boolean, wantYards: boolean, wardRoof?: number, wantShops = true, wardBody?: number,
+  lotScale = 1, lotTail = false,
 ): { yards: W9Yard[]; alleys: W9Alley[]; blocks: W9Block[]; lotArea: number; partyArea: number } {
   const lots: { poly: Poly; c: V2; area: number }[] = [];
   const alleys: W9Alley[] = [];
@@ -1976,11 +2048,18 @@ function planRegion(
   while (stack.length && guard++ < 9000) {
     const nd = stack.pop()!;
     const p = nd.poly;
-    // 停切面积：90% 抽 260–420㎡（常态院落，取 0.2 次幂偏向大端），10% 抽 22–64㎡
-    // （柴院 / 披屋 / 独户小院）。只按 260–420 停切就产不出 <40 / 40–90 两档，而 SPEC §8 要求四档都有货
-    const small = h(k++) < 0.1;
-    const target = small ? 22 + 42 * h(k++) : W9_LOT[0] + (W9_LOT[1] - W9_LOT[0]) * Math.pow(h(k++), 0.2);
-    if (p.length < 3 || nd.area < target || nd.depth >= W9_DEPTH) { lots.push({ poly: p, c: nd.c, area: nd.area }); continue; }
+    // 停切面积：近景沿用旧口径（均匀 260–420 + 10% 抽 22–64）；
+    // 远景走密度场 + 几何长尾（成片的小院 / 大宅），再叠 ±16% 细抖与 LOD 放大系数。
+    let target: number;
+    if (lotTail) {
+      const dens = Math.max(0, Math.min(1, 0.5 + 1.5 * fieldN(nd.c.x, nd.c.z, 9410)));
+      target = W9_LOT_TAIL[0] * Math.pow(W9_LOT_TAIL[1] / W9_LOT_TAIL[0], dens)
+        * (1 - W9_LOT_JIT + 2 * W9_LOT_JIT * h(k++)) * lotScale;
+    } else {
+      const small = h(k++) < 0.1;
+      target = (small ? 22 + 42 * h(k++) : W9_LOT[0] + (W9_LOT[1] - W9_LOT[0]) * Math.pow(h(k++), 0.2)) * lotScale;
+    }
+    if (p.length < 3 || nd.area < target || nd.depth >= (lotTail ? W9_DEPTH : W9_DEPTH_NEAR)) { lots.push({ poly: p, c: nd.c, area: nd.area }); continue; }
     // 切线方向：父主轴 + 90° + 随机偏转 0–25°（保留），再叠低频场 ±42°。
     // 旧版只取「垂直父轴 ±25°」，全坊的切缝永久锁在两族正交方向上，地块与巷道排成十字格；
     // 连续场让切线相对父轴可偏 25°–155°，相邻地块不再共享同一族方向。
@@ -1999,6 +2078,7 @@ function planRegion(
     const ratio = W9_RATIO[0] + (W9_RATIO[1] - W9_RATIO[0]) * h(k++)
       + W9_RATIO_FIELD * fieldN(nd.c.x, nd.c.z, 9400);
     const off = lo + span * Math.max(0.08, Math.min(0.92, ratio));
+    // 巷道判定（成对合院方案实测对最近邻 CV 无贡献，已撤，只留这条）
     const alley = h(k++) < W9_ALLEY_P;
     // 巷宽 2.2–4.5m：以切缝中点坐标为种（低频场定大势 + hash 细抖），一条巷一个宽度；
     // 旧版是「全城 1.7m 夹道 + 偶发 5m 主巷」的二值分布，俯视读成等宽网线。
@@ -2122,7 +2202,7 @@ function planRegion(
 }
 
 /** 一个坊的完整规划：坊界折线 + 地块/巷/院 */
-function planWard(cell: WardCell, reserved: (x: number, z: number) => boolean, wantYards: boolean, jit = W9_CORNER, wantShops = true): W9Plan {
+function planWard(cell: WardCell, reserved: (x: number, z: number) => boolean, wantYards: boolean, jit = W9_CORNER, wantShops = true, lotScale = 1, lotTail = false): W9Plan {
   const sa = Math.round(cell.cx), sb = Math.round(cell.cz);
   const h = (k: number): number => h01(sa, sb, 12000 + k);
   // 坊级屋顶色：8 档按坊心 hash 取一档，整坊共用
@@ -2139,7 +2219,7 @@ function planWard(cell: WardCell, reserved: (x: number, z: number) => boolean, w
     if (nx * (cell.cx - a.x) + nz * (cell.cz - a.z) < 0) { nx = -nx; nz = -nz; }
     root = clipHalf(root, nx, nz, a.x, a.z, W9_INSET);
   }
-  const reg = planRegion(root, edgeDir(root), h, reserved, wantYards, wardRoof, wantShops, wardBody);
+  const reg = planRegion(root, edgeDir(root), h, reserved, wantYards, wardRoof, wantShops, wardBody, lotScale, lotTail);
   return { ring, corner, yards: reg.yards, alleys: reg.alleys, blocks: reg.blocks, lotArea: reg.lotArea, partyArea: reg.partyArea, span: (cell.half * 2) ** 2 };
 }
 
@@ -2577,6 +2657,22 @@ function emitFill(b: Bucket, plan: W9Plan, h: (k: number) => number, reserved: (
       const hh = yd.main ? yd.hh : 3.2 + h(Math.round(yd.c.x)) * 1.4;
       const x = yd.main ? yd.hx : yd.c.x, z = yd.main ? yd.hz : yd.c.z;
       b.bodies.push({ x, z, w, d, h: hh, yaw: yd.yaw, bc: yd.bc, rc: yd.rc, tk: 0.4 });
+      // 院组：一部分宅基出两栋（正房 + 后檐小屋），两栋相距 4.4–6.0m。
+      // tier1/2 的 LOD 以前把厢房整条砍掉，每院只剩一栋居中的盒子 —— 最近邻因此全等于地块间距，
+      // 远景读成规则格网。补回来的这一栋不改变宅基数，只在原地块内偏置，间距分布才有近支。
+      if (h(7300 + (owner & 1023)) < W9_PAIR_LOD) {
+        const w2 = Math.min(4.6, Math.max(3.0, w * 0.5));
+        const d2 = 2.6;
+        // 沿进深方向（v 轴）并排：小屋贴着正房后檐，中心距 4.4–6.0m，与 12–18m 的户间距成对拉开。
+        const vx = Math.sin(yd.yaw), vz = Math.cos(yd.yaw);
+        const off = d / 2 + d2 / 2 + 0.45;
+        for (const sgn of [1, -1]) {
+          const x2 = x + vx * off * sgn, z2 = z + vz * off * sgn;
+          if (!fitRect(yd.poly, x2, z2, w2, d2, yd.yaw)) continue;
+          b.bodies.push({ x: x2, z: z2, w: w2, d: d2, h: hh * 0.8, yaw: yd.yaw, bc: yd.bc, rc: yd.rc, tk: 0.3 });
+          break;
+        }
+      }
       // tier1 补最小门窗（2 樘窗 + 1 樘门 + 踏跺石，8 面/户）：验收机位 (2100,55,2500) 整片落在
       // 1200–2400m 这一档，不给门窗就仍是"米白盒子"，与"每户数得出 2 窗 1 门"直接冲突。
       // tier2（2.4km 外）仍不加：一樘 1m 的窗不足 1px，面数花了也读不出。
@@ -2620,7 +2716,8 @@ function fillWard(b: Bucket, cell: WardCell, reserved: (x: number, z: number) =>
   const h = (k: number): number => h01(sa, sb, 12000 + k);
   // 坊级屋顶色：8 档按坊心 hash 取一档，整坊共用
   const wardRoof = ROOF_COLORS[Math.floor(h(431) * ROOF_COLORS.length)];
-  const plan = planWard(cell, reserved, b.tier <= 2, W9_CORNER, b.tier === 0);
+  const plan = planWard(cell, reserved, b.tier <= 2, W9_CORNER, b.tier === 0,
+    b.tier >= 1 ? W9_LOT_LOD : 1, b.tier >= 1);
   // 坊界院墙整坊共用一个 owner：同一坊的墙段在转角处本来就该相接，不互相判干涉
   const wardOwner = b.ownerSeq++;
   wardWall(b, plan, b.tier, h, reserved, wardOwner);
@@ -2643,7 +2740,8 @@ function rectPoly(cx: number, cz: number, hx: number, hz: number): Poly {
 function fillCourt(b: Bucket, w: CourtWard, wi: number, reserved: (x: number, z: number) => boolean): void {
   const h = (k: number): number => h01(wi, 17, 15000 + k);
   const root = rectPoly(w.cx, w.cz, w.hx - 1.8, w.hz - 1.8);
-  const reg = planRegion(root, 0, h, reserved, b.tier <= 2);
+  const reg = planRegion(root, 0, h, reserved, b.tier <= 2, undefined, true, undefined,
+    b.tier >= 1 ? W9_LOT_LOD : 1, b.tier >= 1);
   const plan: W9Plan = { ring: root, corner: root, yards: reg.yards, alleys: reg.alleys, blocks: reg.blocks, lotArea: reg.lotArea, partyArea: reg.partyArea, span: w.hx * w.hz * 4 };
   emitFill(b, plan, h, reserved);
   plantTrees(b, plan, h, reserved);
@@ -2770,7 +2868,10 @@ export class WardInfill {
     const ROOF = new THREE.MeshLambertMaterial({ color: 0xffffff, vertexColors: true, emissive: 0x2a323e, map: tex.roofTex, side: THREE.DoubleSide });
     // 瓦垄只开在瓦顶上：草顶/苇顶是一张粗糙的坡面，多两道亮暗条纹就成了"瓦当"。
     roofFluteHook(ROOF);
+    // 夜间自发光按瓦色着色：必须排在 roofFluteHook 之后（它给 onBeforeCompile 打瓦垄补丁，本函数在其上叠加）
+    roofEmissiveTint(ROOF);
     const ROOF_THATCH = new THREE.MeshLambertMaterial({ color: 0xffffff, vertexColors: true, emissive: 0x2a323e, map: tex.roofTex, side: THREE.DoubleSide });
+    roofEmissiveTint(ROOF_THATCH);
     // 窗光：旧版 Basic + toneMapped:false = 不受光、不过 ACES，1.1×1.2m 的窗在全城上万个实例里
     // 直接输出原始亮度，Bloom 一叠就是满屏白斑（用户问的「闪光」有一半来自这里）。
     // 改走 ACES + 压暗一档：夜里有灯感，但不会烧成纯白。
@@ -2801,8 +2902,10 @@ export class WardInfill {
     const gableWallGeoRef = gableWallUnit();
     const shedGeo = shedUnit();
     const tentGeo = tentUnit();
-    const eaveGeo = new THREE.BoxGeometry(1.06, 0.36, 1.06).translate(0, 0.5, 0);
-    const winGeo = new THREE.BoxGeometry(1.1, 1.2, 0.12);
+    // 压顶石板 / 门罩 / 腰檐：ROOF 材质是 DoubleSide，砍掉 −y 面从檐下看仍是实心面，
+    // 35k 件 × 2 面 = 7 万面，正好抵掉 A5 新增灯笼与招幌的预算（净增 ≤0）。
+    const eaveGeo = boxUnit5c(1.06, 0.36, 1.06).translate(0, 0.5, 0);
+    const winGeo = boxUnit5c(1.1, 1.2, 0.12);
     // 幌子 / 苇席棚顶：六面盒（12 面）。棚顶从街上要看得见底面，不能像墙那样砍掉 −y 面
     const fabricGeo = new THREE.BoxGeometry(1, 1, 1);
     // 树冠：球冠（近档 42 面 / 中档 20 面）。单圆锥在 2km 外读成钉子，形态靠实例缩放区分

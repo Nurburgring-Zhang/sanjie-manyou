@@ -61,7 +61,8 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
   <div id="toast"></div>
   <div id="skip">跳过开场 »</div>
   <div id="stick"><i></i></div>
-  <div id="lookzone"></div>`;
+  <div id="lookzone"></div>
+  <button id="jumpbtn" type="button" aria-label="跳跃">跳跃</button>`;
 
   const $ = (id: string): HTMLElement => document.getElementById(id)!;
   const q = <T extends HTMLElement>(s: string): T => ui.querySelector(s) as T;
@@ -418,12 +419,12 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
   };
 
   // ---- 点击聚焦最近英雄（屏幕空间投影） ----
+  // 注册到 engine 的单击路由：优先级 20 > 出拳 10 > 指针锁定兜底。
+  // 只有真的命中英雄才返回 true 消费；否则让给出拳/指针锁定，一次单击仍只做一件事。
   const ray = new THREE.Vector3();
-  let downX = 0, downY = 0;
-  engine.renderer.domElement.addEventListener('pointerdown', (e) => { downX = e.clientX; downY = e.clientY; });
-  engine.renderer.domElement.addEventListener('pointerup', (e) => {
-    if (Math.hypot(e.clientX - downX, e.clientY - downY) > 6) return;
-    if (e.pointerType === 'touch') return;
+  engine.input.register('heroFocus', (e) => {
+    if (e.pointerType === 'touch') return false;
+    if (document.pointerLockElement) return false; // 锁定态屏幕坐标不可靠
     let best: { code: string; d: number } | null = null;
     for (const h of world.crowd.heroes) {
       if (h.hidden || !h.data) continue;
@@ -434,11 +435,19 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
       const d = Math.hypot(sx - e.clientX, sy - e.clientY);
       if (d < 34 && (!best || d < best.d)) best = { code: h.data.code!, d };
     }
-    if (best) world.focusHero(best.code);
-  });
+    if (!best) return false;
+    world.focusHero(best.code);
+    return true;
+  }, 20);
 
   // ---- 触控 ----
   if (engine.isTouch) document.body.classList.add('touch');
+  // 移动端跳跃键：#jumpbtn 默认 display:none，body.touch 才显示（见 style.css）
+  $('jumpbtn').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    world.player?.jump();
+  });
   const stick = $('stick'), knob = q<HTMLElement>('#stick i'), lookzone = $('lookzone');
   let stickId = -1, lookId = -1, lx = 0, ly = 0;
   stick.addEventListener('touchstart', (e) => { stickId = (e as TouchEvent).changedTouches[0].identifier; e.preventDefault(); }, { passive: false });

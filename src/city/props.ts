@@ -745,8 +745,10 @@ export function buildLanterns(b: Baker, sg: SignMesher, atlas: SignAtlas, rng: R
 }
 
 export function buildKites(b: Baker): void {
+  // 风筝不是商铺，按业态色板不配「商霓桃红」——旧版三只 1.1m 品红菱形悬在 22–30m 高空，
+  // 远看就是三块高反光品红方块（用户投诉的「悬浮高反光物体」）。改暖金风筝面 + 电青尾。
   for (const [x, y, z] of [[-430, 22, 70], [-300, 26, -80], [250, 30, 110]] as const) {
-    b.box('glow', 1.1, 1.1, 0.04, x, y, z, C.neonMag, 0.5, 0.4, Math.PI / 4);
+    b.box('glow', 1.1, 1.1, 0.04, x, y, z, C.neonGold, 0.5, 0.4, Math.PI / 4);
     b.box('glow', 0.04, 2.2, 0.04, x, y - 1.6, z, C.neonCyan);
   }
 }

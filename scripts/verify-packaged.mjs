@@ -142,12 +142,33 @@ try {
   if (!info) info = { title: '', live: 0, heroes: 0, calls: 0, triangles: 0, canvas: [0, 0] };
   // 打包版首帧在软件渲染下可能超过默认协议超时；截图属于留证，失败不判负
   try { await page.screenshot({ path: path.join(OUT_DIR, 'portable-boot.png'), timeout: 180000 }); } catch (e) { console.log('screenshot skipped:', String(e).slice(0, 120)); }
-  const ok = info.live > 0 && info.triangles > 1e6 && /^file:|^http:\/\/127/.test(url);
+  // PASS 必须同时满足：无页面错误 + 场景起来了 + 来源合法。
+  // 原实现把 errors 只放进退出码、不进 ok，导致日志可以打印 PASS 而进程 exit 1——
+  // 人读日志会被骗。（2026-11-03 审核 D 指出，已修）
+  // PASS 判据（2026-11-03 补）：性能红线必须进 PASS，否则「PASS」只等于「能启动」。
+  // 载入均值：navToEngineMs + engineMs ≤ 12,000（SPEC 总账判定口径）
+  const loadMs = (info.navToEngineMs ?? 0) + (info.engineMs ?? 0);
+  const loadOk = loadMs > 0 && loadMs <= 12000;
+  const callsOk = (info.calls ?? 0) <= 600;
+  const p95Ok = (info.frameP95 ?? 0) <= 50;
+  const ok =
+    errors.length === 0 &&
+    info.live > 0 &&
+    info.triangles > 1e6 &&
+    /^file:|^http:\/\/127/.test(url) &&
+    loadOk &&
+    callsOk &&
+    p95Ok;
   console.log('url:', url);
   console.log('runtime:', JSON.stringify(info));
   console.log('errors:', errors.length ? errors.slice(0, 5).join(' | ') : 'NONE');
+  console.log(
+    `gates: load=${loadMs}ms(≤12000 ${loadOk ? 'OK' : 'FAIL'}) ` +
+      `calls=${info.calls}(≤600 ${callsOk ? 'OK' : 'FAIL'}) ` +
+      `p95=${info.frameP95}ms(≤50 ${p95Ok ? 'OK' : 'FAIL'})`,
+  );
   console.log(ok ? 'PACKAGED_BOOT=PASS' : 'PACKAGED_BOOT=FAIL');
-  code = ok && errors.length === 0 ? 0 : 1;
+  code = ok ? 0 : 1;
 } catch (err) {
   console.error('PACKAGED_BOOT=FAIL', String(err).slice(0, 300));
 } finally {
