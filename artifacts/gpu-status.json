@@ -1,0 +1,22 @@
+{
+ "generatedAt": "2026-11-03T19:06:06.518Z",
+ "url": "http://127.0.0.1:4182/",
+ "verdict": "HARDWARE",
+ "vendor": "Google Inc. (NVIDIA)",
+ "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4090 (0x00002684) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+ "webgl2": true,
+ "maxTexture": 16384,
+ "maxVertexAttribs": 16,
+ "contextAttributes": {
+  "alpha": true,
+  "antialias": true,
+  "depth": true,
+  "desynchronized": false,
+  "failIfMajorPerformanceCaveat": false,
+  "powerPreference": "default",
+  "premultipliedAlpha": true,
+  "preserveDrawingBuffer": false,
+  "stencil": false,
+  "xrCompatible": false
+ }
+}

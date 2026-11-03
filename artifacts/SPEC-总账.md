@@ -2370,3 +2370,19 @@ node scripts/probe-p95-attrib.mjs  (600帧×2轮) → artifacts/p95-attrib-600.j
 - 新增探针 4 个：probe-frame-pacing / probe-error-stack / probe-interact-reach / （待建 probe-gpu-status）。
 - E4 toFixed×52：修复后复测 0，诚实记「已消失+常驻把守」，不宣称归因。
 - 对抗审核 A：APPROVE_WITH_FIXES（四条全采纳）；**审核 B 缺席待补**。
+
+
+---
+
+## 2026-11-04 补登（对抗审核 B 通过后）
+
+### H3 一条龙 spike ✅（补登——首轮漏记，B 抓出）
+`creations/dragon/build.mjs` 手写程序化一条龙：1,141 tri / 22.6KB，四门 PASS，双跑逐字节一致。**P2「agent 代码构建造物」路线成立，不降级部件拼装**。欠账：形状门（四门不查形）挂 P2-3。详见清单 H3 结论节。
+
+### E3 终审 ✅（两轮对抗完整记录）
+探针抓 5 人 off-deck → 第一轮判「假红」（岸段+船客）→ **审核 B 半推翻** → 截图取证实锤 3 个摊主嵌在虹桥端实心踏步体（船客 2 人证据链成立维持豁免）→ 根修 `props.ts buildStalls` 摊点守卫（桥面足迹内推到桥端外 3m）→ 严格判据复跑 **PASS（70 on deck / 0 off-deck）**。教训入账：**截图级取证先于判据修正——判据放水会掩盖真缺陷**。
+
+### 审核/spike 状态
+- 审核 A：APPROVE_WITH_FIXES（4 条全采纳）；审核 B（补跑）：APPROVE_WITH_FIXES（6 条全部消化或登记：E3 证伪/形状门/PATTERNS 补强/F7 挂靠/P2-7·P2-9 修订/F1 回归清单）
+- H1 spike：**GO**（16/16，三套结构共用一套 id 可行，P0-1 不换模型；最大风险=physics 押注 actor 永不删，P0-1 步3 须排 P0-5 之后）
+- F4：probe-gpu-status 常驻化，dev 端 HARDWARE（RTX 4090 D3D11），软渲染回退排除；打包态核验待下次出包跑同一探针

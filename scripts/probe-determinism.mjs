@@ -45,6 +45,9 @@ const PATTERNS = [
   { re: /\bperformance\.now\s*\(/g, name: 'performance.now' },
   { re: /\bDate\.now\s*\(/g, name: 'Date.now' },
   { re: /\bnew\s+Date\s*\(/g, name: 'new Date' },
+  // 审核 B 补强（2026-11-04）：裸 Date() 与 crypto 随机源同样是墙钟/熵依赖
+  { re: /\bDate\s*\(\s*\)/g, name: 'Date()' },
+  { re: /\bcrypto\.(getRandomValues|randomUUID)\b/g, name: 'crypto' },
 ];
 
 function walk(dir, out = []) {

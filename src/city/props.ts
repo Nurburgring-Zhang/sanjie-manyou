@@ -4,6 +4,7 @@ import { Baker, SignMesher, SignAtlas, shade } from './bake';
 import { C } from './buildings';
 import { SpotRegistry } from '../data/jobs';
 import { bowl, jar, tray, cabinet, scrollRack, censer, vase, umbrella, book, fan, table, stool } from './itemKit';
+import { bridgeDeckYAt, BRIDGE_HALF as BRIDGE_HONG_HALF } from './layout';
 import { buildPavementDetail } from './pavement';
 import { flowerBush } from './interiors';
 import { RIVER_END, riverCenterZ, riverHalfWidth } from './river';
@@ -523,7 +524,13 @@ import { inLandmarkKeepout } from './layout';
 
 export function buildStalls(b: Baker, sg: SignMesher, atlas: SignAtlas, rng: RNG, spots: SpotRegistry): StallInfo[] {
   const out: StallInfo[] = [];
-  const add = (x: number, z: number, y: number, ry: number, kind: StallInfo['kind']): void => {
+  const add = (x0: number, z0: number, y: number, ry: number, kind: StallInfo['kind']): void => {
+    // E3 复审修正（对抗审核 B 抓出的真缺陷）：「虹桥桥头密集摊」生成带 x∈±40、z∈42–54
+    // 横跨桥轴，落进桥体/踏步足迹（虹桥端 z 43.2–49.1 是实心多层踏步，台面 1.483m）——
+    // 摊位几何、摊主、交互点三链路都按 (x,z) 落位，y=0.1 会嵌进踏步实体（取证截图
+    // artifacts/_e3_vendor_south.png）。守卫：落在桥面足迹内的摊点，沿 z 推到桥端外 3m。
+    let x = x0, z = z0;
+    if (bridgeDeckYAt(x, z) !== null) z = Math.sign(z || 1) * (BRIDGE_HONG_HALF + 3);
     if (inLandmarkKeepout(x, z)) return;
     const label = kind === 'food' ? rng.pick(FOOD_LABELS) : kind === 'fortune' ? '測字卦攤' : kind === 'letter' ? '代書書信' : rng.pick(GOODS_LABELS);
     out.push({ x, z, y, ry, kind, label });
