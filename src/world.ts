@@ -277,6 +277,8 @@ export class World {
   phaseName = '';
   private _lastT = 0;
   private _frame = 0;
+  /** E1：npcSweep 的 walker 复用数组（原地压实，避免每 3 帧 filter 新数组） */
+  private _npcWalkers: import('./actors/types').Actor[] = [];
   playerWeapon = { mult: 1, label: '双拳' };
   scrolling = false;
   creatures: CreatureSystem | null = null;
@@ -1328,7 +1330,14 @@ export class World {
       if (this.player.state === 'foot') {
         this.impacts.vehicleSweep(this.player.actor, this.units.traffic());
         if (this._frame % 3 === 0) {
-          this.impacts.npcSweep(this.units.traffic(), this.crowd.actors.filter((a) => !a.hidden && !a.freeze && !a.sky && !a.attach && !a.data));
+          // E1（审计 P1-3）：复用预分配数组原地压实，替代每 3 帧 new 一个 ~2000 元素 filter 数组
+          // （基线实测 ≈13 数组/秒）；npcSweep 内部仍会复查 hidden，缓存不过期也安全。
+          const w = this._npcWalkers;
+          w.length = 0;
+          for (const a of this.crowd.actors) {
+            if (!a.hidden && !a.freeze && !a.sky && !a.attach && !a.data) w.push(a);
+          }
+          this.impacts.npcSweep(this.units.traffic(), w);
         }
       }
     }

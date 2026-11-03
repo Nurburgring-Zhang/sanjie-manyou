@@ -199,12 +199,19 @@ export class ImpactSystem {
 
   /** 交通工具撞 NPC */
   npcSweep(vehicles: { pos: THREE.Vector3; yaw: number; speed: number; mass: number }[], walkers: Actor[]): void {
-    if (this.clock() < this.bumpCd - 500) return;
+    const now = this.clock();
+    if (now < this.bumpCd - 500) return;
     for (const v of vehicles) {
       if (v.speed < 2.2) continue; // 只有真正疾驰的车辆才会撞倒人
       const fwd = new THREE.Vector3(Math.sin(v.yaw), 0, Math.cos(v.yaw));
       for (const a of walkers) {
-        if (a.hidden || a.impactUntil > this.clock()) continue;
+        if (a.hidden || a.impactUntil > now) continue;
+        // E1（审计 P1-3）：平方距离粗判零分配，粗判过了才 clone 精判——
+        // 基线实测单次本就 p95≈0.1ms（walker 2013×车 16），收益主要在砍 ~10 万次/秒的
+        // clone 分配 GC 压力（H5 噪声分支嫌疑），不是帧尖峰修复。
+        const dx = a.pos.x - v.pos.x, dz = a.pos.z - v.pos.z;
+        const d2 = dx * dx + dz * dz;
+        if (d2 > 4.84 || d2 < 0.0001) continue; // 2.2² 与 0.01²，与下方 d 判据严格同域
         const to = a.pos.clone().sub(v.pos);
         to.y = 0;
         const d = to.length();
@@ -212,7 +219,7 @@ export class ImpactSystem {
         if (fwd.dot(to.clone().normalize()) > 0.4) {
           const F = v.mass * v.speed;
           this.apply(tierOf(F, profileOf(a)), a, fwd, F);
-          this.bumpCd = this.clock() + 800;
+          this.bumpCd = now + 800;
           return;
         }
       }

@@ -444,3 +444,20 @@ node scripts/verify-packaged.mjs "release-v79/win-unpacked/CyberQingming.exe"
 - 详见 `docs/重建-v2/全量工作清单.md` 「H3 结论」节。
 
 ### -1 风险验证进度：3/7（H5 ✅ H3 ✅ P0-0 ✅）→ 下一个 H1 实体身份
+
+## 2026-11-04 04:xx · H6 经济纸面 NO-GO + E1 已修降级（-1 阶段推进）
+
+### H6 经济纸面（artifacts/spike-H6-economy-paper.md）——**NO-GO：三轴两断**
+- **阴德轴断裂**：唯一入口烧纸 10 文→+1（interact.ts:105），全仓零消费点——攒了没用。
+- **蟠桃轴断裂**：唯一出口赏赐 -1→+100 文，全仓零来源（蟠桃宴只在 havoc 幕名里，经济入口未实现），初始 3 枚用完死轴。
+- 铜钱轴闭合无张力（扛包 2.44 文/s vs 最高消费 30 文）；骰子 3d6 对称 p=0.5、EV=0 基准健康。
+- **五子棋零成本入水口**：免费入场胜 +100 可无限重复（速率低于扛包但零劳动成本）。
+- P1-1 三条强制修订入档：先 sink/source 后汇率、劳动秒数锚定、五子棋收费或限次。
+
+### E1 npcSweep（artifacts/spike-E1-npc-sweep.md）——**已修，严重度诚实降级**
+- 基线实测**推翻审计 P1-3 预估**：单次 p95≈0.1ms（walker 实际 2013 非全量 4400），占 16.7ms 帧预算 0.6%——"帧尖峰"不成立；真实影响 ≈10.6 万次/秒 clone 分配的 GC 压力（H5 噪声嫌疑）。
+- 修复：world.ts filter 新数组→`_npcWalkers` 原地压实；physics.ts 平方距离粗判零分配先滤 + `clock()` 每扫提升一次。验证链全绿（tsc 0 / vitest 81 / determinism 7 文件 0 / BASELINE+AFTER 双 JSON）。
+- 连带：P1-3 账面 P1→P2；E1 关闭。
+
+### 在跑
+- H2 碰撞预算 spike（后台 agent：朴素/网格哈希/broadphase 三结构基准，4400 实体负载）

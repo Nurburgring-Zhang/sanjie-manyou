@@ -1,0 +1,17 @@
+{
+ "generatedAt": "2026-11-03T19:29:25.305Z",
+ "url": "http://127.0.0.1:4182/",
+ "windowMs": 12012,
+ "calls": 40,
+ "walkersPerCall": 2013,
+ "vehiclesPerCall": 16,
+ "cloneProxyPerCall": 32208,
+ "ms": {
+  "p50": 0,
+  "p95": 0,
+  "p99": 0.1,
+  "max": 0.1,
+  "mean": 0.002
+ },
+ "note": "monkey-patch 实例方法计时，含 patch 开销 ~µs 级；修复对比看同探针前后差值"
+}
