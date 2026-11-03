@@ -461,3 +461,10 @@ node scripts/verify-packaged.mjs "release-v79/win-unpacked/CyberQingming.exe"
 
 ### 在跑
 - H2 碰撞预算 spike（后台 agent：朴素/网格哈希/broadphase 三结构基准，4400 实体负载）
+
+
+## 2026-11-04 05:xx · H2 碰撞预算 GO（-1 阶段 5/7，清单已落「H2 结论」节）
+
+- 增量网格哈希 @8m：0.055ms p95（0.16%）；P0-7 全员贴地 0.98ms vs 线性扫 34.3ms（爆帧）。**P0-2/P0-3 选型定案：网格哈希+增量，禁线性扫；groundHeight forEach → pointQuery。**
+- ZCode 对抗核验：负载含 3,937 动态 npc 每帧行走（lastMoves 追踪证实增量口径完整），三校验和跨 8 结构逐位一致。
+- E1 降级回写审计账（P1-3→P2）；F7 四条视觉遗留原子 spec 落盘（artifacts/SPEC-F7-视觉遗留-20261104.md）；网络恢复，722ccc1→c97c64d 积压推平 + ebee387/H2 轮。

@@ -1,0 +1,373 @@
+{
+  "meta": {
+    "spike": "H2 碰撞预算",
+    "date": "2026-11-03",
+    "node": "v25.2.1",
+    "platform": "win32",
+    "seed": 20261104,
+    "rng": "mulberry32(无裸 Math.random)",
+    "warmupFrames": 50,
+    "sampledFrames": 300,
+    "passes": 2,
+    "dtFrame": 0.016666666666666666,
+    "load": {
+      "entities": 4400,
+      "byKind": {
+        "npc": 3937,
+        "creation": 121,
+        "building": 342
+      },
+      "dynEntities": 3937,
+      "vehicles": 12,
+      "vehicleNeighborhoodR": 2.2,
+      "pointQueriesPerFrame": 100,
+      "maxHw": 4.997346334159374,
+      "streets": 12,
+      "hitStats": {
+        "candidatesPerFrame": 14.1,
+        "pointHitRate": 0.045
+      }
+    },
+    "budgetRef": {
+      "devFrameP95Ms": 33.3,
+      "packagedFrameP95Ms": 58,
+      "vsync60Ms": 16.7
+    },
+    "predicate": "邻域=中心距²≤r²（npcSweep 语义，窄相过滤为公共成本不计）；pointQuery=AABB 含点取最高 top；车辆窄相/点积判向不计"
+  },
+  "determinism": {
+    "identicalAcrossStructures": true,
+    "identicalAcrossPasses": true,
+    "note": "主负载 cand/id/top 三校验和跨 8 结构 × 2 轮逐位一致"
+  },
+  "results": [
+    {
+      "name": "a1-naive-alloc(npcSweep式)",
+      "mode": "naive",
+      "cell": null,
+      "supplementary": false,
+      "pointQueriesPerFrame": 100,
+      "sampledFrames": 300,
+      "deterministic": true,
+      "avgMs": 1.1495,
+      "p50Ms": 1.0003,
+      "p95Ms": 1.862,
+      "maxMs": 2.1827,
+      "allocsPerFrame": 52812,
+      "heapMB": 8.3,
+      "footprint": {
+        "cells": 0,
+        "slots": 0,
+        "estKB": 0
+      },
+      "pctDevP95_avg": 3.45,
+      "pctDevP95_p95": 5.59,
+      "pctVsync_avg": 6.88,
+      "checksum": {
+        "candSum": 4235,
+        "idSum": 6515178,
+        "topSum": 1348.4757098846271
+      },
+      "pass1": {
+        "avgMs": 1.1305,
+        "p95Ms": 1.7822
+      }
+    },
+    {
+      "name": "a2-naive-noalloc",
+      "mode": "sap",
+      "cell": null,
+      "supplementary": false,
+      "pointQueriesPerFrame": 100,
+      "sampledFrames": 300,
+      "deterministic": true,
+      "avgMs": 0.8123,
+      "p50Ms": 0.6945,
+      "p95Ms": 1.3788,
+      "maxMs": 5.9347,
+      "allocsPerFrame": 0,
+      "heapMB": 8.3,
+      "footprint": {
+        "cells": 0,
+        "slots": 0,
+        "estKB": 0
+      },
+      "pctDevP95_avg": 2.44,
+      "pctDevP95_p95": 4.14,
+      "pctVsync_avg": 4.86,
+      "checksum": {
+        "candSum": 4235,
+        "idSum": 6515178,
+        "topSum": 1348.4757098846271
+      },
+      "pass1": {
+        "avgMs": 0.8123,
+        "p95Ms": 1.3788
+      }
+    },
+    {
+      "name": "b0-grid-rebuild-clear@8m",
+      "mode": "rebuild-clear",
+      "cell": 8,
+      "supplementary": false,
+      "pointQueriesPerFrame": 100,
+      "sampledFrames": 300,
+      "deterministic": true,
+      "avgMs": 0.1433,
+      "p50Ms": 0.1286,
+      "p95Ms": 0.2279,
+      "maxMs": 1.9246,
+      "allocsPerFrame": 1079,
+      "heapMB": 11.2,
+      "footprint": {
+        "cells": 1067,
+        "slots": 4400,
+        "estKB": 151.1
+      },
+      "insertsPerFrame": 4400,
+      "pctDevP95_avg": 0.43,
+      "pctDevP95_p95": 0.68,
+      "pctVsync_avg": 0.86,
+      "checksum": {
+        "candSum": 4235,
+        "idSum": 6515178,
+        "topSum": 1348.4757098846271
+      },
+      "pass1": {
+        "avgMs": 0.1433,
+        "p95Ms": 0.2279
+      }
+    },
+    {
+      "name": "b1-grid-rebuild-pooled@8m",
+      "mode": "rebuild-pooled",
+      "cell": 8,
+      "supplementary": false,
+      "pointQueriesPerFrame": 100,
+      "sampledFrames": 300,
+      "deterministic": true,
+      "avgMs": 0.1968,
+      "p50Ms": 0.2026,
+      "p95Ms": 0.2661,
+      "maxMs": 0.5841,
+      "allocsPerFrame": 0,
+      "heapMB": 11.2,
+      "footprint": {
+        "cells": 1643,
+        "slots": 4400,
+        "estKB": 214.1
+      },
+      "insertsPerFrame": 4400,
+      "pctDevP95_avg": 0.59,
+      "pctDevP95_p95": 0.8,
+      "pctVsync_avg": 1.18,
+      "checksum": {
+        "candSum": 4235,
+        "idSum": 6515178,
+        "topSum": 1348.4757098846271
+      },
+      "pass1": {
+        "avgMs": 0.1968,
+        "p95Ms": 0.2661
+      }
+    },
+    {
+      "name": "b2-grid-incremental@8m",
+      "mode": "incremental",
+      "cell": 8,
+      "supplementary": false,
+      "pointQueriesPerFrame": 100,
+      "sampledFrames": 300,
+      "deterministic": true,
+      "avgMs": 0.0361,
+      "p50Ms": 0.0332,
+      "p95Ms": 0.0546,
+      "maxMs": 0.1321,
+      "allocsPerFrame": 0,
+      "heapMB": 11.2,
+      "footprint": {
+        "cells": 1643,
+        "slots": 4400,
+        "estKB": 214.1
+      },
+      "movesPerFrame": 9.616666666666667,
+      "pctDevP95_avg": 0.11,
+      "pctDevP95_p95": 0.16,
+      "pctVsync_avg": 0.22,
+      "checksum": {
+        "candSum": 4235,
+        "idSum": 6515178,
+        "topSum": 1348.4757098846271
+      },
+      "pass1": {
+        "avgMs": 0.0361,
+        "p95Ms": 0.0517
+      }
+    },
+    {
+      "name": "b2-grid-incremental@4m",
+      "mode": "incremental",
+      "cell": 4,
+      "supplementary": false,
+      "pointQueriesPerFrame": 100,
+      "sampledFrames": 300,
+      "deterministic": true,
+      "avgMs": 0.0523,
+      "p50Ms": 0.0503,
+      "p95Ms": 0.06,
+      "maxMs": 0.1499,
+      "allocsPerFrame": 2,
+      "heapMB": 11.4,
+      "footprint": {
+        "cells": 3507,
+        "slots": 4400,
+        "estKB": 418
+      },
+      "movesPerFrame": 19.946666666666665,
+      "pctDevP95_avg": 0.16,
+      "pctDevP95_p95": 0.18,
+      "pctVsync_avg": 0.31,
+      "checksum": {
+        "candSum": 4235,
+        "idSum": 6515178,
+        "topSum": 1348.4757098846271
+      },
+      "pass1": {
+        "avgMs": 0.0523,
+        "p95Ms": 0.06
+      }
+    },
+    {
+      "name": "b2-grid-incremental@16m",
+      "mode": "incremental",
+      "cell": 16,
+      "supplementary": false,
+      "pointQueriesPerFrame": 100,
+      "sampledFrames": 300,
+      "deterministic": true,
+      "avgMs": 0.0333,
+      "p50Ms": 0.029,
+      "p95Ms": 0.0532,
+      "maxMs": 0.1801,
+      "allocsPerFrame": 0,
+      "heapMB": 11.4,
+      "footprint": {
+        "cells": 893,
+        "slots": 4400,
+        "estKB": 132
+      },
+      "movesPerFrame": 6.05,
+      "pctDevP95_avg": 0.1,
+      "pctDevP95_p95": 0.16,
+      "pctVsync_avg": 0.2,
+      "checksum": {
+        "candSum": 4235,
+        "idSum": 6515178,
+        "topSum": 1348.4757098846271
+      },
+      "pass1": {
+        "avgMs": 0.0304,
+        "p95Ms": 0.0366
+      }
+    },
+    {
+      "name": "c-sap(sorted-sweep)",
+      "mode": "sap",
+      "cell": null,
+      "supplementary": false,
+      "pointQueriesPerFrame": 100,
+      "sampledFrames": 300,
+      "deterministic": true,
+      "avgMs": 0.0622,
+      "p50Ms": 0.0695,
+      "p95Ms": 0.094,
+      "maxMs": 0.1963,
+      "allocsPerFrame": 0,
+      "heapMB": 11.5,
+      "footprint": {
+        "cells": 4400,
+        "slots": 4400,
+        "estKB": 51.6
+      },
+      "pctDevP95_avg": 0.19,
+      "pctDevP95_p95": 0.28,
+      "pctVsync_avg": 0.37,
+      "checksum": {
+        "candSum": 4235,
+        "idSum": 6515178,
+        "topSum": 1348.4757098846271
+      },
+      "pass1": {
+        "avgMs": 0.0622,
+        "p95Ms": 0.094
+      }
+    }
+  ],
+  "supplement": [
+    {
+      "name": "[补充]b2-incremental@8m×4400pq",
+      "mode": "incremental",
+      "cell": 8,
+      "supplementary": true,
+      "pointQueriesPerFrame": 4400,
+      "sampledFrames": 200,
+      "deterministic": null,
+      "avgMs": 0.7021,
+      "p50Ms": 0.6492,
+      "p95Ms": 0.9812,
+      "maxMs": 1.2041,
+      "allocsPerFrame": 0,
+      "heapMB": 11.9,
+      "footprint": {
+        "cells": 1607,
+        "slots": 4400,
+        "estKB": 210.1
+      },
+      "movesPerFrame": 8.865,
+      "pctDevP95_avg": 2.11,
+      "pctDevP95_p95": 2.95,
+      "pctVsync_avg": 4.2,
+      "checksum": {
+        "candSum": 3239,
+        "idSum": 4921268,
+        "topSum": 37257.15986906575
+      },
+      "pass1": {
+        "avgMs": 0.7021,
+        "p95Ms": 0.9812
+      }
+    },
+    {
+      "name": "[补充]a2-naive-noalloc×4400pq",
+      "mode": "sap",
+      "cell": null,
+      "supplementary": true,
+      "pointQueriesPerFrame": 4400,
+      "sampledFrames": 200,
+      "deterministic": null,
+      "avgMs": 27.6602,
+      "p50Ms": 26.3893,
+      "p95Ms": 34.3231,
+      "maxMs": 46.8381,
+      "allocsPerFrame": 0,
+      "heapMB": 11.9,
+      "footprint": {
+        "cells": 0,
+        "slots": 0,
+        "estKB": 0
+      },
+      "pctDevP95_avg": 83.06,
+      "pctDevP95_p95": 103.07,
+      "pctVsync_avg": 165.63,
+      "checksum": {
+        "candSum": 3239,
+        "idSum": 4921268,
+        "topSum": 37257.15986906575
+      },
+      "pass1": {
+        "avgMs": 27.6602,
+        "p95Ms": 34.3231
+      }
+    }
+  ]
+}

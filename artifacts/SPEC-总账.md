@@ -2386,3 +2386,13 @@ node scripts/probe-p95-attrib.mjs  (600帧×2轮) → artifacts/p95-attrib-600.j
 - 审核 A：APPROVE_WITH_FIXES（4 条全采纳）；审核 B（补跑）：APPROVE_WITH_FIXES（6 条全部消化或登记：E3 证伪/形状门/PATTERNS 补强/F7 挂靠/P2-7·P2-9 修订/F1 回归清单）
 - H1 spike：**GO**（16/16，三套结构共用一套 id 可行，P0-1 不换模型；最大风险=physics 押注 actor 永不删，P0-1 步3 须排 P0-5 之后）
 - F4：probe-gpu-status 常驻化，dev 端 HARDWARE（RTX 4090 D3D11），软渲染回退排除；打包态核验待下次出包跑同一探针
+
+
+---
+
+## 2026-11-04 补登 II：H2 碰撞预算 GO（-1 阶段 6/7）
+
+- `_spike/h2-collision-bench.mjs`：**增量网格哈希 @8m = 0.055ms p95（0.16% 预算）**，线性扫 1.86ms（25×）；P0-7 全员贴地场景 0.98ms vs 线性 34.3ms（**爆帧 103% → 2.95%**）。
+- 决策：P0-2/P0-3 = 网格哈希+增量更新 @8m；groundHeight forEach → pointQuery 强制修订；幽灵格风险登记。
+- ZCode 对抗核验：增量含动态换格（3,937 npc 每帧行走），校验和逐位一致，承重假设成立。
+- **-1 风险验证：5/7**（H5/P0-0/H3/H1/H2 ✅ + H6 ✅ 提前；余 H4 存档、H7 移动造物）。
