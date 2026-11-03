@@ -426,3 +426,21 @@ node scripts/verify-packaged.mjs "release-v79/win-unpacked/CyberQingming.exe"
 3. E1 npcSweep 性能切片（探针护航）
 4. 补跑对抗审核 B
 5. -1 阶段剩余 spike：H3 龙 → H1 → H2 → H6 → H4 → H7
+
+## 2026-11-04 03:xx · E3 关闭（判据假红）+ H3 一条龙 spike 收口
+
+### E3：probe-water-clash 判据 C 的 5 个 off-deck 全部取证为合法状态
+
+页内逐 actor 取证（x/y/z + freeze/attach + attach 回调源码特征）：
+- z≈44–46 ×3：`vendor hawk` 叫卖摊主，freeze 定桩无 attach，站在**出河带引桥岸段**（虹桥半跨 48 > 河半宽 ~30.6，y=0 是岸面）——合法。
+- z≈12 ×2：`musician/lady`，attach 回调含 `b.x`/`bob = sin(b.phase)`——**桥下过洞的船上乘客**（y=1.76=船甲板），合法。
+- 桥带内 y=0 桥下穿行是 R27 明确设计。**曾加「推出到岸」分支后撤销**（会把合法行为改坏）；引擎零改动，探针判据 C 修正（排除船上人 onBoatDeck + 出河带岸段）→ **PASS（50 on deck / 0 off-deck）**。tsc 0 错。
+
+### H3 一条龙 spike（-1 阶段第 3 个，前两个 H5/P0-0 已收）——✅ 一次全绿
+
+- `creations/dragon/build.mjs`：手写程序化一条龙（蛇形放样 44 环×10 边 + 吻/角/眼/背鳍/尾鳍/四腿三趾），纯常量驱动零随机。
+- 实测：**1,141 tri / 742 verts / 22,596 bytes**；`probe-creation-bundle --file` **RESULT=PASS**；**双跑逐字节 IDENTICAL**。
+- 结论：**P2「agent 代码构建造物」路线成立，不降级部件拼装**（1,400 硬门禁预算合理；单造物手写 ≈180 行）。
+- 详见 `docs/重建-v2/全量工作清单.md` 「H3 结论」节。
+
+### -1 风险验证进度：3/7（H5 ✅ H3 ✅ P0-0 ✅）→ 下一个 H1 实体身份

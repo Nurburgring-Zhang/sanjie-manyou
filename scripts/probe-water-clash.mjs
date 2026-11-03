@@ -120,10 +120,17 @@ const out = await evaluate(async (margin) => {
   );
 
   // ---------- C. 桥面贴合：虹桥带内的人必须落在 bridgeDeckY 上 ----------
+  // E3 复审（2026-11-04）：原判据把两类合法状态误判为 off-deck——
+  //   ① 出河带的引桥岸段（虹桥半跨 48 > 河半宽 ~30.6，桥端踏步外是岸，y=0 合法）；
+  //   ② 桥下过洞的船上乘客（attach 由 boat 系统驱动，y=甲板高，合法）。
+  // 修法：排除船上人（复用 onBoatDeck 甲板三证据）与出河带岸段（|z| > riverHalfWidth(x)+2）。
   const layout = await import('/src/city/layout.ts');
+  const riverGeom = await import('/src/city/riverGeom.ts');
   const deckY = layout.bridgeDeckY;
   const bridgeRange = layout.BRIDGE_HALF;
-  const deckActors = actors.filter((a) => !a.sky && a.y > -5 && a.y < 40 && Math.abs(a.x) <= 6 && Math.abs(a.z) <= bridgeRange);
+  const onBankOutsideRiver = (a) => Math.abs(a.z - riverGeom.riverCenterZ(a.x)) > riverGeom.riverHalfWidth(a.x) + 2;
+  const deckActors = actors.filter((a) => !a.sky && a.y > -5 && a.y < 40 && Math.abs(a.x) <= 6 && Math.abs(a.z) <= bridgeRange
+    && !onBoatDeck(a) && !onBankOutsideRiver(a));
   const offDeck = deckActors.filter((a) => Math.abs(a.y - deckY(a.z)) > 0.9);
   const bridgeCrown = deckY(0);
 

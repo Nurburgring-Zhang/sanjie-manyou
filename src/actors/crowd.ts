@@ -116,6 +116,11 @@ function keepOnBridgeDeck(a: Actor): void {
     if (a.pos.y > 0.4 && a.pos.y < 9) a.pos.y = 0;
     return;
   }
+  // E3 复审（2026-11-04）：探针抓到的 5 个「off-deck」逐一取证后全部为合法状态——
+  // 3 个 vendor hawk 站在出河带的引桥岸段（虹桥半跨 48 > 河半宽 30.6，y=0 是岸面），
+  // 2 个是桥下过洞的船上乐师/茶客（attach 由 boat 系统驱动，y=1.76 是甲板）。
+  // 桥带内 y=0 的桥下穿行是 R27 明确允许的设计。此处不加「推出到岸」——那会把合法
+  // 行为改坏；判据缺陷已在 probe-water-clash 判据 C 修正（排除船上人与出河带岸段）。
   // 已经悬空/站在桥面上的人按净宽 ±10 收回来（实测悬空点在 x=-8.2）；
   // 贴地的人只有本来就落在桥面足迹（±5.2）内才抬上桥，避免把桥头的岸上行人吸到桥面。
   const deck = bridgeDeckY(THREE.MathUtils.clamp(a.pos.z, -BRIDGE_HALF, BRIDGE_HALF));
