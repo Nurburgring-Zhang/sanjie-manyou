@@ -1,0 +1,144 @@
+{
+ "schema_version": 1,
+ "note": "23 条均为继承代码注释的词法误报（占位圈/占位表=空间布局术语；写死/硬编码出现在否定句或缺陷记录中）；逐行 SHA 锚定，行变更自动失效；不豁免 AST 空实现",
+ "allow": [
+  {
+   "path": "src/actors/crowd.ts",
+   "line": 1369,
+   "sha256": "1682d11d31805cd951076f195f51d26157aaddf36f76c5c89a38f8b21879e982",
+   "reason": "占位表=2m 占用登记表（空间布局术语），非未实现占位"
+  },
+  {
+   "path": "src/actors/crowd.ts",
+   "line": 1760,
+   "sha256": "cef381a7a8f3aa3fbfb43813aa0a670c755e28a7b34000b1ad9764bca69e697e",
+   "reason": "同上：共用 2m 占位表，术语误报"
+  },
+  {
+   "path": "src/city/architecture.ts",
+   "line": 7,
+   "sha256": "b5d8521e329667879331566016cc78549d622517c9ecf37bfdcb999286310a04",
+   "reason": "注释说明「不靠硬编码标高」，关键词出现在否定句"
+  },
+  {
+   "path": "src/city/buildings.ts",
+   "line": 69,
+   "sha256": "b61680dd69e0336ccb337c75401abf387890918f1fbf16a7395ef8f7498fc9a2",
+   "reason": "占位色=色板预留槽位且概率 0（不挂霓虹），非空实现"
+  },
+  {
+   "path": "src/city/buildings.ts",
+   "line": 2659,
+   "sha256": "3eabdad9c25618eb1c4b2741ba5a225977487bf381127db9a4a710347af24685",
+   "reason": "注释说明旧版写死已被判据替换，否定句误报"
+  },
+  {
+   "path": "src/city/interiors.ts",
+   "line": 1162,
+   "sha256": "a5cd1d930fbb5698f17364eaada51eca15120319c474efc3f7af89d6835ae202",
+   "reason": "注释说明「把坐标写死会悬空」的反面教材，非实现"
+  },
+  {
+   "path": "src/city/landmarks2.ts",
+   "line": 14,
+   "sha256": "01dd635b05188ce249db7a66ee392ce9e926349e6f1d926aabf245c640fb653c",
+   "reason": "注释记录台基顶面与 W13 基准 0.06 锁定的派生约束，非硬编码实现"
+  },
+  {
+   "path": "src/city/palaceGrounds.ts",
+   "line": 76,
+   "sha256": "b9daefd92d0f2164801eddfca45169fcfa3b41c669c0f3061fca35e2992fb4b4",
+   "reason": "占位台账=机检「最大空矩形」的登记结构，术语误报"
+  },
+  {
+   "path": "src/city/palaceGrounds.ts",
+   "line": 1000,
+   "sha256": "993fb403d686d7713a72ca1ad1877da1332106b3db723dc84b489fb6ab18f123",
+   "reason": "占位审计函数的 docstring，术语误报"
+  },
+  {
+   "path": "src/core/engine.ts",
+   "line": 508,
+   "sha256": "45e8e199e7fd6e2966131a81d05b1ee0bcfa908885175c5ee0d4a7ad94c7632e",
+   "reason": "注释说明旧版写死 1.7 的缺陷已修，否定句误报"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 284,
+   "sha256": "2e35933700ec02e4656f0e97fc44dfccc6701de892f1419d65fc7d34eedc3ca1",
+   "reason": "注释告诫「不要再写死」，否定句误报"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 1270,
+   "sha256": "4333c363c2a905e68ad3eed468d610d1d7e505e1eeff33a542635a5d386a1ff9",
+   "reason": "占位圈=落位避让的几何术语，非未实现"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 1271,
+   "sha256": "d916d4e2d3b4620ef9548813333f2aec3572bfa3c6ecbac363b132bf73e8ed2c",
+   "reason": "同上：占位圈按岛径重算，术语误报"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 1315,
+   "sha256": "fc2e7798936cd8bacac88751e26771eb6120bc8674ea6f0e60b27d42068b086c",
+   "reason": "既有天宫占位圈数据表 docstring，术语误报"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 1322,
+   "sha256": "9f349480d47a22eff0ece41b9d264c0e7e7c7a73c0c592dce057c8c05a831667",
+   "reason": "占位按 28 留净空=避让半径取值说明，术语误报"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 1385,
+   "sha256": "7c141dde7d306724fa6fe4c0b844a8059a55450d5a149f17b6fcc4e8c22224fa",
+   "reason": "既有建筑占位圈（H_KEEP）说明，术语误报"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 1389,
+   "sha256": "fd6e7b0ebfdb65cbdb34a46a401877e15fa347d7db72364b9a5992f080ba540c",
+   "reason": "已落岛作为互斥占位参与求解，术语误报"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 1401,
+   "sha256": "0ae46fe8557443d5bb78520269c7bd955880548c03d13e7c57f3f95797543a9d",
+   "reason": "净空计算注释中的占位圈引用，术语误报"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 2173,
+   "sha256": "fb6fd05bb63d84fe3f7fbe5fae002281bb0f9d49fd8e2111e73a91ee0974daec",
+   "reason": "注释明确「坐标由布局直接算出，不写死」，否定句误报"
+  },
+  {
+   "path": "src/sky/expansion.ts",
+   "line": 2698,
+   "sha256": "cb544c1d94acb5366c9b99fd1189d9e171f76552e75d3579ddad053b86e1636e",
+   "reason": "中环 24 岛互斥占位说明，术语误报"
+  },
+  {
+   "path": "src/sky/flora.ts",
+   "line": 413,
+   "sha256": "2102c64deadb72d8ce5669ad67380937004cf0185a37a8ec73b8272c26a070f7",
+   "reason": "注释解释为何必须自建网格（Baker 烘完即定）的技术权衡说明"
+  },
+  {
+   "path": "src/sky/palace.ts",
+   "line": 1233,
+   "sha256": "18acdcf434b896f9e5fcee7f50a7033e8f361a7e71d4396e912bd5a0371a6a5d",
+   "reason": "注释记录旧版灯光缺陷已修（灯沉台基），否定句误报"
+  },
+  {
+   "path": "src/sky/realm.ts",
+   "line": 1025,
+   "sha256": "035b6c5a191842acfd424091ad1679b3647037359613db696d74b0ca98708d62",
+   "reason": "同 flora：Baker 合批与自建网格的技术权衡说明"
+  }
+ ]
+}
