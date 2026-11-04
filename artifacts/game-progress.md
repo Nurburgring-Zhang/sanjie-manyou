@@ -558,3 +558,22 @@ vitest **8 files / 96 tests** 全绿（+7 新：loop 对称/固定步顺序/确�
 - 测试三轮修正如实记录：nearby 去重（跨 cell 重复回调）、邻域期望（2 条足迹同域正确）、相切语义（接触即碰撞，保守占位）。**实现侧仅一处语义收紧（<→<=）。**
 - 验证链：vitest **12 files / 118 tests** 全绿（+5）；tsc 0 错；determinism PASS。
 - 验收对照（清单 P0-9）：「100m 落点规则能判定此处可放」→ canPlace 数据源与判定就绪（world 载入期 ingest 快照的接线留 P2-6 落点实施时一并——纯数据喂入零行为）。
+
+## 2026-11-05 04:xx · P0-8 Electron 安全收口（含一个实锤漏洞的封堵）
+
+### 实施
+- `electron/preload.cjs`：contextBridge 三条白名单 IPC（app:version / window:close / shell:open-external 域名白名单 https-only）。
+- `electron/main.cjs` 硬化：sandbox:true 显式、setWindowOpenHandler 全拒、will-navigate 白名单（仅 dist 内 file://）、will-attach-webview 禁用、SANJIE_SECURITY_PROBE=1 门控探针（生产零影响）。
+- **CSP 双口径**（实锤教训）：index.html meta 只适合 dev（localhost 放行）；打包态由 `vite.config.ts` transformIndexHtml(build-only) 注入**严格版 connect-src 'none'**——本游戏零联网，'none' 是唯一安全口径。
+
+### 实锤漏洞与封堵（n3 探针的完整对抗过程）
+1. 首版负样本判据 `fetch().catch()` → **假阴性**：CORS 失败的 fetch 不 reject，给 opaque response——改读 body 验证。
+2. 读 body **实锤 win.ini 真实内容被读出（LEN=92）**——`connect-src 'self'` 在 file:// 页面把 file:// 也视为同源放行！CSP meta 无法两全（dev 需 localhost / 打包需 none）。
+3. **封堵**：strict CSP 移至 vite build-only 钩子 → 复测 **Failed to fetch** ✅。负样本三全 BLOCK：外链导航拦 / window.open deny / fetch file 拒 + preload 桥与白名单外 openExternal 附加项全过。
+
+### 残余风险记账（诚实）
+- script-src 保留 'unsafe-inline'（index.html 内联 __errs 段需要）——需先存在 HTML 注入点才可利用；升级路径=构建期移除内联段并注入 hash。
+- mesh 形状 collider 当前不挡（P0-3 诚实降级）与本条无关，属 P0-3 账。
+
+### 验证链
+vitest 12 files / 118 tests 全绿；tsc 0 错；determinism PASS；A1 PASS；**安全探针 5 项全过（负样本三 BLOCK + 桥 + 白名单外拒）**；vite build CSP 注入 dist 实证（grep connect-src 'none' 命中）。
