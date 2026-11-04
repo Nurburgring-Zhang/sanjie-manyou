@@ -475,3 +475,18 @@ node scripts/verify-packaged.mjs "release-v79/win-unpacked/CyberQingming.exe"
 - agent 中途死亡（mtime 03:45 vs 23:23），脚本完整交付，ZCode 代跑：**GO 五判据全过**。
 - 方案 A 定案（260ms/17.2MB），手工压缩否决（Chrome 自动 Snappy 实证）；同步抛错半写提交坑实锤。
 - P0-4 五条修订落清单「H4 结论」节；-1 阶段仅余 H7 移动造物。
+
+## 2026-11-05 00:xx · 融合终版 FINAL + H4 收口（文档工程阶段完成）
+
+### 融合终版（docs/融合终版/，13 文件 60,347 字）——**FINAL**
+- 12 系统 × 五段式（代码现状实测锚/V系要点/D系要点/冲突裁决/原子任务与验收）。
+- 对抗审核 **APPROVE_WITH_FIXES**：引用 27 条全命中、40+ 裁决零违反原则、无整卷漏收；6 处小修（八槽缺口账 40/96、体素 delta 段位 P1-2、两条假验收改可测断言、相对段位钉任务编号、creatures 路径补全）**全部落地**。
+- 总纲已标 FINAL + 效力顺序（spike 勘误层 > 裁决段 > 清单 v3 > 素材卷）。合订本（73.7 万字）降为原文库。
+
+### H4 存档 GO（agent 死亡代跑，artifacts/spike-H4-idb-save.md）
+- 方案 A 定案（原始 JSON 单事务双 store，写入 p95 260ms / 落盘 17.2MB）；手工压缩实测否决（Chrome 自动 Snappy，双重压缩负收益且落盘反大 21MB）。
+- 原子性 4 子例全过；**坑实锤：put 同步抛错不自动 abort（半写提交）**→ P0-4 五条修订。
+
+### 状态
+- **-1 风险验证 6/7**：仅余 H7 移动造物（agent 在跑：实例化/独立 mesh/烘焙三路径移动实验）。
+- push：网络间歇抖动，ahead 积压随时可推平。
