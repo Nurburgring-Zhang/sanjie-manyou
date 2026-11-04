@@ -96,6 +96,16 @@ interface WsRect { x0: number; x1: number; z0: number; z1: number; y: number; k:
 let WS_GRID: Map<number, WsRect[]> | null = null;
 let WS_RECTS = 0;
 
+/** P0-9：建筑足迹只读快照（runtimeAssets 载入期 ingest 用；纯读，不改 WS 结构） */
+export function snapshotWalkSurfaces(fn: (r: { x0: number; x1: number; z0: number; z1: number; y: number; wall: boolean }) => void): number {
+  if (!WS_GRID) return 0;
+  let n = 0;
+  for (const arr of WS_GRID.values()) {
+    for (const r of arr) { fn({ x0: r.x0, x1: r.x1, z0: r.z0, z1: r.z1, y: r.y, wall: r.k === WS_WALL_K }); n++; }
+  }
+  return n;
+}
+
 function wsRect(g: Map<number, WsRect[]>, x0: number, x1: number, z0: number, z1: number, y: number, k: 0 | 1): void {
   if (x1 - x0 < 0.02 || z1 - z0 < 0.02) return;
   const r: WsRect = { x0, x1, z0, z1, y, k };

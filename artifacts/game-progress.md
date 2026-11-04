@@ -549,3 +549,12 @@ vitest **8 files / 96 tests** 全绿（+7 新：loop 对称/固定步顺序/确�
 - 页面探针 `probe-save-atomic.mjs` **6 断言全 PASS**（真实 IDB）：S1 原子写回读一致 / S2 lastGood 截断半写 → 顺序回退完好槽（coins=888）/ S3 显式 abort 两 store 回滚 + lastGood 未污染 / S3b DB 未毒坏 / S4 legacy 250/3/1 → v2 迁移落档 / S5 persist=false + quota 10GB 实录。
 - 纯逻辑单测 5 条（轮转 readOrder 修一 bug：其余槽须号降序=新→旧）/ v1→v2 迁移 / 未知版本拒载 / legacy NaN 同口径。
 - 验证链：vitest **10 files / 111 tests** 全绿（+3）；tsc 0 错；determinism PASS。诚实备注：H4 修订⑤「真实存档序列化复测」待步 3 接管实体表后跑（当前 economy 快照，entities 字段先行恒空）。
+
+## 2026-11-05 03:xx · P0-9 runtimeAssets + 建筑足迹索引收口
+
+- `src/rt/runtimeAssets.ts`：RuntimeAssets——建筑足迹空间哈希（cell 16、跨 cell 大矩形 ingest 展开、nearby 引用去重）+ `canPlace(x,z,ctx)`「此处可放」判定（P2-6 落点规则 v1 数据源）：不压建筑足迹（相切即占）→ 不落河心（inRiver 回调注入）→ 地面可站立（groundAt 回调注入），reason 给第一条失败。
+- `behaviors.snapshotWalkSurfaces()`：只读快照访问器（全城建筑足迹矩形含墙带与地板高度，载入期烘焙生成）——零行为变化纯读导出。
+- 单测 5 条：跨 cell 矩形查询去重 / footprint 相切占位 / 水面回调 / 地面 null / 裁决顺序。
+- 测试三轮修正如实记录：nearby 去重（跨 cell 重复回调）、邻域期望（2 条足迹同域正确）、相切语义（接触即碰撞，保守占位）。**实现侧仅一处语义收紧（<→<=）。**
+- 验证链：vitest **12 files / 118 tests** 全绿（+5）；tsc 0 错；determinism PASS。
+- 验收对照（清单 P0-9）：「100m 落点规则能判定此处可放」→ canPlace 数据源与判定就绪（world 载入期 ingest 快照的接线留 P2-6 落点实施时一并——纯数据喂入零行为）。
