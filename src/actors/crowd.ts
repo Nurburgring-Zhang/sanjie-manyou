@@ -4,6 +4,7 @@ import { PoolSet, InstPool, BODY_MAT, MAX_HUMANS } from './pools';
 import { ACTIONS, newPose, Pose, ActView, ActionFn } from './actions';
 import type { Actor } from './types';
 import { JOBS, JOB_MAP, SpotRegistry } from '../data/jobs';
+import { allocate } from '../rt/entity';
 import { NavGraph, H_STREETS, V_STREETS, BRIDGE_HALF, POIS, bridgeDeckY } from '../city/layout';
 import {
   tickActor, BehCtx, markCrossing, isCrossing, actionKindOf, behaviorChangeStats,
@@ -1361,6 +1362,8 @@ export class Crowd {
     // 不必等第一次 tick（否则快照会读到一堆 null，格子种类被低估）。
     // 随机源与 crowd 共用同一条流：行为初相位（车道/步速/类时长）也跟着种子走。
     initBehavior(a, undefined, this.rng);
+    // P0-1 步 1：登记实体表（谁都不读，零行为变化）；pos 传 Vector3 引用（结构兼容 {x,y,z}，天然同步）
+    a.eid = allocate('npc', { pos: a.pos, persist: true });
     return a;
   }
 

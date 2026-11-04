@@ -10,6 +10,8 @@ export interface ActorData {
 
 export interface Actor {
   id: number;
+  /** P0-1 实体表 id（步 1 登记，谁都不读）；与 Actor.id（池内序号）不同源 */
+  eid?: import('../rt/entity').EntityId;
   pos: THREE.Vector3;
   yaw: number;
   speed: number;

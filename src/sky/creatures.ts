@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { UNDER } from './underworld';
+import { allocate } from '../rt/entity';
 import { HEAVEN_LIFT, heavenY } from './heavenFrame';
 
 // 注意：本文件**不得** import ../actors/pools（模块级用 document.createElement，无头用例会崩），
@@ -1182,6 +1183,8 @@ export class CreatureSystem {
         color: new THREE.Color(sp.color), accent: new THREE.Color(sp.accent),
         scale: cfg.scale ?? 1,
       });
+      // P0-1 步 1：八兽 form 路径同样登记（第一轮插入因缩进匹配漏掉本处——A1 交叉核抓出）
+      allocate('beast', { pos: { x: this.beasts[this.beasts.length - 1].x, y: this.beasts[this.beasts.length - 1].y, z: this.beasts[this.beasts.length - 1].z } });
       this.okCount++;
       return;
     }
@@ -1216,6 +1219,8 @@ export class CreatureSystem {
       color: new THREE.Color(sp.color), accent: new THREE.Color(sp.accent),
       scale: cfg.scale ?? 1,
     });
+    // P0-1 步 1：登记实体表（pos 为快照，beast 分量字段步 2 改引用同步；谁都不读）
+    allocate('beast', { pos: { x: this.beasts[this.beasts.length - 1].x, y: this.beasts[this.beasts.length - 1].y, z: this.beasts[this.beasts.length - 1].z } });
     this.okCount++;
   }
 

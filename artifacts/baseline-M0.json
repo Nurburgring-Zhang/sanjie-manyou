@@ -1,0 +1,32 @@
+{
+ "baseline": "M0 · 0 地基阶段起点（2026-11-05，P0-1 步 1 开工时锁定）",
+ "world": {
+  "T_static": 18959342,
+  "live": 4610,
+  "byKind": {
+   "npc": 4520,
+   "beast": 90
+  },
+  "crowd": 4520,
+  "beasts": 90
+ },
+ "frame": {
+  "dev_p95_ms": 25.1,
+  "dev_p50_ms": 16.7,
+  "口径警示": "dev 环境数字；打包态 frameP95=58ms（release-v95 verify-packaged），归因复测列 P3-1b"
+ },
+ "quality": {
+  "tsc": "0 错",
+  "vitest": "7 files / 89 tests（81 基线 + 8 entityRegistry）",
+  "probe_determinism": "A 类 7 文件 0 命中 PASS",
+  "probe_face_accounting": "PASS（本轮实测）",
+  "probe_entity_registry": "A1 PASS alive=4610（npc 4520 + beast 90）",
+  "PACKAGED_BOOT": "release-v95 PASS（历史基线）"
+ },
+ "invariants": [
+  "T_static 18,959,342 不回落（P0-1 退出判据⑤）",
+  "确定性门 A 类棘轮只增不减",
+  "p95 发布门 ≤50（地基门 ≤70）"
+ ],
+ "usage": "后续每项 0 地基/玩法/造物任务交付前，对照本文件跑回归（face-accounting/determinism/vitest/p95 探针），任一不变量破即 BLOCK"
+}

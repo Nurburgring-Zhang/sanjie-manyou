@@ -497,3 +497,16 @@ node scripts/verify-packaged.mjs "release-v79/win-unpacked/CyberQingming.exe"
 - H7（artifacts/spike-H7-move-lod.md）：实例化移动 LOD 不跟（setBounds 缺口）/ 独立 mesh 无距离 LOD / 烘焙禁移。P0-6 裁定：unregister+setBounds 两 API、setBounds 单事务刷包围盒+剔除体、A-move/A-leak 断言、city_* 禁移。
 - **G-1 ✅ 达成 → 0 地基解锁**。下一步：P0-1 实体表实施（选型全就绪：H1 模型/H2 网格/H4 存档形态/P0-0 确定性基线）。
 - 融合终版 FINAL 已入库（0f0a609/6a3c12e）；push 积压 ahead 5 待网络。
+
+## 2026-11-05 01:xx · M0 基线锁定 + P0-1 步 1 收口（0 地基首个实施项）
+
+### M0 基线（artifacts/baseline-M0.json）
+T_static 18,959,342 / live 4610（npc 4520 + beast 90）/ dev p95 33.3 / vitest 89 / determinism PASS / PACKAGED_BOOT v95 PASS。后续任务交付前对照跑回归。
+
+### P0-1 步 1（建表 + 登记，零行为变化）
+- `src/rt/entity.ts`：spec §2/§3 全 API（allocate/get/alive/dispose/forEach/entityStats；id 单调不复用、onDispose 逆序、重入安全、dispose 幂等、forEach 零分配）。
+- 接线三处：`types.ts` Actor.eid 可选字段；`crowd.ts` spawnActor 登记 npc（pos 传 Vector3 引用天然同步）；`creatures.ts` 两处 beasts.push 登记 beast（pos 快照，步 2 改引用同步）。
+- **A1 探针立功**：首轮抓出八兽 form 路径漏登记（缩进匹配错误，表 78 vs 数组 90）→ 补登记 → **alive=4610 = 期望 4610，A1 PASS**。
+- 验证链五判据全过：probe-entity-registry A1 PASS / tsc 0 错 / vitest 7 files 89 tests（81+8 新）/ probe-determinism PASS / **T_static 18,959,342 实测不变**（probe-face-accounting PASS）。
+- 单测：tests/entityRegistry.test.ts 8 条（A2 递增去重/A3/A4 幂等/A6 逆序+重入/A7-node/A8 确定性/forEach 过滤/persist+组件槽）。
+- 步 2/3 未动（谁都不读）；A5（renderer calls）与 A7-heap 留步 3 页面验证；A-move/A-leak（H7）入 P0-1 断言集待步 2。

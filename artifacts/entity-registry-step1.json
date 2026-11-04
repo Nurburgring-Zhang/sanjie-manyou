@@ -1,0 +1,41 @@
+{
+ "generatedAt": "2026-11-04T16:48:25.184Z",
+ "url": "http://127.0.0.1:4182/",
+ "stats": {
+  "alive": 4610,
+  "allocated": 4610,
+  "disposed": 0,
+  "byKind": {
+   "npc": 4520,
+   "beast": 90
+  },
+  "lastDisposeReason": null,
+  "idSeq": 4610
+ },
+ "crowdN": 4520,
+ "beastN": 90,
+ "expectedAlive": 4610,
+ "sample": [
+  {
+   "id": 1,
+   "eid": 1
+  },
+  {
+   "id": 2,
+   "eid": 2
+  },
+  {
+   "id": 3,
+   "eid": 3
+  },
+  {
+   "id": 4,
+   "eid": 4
+  },
+  {
+   "id": 5,
+   "eid": 5
+  }
+ ],
+ "eidDistinct": true
+}
