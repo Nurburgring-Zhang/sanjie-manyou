@@ -468,3 +468,10 @@ node scripts/verify-packaged.mjs "release-v79/win-unpacked/CyberQingming.exe"
 - 增量网格哈希 @8m：0.055ms p95（0.16%）；P0-7 全员贴地 0.98ms vs 线性扫 34.3ms（爆帧）。**P0-2/P0-3 选型定案：网格哈希+增量，禁线性扫；groundHeight forEach → pointQuery。**
 - ZCode 对抗核验：负载含 3,937 动态 npc 每帧行走（lastMoves 追踪证实增量口径完整），三校验和跨 8 结构逐位一致。
 - E1 降级回写审计账（P1-3→P2）；F7 四条视觉遗留原子 spec 落盘（artifacts/SPEC-F7-视觉遗留-20261104.md）；网络恢复，722ccc1→c97c64d 积压推平 + ebee387/H2 轮。
+
+
+## 2026-11-04 23:xx · H4 存档 GO（-1 阶段 6/7，仅余 H7）
+
+- agent 中途死亡（mtime 03:45 vs 23:23），脚本完整交付，ZCode 代跑：**GO 五判据全过**。
+- 方案 A 定案（260ms/17.2MB），手工压缩否决（Chrome 自动 Snappy 实证）；同步抛错半写提交坑实锤。
+- P0-4 五条修订落清单「H4 结论」节；-1 阶段仅余 H7 移动造物。

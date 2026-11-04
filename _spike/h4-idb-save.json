@@ -1,0 +1,417 @@
+{
+ "generatedAt": "2026-11-04T15:24:31.866Z",
+ "chrome": "C:\\Users\\Administrator\\AppData\\Local\\ms-playwright\\chromium-1243\\chrome-win64\\chrome.exe",
+ "task": "H4 存档 28.7MB IndexedDB 原子写（全量工作清单 -1 阶段 H4 行）",
+ "blankPagePolicy": "about:blank/data: 为 opaque origin，indexedDB 被拒（见 opaqueOriginProbe）；改用仅回环临时端口的零脚本空 HTML，不加载游戏页面",
+ "opaqueOriginProbe": {
+  "ok": false,
+  "name": "SecurityError",
+  "msg": "Failed to execute 'open' on 'IDBFactory': access to the Indexed Database API is denied in this context."
+ },
+ "env": {
+  "origin": "http://127.0.0.1:50441",
+  "scripts": 0,
+  "resources": 1,
+  "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+  "hardwareConcurrency": 28,
+  "compressionStream": "function",
+  "deflateRawFormat": true
+ },
+ "payload": {
+  "targetBytes": 30094131,
+  "actualBytes": 30357575,
+  "rawMB": 28.95,
+  "sha256": "bced8e33e0d96e5d885c45c5cb036b8c382392118d05033fdb16a83432c0c465",
+  "nEntities": 60825,
+  "nQuests": 17667,
+  "nItems": 2793,
+  "voxChars": 3611295,
+  "perEntityBytes": 405.7,
+  "schemaVersion": 3
+ },
+ "storage": {
+  "persisted": false,
+  "persistErr": null,
+  "quotaBytes": 10737418240,
+  "usageBytesBefore": 0,
+  "usageBytesAfterPersist": 0,
+  "quotaAfterBytes": 10737418240
+ },
+ "atomic": {
+  "control": {
+   "ended": "complete",
+   "slotKeys": [
+    "save:v1"
+   ],
+   "lastGood": "save:v1"
+  },
+  "injection": {
+   "reqErrSync": true,
+   "reqErrName": "DataError",
+   "ended": "abort",
+   "errorName": null,
+   "slotKeys": [
+    "save:v1"
+   ],
+   "lastGood": "save:v1"
+  },
+  "postFailWrite": {
+   "ended": "complete",
+   "slotKeys": [
+    "save:v1",
+    "save:v2"
+   ],
+   "lastGood": "save:v2"
+  },
+  "manualAbort": {
+   "ended": "abort",
+   "slotKeys": [
+    "save:v1",
+    "save:v2"
+   ],
+   "lastGood": "save:v2"
+  },
+  "syncThrowCase": {
+   "syncThrow": "TypeError",
+   "ended": "complete",
+   "slotKeys": [
+    "save:v1",
+    "save:v2",
+    "save:v4"
+   ],
+   "lastGood": "save:v2"
+  }
+ },
+ "recovery": {
+  "badWrite": {
+   "ended": "complete",
+   "cutUnits": 524288,
+   "fullUnits": 29175299
+  },
+  "recovered": {
+   "ok": true,
+   "recoveredVer": 2,
+   "steps": [
+    {
+     "tried": 3,
+     "present": true,
+     "corrupt": true
+    },
+    {
+     "tried": 2,
+     "present": true
+    }
+   ],
+   "dataOk": true,
+   "parseOk": true
+  }
+ },
+ "A": {
+  "rounds": [
+   {
+    "round": 1,
+    "stringifyMs": 42.9,
+    "compressMs": 0,
+    "blobBytes": null,
+    "putMs": 209.5,
+    "writeTotalMs": 252.5,
+    "readGetMs": 91.5,
+    "verifyMs": 125.79999999998836,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 73728,
+    "usageAfterBytes": 18030592,
+    "longTasks": 1,
+    "longTaskMaxMs": 80
+   },
+   {
+    "round": 2,
+    "stringifyMs": 43.6,
+    "compressMs": 0,
+    "blobBytes": null,
+    "putMs": 205.5,
+    "writeTotalMs": 249.1,
+    "readGetMs": 90.8,
+    "verifyMs": 122.39999999999418,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 73728,
+    "usageAfterBytes": 18030592,
+    "longTasks": 1,
+    "longTaskMaxMs": 79
+   },
+   {
+    "round": 3,
+    "stringifyMs": 44.2,
+    "compressMs": 0,
+    "blobBytes": null,
+    "putMs": 209.4,
+    "writeTotalMs": 253.6,
+    "readGetMs": 89,
+    "verifyMs": 123.5,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 73728,
+    "usageAfterBytes": 18030592,
+    "longTasks": 1,
+    "longTaskMaxMs": 81
+   },
+   {
+    "round": 4,
+    "stringifyMs": 43.4,
+    "compressMs": 0,
+    "blobBytes": null,
+    "putMs": 211.2,
+    "writeTotalMs": 254.6,
+    "readGetMs": 93.6,
+    "verifyMs": 123.70000000001164,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 73728,
+    "usageAfterBytes": 18030592,
+    "longTasks": 1,
+    "longTaskMaxMs": 81
+   },
+   {
+    "round": 5,
+    "stringifyMs": 43.8,
+    "compressMs": 0,
+    "blobBytes": null,
+    "putMs": 216.2,
+    "writeTotalMs": 260,
+    "readGetMs": 92.3,
+    "verifyMs": 124.39999999999418,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 73728,
+    "usageAfterBytes": 18030592,
+    "longTasks": 1,
+    "longTaskMaxMs": 81
+   }
+  ],
+  "agg": {
+   "stringify": {
+    "n": 5,
+    "p50": 43.6,
+    "p95": 44.2,
+    "max": 44.2
+   },
+   "put": {
+    "n": 5,
+    "p50": 209.5,
+    "p95": 216.2,
+    "max": 216.2
+   },
+   "writeTotal": {
+    "n": 5,
+    "p50": 253.6,
+    "p95": 260,
+    "max": 260
+   },
+   "readGet": {
+    "n": 5,
+    "p50": 91.5,
+    "p95": 93.6,
+    "max": 93.6
+   },
+   "verify": {
+    "n": 5,
+    "p50": 123.70000000001164,
+    "p95": 125.79999999998836,
+    "max": 125.79999999998836
+   },
+   "hashAllOk": true,
+   "usageAfter": {
+    "n": 5,
+    "p50": 18030592,
+    "p95": 18030592,
+    "max": 18030592
+   },
+   "longTasks": {
+    "n": 5,
+    "p50": 1,
+    "p95": 1,
+    "max": 1
+   },
+   "longTaskMax": 81
+  }
+ },
+ "B": {
+  "rounds": [
+   {
+    "round": 1,
+    "stringifyMs": 43.1,
+    "compressMs": 605.4,
+    "blobBytes": 10975182,
+    "putMs": 38.5,
+    "writeTotalMs": 687,
+    "readGetMs": 3.2,
+    "verifyMs": 116.40000000002328,
+    "readMs": 212.9,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 18104320,
+    "usageAfterBytes": 29085696,
+    "longTasks": 1,
+    "longTaskMaxMs": 106
+   },
+   {
+    "round": 2,
+    "stringifyMs": 43.9,
+    "compressMs": 605.5,
+    "blobBytes": 10975182,
+    "putMs": 42.3,
+    "writeTotalMs": 691.7,
+    "readGetMs": 3.4,
+    "verifyMs": 124.60000000000582,
+    "readMs": 222.3,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 29085696,
+    "usageAfterBytes": 40075264,
+    "longTasks": 1,
+    "longTaskMaxMs": 106
+   },
+   {
+    "round": 3,
+    "stringifyMs": 44,
+    "compressMs": 598.8,
+    "blobBytes": 10975182,
+    "putMs": 38.9,
+    "writeTotalMs": 681.7,
+    "readGetMs": 3.2,
+    "verifyMs": 166.19999999998254,
+    "readMs": 269.2,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 40075264,
+    "usageAfterBytes": 51060736,
+    "longTasks": 1,
+    "longTaskMaxMs": 106
+   },
+   {
+    "round": 4,
+    "stringifyMs": 43.7,
+    "compressMs": 601.5,
+    "blobBytes": 10975182,
+    "putMs": 42.4,
+    "writeTotalMs": 687.6,
+    "readGetMs": 3.3,
+    "verifyMs": 115.60000000000582,
+    "readMs": 217.9,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 29085696,
+    "usageAfterBytes": 40075264,
+    "longTasks": 1,
+    "longTaskMaxMs": 110
+   },
+   {
+    "round": 5,
+    "stringifyMs": 44.1,
+    "compressMs": 597.5,
+    "blobBytes": 10975182,
+    "putMs": 40.5,
+    "writeTotalMs": 682.1,
+    "readGetMs": 3.6,
+    "verifyMs": 116.10000000000582,
+    "readMs": 219.1,
+    "parseOk": true,
+    "parseErr": null,
+    "hashOk": true,
+    "usageBeforeBytes": 40075264,
+    "usageAfterBytes": 51060736,
+    "longTasks": 1,
+    "longTaskMaxMs": 109
+   }
+  ],
+  "agg": {
+   "stringify": {
+    "n": 5,
+    "p50": 43.9,
+    "p95": 44.1,
+    "max": 44.1
+   },
+   "compress": {
+    "n": 5,
+    "p50": 601.5,
+    "p95": 605.5,
+    "max": 605.5
+   },
+   "put": {
+    "n": 5,
+    "p50": 40.5,
+    "p95": 42.4,
+    "max": 42.4
+   },
+   "writeTotal": {
+    "n": 5,
+    "p50": 687,
+    "p95": 691.7,
+    "max": 691.7
+   },
+   "readGet": {
+    "n": 5,
+    "p50": 3.3,
+    "p95": 3.6,
+    "max": 3.6
+   },
+   "verify": {
+    "n": 5,
+    "p50": 116.40000000002328,
+    "p95": 166.19999999998254,
+    "max": 166.19999999998254
+   },
+   "blob": {
+    "n": 5,
+    "p50": 10975182,
+    "p95": 10975182,
+    "max": 10975182
+   },
+   "ratio": 0.3615,
+   "hashAllOk": true,
+   "usageAfter": {
+    "n": 5,
+    "p50": 40075264,
+    "p95": 51060736,
+    "max": 51060736
+   },
+   "longTasks": {
+    "n": 5,
+    "p50": 1,
+    "p95": 1,
+    "max": 1
+   },
+   "longTaskMax": 110
+  }
+ },
+ "verdict": {
+  "go": true,
+  "criteria": {
+   "atomicPass": true,
+   "integrityPass": true,
+   "quotaPass": true,
+   "perfPass": true,
+   "recoveryPass": true,
+   "sizeOk": true
+  },
+  "thresholds": {
+   "writeTotalP50Ms": 3000,
+   "quotaMinFactor": 10,
+   "sizeTolerance": 0.05
+  }
+ },
+ "notes": [
+  "空白页存在脚本/资源（污染告警）"
+ ],
+ "pageErrors": []
+}

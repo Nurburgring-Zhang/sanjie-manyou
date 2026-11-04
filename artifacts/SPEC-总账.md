@@ -2396,3 +2396,13 @@ node scripts/probe-p95-attrib.mjs  (600帧×2轮) → artifacts/p95-attrib-600.j
 - 决策：P0-2/P0-3 = 网格哈希+增量更新 @8m；groundHeight forEach → pointQuery 强制修订；幽灵格风险登记。
 - ZCode 对抗核验：增量含动态换格（3,937 npc 每帧行走），校验和逐位一致，承重假设成立。
 - **-1 风险验证：5/7**（H5/P0-0/H3/H1/H2 ✅ + H6 ✅ 提前；余 H4 存档、H7 移动造物）。
+
+
+---
+
+## 2026-11-04 补登 III：H4 存档 GO（-1 阶段 6/7 → 仅余 H7）
+
+- **GO，P0-4 不降级**：方案 A（原始 JSON 单事务双 store）写入 p95 260ms、落盘 17.2MB；方案 B 手工压缩实测否决（Chrome 已自动 Snappy，双重压缩负收益且落盘反大 21MB）。
+- 原子性 4 子例全过；**坑实锤：put 同步抛错不自动 abort（半写提交）**——P0-4 五条修订见 spike 报告。
+- 恢复演练通过（截断→回退→hash OK）；persist()=false 待申请。
+- 执行说明：H4 agent 死亡（通知丢失），脚本由 agent 完整交付，ZCode 代跑收口。
