@@ -510,3 +510,18 @@ T_static 18,959,342 / live 4610（npc 4520 + beast 90）/ dev p95 33.3 / vitest 
 - 验证链五判据全过：probe-entity-registry A1 PASS / tsc 0 错 / vitest 7 files 89 tests（81+8 新）/ probe-determinism PASS / **T_static 18,959,342 实测不变**（probe-face-accounting PASS）。
 - 单测：tests/entityRegistry.test.ts 8 条（A2 递增去重/A3/A4 幂等/A6 逆序+重入/A7-node/A8 确定性/forEach 过滤/persist+组件槽）。
 - 步 2/3 未动（谁都不读）；A5（renderer calls）与 A7-heap 留步 3 页面验证；A-move/A-leak（H7）入 P0-1 断言集待步 2。
+
+## 2026-11-05 01:xx · P0-5 + P0-6 收口（步 3 前置就绪）
+
+### P0-5 removeUpdate + 固定步循环
+- `engine.removeUpdate(u)`：splice 保序（spec §6 遍历顺序稳定；swap-remove 会破坏逐帧确定性），幂等。
+- `src/rt/loop.ts`：FixedStepLoop（FIXED_DT=1/120 / MAX_SUBSTEPS=16 / 掉帧钳制，与 physics.ImpactSystem 同口径通用化）；注册顺序=执行顺序；确定性可单测。
+- 诚实范围：player 接入固定步是行为变化（移动手感改变），列 **P0-5b** 独立小步验证后接——本切片只交付基础设施（零行为变化）。
+
+### P0-6 unregister + setBounds（H7 裁定落地）
+- `LodManager.unregister(id)`：摘组+摘 snap（只摘 LOD 管理，不动 scene/几何）；幂等。
+- `LodManager.setBounds(id, cx..hz)`：**单事务**同块刷组中心/半尺 + 全成员剔除体（InstancedMesh 走实例感知 computeBoundingSphere；H7 实测的两处陈旧——判档不跟/移出视锥 +1 call——的语义层修复点）。
+- `city_*` 烘焙对象禁开移动/注销 API（H7 裁定，编码期纪律）。
+
+### 验证链
+vitest **8 files / 96 tests** 全绿（+7 新：loop 对称/固定步顺序/确定性/截断/unregister/setBounds 判档跟随/剔除体刷新）；tsc 0 错；determinism PASS；A1 仍 PASS。测试自身两轮修正（交错序列才是正确语义；snap 引用别名需取值快照；测试数据须贴真实四档注册形态——空 far 档会触发"宁可糊不能空"兜底）。

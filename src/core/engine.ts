@@ -233,6 +233,39 @@ export class LodManager {
     return true;
   }
 
+  /**
+   * P0-6（H7 裁定）：注销组——从管理器摘除，之后 update 不再判档/写该组 visible。
+   * 只摘 LOD 管理，不动 scene 与几何（几何释放属调用方 onDispose 语义）。
+   * 返回 false = 组不存在（幂等）。
+   */
+  unregister(id: string): boolean {
+    const gi = this.groups.findIndex((x) => x.id === id);
+    if (gi < 0) return false;
+    const snapId = this.view.groups.findIndex((x) => x.id === id);
+    if (snapId >= 0) this.view.groups.splice(snapId, 1);
+    this.groups.splice(gi, 1);
+    return true;
+  }
+
+  /**
+   * P0-6（H7 裁定）：移动造物的单事务刷新——同一同步块里更新组中心/半尺 + 刷新全部
+   * 成员剔除体（InstancedMesh 走实例感知 computeBoundingSphere，普通 Mesh 走 geometry）。
+   * 缺这两步的任何一步都会复现 H7 实测的「移出视锥仍 +1 call / 判档不跟」。
+   */
+  setBounds(id: string, cx: number, cy: number, cz: number, hx: number, hy: number, hz: number): boolean {
+    const g = this.groups.find((x) => x.id === id);
+    if (!g) return false;
+    g.cx = cx; g.cy = cy; g.cz = cz;
+    g.hx = hx; g.hy = hy; g.hz = hz;
+    for (const m of g.meshes) {
+      const im = m as THREE.InstancedMesh;
+      if (typeof im.computeBoundingSphere === 'function') { im.computeBoundingSphere(); continue; }
+      const mesh = m as THREE.Mesh;
+      if (mesh.geometry) mesh.geometry.computeBoundingSphere();
+    }
+    return true;
+  }
+
   reset(): void {
     this.view.switches = 0;
     this.view.switchEvents = 0;
@@ -726,6 +759,17 @@ export class Engine {
   }
 
   addUpdate(u: Updatable): void { this.updatables.push(u); }
+
+  /**
+   * P0-5：与 addUpdate 对称的注销。splice 保序（spec §6：遍历顺序必须稳定——swap-remove 会
+   * 把尾项换到被删位，破坏逐帧确定性顺序）。不存在时返回 false（幂等）。
+   */
+  removeUpdate(u: Updatable): boolean {
+    const i = this.updatables.indexOf(u);
+    if (i < 0) return false;
+    this.updatables.splice(i, 1);
+    return true;
+  }
 
   private bindInput(): void {
     window.addEventListener('keydown', (e) => {
