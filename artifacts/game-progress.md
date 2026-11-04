@@ -533,3 +533,12 @@ vitest **8 files / 96 tests** 全绿（+7 新：loop 对称/固定步顺序/确�
 - 单测 6 条：候选一致性（500 实体×50 查询，网格 vs 朴素扫零漏报零幽灵）/ 换格幽灵对账（200 实体×100 帧含跨格快移，幽灵=0 且尾验自见率 100%）/ remove 摘除 / **「生成物挡住玩家」端到端**（球 r2，玩家走近 |z|≤3 被挡）/ dispose 摘除闭环 / updateAll 引用同步。
 - 测试自身两轮修正（诚实记录）：一致性上界 (r+12)² 漏算 cell 对角分量 → (r+16)²；换格测试初版传快照对象（永不换格）→ 改引用语义（真实用法）。**实现零改动通过。**
 - 验证链：vitest **9 files / 102 tests** 全绿（+6 新）；tsc 0 错；determinism PASS；A1 PASS。
+
+## 2026-11-05 02:xx · P0-2+P0-7 统一地面查询层收口（零接线切片）
+
+- `src/rt/ground.ts`：GroundLayers——block/creation 顶面层（attachGroundBox：collider+topY+onDispose 摘除闭环）走 **ColliderGrid pointQuery（H2 禁 forEach 落地）**；既有判定（player.groundHeight 分层 / walkSurfaceY 哈希）作为 provider 注入组合，不复制不接管。
+- `groundAt(x,z,refY,stepUp=0.95)`：顶面（≤refY+stepUp 的最高者）与 providers 取 max——语义照 walkSurfaceY 口径。
+- 单测 6 条：顶面/provider 组合/stepUp 口径/天宫烟测/dispose 摘除闭环/引用移动跟随/多块取 max。
+- 测试三轮修正如实记录：①stepUp 语义（refY=0 够不着 5m 顶面——期望值写错）；②天宫烟测 0.05 差；③**跨 cell 漏检**——单 cell 查询在实体中心与查询点分属相邻 cell 时漏检（查询半径升 CELL=8 覆盖 3×3 邻域，仍远优于 4400 线性扫）；④vitest 环境 require 不可用→静态 import。
+- **零接线声明**：player/behaviors 未动——接线（步 2 只读消费）是行为变化，须收口探针护航后独立切片。
+- 验证链：vitest **10 files / 108 tests** 全绿（+12）；tsc 0 错；determinism PASS。
