@@ -490,3 +490,10 @@ node scripts/verify-packaged.mjs "release-v79/win-unpacked/CyberQingming.exe"
 ### 状态
 - **-1 风险验证 6/7**：仅余 H7 移动造物（agent 在跑：实例化/独立 mesh/烘焙三路径移动实验）。
 - push：网络间歇抖动，ahead 积压随时可推平。
+
+
+## 2026-11-05 · H7 GO + G-1 门达成（-1 风险验证 7/7 收官）
+
+- H7（artifacts/spike-H7-move-lod.md）：实例化移动 LOD 不跟（setBounds 缺口）/ 独立 mesh 无距离 LOD / 烘焙禁移。P0-6 裁定：unregister+setBounds 两 API、setBounds 单事务刷包围盒+剔除体、A-move/A-leak 断言、city_* 禁移。
+- **G-1 ✅ 达成 → 0 地基解锁**。下一步：P0-1 实体表实施（选型全就绪：H1 模型/H2 网格/H4 存档形态/P0-0 确定性基线）。
+- 融合终版 FINAL 已入库（0f0a609/6a3c12e）；push 积压 ahead 5 待网络。

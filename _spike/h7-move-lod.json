@@ -1,0 +1,1245 @@
+{
+ "generatedAt": "2026-11-04T16:31:15.693Z",
+ "url": "http://127.0.0.1:4182/",
+ "chrome": "C:\\Users\\Administrator\\AppData\\Local\\ms-playwright\\chromium-1243\\chrome-win64\\chrome.exe",
+ "status": "OK",
+ "meta": {
+  "backend": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4090 (0x00002684) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "quality": {
+   "name": "high",
+   "pixelRatio": 1
+  },
+  "shadowMapEnabled": true,
+  "cameraPos": [
+   -517.18,
+   15.42,
+   71.08
+  ],
+  "cameraDir": [
+   0.949,
+   -0.057,
+   -0.309
+  ],
+  "lodGroups": 54,
+  "threeRevision": "180"
+ },
+ "baseline": {
+  "frames": [
+   {
+    "calls": 240,
+    "ms": 16.6
+   },
+   {
+    "calls": 378,
+    "ms": 16.7
+   },
+   {
+    "calls": 240,
+    "ms": 8.3
+   },
+   {
+    "calls": 378,
+    "ms": 8.4
+   },
+   {
+    "calls": 240,
+    "ms": 8.3
+   },
+   {
+    "calls": 378,
+    "ms": 16.6
+   },
+   {
+    "calls": 240,
+    "ms": 8.3
+   },
+   {
+    "calls": 378,
+    "ms": 8.4
+   },
+   {
+    "calls": 240,
+    "ms": 16.7
+   },
+   {
+    "calls": 378,
+    "ms": 8.3
+   },
+   {
+    "calls": 240,
+    "ms": 8.3
+   },
+   {
+    "calls": 378,
+    "ms": 8.4
+   },
+   {
+    "calls": 240,
+    "ms": 8.3
+   },
+   {
+    "calls": 378,
+    "ms": 16.7
+   },
+   {
+    "calls": 240,
+    "ms": 8.3
+   },
+   {
+    "calls": 378,
+    "ms": 8.3
+   },
+   {
+    "calls": 240,
+    "ms": 16.7
+   },
+   {
+    "calls": 378,
+    "ms": 8.4
+   },
+   {
+    "calls": 240,
+    "ms": 8.3
+   },
+   {
+    "calls": 378,
+    "ms": 8.3
+   },
+   {
+    "calls": 240,
+    "ms": 16.7
+   },
+   {
+    "calls": 378,
+    "ms": 8.3
+   },
+   {
+    "calls": 240,
+    "ms": 8.3
+   },
+   {
+    "calls": 378,
+    "ms": 8.4
+   },
+   {
+    "calls": 240,
+    "ms": 16.7
+   },
+   {
+    "calls": 378,
+    "ms": 16.6
+   },
+   {
+    "calls": 240,
+    "ms": 8.3
+   },
+   {
+    "calls": 378,
+    "ms": 8.4
+   },
+   {
+    "calls": 240,
+    "ms": 16.6
+   },
+   {
+    "calls": 378,
+    "ms": 8.4
+   }
+  ],
+  "summary": {
+   "n": 30,
+   "callsMin": 240,
+   "callsMax": 378,
+   "callsMean": 309,
+   "frameMsP50": 8.4,
+   "frameMsP95": 16.7,
+   "frameMsMax": 16.7
+  },
+  "stable": false
+ },
+ "expA_instanced": {
+  "instanceCount": 64,
+  "geometrySrc": "pool_hem",
+  "register": {
+   "frames": [
+    {
+     "calls": 380,
+     "ms": 16.6
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 16.6
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.2
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 16.7
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.2
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 16.7
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.2
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 380,
+     "ms": 8.5
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 380,
+     "ms": 8.2
+    },
+    {
+     "calls": 241,
+     "ms": 8.5
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    }
+   ],
+   "summary": {
+    "n": 30,
+    "callsMin": 241,
+    "callsMax": 380,
+    "callsMean": 310.5,
+    "frameMsP50": 8.4,
+    "frameMsP95": 16.7,
+    "frameMsMax": 16.7
+   },
+   "groupAfterRegister": {
+    "tier": "near",
+    "want": "near",
+    "dist": 16,
+    "visible": 1
+   },
+   "callsDeltaVsBaseline": 1.5
+  },
+  "moveInstance50m": {
+   "frames": [
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 16.6
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 16.6
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 16.6
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 16.7
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.8
+    },
+    {
+     "calls": 380,
+     "ms": 8.2
+    }
+   ],
+   "summary": {
+    "n": 30,
+    "callsMin": 241,
+    "callsMax": 380,
+    "callsMean": 310.5,
+    "frameMsP50": 8.4,
+    "frameMsP95": 16.7,
+    "frameMsMax": 16.8
+   },
+   "movedInstance": {
+    "by": "instanceMatrix +50m along camera-right",
+    "to": [
+     -473.2254439708331,
+     13.70600761840371,
+     109.34864978311958
+    ]
+   },
+   "groupAfterMove": {
+    "tier": "near",
+    "want": "near",
+    "dist": 16,
+    "visible": 1
+   },
+   "callsDeltaVsBaseline": 1.5,
+   "lodTierUnchangedAfterMove": true,
+   "interpretation": "LOD 组的 tier/want/dist 与移动前逐值一致 → 注册时拷贝的静态包围盒不跟 instanceMatrix（P0-6 setBounds 缺口的直接证据）"
+  },
+  "moveAllBehindCamera": {
+   "frames": [
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.8
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.2
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    }
+   ],
+   "summary": {
+    "n": 30,
+    "callsMin": 241,
+    "callsMax": 380,
+    "callsMean": 310.5,
+    "frameMsP50": 8.4,
+    "frameMsP95": 16.7,
+    "frameMsMax": 16.8
+   },
+   "sphereBeforeRecompute": {
+    "c": [
+     -486.4799147266236,
+     17.395088806314746,
+     68.63315200207518
+    ],
+    "r": 15.2
+   },
+   "callsDeltaVsBaseline": 1.5,
+   "culledAfterMoveAllOut": false,
+   "afterComputeBoundingSphere": {
+    "sphereMs": 0,
+    "sphereRadius": 9,
+    "summary": {
+     "n": 10,
+     "callsMin": 240,
+     "callsMax": 379,
+     "callsMean": 309.5,
+     "frameMsP50": 8.4,
+     "frameMsP95": 16.7,
+     "frameMsMax": 16.7
+    },
+    "callsDeltaVsBaseline": 0.5
+   },
+   "boundingSphereCost4096": {
+    "matrixWrite4096Ms": 2.7,
+    "computeBoundingSphere4096Ms": 0.4
+   }
+  },
+  "cleanup": {
+   "groupsAfterRemove": 55,
+   "recoveryCallsMean": 309,
+   "baselineCallsMax": 378,
+   "callsBackToBaseline": true
+  },
+  "groupLeakConfirmed": true
+ },
+ "expB_independent": {
+  "addInView": {
+   "frames": [
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.2
+    },
+    {
+     "calls": 379,
+     "ms": 8.5
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.8
+    },
+    {
+     "calls": 379,
+     "ms": 8.2
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 379,
+     "ms": 16.7
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.8
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.2
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    }
+   ],
+   "summary": {
+    "n": 30,
+    "callsMin": 241,
+    "callsMax": 379,
+    "callsMean": 310,
+    "frameMsP50": 8.3,
+    "frameMsP95": 16.8,
+    "frameMsMax": 16.8
+   },
+   "callsDeltaVsBaseline": 1,
+   "addedAt": [
+    -488.702912191514,
+    13.70600761840371,
+    61.80448108202846
+   ]
+  },
+  "move50mOutOfFrustum": {
+   "frames": [
+    {
+     "calls": 240,
+     "ms": 8.4
+    },
+    {
+     "calls": 378,
+     "ms": 16.6
+    },
+    {
+     "calls": 240,
+     "ms": 8.4
+    },
+    {
+     "calls": 378,
+     "ms": 8.3
+    },
+    {
+     "calls": 240,
+     "ms": 8.3
+    },
+    {
+     "calls": 378,
+     "ms": 8.4
+    },
+    {
+     "calls": 240,
+     "ms": 16.6
+    },
+    {
+     "calls": 378,
+     "ms": 8.3
+    },
+    {
+     "calls": 240,
+     "ms": 16.8
+    },
+    {
+     "calls": 378,
+     "ms": 8.3
+    },
+    {
+     "calls": 240,
+     "ms": 8.2
+    },
+    {
+     "calls": 378,
+     "ms": 16.8
+    },
+    {
+     "calls": 240,
+     "ms": 8.3
+    },
+    {
+     "calls": 378,
+     "ms": 8.3
+    },
+    {
+     "calls": 240,
+     "ms": 8.3
+    },
+    {
+     "calls": 378,
+     "ms": 16.7
+    },
+    {
+     "calls": 240,
+     "ms": 8.3
+    },
+    {
+     "calls": 378,
+     "ms": 16.7
+    },
+    {
+     "calls": 240,
+     "ms": 8.4
+    },
+    {
+     "calls": 378,
+     "ms": 8.3
+    },
+    {
+     "calls": 240,
+     "ms": 8.3
+    },
+    {
+     "calls": 378,
+     "ms": 16.7
+    },
+    {
+     "calls": 240,
+     "ms": 8.3
+    },
+    {
+     "calls": 378,
+     "ms": 8.4
+    },
+    {
+     "calls": 240,
+     "ms": 8.3
+    },
+    {
+     "calls": 378,
+     "ms": 16.6
+    },
+    {
+     "calls": 240,
+     "ms": 8.3
+    },
+    {
+     "calls": 378,
+     "ms": 16.7
+    },
+    {
+     "calls": 240,
+     "ms": 8.4
+    },
+    {
+     "calls": 378,
+     "ms": 8.3
+    }
+   ],
+   "summary": {
+    "n": 30,
+    "callsMin": 240,
+    "callsMax": 378,
+    "callsMean": 309,
+    "frameMsP50": 8.4,
+    "frameMsP95": 16.8,
+    "frameMsMax": 16.8
+   },
+   "callsDeltaVsBaseline": 0,
+   "frustumCullingFollowed": true
+  },
+  "backInViewWithShadow": {
+   "frames": [
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 16.7
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 16.6
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 380,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.2
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 16.7
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 8.2
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 380,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 380,
+     "ms": 16.6
+    }
+   ],
+   "summary": {
+    "n": 30,
+    "callsMin": 241,
+    "callsMax": 380,
+    "callsMean": 310.5,
+    "frameMsP50": 8.4,
+    "frameMsP95": 16.7,
+    "frameMsMax": 16.7
+   },
+   "callsDeltaVsBaseline": 1.5,
+   "shadowCallsDelta": 0.5
+  },
+  "far2000mNoLod": {
+   "frames": [
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 379,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 379,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 379,
+     "ms": 16.7
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 379,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 8.2
+    },
+    {
+     "calls": 379,
+     "ms": 16.7
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 379,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    },
+    {
+     "calls": 241,
+     "ms": 8.3
+    },
+    {
+     "calls": 379,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.7
+    },
+    {
+     "calls": 379,
+     "ms": 8.2
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 379,
+     "ms": 16.6
+    },
+    {
+     "calls": 241,
+     "ms": 8.4
+    },
+    {
+     "calls": 379,
+     "ms": 8.4
+    },
+    {
+     "calls": 241,
+     "ms": 16.6
+    },
+    {
+     "calls": 379,
+     "ms": 8.3
+    }
+   ],
+   "summary": {
+    "n": 30,
+    "callsMin": 241,
+    "callsMax": 379,
+    "callsMean": 310,
+    "frameMsP50": 8.4,
+    "frameMsP95": 16.7,
+    "frameMsMax": 16.7
+   },
+   "callsDeltaVsBaseline": 1,
+   "note": "2000m 仍在视锥内 → 无 LOD 注册的独立 mesh 不会被距离降档，只要在视锥就照样提交"
+  },
+  "cleanup": {
+   "recoveryCallsMean": 309,
+   "baselineCallsMax": 378,
+   "callsBackToBaseline": true
+  }
+ },
+ "expC_baked": {
+  "cityMeshCount": 37,
+  "totalVerts": 56696487,
+  "smallestBatch": {
+   "name": "city_signs",
+   "verts": 14652,
+   "matrixAutoUpdate": false,
+   "boundingBoxSpan": null
+  },
+  "largestBatch": {
+   "name": "city_roof_9",
+   "verts": 5472942,
+   "matrixAutoUpdate": false
+  },
+  "perMeshTop5Smallest": [
+   {
+    "name": "city_signs",
+    "verts": 14652,
+    "matrixAutoUpdate": false
+   },
+   {
+    "name": "city_glow_3",
+    "verts": 34212,
+    "matrixAutoUpdate": false
+   },
+   {
+    "name": "city_fabric_3",
+    "verts": 44748,
+    "matrixAutoUpdate": false
+   },
+   {
+    "name": "city_water",
+    "verts": 150072,
+    "matrixAutoUpdate": false
+   },
+   {
+    "name": "city_wood_3",
+    "verts": 287796,
+    "matrixAutoUpdate": false
+   }
+  ],
+  "wholeBatchMove": {
+   "callsBefore": [
+    240
+   ],
+   "callsAfterMoving50m": [
+    378
+   ],
+   "granularity": "整批（单件无身份，bake.ts push 时 applyMatrix4 已把变换烘进顶点）"
+  }
+ },
+ "pageErrors": [
+  "console.log(合批): [加载] 静态合批：273 个网格 → 36 个（合并 22，保留单块 14，单批 ≤48MB）"
+ ],
+ "verdict": {
+  "instancedPath": {
+   "lodTierFollowsInstanceMatrix": false,
+   "drawCallsConstantPerBatch": true,
+   "frustumCulledAfterMoveAllOut": false,
+   "needsManualComputeBoundingSphere": true,
+   "groupLeakNoUnregister": true
+  },
+  "independentPath": {
+   "frustumCullingFollowed": true,
+   "shadowFollows": true,
+   "distanceLodWithoutRegistration": false
+  },
+  "bakedPath": {
+   "movableGranularity": "whole material batch only",
+   "singleCreationMovable": false
+  }
+ }
+}

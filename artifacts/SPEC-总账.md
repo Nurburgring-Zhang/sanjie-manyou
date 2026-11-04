@@ -2406,3 +2406,12 @@ node scripts/probe-p95-attrib.mjs  (600帧×2轮) → artifacts/p95-attrib-600.j
 - 原子性 4 子例全过；**坑实锤：put 同步抛错不自动 abort（半写提交）**——P0-4 五条修订见 spike 报告。
 - 恢复演练通过（截断→回退→hash OK）；persist()=false 待申请。
 - 执行说明：H4 agent 死亡（通知丢失），脚本由 agent 完整交付，ZCode 代跑收口。
+
+
+---
+
+## 2026-11-05 补登：H7 GO + **G-1 门达成（-1 风险验证 7/7）→ 0 地基解锁**
+
+- H7 三路径：实例化移动后 LOD 组不跟（setBounds 缺口坐实，手动 computeBoundingSphere 回落 0.4ms）；独立 mesh 无距离 LOD；烘焙禁运行时移动。注销 A5 成立但 LOD 组 54→55 泄漏。
+- P0-6 裁定：unregister+setBounds 两 API 不扩；setBounds 单事务刷组包围盒+剔除体；P0-1 加 A-move/A-leak 断言；city_* 禁移动 API。
+- **G-1 ✅**：七 spike 全收口（H5/H1/H2/H3/H4/H6/H7），各有对抗核验。**P0-1 实体表实施解锁。**
