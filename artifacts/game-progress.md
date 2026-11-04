@@ -525,3 +525,11 @@ T_static 18,959,342 / live 4610（npc 4520 + beast 90）/ dev p95 33.3 / vitest 
 
 ### 验证链
 vitest **8 files / 96 tests** 全绿（+7 新：loop 对称/固定步顺序/确定性/截断/unregister/setBounds 判档跟随/剔除体刷新）；tsc 0 错；determinism PASS；A1 仍 PASS。测试自身两轮修正（交错序列才是正确语义；snap 引用别名需取值快照；测试数据须贴真实四档注册形态——空 far 档会触发"宁可糊不能空"兜底）。
+
+## 2026-11-05 02:xx · P0-3 collider registry 收口（H2 选型落地）
+
+- `src/rt/collider.ts`：ColliderGrid（均匀网格 @8m、数字打包 key、增量换格、pointQuery 零分配遍历、reconcile 幽灵对账双向修正）+ ColliderRegistry（attachEntity 挂接实体表 onDispose 摘除闭环 / blocked 两级判定=网格候选→形状精判 / updateAll 引用同步驱动）。
+- 四形状：box（圆-AABB）/sphere/capsule（XZ 圆）实判；**mesh 当前不挡（诚实降级，P2 造物期精判）**。
+- 单测 6 条：候选一致性（500 实体×50 查询，网格 vs 朴素扫零漏报零幽灵）/ 换格幽灵对账（200 实体×100 帧含跨格快移，幽灵=0 且尾验自见率 100%）/ remove 摘除 / **「生成物挡住玩家」端到端**（球 r2，玩家走近 |z|≤3 被挡）/ dispose 摘除闭环 / updateAll 引用同步。
+- 测试自身两轮修正（诚实记录）：一致性上界 (r+12)² 漏算 cell 对角分量 → (r+16)²；换格测试初版传快照对象（永不换格）→ 改引用语义（真实用法）。**实现零改动通过。**
+- 验证链：vitest **9 files / 102 tests** 全绿（+6 新）；tsc 0 错；determinism PASS；A1 PASS。
