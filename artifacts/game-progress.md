@@ -542,3 +542,10 @@ vitest **8 files / 96 tests** 全绿（+7 新：loop 对称/固定步顺序/确�
 - 测试三轮修正如实记录：①stepUp 语义（refY=0 够不着 5m 顶面——期望值写错）；②天宫烟测 0.05 差；③**跨 cell 漏检**——单 cell 查询在实体中心与查询点分属相邻 cell 时漏检（查询半径升 CELL=8 覆盖 3×3 邻域，仍远优于 4400 线性扫）；④vitest 环境 require 不可用→静态 import。
 - **零接线声明**：player/behaviors 未动——接线（步 2 只读消费）是行为变化，须收口探针护航后独立切片。
 - 验证链：vitest **10 files / 108 tests** 全绿（+12）；tsc 0 错；determinism PASS。
+
+## 2026-11-05 03:xx · P0-4 存档实施收口（H4 方案 A 五修订全落地）
+
+- `src/rt/save.ts`：SaveManager（IndexedDB 双 store slots+index、**原始 JSON 单 readwrite 事务**（禁手工压缩——H4 实测）、**put 同步抛错 try/catch 显式 tx.abort**（实测半写提交坑）、**版本化槽位 v0/v1/v2 轮转 + lastGood 指针 + 顺序回退**、persist 授权、estimate）+ SaveSlots 纯轮转类（Node 可测）+ migrate 链（v1 legacy 三键 → v2；未知未来版本拒载）+ loadOrMigrateLegacy（旧档可开）。
+- 页面探针 `probe-save-atomic.mjs` **6 断言全 PASS**（真实 IDB）：S1 原子写回读一致 / S2 lastGood 截断半写 → 顺序回退完好槽（coins=888）/ S3 显式 abort 两 store 回滚 + lastGood 未污染 / S3b DB 未毒坏 / S4 legacy 250/3/1 → v2 迁移落档 / S5 persist=false + quota 10GB 实录。
+- 纯逻辑单测 5 条（轮转 readOrder 修一 bug：其余槽须号降序=新→旧）/ v1→v2 迁移 / 未知版本拒载 / legacy NaN 同口径。
+- 验证链：vitest **10 files / 111 tests** 全绿（+3）；tsc 0 错；determinism PASS。诚实备注：H4 修订⑤「真实存档序列化复测」待步 3 接管实体表后跑（当前 economy 快照，entities 字段先行恒空）。

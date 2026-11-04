@@ -1,0 +1,34 @@
+{
+ "checks": [
+  {
+   "name": "S1 原子写+回读一致",
+   "ok": true,
+   "detail": "slot=save:v0 bytes=101"
+  },
+  {
+   "name": "S2 坏档回退",
+   "ok": true,
+   "detail": "lastGood=save:v0 截断 → 回退到完好槽 coins=888"
+  },
+  {
+   "name": "S3 显式 abort 回滚",
+   "ok": true,
+   "detail": "abort 后两 store 均回滚、lastGood 未污染"
+  },
+  {
+   "name": "S3b 失败后 DB 可继续写",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 legacy 迁移",
+   "ok": true,
+   "detail": "三键 250/3/1 → v2 且二次读回确认落档"
+  },
+  {
+   "name": "S5 persist/estimate 实录",
+   "ok": true,
+   "detail": "persist=false usage=0.1MB quota=10240MB"
+  }
+ ]
+}
