@@ -677,9 +677,14 @@ export class World {
               this.codexLog.push({ code: JULING.code, name: JULING.name, note: '天宫擂台 · 已伏誅' });
             }
             bus.emit('codex:unlock', JULING.code);
-            // P1-2 生存循环利品：伏誅巨灵神 → 蟠桃 +2 + 铜钱 300（战斗→资源轴闭环）
+            // P1-2 生存循环利品：伏誅巨灵神 → 蟠桃 +2 + 铜钱 300 + 「伏魔锏」攻击 4.0
+            // （装备梯度：双拳 1.0 < 钢刀 2.5 < 伏魔锏 4.0——Boss 专属顶级武器，战斗→成长闭环）
             this.interact.addPeach(2);
             this.interact.earn(300);
+            if (this.playerWeapon.mult < 4) {
+              this.playerWeapon = { mult: 4.0, label: '伏魔锏' };
+              bus.emit('ui:toast', '巨灵神的伏魔锏归你所有——攻击力大幅提升！');
+            }
             this.survival.bossReward();
           },
           () => { this.respawnPlayerAt(JULING.recoverPoi); },
