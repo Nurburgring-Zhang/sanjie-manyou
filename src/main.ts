@@ -3,6 +3,7 @@ import { Engine } from './core/engine';
 import { World } from './world';
 import { STATION } from './data/shuihu';
 import { initUI } from './ui/ui';
+import { BuildMode } from './game/buildMode';
 
 // ============ 入口：加载 → 世界生成 → 开场运镜 ============
 async function boot(): Promise<void> {
@@ -38,6 +39,11 @@ async function boot(): Promise<void> {
     tip.textContent = label + '……';
   });
   bar.style.width = '100%';
+
+  // P1-2 建造模式：G 键切换、hotbar、射线放/拆（world.voxelMesh 由载入链产出）
+  const build = new BuildMode(() => engine.scene, () => engine.camera);
+  build.init(world.voxelMesh!, document.getElementById('ui')!);
+  (window as unknown as Record<string, unknown>)['__build'] = build;
 
   engine.addUpdate({ update: (t, dt) => { world.update(t, dt); } });
   engine.addUpdate({ update: (_t, dt) => { uiTick(dt); } });

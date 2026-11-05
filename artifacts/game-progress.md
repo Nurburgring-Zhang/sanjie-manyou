@@ -628,3 +628,20 @@ M0 / P0-0 / P0-1(步1/2/3) / P0-3 / P0-2+7查询层 / P0-4 / P0-5 / P0-6 / P0-8 
 - `probe-economy.mjs` **6/6 PASS**（真实页面 interact 实例）：E1a 拒付 / E1b 扣 50 / E2a source / E2b 封顶 9 / E3 跨轴 / E4 grant 回归。
 - 验证链：vitest 118/118、determinism PASS、A1 PASS。
 - 汇率表与剩余设计（更多 sink 物品）见 spike-H6 结论节；资源轴扩展（体力/食材）随 P1-2 MC 中间层。
+
+## 2026-11-06 · P1-2 体素沙盒最小可玩闭环收口（D3 首块游戏实体落地）
+
+### 玩法实体（用户可见可玩）
+- **营造司**：城南偏东荒地 (2776,-824) 的 48×48 青石台，POI 注册（传送面板可达）；基座顶面 1.0，玩家跳跃 1.34m 可上。
+- **G 键建造模式**：hotbar 8 种方块（营造土/青石/松木/城砖/琉璃/鎏金/碧玉/玄墨，1-8 或点击选择）+ 中央准星；**左键放**（射线命中面外邻格，限 12m）/ **右键拆**（y=0 基座保护）。
+- **体素站立**：player.groundHeight 城区分纳入 `voxelColumnTop`（步高 1.2 多层语义：基座/纤道/台面全兼容——walkSurfaceY 同款）——玩家可爬堆叠的方块塔。
+- **存档**：SaveDataV2.voxel 全量字段（[gx,gy,gz,t] 扁平），roundtrip 逐格一致。
+
+### 工程
+- `src/rt/voxelStore.ts`（纯数据零 three 依赖，可 Node 单测+被 player/存档查询）、`src/game/voxelMesh.ts`（per-face culling+面明暗差）、`src/game/buildMode.ts`（射线拾取/hotbar/G 键）、`src/rt/voxelGround.ts`（player→store 解耦桥）。
+- 单测 6 条（柱顶语义/roundtrip/边界/隔离）+ 探针 6/6（V1 网格+基座 / V2 站立 / V3 放拆数据链 / V4 roundtrip / V5 G 模式）。
+- **探针双实例教训**：vite dev 下模块 URL 带 HMR `?t=` 参数会分裂实例（world 的 store 有基座、探针 import 的为空）——改从 world 实例取（`world.voxelStore`），运行时单例语义恢复。
+- **columnTop 笔误**：注释写「继续扫」代码写了 `break`——多层步高语义（基座/纤道穿透）被截断，单测抓出。
+
+### 验证链
+vitest **13 files / 124 tests** 全绿（+6）；tsc 0 错；determinism PASS；economy 6/6；A1 PASS；voxel 冒烟 6/6。

@@ -1,0 +1,34 @@
+{
+ "checks": [
+  {
+   "name": "V1a 体素网格挂场景",
+   "ok": true,
+   "detail": "tri≈9600"
+  },
+  {
+   "name": "V1b 基座就位",
+   "ok": true,
+   "detail": "nonEmpty=2304"
+  },
+  {
+   "name": "V2 体素柱顶站立",
+   "ok": true,
+   "detail": "groundHeight=1（期望 1.0）"
+  },
+  {
+   "name": "V3 放/拆数据链",
+   "ok": true,
+   "detail": "nonEmpty 2304→2305→2304 colTop@refY1=2"
+  },
+  {
+   "name": "V4 存档 roundtrip 逐格一致",
+   "ok": true,
+   "detail": "flat=9216 项"
+  },
+  {
+   "name": "V5 G 模式切换",
+   "ok": true,
+   "detail": "toggle 后 hotbar 显示、再 toggle 后隐藏"
+  }
+ ]
+}

@@ -3,6 +3,7 @@ import type { Crowd } from '../actors/crowd';
 import type { Actor } from '../actors/types';
 import { PITCH_LIMIT, type Engine } from '../core/engine';
 import { bridgeDeckY, bridgeDeckYAt, BRIDGE_HALF } from '../city/layout';
+import { voxelColumnTop } from '../rt/voxelGround';
 import { terrainHeight, waterAt } from '../world/terrain';
 import { bus } from '../core/rng';
 import { legacyClock, type Clock } from '../actors/behaviors';
@@ -256,6 +257,9 @@ export class PlayerController {
       for (const d of DOCKS) {
         if (Math.abs(x - d[0]) < d[2] / 2 && Math.abs(z - d[1]) < d[3] / 2) return 0.95;
       }
+      // P1-2 体素站立：营造司（及未来全部 block/creation）柱顶纳入地面（一格跳跃可达语义）
+      const vt = voxelColumnTop(x, z, refY);
+      if (vt !== null) return vt;
       return 0;
     }
     // 城外大地

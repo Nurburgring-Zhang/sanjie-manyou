@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-05T18:38:38.103Z",
+ "generatedAt": "2026-11-05T19:25:52.740Z",
  "url": "http://127.0.0.1:4182/",
  "h1": [
   {
@@ -118,7 +118,9 @@
   }
  ],
  "h4": {
-  "keyGHits": [],
+  "keyGHits": [
+   "game\\buildMode.ts"
+  ],
   "keyYHits": [],
   "pass": true
  },

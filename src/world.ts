@@ -27,6 +27,8 @@ import { CreatureSystem, spawnZhaoGongming } from './sky/creatures';
 import { buildGhostFlora, buildCelestialFlora } from './sky/flora';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { PoiGuide } from './game/poiGuide';
+import { ensureWorkshopBase, voxelStore, VOX } from './rt/voxelStore';
+import { buildVoxelMesh } from './game/voxelMesh';
 import { buildSkyRealm, SkyCenters } from './sky/realm';
 import { DeityStage } from './sky/deities';
 import { Havoc, SKY_STAND_Y } from './sky/havoc';
@@ -282,6 +284,8 @@ export class World {
   playerWeapon = { mult: 1, label: '双拳' };
   scrolling = false;
   creatures: CreatureSystem | null = null;
+  voxelMesh: THREE.Mesh | null = null;
+  voxelStore: typeof voxelStore = voxelStore;   // P1-2：探针/存档从实例取（避免 HMR 双实例分裂）
   poiGuide: PoiGuide | null = null;
   assetAudit: BakerStats | null = null;
   private dynamicLights: { l: THREE.PointLight; base: number }[] = []; // 精修5：室内/界域点光（昼夜节律驱动）
@@ -323,6 +327,7 @@ export class World {
         POIS['mengpo'] = { name: '地府·孟婆庄', pos: new THREE.Vector3(-40, UNDER.y + 2, -132), radius: 12 };
         POIS['sansheng'] = { name: '地府·三生石', pos: new THREE.Vector3(24, UNDER.y + 2, -104), radius: 10 };
         POIS['wangxiang'] = { name: '地府·望乡台', pos: new THREE.Vector3(-150, UNDER.y + 18, -150), radius: 14 };
+        POIS['workshop'] = { name: '营造司（体素建造）', pos: new THREE.Vector3(VOX.ox + 24, 1.2, VOX.oz + 24), radius: 40 };
         POIS['scroll'] = { name: '上河长卷（横向观画）', pos: new THREE.Vector3(-560, 9, 46), radius: 10 };
         // 天宫·星宿九府：host 待定——九府是 x≈±215~230、z −70~80 的两列岛链（realm.ts:2207 buildStarPalaces），
         // 没有单点可站；本 POI 是 B10「两列中点」的片区标记，只把混合口径收进 heavenPoint：
@@ -547,6 +552,11 @@ export class World {
       ['幽冥·丰都街', () => buildUnderworldExpansion(baker, sg, this.atlas, rng)],
       ['幽冥·阎罗殿', () => buildYanluoInterior(baker, sg, this.atlas)],
       ['幽冥·孟婆庄', () => buildMengpoZhuang(baker, sg, this.atlas)],
+      ['营造司·体素台', () => {
+        // P1-2 最小可玩闭环：城南偏东荒地 48×48 青石台，G 键建造模式（D3 体素首块落地）
+        ensureWorkshopBase(voxelStore);
+        this.voxelMesh = buildVoxelMesh(scene);
+      }],
       ['幽冥·奈何桥', () => buildNaiheSystem(baker, sg, this.atlas)],
       ['幽冥·三生石', () => buildSansheng(baker, sg, this.atlas)],
       ['幽冥·望乡台', () => buildWangxiang(baker, sg, this.atlas)],
