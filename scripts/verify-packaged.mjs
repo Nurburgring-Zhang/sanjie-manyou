@@ -75,6 +75,11 @@ try {
   await pollUntil(() => typeof window.__qingming === 'object' && !!window.__qingming, 150000, '等待 __qingming');
   await pollUntil(() => !document.getElementById('loading'), 150000, '等待加载层消失');
   await sleep(2500);
+  // 2026-11-05：frameMs 环形缓冲（600 帧）里混着载入期构图冷帧（着色器首编译/峰值堆），
+  // 载入完成即快照会把冷帧算进 p95（六轮双峰 58 vs 67-83 的根因）。稳态口径：清空缓冲
+  // 后再采 300 帧（≥5s @60fps），与 --ab 的 baseline 口径一致。
+  await page.evaluate(() => { const e = window.__qingming.engine; e.frameMs.length = 0; e.maxFrameMs = 0; });
+  await sleep(5000);
   const url = page.url();
   // 首帧可能仍在编译着色器（软件渲染下每帧数秒），统计值要轮询到场景真的画出来为止
   async function readInfo() {
@@ -150,7 +155,12 @@ try {
   const loadMs = (info.navToEngineMs ?? 0) + (info.engineMs ?? 0);
   const loadOk = loadMs > 0 && loadMs <= 12000;
   const callsOk = (info.calls ?? 0) <= 600;
-  const p95Ok = (info.frameP95 ?? 0) <= 50;
+  // 门双口径（2026-11-05，审核 B 原话「50 是发布门，不是地基门」落地）：
+  //   G0 地基门 = p95 ≤ 70 且不回归 M0 基线（基线 58，baseline-M0.json）；
+  //   发布门   = p95 ≤ 50（G3 门槛，另报不混判）。
+  const p95 = info.frameP95 ?? 0;
+  const p95DevGate = p95 > 0 && p95 <= 70 && p95 <= 58 * 1.05;   // 地基门：≤70 且不回归基线 ±5%
+  const p95ReleaseGate = p95 > 0 && p95 <= 50;                    // 发布门：G3 才要求
   const ok =
     errors.length === 0 &&
     info.live > 0 &&
@@ -158,14 +168,14 @@ try {
     /^file:|^http:\/\/127/.test(url) &&
     loadOk &&
     callsOk &&
-    p95Ok;
+    p95DevGate;
   console.log('url:', url);
   console.log('runtime:', JSON.stringify(info));
   console.log('errors:', errors.length ? errors.slice(0, 5).join(' | ') : 'NONE');
   console.log(
     `gates: load=${loadMs}ms(≤12000 ${loadOk ? 'OK' : 'FAIL'}) ` +
       `calls=${info.calls}(≤600 ${callsOk ? 'OK' : 'FAIL'}) ` +
-      `p95=${info.frameP95}ms(≤50 ${p95Ok ? 'OK' : 'FAIL'})`,
+      `p95=${info.frameP95}ms(地基≤70不回归基线 ${p95DevGate ? 'OK' : 'FAIL'} | 发布≤50 ${p95ReleaseGate ? 'OK' : 'PENDING-G3'})`,
   );
   console.log(ok ? 'PACKAGED_BOOT=PASS' : 'PACKAGED_BOOT=FAIL');
   code = ok ? 0 : 1;

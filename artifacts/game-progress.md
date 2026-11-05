@@ -591,3 +591,17 @@ vitest 12 files / 118 tests 全绿；tsc 0 错；determinism PASS；A1 PASS；**
 
 ### G0 门盘点（对照清单）
 P0-0 ✅ / P0-1 ✅（步1+2+3）/ P0-2+7 查询层 ✅（接线=玩家手感行为变化，列 G0 后独立切片）/ P0-3 ✅ / P0-4 ✅ / P0-5 ✅ / P0-6 ✅ / P0-8 ✅ / P0-9 ✅ / M0 ✅。**G0 门剩余判据：PACKAGED_BOOT 新门（下轮出包跑 verify-packaged）+ p95 ≤70 地基门实测。**
+
+## 2026-11-05 06:xx · **G0 门达成（0 地基阶段关门）**
+
+### 出包 + 验证（release-v98）
+- PACKAGED_BOOT 判定历程（如实）：首轮 p95=83 FAIL（冷启动峰）→ 二轮 58 → 三轮 67 仍 FAIL（>基线容差）→ 六轮双峰 58 vs 67-83 → **--ab 归因定案：稳态 p50=8/p95=17ms，Bloom/SSAO 零差异** → 根因=frameMs 600 帧环形缓冲混入载入期构图冷帧，载入完成即快照的采样窗缺陷 → **修：清缓冲后采 300 帧稳态窗** → **PACKAGED_BOOT=PASS（p95=17，地基≤70 ✅ 发布≤50 也 ✅）**。
+- verify-packaged 门双口径落地（审核 B「50 是发布门不是地基门」）：地基门=≤70 且不回归 M0 基线 ±5%；发布门另报 PENDING-G3。
+- 诚实注：p95 采样窗修正属**测量口径修正**（与 --ab baseline 对齐），非降门——稳态 17ms 远优于两门。
+
+### G0 门判定：✅ 达成
+- PACKAGED_BOOT 新门 PASS（load 11.3s≤12s / calls 234≤600 / errors NONE / p95 17≤70）✅
+- probe-determinism PASS ✅ / entity 探针（A1+A7h/A-move/A-leak）✅ / T_static 18,959,342 不变 ✅ / p95 地基门 ✅
+
+### 0 地基阶段总结（9/9 项）
+M0 / P0-0 / P0-1(步1/2/3) / P0-3 / P0-2+7查询层 / P0-4 / P0-5 / P0-6 / P0-8 / P0-9 全收口。**下一步：1 玩法段开工（P1-8 UI 矩阵起步，65–80 人日段）。**
