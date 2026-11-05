@@ -1,0 +1,50 @@
+{
+ "checks": [
+  {
+   "name": "S6 存档读表交叉核",
+   "ok": true,
+   "detail": "entities=4610 persistCount=4610 alive=4610（persist 参数修复后全量入档）"
+  },
+  {
+   "name": "A5 注销后 mesh 摘除（场景图充要语义）",
+   "ok": true,
+   "detail": "inBefore=true odRan=1 inAfter=false uuidMatch=null parent=null gone=true goneUuidMatch=null foundType=-"
+  },
+  {
+   "name": "A7h 分配1000全注销 alive 回基线",
+   "ok": true,
+   "detail": "mid alive=5610（含1000测试实体）→ end alive=4610（差=1000）"
+  },
+  {
+   "name": "A-move setBounds 后剔除体刷新（H7 回归）",
+   "ok": true,
+   "detail": "center.x 11.5 → 501.5"
+  },
+  {
+   "name": "A-leak 注册/注销100轮 groups 回基线",
+   "ok": true,
+   "detail": "base=54 after100rounds=54（H7 实测曾 54→55）"
+  }
+ ],
+ "s6len": 4610,
+ "s6sample": [
+  {
+   "eid": 1,
+   "kind": "npc",
+   "x": -1.7,
+   "y": 6.533449089415513,
+   "z": 26.532400000005964
+  },
+  {
+   "eid": 2,
+   "kind": "npc",
+   "x": 0.6,
+   "y": 5.528213541666667,
+   "z": -31.3
+  }
+ ],
+ "a7": {
+  "midAlive": 5610,
+  "endAlive": 4610
+ }
+}

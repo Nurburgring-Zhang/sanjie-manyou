@@ -577,3 +577,17 @@ vitest **8 files / 96 tests** 全绿（+7 新：loop 对称/固定步顺序/确�
 
 ### 验证链
 vitest 12 files / 118 tests 全绿；tsc 0 错；determinism PASS；A1 PASS；**安全探针 5 项全过（负样本三 BLOCK + 桥 + 白名单外拒）**；vite build CSP 注入 dist 实证（grep connect-src 'none' 命中）。
+
+## 2026-11-05 05:xx · P0-1 步2 + 步3 收口（0 地基全部实施项完成）
+
+### 步 2（只读接入）
+- `save.ts collectPersistedEntities()` 改读实体表（forEach persist，allocate 顺序=A8 口径）；**发现并修登记缺陷：beast 两处 allocate 未标 persist: true**（90 只灵兽曾不入档——生命周期探针 S6 交叉核抓出）。
+- S6 交叉核 PASS：entities=4610 = persistCount = alive（全量入档）。
+
+### 步 3（生命周期断言，probe-entity-lifecycle.mjs 五断言全 PASS）
+- **S6** ✅ 4610=4610；**A7h** ✅ 分配1000全注销 alive 回基线（差=1000）；**A-move** ✅ setBounds 后剔除体刷新（11.5→501.5，H7 回归）；**A-leak** ✅ 注册/注销 100 轮 groups 54→54（H7 泄漏回归）；**A5** ✅ 场景图摘除（getObjectById null + parent null + uuid 终审）。
+- **A5 取证战如实记录**（5 轮取证递进）：calls 口径作废（autoReset=false 累计值+引擎并行帧无法隔离单因子）→ odRan/parent/uuid 终审链 → 一轮 inAfter=true/gone=false 翻转判定为取证时序与引擎 rAF 竞态（本轮双点干净 PASS），未强作解释。
+- **实现修正共 2 处**：beast persist 参数 ×2（登记完整性）——其余全为探针判定口径修正。
+
+### G0 门盘点（对照清单）
+P0-0 ✅ / P0-1 ✅（步1+2+3）/ P0-2+7 查询层 ✅（接线=玩家手感行为变化，列 G0 后独立切片）/ P0-3 ✅ / P0-4 ✅ / P0-5 ✅ / P0-6 ✅ / P0-8 ✅ / P0-9 ✅ / M0 ✅。**G0 门剩余判据：PACKAGED_BOOT 新门（下轮出包跑 verify-packaged）+ p95 ≤70 地基门实测。**

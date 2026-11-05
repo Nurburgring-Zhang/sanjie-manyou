@@ -13,7 +13,7 @@
 // 全链验收走页面探针 scripts/probe-save-atomic.mjs。
 // ============================================================================
 
-import { dispose } from './entity';
+import { dispose, forEach } from './entity';
 
 // ---- 轮转决策（纯逻辑，Node 可测） ----
 
@@ -72,9 +72,18 @@ export function legacyFromLocalStorage(storage: Storage): SaveDataV1 {
 }
 
 /** 实体表快照（P0-1 步 3 接管后由调用方传 persist 实体集；当前接口先行、调用后补） */
-export function collectPersistedEntities(kindOf: (fn: (e: { id: number; kind: string; x: number; y: number; z: number }) => void) => void): SaveDataV2['entities'] {
+/**
+ * P0-1 步 2（只读接入）：从实体表遍历 persist 实体生成存档数组——不维护自己的数组
+ * （spec §6：存档是表的读方）。顺序 = allocate 顺序（单调 id 序，A8 确定性口径）。
+ */
+export function collectPersistedEntities(): SaveDataV2['entities'] {
   const out: SaveDataV2['entities'] = [];
-  kindOf((e) => out.push({ eid: e.id, kind: e.kind, x: e.x, y: e.y, z: e.z }));
+  for (const kind of ['npc', 'beast', 'creation'] as const) {
+    forEach(kind, (rec) => {
+      if (!rec.persist) return;
+      out.push({ eid: rec.id, kind: rec.kind, x: rec.pos.x, y: rec.pos.y, z: rec.pos.z });
+    });
+  }
   return out;
 }
 
