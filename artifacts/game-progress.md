@@ -679,3 +679,9 @@ Y 键命令条 → 输入「一条赤红色的龙」→ 关键词匹配龙模板
 ### 诚实边界
 - 模板 8 种为手工放样（词表匹配非 LLM 意图解析——D5 P1 的 LLM 档属后续沙箱/云段）；mesh 静态展示（行为动画属 P1-5 六阶动词）。
 - script-src unsafe-inline 残余风险、mesh 形状不挡等旧账不变。
+
+## 2026-11-06 · 体素资源化收口（建造接经济循环）
+
+- 放置 10 文/块（买不起不落）、拆除返 2 文；build.spend/earn 由 main 注入 interact.tryPay/earn。
+- Boss 周期重生机制确认已有（spec.respawnDelay，state='respawning'）——可重复 Boss 内容 ✓。
+- probe-voxel **8/8 PASS**（V6a/V6b 资源化断言新增）。

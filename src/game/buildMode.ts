@@ -15,7 +15,10 @@ import { rebuildVoxelMesh } from './voxelMesh';
 
 export class BuildMode {
   active = false;
-  selected = 1;                                  // 当前方块类型（1-8）
+  selected = 1;
+  /** P1-2 资源化：放置扣 10 文 / 拆除返 2 文（main 注入 interact.tryPay/earn——资源轴闭环） */
+  spend: ((coins: number) => boolean) | null = null;
+  earn: ((coins: number) => void) | null = null;                                  // 当前方块类型（1-8）
   private mesh: THREE.Mesh | null = null;
   private hotbar: HTMLElement | null = null;
   private crosshair: HTMLElement | null = null;
@@ -118,6 +121,7 @@ export class BuildMode {
     const px = aim.gx + Math.round(n.x), py = aim.gy + Math.round(n.y), pz = aim.gz + Math.round(n.z);
     if (!inArea(VOX.ox + px, VOX.oz + pz) || py < 1 || py >= VOX.ny) return;   // 基座层 y=0 之上才可放
     if (voxelStore.get(px, py, pz) !== 0) return;
+    if (this.spend && !this.spend(10)) return;   // P1-2 资源化：10 文/块（买不起不落）
     voxelStore.set(px, py, pz, this.selected);
     if (this.mesh) rebuildVoxelMesh(this.mesh);
   }
@@ -128,6 +132,7 @@ export class BuildMode {
     if (!aim) return;
     if (aim.gy <= 0) return;
     if (voxelStore.get(aim.gx, aim.gy, aim.gz) === 0) return;
+    if (this.earn) this.earn(2);                 // P1-2 资源化：拆除返 2 文（回收）
     voxelStore.set(aim.gx, aim.gy, aim.gz, 0);
     if (this.mesh) rebuildVoxelMesh(this.mesh);
   }

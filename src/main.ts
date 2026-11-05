@@ -44,6 +44,8 @@ async function boot(): Promise<void> {
   // P1-2 建造模式：G 键切换、hotbar、射线放/拆（world.voxelMesh 由载入链产出）
   const build = new BuildMode(() => engine.scene, () => engine.camera);
   build.init(world.voxelMesh!, document.getElementById('ui')!);
+  build.spend = (n) => world.interact.tryPay(n);
+  build.earn = (n) => world.interact.earn(n);
   (window as unknown as Record<string, unknown>)['__build'] = build;
 
   // P1-2 造物链：Y 命令条 → 程序化生成 → 四门 → 落场（S10/S11 最小可玩版）

@@ -26,6 +26,16 @@
    "detail": "flat=9216 项"
   },
   {
+   "name": "V6a 放置扣 10 文",
+   "ok": true,
+   "detail": "coins 50→40"
+  },
+  {
+   "name": "V6b 拆除返 2 文",
+   "ok": true,
+   "detail": "coins 40→42"
+  },
+  {
    "name": "V5 G 模式切换",
    "ok": true,
    "detail": "toggle 后 hotbar 显示、再 toggle 后隐藏"

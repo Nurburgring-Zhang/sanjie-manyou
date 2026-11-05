@@ -57,12 +57,15 @@ try {
     pl.actor.pos.set(-20, 0, 58);              // 归位出生点
 
     // V3 放/拆：直接走 store + 重建（交互路径由 G 键人工验证；此处验数据/网格链路）
+    const it = Q.world.interact;
+    it.coins = 100; it.save();                   // 资源化前置：给足铜钱
     const before = Q.world.voxelStore.nonEmpty;
     Q.world.voxelStore.set(24, 1, 24, 6);           // 放一块鎏金
     const afterPlace = Q.world.voxelStore.nonEmpty;
     const colTop = Q.world.voxelStore.columnTop(VOX.ox + 24, VOX.oz + 24, 1);
     Q.world.voxelStore.set(24, 1, 24, 0);           // 拆除还原
     const afterBreak = Q.world.voxelStore.nonEmpty;
+    const coinsAfterPlace = it.coins;            // build.spend(10) 由 buildMode 交互路径扣——此探针走 store 直写不扣费
     chk('V3 放/拆数据链', before + 1 === afterPlace && afterBreak === before && colTop === VOX.oy + 2,
       `nonEmpty ${before}→${afterPlace}→${afterBreak} colTop@refY1=${colTop}`);
     // mesh 重建（buildMode 交互路径）不在此处触发——数据链为准
@@ -80,10 +83,18 @@ try {
           if (s2.get(x, y, z) !== Q.world.voxelStore.get(x, y, z)) same = false;
     chk('V4 存档 roundtrip 逐格一致', same && flat.length > 0, `flat=${flat.length} 项`);
 
-    // V5 G 模式切换（__build 由 main.ts 暴露）
+    // V5 G 模式切换（__build 由 main.ts 暴露）+ 资源化断言
     const bm = window.__build;
     if (!bm) { chk('V5 G 模式切换', false, '__build 未暴露'); }
     else {
+      // V6 资源化：放扣 10 / 拆返 2（真实 interact）
+      bm.active = true;
+      it.coins = 50; it.save();
+      const okPlace = bm.spend ? bm.spend(10) : true;
+      chk('V6a 放置扣 10 文', okPlace && it.coins === 40, `coins 50→${it.coins}`);
+      bm.earn && bm.earn(2);
+      chk('V6b 拆除返 2 文', it.coins === 42, `coins 40→${it.coins}`);
+      bm.active = false;
       bm.toggle();
       const hotbarVisible = getComputedStyle(document.getElementById('hotbar')).display !== 'none';
       bm.toggle();
