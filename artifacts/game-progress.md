@@ -661,3 +661,21 @@ vitest **13 files / 124 tests** 全绿（+6）；tsc 0 错；determinism PASS；
 ### 验收
 `probe-survival.mjs` **7/7 PASS**（真实页面）：W1 饥饿消耗 / W2 饿空扣血 / W3 饱腹回血 / W4 重伤晕倒迁移 / W5 Boss 利品 / W6 进食 / W7 roundtrip。
 验证链：vitest 118/118、tsc 0 错、determinism PASS、voxel 6/6、economy 6/6。
+
+## 2026-11-06 02:xx · P1-2 造物链最小可玩版收口（核心愿景「我要一条龙」成为真实游戏功能）
+
+### 玩家流程（真实可玩）
+Y 键命令条 → 输入「一条赤红色的龙」→ 关键词匹配龙模板 + seed=hash(全文) → 程序化放样（确定性：同愿同物）→ 内联四门（tri/bbox/bytes/seed）→ 扣 100 文 → **落场玩家前方 30m 地面** → 实体表登记 persist:true + provenance → 读档 rebuildAll 重演。
+
+### 实体
+- `src/game/creationTemplates.ts`：8 模板程序化放样（龙/凤/玄龟/仙鹤/锦鲤/白虎/麒麟/七级浮屠，GeoBuilder 通用环放样+skull+cone+tri）。
+- `src/game/creation.ts`：CreationSystem（命令条 UI/submit 全链/内联四门/spend 消耗/placement 落点/destroy/rebuildAll）。
+- main.ts 接线：placement=玩家前方 groundHeight 落点、spend=interact.tryPay（资源轴闭环——造物是 H6 的"造物用途"100 文 sink）、Y 命令条 UI。
+
+### 验收
+`probe-creation.mjs` **7/7 PASS**（真实页面 E2E）：C1 龙落场（998 tri）/ C2 同愿同物 / C3 消耗 300 文/3 次 / C4 无模板拒 / C5 persist+provenance 登记 / C6 destroy / C7 rebuildAll 幂等。
+验证链：vitest 118/118、tsc 0 错、determinism PASS。
+
+### 诚实边界
+- 模板 8 种为手工放样（词表匹配非 LLM 意图解析——D5 P1 的 LLM 档属后续沙箱/云段）；mesh 静态展示（行为动画属 P1-5 六阶动词）。
+- script-src unsafe-inline 残余风险、mesh 形状不挡等旧账不变。

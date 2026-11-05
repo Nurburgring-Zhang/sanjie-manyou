@@ -85,7 +85,7 @@ export function collectPersistedEntities(): SaveDataV2['entities'] {
   for (const kind of ['npc', 'beast', 'creation'] as const) {
     forEach(kind, (rec) => {
       if (!rec.persist) return;
-      out.push({ eid: rec.id, kind: rec.kind, x: rec.pos.x, y: rec.pos.y, z: rec.pos.z });
+      out.push({ eid: rec.id, kind: rec.kind, x: rec.pos.x, y: rec.pos.y, z: rec.pos.z, provenance: rec.provenance });
     });
   }
   return out;

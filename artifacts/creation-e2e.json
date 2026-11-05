@@ -1,0 +1,41 @@
+{
+ "checks": [
+  {
+   "name": "C1 许愿落场",
+   "ok": true,
+   "detail": "tris=998 eid=4611 mesh=true"
+  },
+  {
+   "name": "C2 同愿同物",
+   "ok": true,
+   "detail": "tris 998===998，eid 不同（同几何不同实体）"
+  },
+  {
+   "name": "C3 消耗 100 文/次",
+   "ok": true,
+   "detail": "coins=9700（3 次造物 ×100）"
+  },
+  {
+   "name": "C4 无模板拒造",
+   "ok": true,
+   "detail": "reason=no-template"
+  },
+  {
+   "name": "C5 persist 登记含 provenance",
+   "ok": true,
+   "detail": "creation persist=3"
+  },
+  {
+   "name": "C6 destroy 摘除",
+   "ok": true,
+   "detail": "eid=4613 destroyed=true"
+  },
+  {
+   "name": "C7 rebuildAll 幂等重演",
+   "ok": true,
+   "detail": "rebuilt=0（已注册的不重复）"
+  }
+ ],
+ "creationEntities": 3,
+ "coins": 9700
+}

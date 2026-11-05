@@ -4,6 +4,7 @@ import { World } from './world';
 import { STATION } from './data/shuihu';
 import { initUI } from './ui/ui';
 import { BuildMode } from './game/buildMode';
+import { CreationSystem } from './game/creation';
 
 // ============ 入口：加载 → 世界生成 → 开场运镜 ============
 async function boot(): Promise<void> {
@@ -44,6 +45,20 @@ async function boot(): Promise<void> {
   const build = new BuildMode(() => engine.scene, () => engine.camera);
   build.init(world.voxelMesh!, document.getElementById('ui')!);
   (window as unknown as Record<string, unknown>)['__build'] = build;
+
+  // P1-2 造物链：Y 命令条 → 程序化生成 → 四门 → 落场（S10/S11 最小可玩版）
+  const creation = new CreationSystem(document.getElementById('ui')!);
+  creation.attachScene(engine.scene);
+  creation.spend = (n) => world.interact.tryPay(n);
+  creation.placement = (forward) => {
+    const pl = world.player;
+    const yaw = engine.yaw;
+    const x = pl.actor.pos.x + Math.sin(yaw) * -forward;
+    const z = pl.actor.pos.z + Math.cos(yaw) * -forward;
+    const gy = pl.groundHeight(x, z, pl.actor.pos.y);
+    return { x, y: Number.isFinite(gy) ? gy : pl.actor.pos.y, z };
+  };
+  (window as unknown as Record<string, unknown>)['__creation'] = creation;
 
   engine.addUpdate({ update: (t, dt) => { world.update(t, dt); } });
   engine.addUpdate({ update: (_t, dt) => { uiTick(dt); } });
