@@ -27,6 +27,7 @@ export class PoiGuide {
 
   constructor(uiRoot: HTMLElement, private pois: () => { name: string; pos: THREE.Vector3 }[]) {
     this.el = document.createElement('div');
+    this.el.id = 'poiguide';   // P1-8：HUD 探针白名单锚点（世界空间 POI 投影标记，非 HUD）
     this.el.style.cssText = 'position:fixed;z-index:60;pointer-events:none;transform:translate(-50%,-50%);text-align:center;transition:left .18s,top .18s;';
     this.arrow = document.createElement('div');
     this.arrow.textContent = '➤';

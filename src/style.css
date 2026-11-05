@@ -119,6 +119,7 @@ body { font-family: var(--font-ui); color: var(--txt); -webkit-user-select: none
 
 /* ---- toast / 跳过 ---- */
 #toast { position: absolute; top: 88px; left: 50%; transform: translateX(-50%); font-size: 13px; letter-spacing: .15em;
+  max-width: min(58vw, 900px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;  /* P1-8 H2：长 toast 不撞右上 minimap */
   color: var(--gold); background: var(--ink); border: 1px solid rgba(255,179,0,.35); border-radius: 8px;
   padding: 7px 18px; opacity: 0; transition: opacity .4s; pointer-events: none !important; text-shadow: 0 0 10px rgba(255,179,0,.5); }
 #toast.show { opacity: 1; }

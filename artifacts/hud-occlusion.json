@@ -1,0 +1,126 @@
+{
+ "generatedAt": "2026-11-05T18:38:38.103Z",
+ "url": "http://127.0.0.1:4182/",
+ "h1": [
+  {
+   "w": 1280,
+   "h": 720,
+   "mode": "soul",
+   "vp": [
+    1280,
+    720
+   ],
+   "uiH": 720,
+   "intruders": [],
+   "overlaps": [],
+   "h1pass": true,
+   "h2pass": true
+  },
+  {
+   "w": 1280,
+   "h": 720,
+   "mode": "avatar",
+   "vp": [
+    1280,
+    720
+   ],
+   "uiH": 720,
+   "intruders": [],
+   "overlaps": [],
+   "h1pass": true,
+   "h2pass": true
+  },
+  {
+   "w": 1920,
+   "h": 1080,
+   "mode": "soul",
+   "vp": [
+    1920,
+    1080
+   ],
+   "uiH": 1080,
+   "intruders": [],
+   "overlaps": [],
+   "h1pass": true,
+   "h2pass": true
+  },
+  {
+   "w": 1920,
+   "h": 1080,
+   "mode": "avatar",
+   "vp": [
+    1920,
+    1080
+   ],
+   "uiH": 1080,
+   "intruders": [],
+   "overlaps": [],
+   "h1pass": true,
+   "h2pass": true
+  }
+ ],
+ "h2": [
+  {
+   "w": 1280,
+   "h": 720,
+   "mode": "soul",
+   "vp": [
+    1280,
+    720
+   ],
+   "uiH": 720,
+   "intruders": [],
+   "overlaps": [],
+   "h1pass": true,
+   "h2pass": true
+  },
+  {
+   "w": 1280,
+   "h": 720,
+   "mode": "avatar",
+   "vp": [
+    1280,
+    720
+   ],
+   "uiH": 720,
+   "intruders": [],
+   "overlaps": [],
+   "h1pass": true,
+   "h2pass": true
+  },
+  {
+   "w": 1920,
+   "h": 1080,
+   "mode": "soul",
+   "vp": [
+    1920,
+    1080
+   ],
+   "uiH": 1080,
+   "intruders": [],
+   "overlaps": [],
+   "h1pass": true,
+   "h2pass": true
+  },
+  {
+   "w": 1920,
+   "h": 1080,
+   "mode": "avatar",
+   "vp": [
+    1920,
+    1080
+   ],
+   "uiH": 1080,
+   "intruders": [],
+   "overlaps": [],
+   "h1pass": true,
+   "h2pass": true
+  }
+ ],
+ "h4": {
+  "keyGHits": [],
+  "keyYHits": [],
+  "pass": true
+ },
+ "h3h5h6": "PENDING——hotbar/编辑器 DOM 属 P1-2/P1-5 实装（spec §5 诚实标注）"
+}
