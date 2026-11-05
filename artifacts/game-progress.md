@@ -645,3 +645,19 @@ M0 / P0-0 / P0-1(步1/2/3) / P0-3 / P0-2+7查询层 / P0-4 / P0-5 / P0-6 / P0-8 
 
 ### 验证链
 vitest **13 files / 124 tests** 全绿（+6）；tsc 0 错；determinism PASS；economy 6/6；A1 PASS；voxel 冒烟 6/6。
+
+## 2026-11-06 · P1-2 玩法实体二：生存循环 + Boss 利品收口（玩家可玩的完整循环达成）
+
+### 游戏循环（玩家真实可玩）
+**扛包/摆摊赚钱 → 买食物**（小吃摊 eat 回饥饿+血）**→ 打 Boss**（巨灵神三阶段，重伤晕倒）**→ 胜利蟠桃+2/铜钱 300 / 失败晕倒地府孟婆庄重生罚半铜钱** → **体素建造消耗时间**（饥饿持续消耗倒逼回到经济循环）。
+
+### 实体
+- `src/game/survival.ts`：Survival 状态机（饥饿 20min 耗尽 / 饿空 2血/s / 饱腹 1.5血/s 回 / damage 晕倒沿 / bossReward 利品 / serialize）；world 每帧 tick（仅附身模式推进）；onFaint → 罚半铜钱 + respawnPlayerAt('mengpo') + revive（六成血）。
+- HUD：右上状态区加 ❤️/🍚 实时行。
+- 小吃摊 eat 钩子：买完即 `survival.eat(30, 10)`（真实恢复，非表演）。
+- Boss 伏誅利品：蟠桃 +2（addPeach）+ 铜钱 300 + bossesDown 计数（战斗→资源轴闭环）。
+- 存档：SaveDataV2.survival 字段 + serialize/deserialize。
+
+### 验收
+`probe-survival.mjs` **7/7 PASS**（真实页面）：W1 饥饿消耗 / W2 饿空扣血 / W3 饱腹回血 / W4 重伤晕倒迁移 / W5 Boss 利品 / W6 进食 / W7 roundtrip。
+验证链：vitest 118/118、tsc 0 错、determinism PASS、voxel 6/6、economy 6/6。

@@ -1,0 +1,39 @@
+{
+ "checks": [
+  {
+   "name": "W1 饥饿消耗",
+   "ok": true,
+   "detail": "hunger 50 → 45.0（60s）"
+  },
+  {
+   "name": "W2 饿空扣血",
+   "ok": true,
+   "detail": "hp 100 → 80.0（饿 10s）"
+  },
+  {
+   "name": "W3 饱腹回血",
+   "ok": true,
+   "detail": "hp 50 → 65.0（饱 10s）"
+  },
+  {
+   "name": "W4 重伤晕倒+迁移回调",
+   "ok": true,
+   "detail": "hp→0 晕倒，revive 后 60"
+  },
+  {
+   "name": "W5 Boss 利品蟠桃",
+   "ok": true,
+   "detail": "reward=1 peach 1→2 bossesDown=1"
+  },
+  {
+   "name": "W6 进食恢复",
+   "ok": true,
+   "detail": "hunger 30→60, hp 60→70"
+  },
+  {
+   "name": "W7 serialize/deserialize",
+   "ok": true,
+   "detail": "{\"hp\":42,\"hunger\":77,\"faints\":3,\"bossesDown\":2}"
+  }
+ ]
+}

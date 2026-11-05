@@ -75,7 +75,8 @@ export class InteractSystem {
       : '蟠桃宴赐福——但蟠桃点已满（上限 9），福缘散入云端');
   }
   refund(n: number): void { this.coins += n; this.save(); bus.emit('coins:change', this.coins); } // 蟠桃不足回退已扣款
-  private save(): void {
+  /** 存盘（P1-2 生存循环等系统共用；语义=持久化三币快照） */
+  save(): void {
     localStorage.setItem('cq_coins', String(this.coins));
     bus.emit('coins:change', this.coins);
   }

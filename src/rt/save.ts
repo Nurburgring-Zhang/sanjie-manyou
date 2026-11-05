@@ -44,6 +44,8 @@ export interface SaveDataV2 {
   savedAt: number;
   economy: { coins: number; yinde: number; peach: number   /** P1-2 体素区全量（营造司；[gx,gy,gz,t] 扁平；缺省字段向后兼容） */
   voxel?: number[];
+  /** P1-2 生存循环快照（hp/hunger/faints/bossesDown） */
+  survival?: { hp: number; hunger: number; faints: number; bossesDown: number };
 };
   /** P0-1 实体表 persist 实体（步 3 接管后填充；当前恒空数组——字段先行） */
   entities: Array<{ eid: number; kind: string; x: number; y: number; z: number; provenance?: unknown }>;

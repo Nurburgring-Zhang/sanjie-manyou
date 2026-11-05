@@ -406,7 +406,9 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
     statT -= dt;
     if (statT <= 0) {
       statT = 0.5;
-      statsEl.innerHTML = `<b>${engine.fps.toFixed(0)}</b> fps · ${engine.drawCalls} calls<br>在场 ${world.liveCount()} 人`;
+      const sv = (window as unknown as { __qingming?: { world?: { survival?: { hp: number; hunger: number } } } }).__qingming?.world?.survival;
+      const vital = sv ? `<br>❤️ ${Math.round(sv.hp)} · 🍚 ${Math.round(sv.hunger)}` : '';
+      statsEl.innerHTML = `<b>${engine.fps.toFixed(0)}</b> fps · ${engine.drawCalls} calls<br>在场 ${world.liveCount()} 人${vital}`;
     }
     mmT -= dt;
     if (mmT <= 0) { mmT = 0.25; drawMinimap(); }

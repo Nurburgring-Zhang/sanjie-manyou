@@ -27,6 +27,7 @@ import { CreatureSystem, spawnZhaoGongming } from './sky/creatures';
 import { buildGhostFlora, buildCelestialFlora } from './sky/flora';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { PoiGuide } from './game/poiGuide';
+import { Survival } from './game/survival';
 import { ensureWorkshopBase, voxelStore, VOX } from './rt/voxelStore';
 import { buildVoxelMesh } from './game/voxelMesh';
 import { buildSkyRealm, SkyCenters } from './sky/realm';
@@ -284,6 +285,8 @@ export class World {
   playerWeapon = { mult: 1, label: '双拳' };
   scrolling = false;
   creatures: CreatureSystem | null = null;
+  /** P1-2 玩法实体：生存循环（血量/饥饿/晕倒迁地府）——probe-economy 同代探针验收 */
+  readonly survival = new Survival();
   voxelMesh: THREE.Mesh | null = null;
   voxelStore: typeof voxelStore = voxelStore;   // P1-2：探针/存档从实例取（避免 HMR 双实例分裂）
   poiGuide: PoiGuide | null = null;
@@ -659,6 +662,8 @@ export class World {
         this.havoc.onPeachBanquet = (n) => {
           this.interact.addPeach(n);
         };
+
+        // P1-2 玩法实体：Boss 伏誅利品——蟠桃 +1（战斗→资源轴联动，闭环由 survival 计数）
         // 首个遭遇：擂台上的巨灵神。用已有个体做化身，不新增角色池消耗。
         this.boss = new ArenaBoss(
           JULING,
@@ -672,6 +677,10 @@ export class World {
               this.codexLog.push({ code: JULING.code, name: JULING.name, note: '天宫擂台 · 已伏誅' });
             }
             bus.emit('codex:unlock', JULING.code);
+            // P1-2 生存循环利品：伏誅巨灵神 → 蟠桃 +2 + 铜钱 300（战斗→资源轴闭环）
+            this.interact.addPeach(2);
+            this.interact.earn(300);
+            this.survival.bossReward();
           },
           () => { this.respawnPlayerAt(JULING.recoverPoi); },
         );
@@ -699,6 +708,17 @@ export class World {
         document.getElementById('ui')!.appendChild(fade);
         this.player.setFadeEl(fade);
         this.interact = new InteractSystem(document.getElementById('ui')!, this.player);
+        // P1-2 生存循环接线：晕倒 → 罚半铜钱 → 孟婆庄重生；Boss 伏誅 → 蟠桃利品（资源轴联动）
+        this.survival.onFaint = () => {
+          const I = this.interact;
+          const penalty = Math.floor(I.coins * this.survival.coinPenaltyRatio);
+          if (penalty > 0) { I.coins -= penalty; I.save(); }
+          bus.emit('ui:toast', penalty > 0
+            ? `晕倒于荒野——铜钱 -${penalty} 文，孟婆庄一碗汤垫底`
+            : '晕倒于荒野——孟婆庄一碗汤垫底（身无长物，无从罚起）');
+          this.respawnPlayerAt('mengpo');
+          this.survival.revive();
+        };
         this.stalls = stallsCache;
         this.poiGuide = new PoiGuide(document.getElementById('ui')!, () => []); // 精修3：POI 方位导引
         this.poiGuide.setDoneQuery((k) => !!this.objectiveDone[k]);
@@ -1281,6 +1301,9 @@ export class World {
   }
 
   update(t: number, dt: number): void {
+    // P1-2 生存循环：饥饿/回血/晕倒沿（附身模式才推进——灵魂观景不饿）
+    if (this.player.mode === 'avatar') this.survival.tick(dt);
+
     this._lastT = t;
     this._frame++;
     this.updateMirrorGate();
@@ -1394,6 +1417,7 @@ export class World {
     const foods = stallsCache.filter((s) => s.kind === 'food');
     for (const s of foods) {
       I.add(new THREE.Vector3(s.x, 0.1, s.z), 3.6, '在小吃摊买点吃的', () => {
+        this.survival.eat(30, 10);   // P1-2 生存循环：进食回饥饿+少量血
         I.openShop('小吃摊', [
           { name: '煎鱼整套', price: 12, act: 'eat', say: '外焦里嫩，趁热吃完了' },
           { name: '灌肺炒肺', price: 8, act: 'eat', say: '街边风味，唇齿留香' },
