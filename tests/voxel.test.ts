@@ -71,5 +71,4 @@ describe('P0-4 × P1-2 · 存档 entities 读表', () => {
   });
 });
 
-import { allocate } from '../src/rt/entity';
 
