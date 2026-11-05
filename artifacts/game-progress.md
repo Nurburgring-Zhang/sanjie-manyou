@@ -619,3 +619,12 @@ M0 / P0-0 / P0-1(步1/2/3) / P0-3 / P0-2+7查询层 / P0-4 / P0-5 / P0-6 / P0-8 
 - **实现修复 1 处**：#toast 无 max-width，长文本撞右上 minimap（真缺陷）→ `max-width: min(58vw,900px)` + ellipsis。
 - **poiGuide 加 id="poiguide"**：世界空间 POI 投影标记非 HUD，白名单按子树剔（探针取证 5 轮递进：假白名单→坐标取证→elementFromPoint→ancestor 链→id 锚定）。
 - **探针自身两处重写级教训**：①假 setViewport（页面内函数只设死变量，分辨率从未切换——canvas rect 569=800-230 实锤）→ fresh-load per 组合根治；②重构括号链断裂→整体重写。
+
+## 2026-11-06 · P1-1 资源轴收口（H6 三修订落地，1 玩法段第二项）
+
+- **蟠桃 source 落地**：蟠桃宴幕（havoc pi=9）开幕 → `addPeach(1)`（world 注入 onPeachBanquet 回调，避免 havoc→interact 依赖）；上限 9。
+- **阴德 sink 落地**：王家纸马新商品「冥途牒」10 文：阴德 10 → 蟠桃 +1（跨轴互通）——劳动锚定循环持平不套利（烧纸 100 文成本 = 蟠桃兑 100 文）。
+- **五子棋零成本入水口关闭**：入场费 50 文（赢 +100 净 +50，低于扛包速率，保留娱乐关套利）。
+- `probe-economy.mjs` **6/6 PASS**（真实页面 interact 实例）：E1a 拒付 / E1b 扣 50 / E2a source / E2b 封顶 9 / E3 跨轴 / E4 grant 回归。
+- 验证链：vitest 118/118、determinism PASS、A1 PASS。
+- 汇率表与剩余设计（更多 sink 物品）见 spike-H6 结论节；资源轴扩展（体力/食材）随 P1-2 MC 中间层。

@@ -60,6 +60,20 @@ export class InteractSystem {
   }
   tryPay(n: number): boolean { return this.pay(n); }
   earn(n: number): void { this.coins += n; this.save(); }
+
+  /**
+   * P1-1 资源轴：蟠桃 source 官方入口（蟠桃宴幕回调/未来 R5 线共用）。
+   * 上限 9（三币律 UI 两位显示口径）；超出的部分如实丢弃并提示。
+   */
+  addPeach(n: number): void {
+    const before = this.peach;
+    this.peach = Math.min(9, this.peach + n);
+    this.save();
+    const gained = this.peach - before;
+    bus.emit('ui:toast', gained > 0
+      ? `蟠桃宴赐福：蟠桃点 +${gained}（现 ${this.peach}）`
+      : '蟠桃宴赐福——但蟠桃点已满（上限 9），福缘散入云端');
+  }
   refund(n: number): void { this.coins += n; this.save(); bus.emit('coins:change', this.coins); } // 蟠桃不足回退已扣款
   private save(): void {
     localStorage.setItem('cq_coins', String(this.coins));
@@ -103,6 +117,12 @@ export class InteractSystem {
         if (this.pay(g.price)) {
           // B9 三币特判：烧纸（铜钱→阴德单向）/ 蟠桃赏赐（蟠桃点→铜钱单向）
           if (g.act === 'burnpaper') { this.yinde += 1; this.save(); bus.emit('ui:toast', `纸灰化作阴德 💠 ${this.yinde}（三界单向：不可兑回铜钱）`); }
+          else if (g.act === 'yindepeach') {
+            // P1-1 资源轴（H6 修订②）：阴德 sink——冥途牒 10 文：阴德 10 → 蟠桃 +1（跨轴互通）。
+            // 劳动锚定：10 阴德成本 = 烧纸 100 文；蟠桃兑 100 文 → 循环持平不套利，但打通两轴。
+            if (this.yinde < 10) { this.refund(g.price); bus.emit('ui:toast', `阴德不足（需 10，现 ${this.yinde}）——多烧些纸钱积攒功德`); }
+            else { this.yinde -= 10; this.addPeach(1); this.save(); bus.emit('ui:toast', `冥途牒生效：阴德 -10，天庭记功蟠桃 +1（现 🍑${this.peach}）`); }
+          }
           else if (g.act === 'peachgrant') {
             // B10 蟠桃宴事件（总纲 §四.5：蟠桃点→铜钱单向）：耗 1 点兑 100 文
             if (this.peach < 1) { this.refund(g.price); bus.emit('ui:toast', '蟠桃点不足——赴蟠桃宴方可获赐（R5 瑶池青鸾任务线）'); }
@@ -169,6 +189,9 @@ export class InteractSystem {
 
   // ---- 五子棋（9 路，先手黑 vs 简易 AI） ----
   openGomoku(): void {
+    // P1-1 资源轴（H6 修订③）：五子棋原为零成本入水口（免费 +100/局可无限刷）。
+    // 收费 50 文入场——赢 +100 净 +50，低于扛包速率，保留娱乐价值但关套利。
+    if (!this.pay(50)) return;
     const body = this.makePanel('手谈一局·五子棋（赢棋 +100 文）');
     const N = 9, CELL = 30;
     const cv = document.createElement('canvas');

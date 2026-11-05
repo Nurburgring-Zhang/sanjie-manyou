@@ -1,0 +1,37 @@
+{
+ "checks": [
+  {
+   "name": "E1a 五子棋入场费拒付",
+   "ok": true,
+   "detail": "coins=10 < 50 → 未扣费"
+  },
+  {
+   "name": "E1b 五子棋入场扣 50",
+   "ok": true,
+   "detail": "coins 500 → 450"
+  },
+  {
+   "name": "E2a addPeach source",
+   "ok": true,
+   "detail": "peach 0 → 1"
+  },
+  {
+   "name": "E2b addPeach 上限 9",
+   "ok": true,
+   "detail": "peach 封顶 9"
+  },
+  {
+   "name": "E3 阴德→蟠桃跨轴",
+   "ok": true,
+   "detail": "yinde 20→10, peach 5→6"
+  },
+  {
+   "name": "E4 蟠桃 grant 消费",
+   "ok": true,
+   "detail": "peach 3→2, coins 100→200"
+  }
+ ],
+ "coins": 200,
+ "yinde": 10,
+ "peach": 2
+}

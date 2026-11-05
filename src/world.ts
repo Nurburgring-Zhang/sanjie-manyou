@@ -645,6 +645,10 @@ export class World {
         this.deities = new DeityStage(this.crowd, this.centers, rng, this.vfx);
         this.standDeityActors();
         this.havoc = new Havoc(this.crowd, this.deities, this.centers, this.vfx);
+        // P1-1 资源轴：蟠桃宴幕 → 蟠桃 +1（蟠桃轴唯一 source；H6 断裂修复）
+        this.havoc.onPeachBanquet = (n) => {
+          this.interact.addPeach(n);
+        };
         // 首个遭遇：擂台上的巨灵神。用已有个体做化身，不新增角色池消耗。
         this.boss = new ArenaBoss(
           JULING,

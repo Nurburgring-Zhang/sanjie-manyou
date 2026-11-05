@@ -63,6 +63,12 @@ export class Havoc {
     return () => r.next();
   })();
 
+  /**
+   * P1-1 资源轴（H6 修订）：蟠桃宴幕完成回调——蟠桃点的唯一 source。
+   * world 注入：world.ts 传 (n) => interact 补桃（避免 havoc→interact 依赖）。
+   */
+  onPeachBanquet: ((n: number) => void) | null = null;
+
   constructor(private crowd: Crowd, private stage: DeityStage, private centers: SkyCenters, private vfx: Vfx) {
     // SkyCenters 是「缩放前 x/z + 已抬 y」的混合口径；编排本身按缩放前米书写，
     // 所以先把 y 还原到缩放前（-HEAVEN_LIFT），再在每个目标点上走 heavenPoint 一次。
@@ -359,6 +365,9 @@ export class Havoc {
       np.enter?.();
       bus.emit('battle:report', np.report);
       this.reports.push(np.report);
+      // P1-1 资源轴（H6 修订①）：幕间·蟠桃宴（pi=9）开幕 = 蟠桃 +1——蟠桃轴唯一 source。
+      // 劳动锚定（spike-H6）：扛包 2.44 文/s；每轮大闹天宫全幕 ~10 分钟 → 1 桃 ≈ 100 文等效，弱于扛包速率但绑定玩法。
+      if (this.pi === 9 && this.onPeachBanquet) this.onPeachBanquet(1);
       return;
     }
     p.tick(Math.min(1, k), dt);

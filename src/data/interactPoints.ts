@@ -50,7 +50,7 @@ export const POINTS: PointRow[] = [
   { id: 'M4', name: '西市楼铁笛', x: -2800, z: 900, kind: 'song', desc: '马麟铁笛胡音（赏钱5）' },
   // ---- B 买 16 ----
   { id: 'B1', name: '香药铺', x: 40, z: 62, kind: 'buy', desc: '香料药材', goods: [g('沉香', 80, 'present', '沉香一炷，静气凝神'), g('檀香', 50, 'present', '檀香袅袅')] },
-  { id: 'B2', name: '王家纸马', x: 352, z: 66, kind: 'buy', desc: '纸马冥器', goods: [g('紙馬', 5, 'present', '纸马一匹，捎给那头'), g('樓庫', 30, 'present', '纸楼库一座，烧给先人'), g('燒紙·刀', 10, 'burnpaper', '一刀纸钱焚尽，阴德 +1（单向）')] },
+  { id: 'B2', name: '王家纸马', x: 352, z: 66, kind: 'buy', desc: '纸马冥器', goods: [g('紙馬', 5, 'present', '纸马一匹，捎给那头'), g('樓庫', 30, 'present', '纸楼库一座，烧给先人'), g('燒紙·刀', 10, 'burnpaper', '一刀纸钱焚尽，阴德 +1（单向）'), g('冥途牒', 10, 'yindepeach', '焚冥途牒一份——阴德 10 上报天庭，蟠桃 +1（P1-1 跨轴）')] },
   { id: 'B3', name: '解当铺', x: 258, z: 64, kind: 'buy', desc: '典当/淘死当', goods: [g('贖當', 60, 'present', '赎回当物，物归原主'), g('淘死當', 25, 'present', '死当捡漏，全凭眼力')] },
   { id: 'B4', name: '赵太丞家', x: 168, z: 64, kind: 'buy', desc: '诊疗抓药', goods: [g('湯藥', 10, 'eat', '一剂汤药，寒热俱消'), g('金瘡藥', 20, 'eat', '金疮药敷上，血止痛消')] },
   { id: 'B5', name: '綢緞莊', x: -2900, z: 960, kind: 'buy', desc: '绸缎量裁', goods: [g('杭緞', 150, 'present', '杭缎一匹，水滑生光'), g('蜀錦', 300, 'present', '蜀锦丈二，富贵人家')] },
