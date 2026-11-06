@@ -61,6 +61,12 @@ async function boot(): Promise<void> {
     return { x, y: Number.isFinite(gy) ? gy : pl.actor.pos.y, z };
   };
   (window as unknown as Record<string, unknown>)['__creation'] = creation;
+  const origSubmit = creation.submit.bind(creation);
+  creation.submit = async (t?: string) => {
+    const r = await origSubmit(t);
+    if (r.ok) world.creationCount++;
+    return r;
+  };
 
   engine.addUpdate({ update: (t, dt) => { world.update(t, dt); } });
   engine.addUpdate({ update: (_t, dt) => { uiTick(dt); } });

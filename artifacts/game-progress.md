@@ -714,3 +714,10 @@ Y 键命令条 → 输入「一条赤红色的龙」→ 关键词匹配龙模板
 - 装备显示：右上状态区实时 ⚔️ 武器名（playerWeapon.label，uiTick 0.5s 刷新——双拳/钢刀/伏魔锏随拾取即时反映）。
 - 天宫柱列廊（LEN=64.8）两端山墙封板：旧版 ±32.4 端头檐口到屋脊敞口（用户报「两侧房顶消失」同类），三级阶梯封板+脊端封柱补齐。
 - 验证链：vitest 124/124、tsc 0 错、determinism PASS。
+
+## 2026-11-06 · P1-4 条件节点收口（1 玩法段第三项）
+
+- `src/game/conditions.ts`：6 个资源轴条件触发器（饥饿<30→小吃摊 / 铜钱<50→码头扛包 / 阴德≥10→冥途牒 / Boss伏誅→深狱提示 / 铜钱≥100未造物→Y造物 / 蟠桃满仓≥9→兑铜钱），优先级排序（生存>经济>成长）。
+- HUD 接线：目标链 goalchain 加 ⚡ 条件节点行（topCondition 实时驱动，uiTick 刷新）；world.creationCount 由 main 在造物成功后同步。
+- 单测 7 条（阈值/优先级排序/互斥抑制/全达标 null）全过——1 条测试期望修正（c-creation pri=4 正确高于 c-peach pri=5，hasCreation 抑制后才轮到 c-peach）。
+- 验证链：vitest **13 files / 131 tests** 全绿（+7）；tsc 0 错；determinism PASS。

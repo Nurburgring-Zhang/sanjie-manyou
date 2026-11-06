@@ -287,6 +287,8 @@ export class World {
   creatures: CreatureSystem | null = null;
   /** P1-2 玩法实体：生存循环（血量/饥饿/晕倒迁地府）——probe-economy 同代探针验收 */
   readonly survival = new Survival();
+  /** P1-4：已造物数量（main 注入；条件节点 c-creation 用） */
+  creationCount = 0;
   voxelMesh: THREE.Mesh | null = null;
   voxelStore: typeof voxelStore = voxelStore;   // P1-2：探针/存档从实例取（避免 HMR 双实例分裂）
   poiGuide: PoiGuide | null = null;

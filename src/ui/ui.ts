@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Engine, QUALITY, type QualityName } from '../core/engine';
 import type { World } from '../world';
+import { topCondition } from '../game/conditions';
 import { bus } from '../core/rng';
 import { POIS } from '../city/layout';
 import { JOBS } from '../data/jobs';
@@ -15,7 +16,8 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
     <div id="stats"></div>
   </div>
   <div id="goalchain" style="position:absolute;top:52px;left:16px;z-index:62;pointer-events:none;text-shadow:0 0 10px rgba(0,0,0,.9);">
-    <div id="goalMain" style="display:inline-block;font-size:13px;letter-spacing:.1em;color:#ffe9c8;background:rgba(10,8,6,.5);border:1px solid rgba(255,210,94,.28);border-radius:8px;padding:3px 10px;white-space:nowrap;"></div>
+    <div id="goalMain" style="display:inline-block;font-size:13px;letter-spacing:.1em;color:#ffe9c8;background:rgba(10,8,6,.5);border:1px solid rgba(255,210,94,.28);border-radius:8px;padding:3px 10px;white-space:nowrap;">
+    <div id="condNode" style="font-size:12px;color:#ffd9a8;margin-top:3px;"></div></div>
     <div id="goalFlash" style="margin-top:4px;font-size:16px;font-weight:700;letter-spacing:.12em;color:#ffd25e;opacity:0;transition:opacity .25s;white-space:nowrap;"></div>
   </div>
   <div id="dock">
@@ -170,6 +172,13 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
     goalMain.textContent = p.next
       ? `🎯 目标 ${p.done}/${p.total} · 下一个：${p.next}`
       : `🎯 目标 ${p.done}/${p.total} · 全部达成`;
+    // P1-4 条件节点：资源轴驱动的「该去做什么」（H6 三修订的 HUD 兑付）
+    const it = world.interact;
+    const sv = world.survival;
+    const cre = world.creationCount;
+    const top = topCondition({ coins: it.coins, yinde: it.yinde, peach: it.peach, hunger: sv.hunger, bossesDown: sv.bossesDown, hasCreation: cre > 0 });
+    const condEl = document.getElementById('condNode');
+    if (condEl) condEl.textContent = top ? `⚡ ${top.text}` : '';
   };
   bus.on('objective:done', (raw) => {
     const e = raw as { done?: number; total?: number } | undefined;
