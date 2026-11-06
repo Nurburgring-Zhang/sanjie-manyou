@@ -78,6 +78,21 @@ export class InteractSystem {
   /** 存盘（P1-2 生存循环等系统共用；语义=持久化三币快照） */
   save(): void {
     localStorage.setItem('cq_coins', String(this.coins));
+    // P0-4/P1-2 全量写档：三币 + survival + voxel → IndexedDB（fire-and-forget，异常静默）
+    try {
+      // __saveSave 在 window 上（world.ts 注入）；voxelStore 走 __qingming.world（单例语义）
+      const W = (window as unknown as { __saveSave?: (d: unknown) => Promise<void>; __qingming?: { world?: { survival?: { serialize(): unknown }; voxelStore?: { serialize(): number[] } } } });
+      const sv = W.__qingming?.world;
+      if (W.__saveSave && sv?.survival && sv.voxelStore) {
+        void W.__saveSave({
+          schemaVersion: 2,
+          economy: { coins: this.coins, yinde: this.yinde, peach: this.peach },
+          entities: [],
+          voxel: sv.voxelStore.serialize(),
+          survival: sv.survival.serialize(),
+        });
+      }
+    } catch { /* 存档失败不阻断游戏 */ }
     bus.emit('coins:change', this.coins);
   }
 

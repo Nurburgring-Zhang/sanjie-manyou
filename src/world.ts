@@ -28,6 +28,7 @@ import { buildGhostFlora, buildCelestialFlora } from './sky/flora';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { PoiGuide } from './game/poiGuide';
 import { Survival } from './game/survival';
+import { SaveManager, loadOrMigrateLegacy, type SaveData } from './rt/save';
 import { ensureWorkshopBase, voxelStore, VOX } from './rt/voxelStore';
 import { buildVoxelMesh } from './game/voxelMesh';
 import { buildSkyRealm, SkyCenters } from './sky/realm';
@@ -243,6 +244,8 @@ export class World {
   deityHold = false;
   player!: PlayerController;
   interact!: InteractSystem;
+  /** P0-4 读档暂存：interact 创建时应用（economy 三币） */
+  interactPending: { coins: number; yinde: number; peach: number } | null = null;
   impacts!: ImpactSystem;
   mounts!: MountSystem;
   heightAt: ((x: number, z: number) => number) | null = null;
@@ -302,6 +305,20 @@ export class World {
 
   async init(onP: (p: number, label: string) => void): Promise<void> {
     const scene = this.engine.scene;
+    // P0-4/P1-2 读档接线：IndexedDB 旧档优先（economy→三币/survival→血饥饿/voxel→营造司），
+    // 全空时走 localStorage legacy 迁移并落档。失败不阻断载入（console 报错走新档）。
+    try {
+      const mgr = new SaveManager();
+      await mgr.open();
+      const saved = await loadOrMigrateLegacy(mgr, localStorage);
+      if (saved) {
+        this.interactPending = saved.economy;
+        if (saved.voxel?.length) voxelStore.deserialize(saved.voxel);
+        if (saved.survival) this.survival.deserialize(saved.survival);
+        console.log(`[存档] 已恢复：coins=${saved.economy.coins} voxel=${saved.voxel?.length ?? 0} 项`);
+      }
+      void mgr;
+    } catch (err) { console.warn('[存档] 读档失败，走新档', err); }
     const rng = new RNG(20260905);
     const baker = new Baker();
     const sg = new SignMesher();
@@ -730,6 +747,12 @@ export class World {
           this.interact.addPeach(n);
         };
 
+        // P0-4 全量写档入口：interact.save() 经 window 桥调 SaveManager.save（fire-and-forget）
+        const saveMgr = new SaveManager();
+        void saveMgr.open().then(() => {
+          (window as unknown as Record<string, unknown>)['__saveSave'] = (d: unknown) => saveMgr.save(d as Parameters<SaveManager['save']>[0]);
+        });
+
         // P1-2 玩法实体：Boss 伏誅利品——蟠桃 +1（战斗→资源轴联动，闭环由 survival 计数）
         // 首个遭遇：擂台上的巨灵神。用已有个体做化身，不新增角色池消耗。
         this.boss = new ArenaBoss(
@@ -780,6 +803,13 @@ export class World {
         document.getElementById('ui')!.appendChild(fade);
         this.player.setFadeEl(fade);
         this.interact = new InteractSystem(document.getElementById('ui')!, this.player);
+        if (this.interactPending) {
+          this.interact.coins = this.interactPending.coins;
+          this.interact.yinde = this.interactPending.yinde;
+          this.interact.peach = this.interactPending.peach;
+          this.interact.save();
+          this.interactPending = null;
+        }
         // P1-2 生存循环接线：晕倒 → 罚半铜钱 → 孟婆庄重生；Boss 伏誅 → 蟠桃利品（资源轴联动）
         this.survival.onFaint = () => {
           const I = this.interact;

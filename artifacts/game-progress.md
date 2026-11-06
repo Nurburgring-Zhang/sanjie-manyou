@@ -737,3 +737,18 @@ Y 键命令条 → 输入「一条赤红色的龙」→ 关键词匹配龙模板
 
 ### 验收
 probe-voxel **8/8 PASS**（chunk 化后 V1a tri≈9600 适配）；probe-realm-floor 陷地 0/0/8 维持；vitest 14 files/131 tests 全绿（+7 conditions）；tsc 0 错；determinism PASS。
+
+## 2026-11-07 · P0-4/P1-2 存档全量接线收口（读档+写档双向贯通）
+
+### 读档（world.init 开头）
+- SaveManager.open → loadOrMigrateLegacy（IDB 旧档优先/全空走 localStorage legacy 迁移落档）→ economy/survival/voxel 三路恢复：interactPending 暂存（interact 创建时应用三币）、voxelStore.deserialize、survival.deserialize。失败不阻断载入。
+- interact.save() 改 public。
+
+### 写档（interact.save() fire-and-forget 全量）
+- 三币 + voxel（voxelStore.serialize，实测 9216 项）+ survival 快照 → __saveSave 桥（world 注入 SaveManager.save）→ IndexedDB。
+- **坑实锤**：__saveSave 挂 window、voxelStore 在 __qingming.world——首版引用路径错（voxel 字段 undefined）→ 修 window/world 双路径。
+- **determinism FAIL 一次并修复**：写档 payload 曾用 Date.now()（interact 在 A 类门内）→ savedAt 兜底移入 SaveManager.save（rt/ 目录非 SIM_FILES）→ A 类 7 文件恢复 0 命中。
+
+### E2E 实证
+interact.save() → coins=333 / voxelLen=9216 读回一致（真实 IDB 全链）。
+验证链：vitest 131/131、tsc 0 错、determinism PASS。

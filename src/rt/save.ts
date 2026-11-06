@@ -121,7 +121,8 @@ export class SaveManager {
    */
   async save(data: SaveData): Promise<{ slot: string; bytes: number }> {
     if (!this.db) throw new Error('SaveManager.open() first');
-    const payload = JSON.stringify(data);          // 同步抛错挡在事务外
+    const full = { ...data, savedAt: data.savedAt ?? Date.now() } as SaveData;   // savedAt 兜底（rt/ 目录非 SIM_FILES，允许）
+    const payload = JSON.stringify(full);          // 同步抛错挡在事务外
     const bytes = payload.length;
     const slot = this.slots.pickSlot();
     const db = this.db;
@@ -129,7 +130,7 @@ export class SaveManager {
       const tx = db.transaction([SLOTS_STORE, INDEX_STORE], 'readwrite');
       try {
         tx.objectStore(SLOTS_STORE).put(payload, slot);
-        tx.objectStore(INDEX_STORE).put({ lastGood: slot, bytes, savedAt: data.savedAt }, 'lastGood');
+        tx.objectStore(INDEX_STORE).put({ lastGood: slot, bytes, savedAt: full.savedAt }, 'lastGood');
       } catch (err) {
         tx.abort();                                // H4 修订②：同步抛错必须显式 abort
         reject(err);
