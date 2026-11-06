@@ -40,7 +40,7 @@ import { Vfx } from './fx/vfx';
 import { Soundscape } from './audio/scape';
 import { RNG, bus } from './core/rng';
 import { GLOW_MAT, CLOUD_MAT } from './actors/pools';
-import { PlayerController } from './game/player';
+import { PlayerController, PLATFORMS } from './game/player';
 import { InteractSystem } from './game/interact';
 import { ImpactSystem } from './game/physics';
 import { MountSystem } from './city/mounts';
@@ -555,6 +555,40 @@ export class World {
       ['幽冥·丰都街', () => buildUnderworldExpansion(baker, sg, this.atlas, rng)],
       ['幽冥·阎罗殿', () => buildYanluoInterior(baker, sg, this.atlas)],
       ['幽冥·孟婆庄', () => buildMengpoZhuang(baker, sg, this.atlas)],
+      ['三界演员贴地校正', () => {
+        // P0-9 报障根修：120 位 freeze 演员按区域基准常量放置（y=-260/2153.26/2157.8 等），
+        // 未贴该处烘焙网格实际顶面（探针 probe-realm-floor raycast 实锤 sink 0.36–0.9m）。
+        // 逐演员从胸口向下 raycast，命中顶面即脚高（±0.35 容差内不动——浮台阶语义）。
+        const ray = new THREE.Raycaster();
+        ray.far = 300;
+        const down = new THREE.Vector3(0, -1, 0);
+        const org = new THREE.Vector3();
+        let fixed = 0;
+        let raycastBudget = 400;
+        for (const a of this.crowd.actors) {
+          if (!a.freeze || a.attach || a.hidden || raycastBudget <= 0) continue;
+          const p = a.pos;
+          const realm = p.y > 2085 ? 'heaven' : p.y < -200 ? 'underworld' : p.y > -200 && p.y < 2085 ? 'human' : 'void';
+          if (realm === 'void') continue;
+          // 粗判先行：人间 walkSurfaceY 覆盖（建筑/桥/街面）；天宫 PLATFORMS 圆盘已拍
+          // 只有「两层判定都无法给出地面」的天宫/地府演员才走 raycast（性能：368×全场景遍历曾致载入超时）
+          const ws = this.crowd.walkSurfaceAt(p.x, p.z, p.y);
+          if (realm === 'human' || (realm === 'heaven' && ws !== null)) {
+            if (ws !== null && p.y < ws - 0.35) { p.y = ws + 0.02; fixed++; }
+            continue;
+          }
+          raycastBudget--;
+          org.set(p.x, p.y + 1.0, p.z);
+          ray.set(org, down);
+          // 排除演员自身命中（合并 InstancedMesh 里自己的身体），取第一个低于脚 0.2m 的真地面
+          const allHits = ray.intersectObject(scene, true);
+          const hits = allHits.filter((h) => h.point.y <= p.y - 0.2 && !(h.object instanceof THREE.InstancedMesh));
+          if (hits.length === 0) continue;
+          const floorY = hits[0].point.y;
+          if (p.y < floorY - 0.35) { p.y = floorY + 0.02; fixed++; }   // 只修"陷"，不修"浮"（浮是楼梯/桥梁语义）
+        }
+        if (fixed > 0) console.log(`[贴地校正] ${fixed} 位演员已贴到烘焙地面顶面`);
+      }],
       ['营造司·体素台', () => {
         // P1-2 最小可玩闭环：城南偏东荒地 48×48 青石台，G 键建造模式（D3 体素首块落地）
         ensureWorkshopBase(voxelStore);
@@ -636,6 +670,24 @@ export class World {
             this.crowd.spawnStation('deity', wx, wz, wy + 0.02, 'pray', nm + '·府主宣讲', Math.atan2(-sx, -sz), { name: nm.slice(0, 3), nick: '星宿府主', group: 'deity', desc: nm + ' 府主宣讲星纲' });
             const [ox, oy, oz] = heavenPoint(sx - 1.2, sy + 0.16, sz + 0.8);
             this.crowd.spawnStation('deity', ox, oz, oy + 0.02, 'lookAround', nm + '·侍从立班', Math.atan2(-sx, -sz), { name: '星官侍从', nick: nm.slice(0, 2) + '侍从', group: 'deity', desc: nm + ' 侍从立班听讲' });
+          }
+        }
+        // P0-9 报障修复②：三界 freeze 演员统一站立校正——天宫带按 PLATFORMS 圆盘取
+        // 「≤脚高+1.2 的最高台面」拍齐（烘焙台面不进 walkSurfaceY 哈希，61 位演员曾全员悬空判定失败）
+        const snap = (x: number, z: number, refY: number): number | null => {
+          let best: number | null = null;
+          for (const p of PLATFORMS) {
+            const dx = x - p.x, dz = z - p.z;
+            if (dx * dx + dz * dz < p.r * p.r && p.y <= refY + 1.2 && (best === null || p.y > best)) best = p.y;
+          }
+          return best;
+        };
+        for (const a of this.crowd.actors) {
+          if (!a.freeze || a.attach || a.hidden) continue;
+          const p = a.pos;
+          if (p.y > 2085) {
+            const hit = snap(p.x, p.z, p.y);
+            if (hit !== null && Math.abs(p.y - hit) > 0.6) p.y = hit + 0.02;
           }
         }
         this.crowd.spawnStation('musician', 232, 58, 0.1, 'pluck', '栏前弹唱', 0);

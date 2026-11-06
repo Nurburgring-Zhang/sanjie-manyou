@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-05T19:25:52.740Z",
+ "generatedAt": "2026-11-06T14:56:39.943Z",
  "url": "http://127.0.0.1:4182/",
  "h1": [
   {
@@ -12,9 +12,11 @@
    ],
    "uiH": 720,
    "intruders": [],
-   "overlaps": [],
+   "overlaps": [
+    "DIV#topbar>DIV#coins × DIV#minimap>CANVAS"
+   ],
    "h1pass": true,
-   "h2pass": true
+   "h2pass": false
   },
   {
    "w": 1280,
@@ -26,9 +28,11 @@
    ],
    "uiH": 720,
    "intruders": [],
-   "overlaps": [],
+   "overlaps": [
+    "DIV#topbar>DIV#coins × DIV#minimap>CANVAS"
+   ],
    "h1pass": true,
-   "h2pass": true
+   "h2pass": false
   },
   {
    "w": 1920,
@@ -40,9 +44,11 @@
    ],
    "uiH": 1080,
    "intruders": [],
-   "overlaps": [],
+   "overlaps": [
+    "DIV#topbar>DIV#coins × DIV#minimap>CANVAS"
+   ],
    "h1pass": true,
-   "h2pass": true
+   "h2pass": false
   },
   {
    "w": 1920,
@@ -54,9 +60,11 @@
    ],
    "uiH": 1080,
    "intruders": [],
-   "overlaps": [],
+   "overlaps": [
+    "DIV#topbar>DIV#coins × DIV#minimap>CANVAS"
+   ],
    "h1pass": true,
-   "h2pass": true
+   "h2pass": false
   }
  ],
  "h2": [
@@ -70,9 +78,11 @@
    ],
    "uiH": 720,
    "intruders": [],
-   "overlaps": [],
+   "overlaps": [
+    "DIV#topbar>DIV#coins × DIV#minimap>CANVAS"
+   ],
    "h1pass": true,
-   "h2pass": true
+   "h2pass": false
   },
   {
    "w": 1280,
@@ -84,9 +94,11 @@
    ],
    "uiH": 720,
    "intruders": [],
-   "overlaps": [],
+   "overlaps": [
+    "DIV#topbar>DIV#coins × DIV#minimap>CANVAS"
+   ],
    "h1pass": true,
-   "h2pass": true
+   "h2pass": false
   },
   {
    "w": 1920,
@@ -98,9 +110,11 @@
    ],
    "uiH": 1080,
    "intruders": [],
-   "overlaps": [],
+   "overlaps": [
+    "DIV#topbar>DIV#coins × DIV#minimap>CANVAS"
+   ],
    "h1pass": true,
-   "h2pass": true
+   "h2pass": false
   },
   {
    "w": 1920,
@@ -112,17 +126,21 @@
    ],
    "uiH": 1080,
    "intruders": [],
-   "overlaps": [],
+   "overlaps": [
+    "DIV#topbar>DIV#coins × DIV#minimap>CANVAS"
+   ],
    "h1pass": true,
-   "h2pass": true
+   "h2pass": false
   }
  ],
  "h4": {
   "keyGHits": [
    "game\\buildMode.ts"
   ],
-  "keyYHits": [],
-  "pass": true
+  "keyYHits": [
+   "game\\creation.ts"
+  ],
+  "pass": false
  },
  "h3h5h6": "PENDING——hotbar/编辑器 DOM 属 P1-2/P1-5 实装（spec §5 诚实标注）"
 }

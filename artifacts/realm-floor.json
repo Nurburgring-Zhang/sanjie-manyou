@@ -1,0 +1,72 @@
+{
+ "heaven": [],
+ "underworld": [],
+ "human": [
+  {
+   "id": 2213,
+   "occ": "customer",
+   "x": 10798,
+   "y": -3.25,
+   "floorY": 0,
+   "sink": 3.25
+  },
+  {
+   "id": 2214,
+   "occ": "customer",
+   "x": 12402,
+   "y": -3.25,
+   "floorY": 0,
+   "sink": 3.25
+  },
+  {
+   "id": 2216,
+   "occ": "customer",
+   "x": -160,
+   "y": -1.05,
+   "floorY": 0,
+   "sink": 1.05
+  },
+  {
+   "id": 2218,
+   "occ": "customer",
+   "x": 12499,
+   "y": -3.25,
+   "floorY": 0,
+   "sink": 3.25
+  },
+  {
+   "id": 2229,
+   "occ": "customer",
+   "x": 5398,
+   "y": -0.43,
+   "floorY": 0,
+   "sink": 0.43
+  },
+  {
+   "id": 2230,
+   "occ": "customer",
+   "x": 5601,
+   "y": -0.87,
+   "floorY": 0,
+   "sink": 0.87
+  },
+  {
+   "id": 2255,
+   "occ": "customer",
+   "x": -162,
+   "y": -1.05,
+   "floorY": 0,
+   "sink": 1.05
+  },
+  {
+   "id": 2256,
+   "occ": "customer",
+   "x": -158,
+   "y": -1.05,
+   "floorY": 0,
+   "sink": 1.05
+  }
+ ],
+ "sampled": 368,
+ "raycasts": 189
+}

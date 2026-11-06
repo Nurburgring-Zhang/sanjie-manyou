@@ -1,0 +1,615 @@
+{
+ "heaven": [
+  {
+   "id": 2018,
+   "occ": "deity",
+   "x": -481,
+   "y": 2160,
+   "z": 176,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2019,
+   "occ": "deity",
+   "x": -487,
+   "y": 2160,
+   "z": 178,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2020,
+   "occ": "deity",
+   "x": -503,
+   "y": 2160,
+   "z": 66,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2021,
+   "occ": "deity",
+   "x": -509,
+   "y": 2160,
+   "z": 68,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2022,
+   "occ": "deity",
+   "x": -492,
+   "y": 2162.2,
+   "z": -44,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2023,
+   "occ": "deity",
+   "x": -498,
+   "y": 2162.2,
+   "z": -42,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2024,
+   "occ": "deity",
+   "x": -470,
+   "y": 2157.8,
+   "z": -154,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2025,
+   "occ": "deity",
+   "x": -476,
+   "y": 2157.8,
+   "z": -152,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2026,
+   "occ": "deity",
+   "x": 487,
+   "y": 2160,
+   "z": 176,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2027,
+   "occ": "deity",
+   "x": 481,
+   "y": 2160,
+   "z": 178,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2028,
+   "occ": "deity",
+   "x": 509,
+   "y": 2160,
+   "z": 66,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2029,
+   "occ": "deity",
+   "x": 503,
+   "y": 2160,
+   "z": 68,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2030,
+   "occ": "deity",
+   "x": 498,
+   "y": 2162.2,
+   "z": -44,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2031,
+   "occ": "deity",
+   "x": 492,
+   "y": 2162.2,
+   "z": -42,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2032,
+   "occ": "deity",
+   "x": 476,
+   "y": 2157.8,
+   "z": -154,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2033,
+   "occ": "deity",
+   "x": 470,
+   "y": 2157.8,
+   "z": -152,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2215,
+   "occ": "customer",
+   "x": -16001,
+   "y": 2523.3,
+   "z": 3804,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2221,
+   "occ": "customer",
+   "x": -21502,
+   "y": 2889.1,
+   "z": -15203,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2222,
+   "occ": "customer",
+   "x": -22597,
+   "y": 3732.4,
+   "z": -15400,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2368,
+   "occ": "customer",
+   "x": 2,
+   "y": 2162.7,
+   "z": -114,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2369,
+   "occ": "customer",
+   "x": -87,
+   "y": 2153.3,
+   "z": -12,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2370,
+   "occ": "customer",
+   "x": -88,
+   "y": 2153.3,
+   "z": -25,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2371,
+   "occ": "customer",
+   "x": 94,
+   "y": 2153.3,
+   "z": 18,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2372,
+   "occ": "customer",
+   "x": 77,
+   "y": 2153.3,
+   "z": 28,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2373,
+   "occ": "customer",
+   "x": -86,
+   "y": 2153.3,
+   "z": -22,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2374,
+   "occ": "customer",
+   "x": 90,
+   "y": 2153.3,
+   "z": 18,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2375,
+   "occ": "customer",
+   "x": -4,
+   "y": 2182.9,
+   "z": 216,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2376,
+   "occ": "customer",
+   "x": -5,
+   "y": 2182.9,
+   "z": 200,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2377,
+   "occ": "customer",
+   "x": -252,
+   "y": 2157.7,
+   "z": -43,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2378,
+   "occ": "customer",
+   "x": -3,
+   "y": 2182.9,
+   "z": 213,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2379,
+   "occ": "customer",
+   "x": -3,
+   "y": 2153.3,
+   "z": -54,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2380,
+   "occ": "customer",
+   "x": 8,
+   "y": 2153.3,
+   "z": -48,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2381,
+   "occ": "customer",
+   "x": -6,
+   "y": 2153.3,
+   "z": 61,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2382,
+   "occ": "customer",
+   "x": -7,
+   "y": 2153.6,
+   "z": 68,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2383,
+   "occ": "customer",
+   "x": 88,
+   "y": 2153.3,
+   "z": 18,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2384,
+   "occ": "customer",
+   "x": -4,
+   "y": 2153.3,
+   "z": -43,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2385,
+   "occ": "customer",
+   "x": -3,
+   "y": 2153.3,
+   "z": -56,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2386,
+   "occ": "customer",
+   "x": 10,
+   "y": 2153.3,
+   "z": 54,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2387,
+   "occ": "customer",
+   "x": -7,
+   "y": 2153.3,
+   "z": 62,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2388,
+   "occ": "customer",
+   "x": -2,
+   "y": 2182.9,
+   "z": 205,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2389,
+   "occ": "customer",
+   "x": 7,
+   "y": 2153.3,
+   "z": -26,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2390,
+   "occ": "customer",
+   "x": -5,
+   "y": 2153.3,
+   "z": -20,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2391,
+   "occ": "customer",
+   "x": -4,
+   "y": 2153.3,
+   "z": -36,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2392,
+   "occ": "customer",
+   "x": 12,
+   "y": 2153.3,
+   "z": -25,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2393,
+   "occ": "customer",
+   "x": -3,
+   "y": 2182.9,
+   "z": 213,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2394,
+   "occ": "customer",
+   "x": 262,
+   "y": 2155.4,
+   "z": 258,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2395,
+   "occ": "customer",
+   "x": 341,
+   "y": 2153.2,
+   "z": 313,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2396,
+   "occ": "customer",
+   "x": 99,
+   "y": 2159.9,
+   "z": -113,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2397,
+   "occ": "customer",
+   "x": -298,
+   "y": 2142.3,
+   "z": 106,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2398,
+   "occ": "customer",
+   "x": -362,
+   "y": 2142.3,
+   "z": 93,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2399,
+   "occ": "customer",
+   "x": -330,
+   "y": 2142.3,
+   "z": 108,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2400,
+   "occ": "customer",
+   "x": -7,
+   "y": 2170.9,
+   "z": 158,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2401,
+   "occ": "customer",
+   "x": 0,
+   "y": 2170.9,
+   "z": 166,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2402,
+   "occ": "customer",
+   "x": 7,
+   "y": 2170.9,
+   "z": 173,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2658,
+   "occ": "beggar",
+   "x": -131,
+   "y": 2144.2,
+   "z": 41,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2659,
+   "occ": "beggar",
+   "x": -139,
+   "y": 2144.2,
+   "z": 62,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2660,
+   "occ": "beggar",
+   "x": -167,
+   "y": 2144.2,
+   "z": 66,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2661,
+   "occ": "beggar",
+   "x": -169,
+   "y": 2144.2,
+   "z": 39,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2662,
+   "occ": "beggar",
+   "x": -161,
+   "y": 2144.2,
+   "z": 18,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2663,
+   "occ": "beggar",
+   "x": -133,
+   "y": 2144.2,
+   "z": 14,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2664,
+   "occ": "merchant",
+   "x": -75,
+   "y": 2143.2,
+   "z": 79,
+   "ws": null,
+   "diff": null
+  }
+ ],
+ "human": [
+  {
+   "id": 173,
+   "occ": "soldier",
+   "x": 0,
+   "y": 15.9,
+   "z": 5000,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 174,
+   "occ": "soldier",
+   "x": 0,
+   "y": 15.9,
+   "z": -5000,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 175,
+   "occ": "soldier",
+   "x": 5000,
+   "y": 15.9,
+   "z": 0,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 176,
+   "occ": "soldier",
+   "x": -5000,
+   "y": 15.9,
+   "z": 0,
+   "ws": null,
+   "diff": null
+  },
+  {
+   "id": 2201,
+   "occ": "customer",
+   "x": 224,
+   "y": 0.7,
+   "z": 62,
+   "ws": 0,
+   "diff": 0.72
+  },
+  {
+   "id": 2294,
+   "occ": "customer",
+   "x": 306,
+   "y": 8,
+   "z": 87,
+   "ws": null,
+   "diff": null
+  }
+ ],
+ "underworld": [],
+ "sampleByRealm": {
+  "human": 184,
+  "heaven": 61,
+  "underworld": 123
+ }
+}
