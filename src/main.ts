@@ -61,6 +61,7 @@ async function boot(): Promise<void> {
     return { x, y: Number.isFinite(gy) ? gy : pl.actor.pos.y, z };
   };
   (window as unknown as Record<string, unknown>)['__creation'] = creation;
+  world.onRebuildCreations = () => { world.creationCount = creation.rebuildAll(); };
   const origSubmit = creation.submit.bind(creation);
   creation.submit = async (t?: string) => {
     const r = await origSubmit(t);

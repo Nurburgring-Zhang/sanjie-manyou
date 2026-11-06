@@ -246,6 +246,8 @@ export class World {
   interact!: InteractSystem;
   /** P0-4 读档暂存：interact 创建时应用（economy 三币） */
   interactPending: { coins: number; yinde: number; peach: number } | null = null;
+  /** S10 造物重演回调（main 注入 creation.rebuildAll） */
+  onRebuildCreations: (() => void) | null = null;
   impacts!: ImpactSystem;
   mounts!: MountSystem;
   heightAt: ((x: number, z: number) => number) | null = null;
@@ -612,6 +614,10 @@ export class World {
         // P1-2 最小可玩闭环：城南偏东荒地 48×48 青石台，G 键建造模式（D3 体素首块落地）
         ensureWorkshopBase(voxelStore);
         this.voxelMesh = buildVoxelMesh(scene);
+      }],
+      ['造物重演', () => {
+        // S10 读档重演：persist 的造物实体由 provenance 重建 mesh（幂等——main 侧 creation.rebuildAll）
+        if (this.onRebuildCreations) this.onRebuildCreations();
       }],
       ['幽冥·奈何桥', () => buildNaiheSystem(baker, sg, this.atlas)],
       ['幽冥·三生石', () => buildSansheng(baker, sg, this.atlas)],

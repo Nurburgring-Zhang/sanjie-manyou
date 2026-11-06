@@ -752,3 +752,9 @@ probe-voxel **8/8 PASS**（chunk 化后 V1a tri≈9600 适配）；probe-realm-f
 ### E2E 实证
 interact.save() → coins=333 / voxelLen=9216 读回一致（真实 IDB 全链）。
 验证链：vitest 131/131、tsc 0 错、determinism PASS。
+
+## 2026-11-07 · 心跳批二：造物重演接线 + P1-3 建造产出材料库存
+
+- **造物重演接线**：world 载入链「造物重演」步（营造司体素台后）→ onRebuildCreations 回调（main 注入 creation.rebuildAll）→ 读档后 persist 造物（龙/凤/麒麟…）mesh 全恢复，creationCount 同步。
+- **P1-3 建造产出**：拆除得 1 建材（库存优先，放置免扣费）；库存空才扣 10 文买新块；残料回收 2 文保留。hotbar 加「建材 N」角标。
+- 验证链：vitest 131/131、tsc 0 错、determinism PASS。

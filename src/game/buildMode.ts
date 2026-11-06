@@ -18,10 +18,13 @@ export class BuildMode {
   selected = 1;
   /** P1-2 资源化：放置扣 10 文 / 拆除返 2 文（main 注入 interact.tryPay/earn——资源轴闭环） */
   spend: ((coins: number) => boolean) | null = null;
-  earn: ((coins: number) => void) | null = null;                                  // 当前方块类型（1-8）
+  earn: ((coins: number) => void) | null = null;
+  /** P1-3 建造产出：材料库存（拆 1 块得 1 材料；放置优先耗库存，库存空才扣 10 文） */
+  materialStock = 0;                                  // 当前方块类型（1-8）
   private mesh: THREE.Object3D | null = null;
   private hotbar: HTMLElement | null = null;
   private crosshair: HTMLElement | null = null;
+  private stockBadge: HTMLElement | null = null;
   private raycaster = new THREE.Raycaster();
   private maxDist = 12;
 
@@ -65,6 +68,15 @@ export class BuildMode {
       this.hotbar.appendChild(slot);
     }
     uiRoot.appendChild(this.hotbar);
+
+    // P1-3 建造产出：材料库存角标（hotbar 右上）
+    const badge = document.createElement('div');
+    badge.id = 'mat-stock';
+    badge.style.cssText = 'position:absolute;right:-14px;top:-10px;background:#ffd25e;color:#1a1414;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;display:none;';
+    badge.textContent = '建材 0';
+    this.hotbar.style.position = 'relative';
+    this.hotbar.appendChild(badge);
+    this.stockBadge = badge;
     this.crosshair = document.createElement('div');
     this.crosshair.id = 'crosshair';
     this.crosshair.style.cssText = 'position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;display:none;pointer-events:none;';
@@ -86,6 +98,10 @@ export class BuildMode {
   }
 
   private paint(): void {
+    if (this.stockBadge) {
+      this.stockBadge.textContent = '建材 ' + this.materialStock;
+      this.stockBadge.style.display = this.materialStock > 0 ? 'block' : 'none';
+    }
     if (!this.hotbar) return;
     Array.from(this.hotbar.children).forEach((slot, i) => {
       const el = slot as HTMLElement;
@@ -121,7 +137,9 @@ export class BuildMode {
     const px = aim.gx + Math.round(n.x), py = aim.gy + Math.round(n.y), pz = aim.gz + Math.round(n.z);
     if (!inArea(VOX.ox + px, VOX.oz + pz) || py < 1 || py >= VOX.ny) return;   // 基座层 y=0 之上才可放
     if (voxelStore.get(px, py, pz) !== 0) return;
-    if (this.spend && !this.spend(10)) return;   // P1-2 资源化：10 文/块（买不起不落）
+    // P1-3 建造产出：优先耗材料库存（拆除回收的），库存空才花 10 文买新块
+    if (this.materialStock > 0) { this.materialStock--; }
+    else if (this.spend && !this.spend(10)) return;
     voxelStore.set(px, py, pz, this.selected);
     onVoxelChanged(px, pz);   // P1-2 chunk 增量重建
   }
@@ -132,7 +150,8 @@ export class BuildMode {
     if (!aim) return;
     if (aim.gy <= 0) return;
     if (voxelStore.get(aim.gx, aim.gy, aim.gz) === 0) return;
-    if (this.earn) this.earn(2);                 // P1-2 资源化：拆除返 2 文（回收）
+    this.materialStock++;                        // P1-3 建造产出：拆除得 1 材料（库存优先语义）
+    if (this.earn) this.earn(2);                 // 残料回收 2 文（保留既有经济口径）
     voxelStore.set(aim.gx, aim.gy, aim.gz, 0);
     onVoxelChanged(aim.gx, aim.gz);   // P1-2 chunk 增量重建
   }
