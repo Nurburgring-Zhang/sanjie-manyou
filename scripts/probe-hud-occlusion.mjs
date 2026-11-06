@@ -45,8 +45,9 @@ try {
     }
   };
   walk(srcDir);
-  const h4KeyG = keyGHits.every((f) => /engine|player|ui/.test(f));
-  const h4KeyY = keyYHits.length === 0;
+  // H4 口径（P1-8 裁决已实装）：G=建造（buildMode）／Y=许愿（creation）——按裁决落位断言
+  const h4KeyG = keyGHits.length > 0 && keyGHits.every((f) => /buildMode/.test(f));
+  const h4KeyY = keyYHits.length > 0 && keyYHits.every((f) => /creation/.test(f));
   const h4Pass = h4KeyG && h4KeyY;
 
   // 每组合 fresh load（视口在 goto 前设定——resize 过渡竞态的根治）

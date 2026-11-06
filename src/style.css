@@ -30,7 +30,8 @@ body { font-family: var(--font-ui); color: var(--txt); -webkit-user-select: none
 
 /* ---- 顶栏 ---- */
 #topbar { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 14px;
-  padding: 10px 16px; background: linear-gradient(180deg, rgba(5,8,14,.75), transparent); pointer-events: none; }
+  /* P1-8 H2：右缘留 244px 小地图专属区（minimap right14 宽216+边），#coins 不再撞图 */
+  padding: 10px 260px 10px 16px; background: linear-gradient(180deg, rgba(5,8,14,.75), transparent); pointer-events: none; }
 #topbar > * { pointer-events: auto; }
 .brand { font-family: var(--font-kai); font-size: 22px; letter-spacing: .22em; color: #fff;
   text-shadow: 0 0 14px var(--cyan); white-space: nowrap; }
