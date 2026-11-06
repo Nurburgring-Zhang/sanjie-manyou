@@ -42,13 +42,13 @@ export interface SaveDataV1 { schemaVersion: 1; coins: number; yinde: number; pe
 export interface SaveDataV2 {
   schemaVersion: 2;
   savedAt: number;
-  economy: { coins: number; yinde: number; peach: number   /** P1-2 体素区全量（营造司；[gx,gy,gz,t] 扁平；缺省字段向后兼容） */
+  economy: { coins: number; yinde: number; peach: number };
+  /** P0-1 实体表 persist 实体（步 2 只读接入——collectPersistedEntities 填充） */
+  entities: Array<{ eid: number; kind: string; x: number; y: number; z: number; provenance?: unknown }>;
+  /** P1-2 体素区全量（营造司；[gx,gy,gz,t] 扁平；缺省字段向后兼容） */
   voxel?: number[];
   /** P1-2 生存循环快照（hp/hunger/faints/bossesDown） */
   survival?: { hp: number; hunger: number; faints: number; bossesDown: number };
-};
-  /** P0-1 实体表 persist 实体（步 3 接管后填充；当前恒空数组——字段先行） */
-  entities: Array<{ eid: number; kind: string; x: number; y: number; z: number; provenance?: unknown }>;
 }
 export type SaveData = SaveDataV2;
 

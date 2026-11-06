@@ -173,8 +173,10 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
       ? `🎯 目标 ${p.done}/${p.total} · 下一个：${p.next}`
       : `🎯 目标 ${p.done}/${p.total} · 全部达成`;
     // P1-4 条件节点：资源轴驱动的「该去做什么」（H6 三修订的 HUD 兑付）
+    // P1-4 条件节点：interact/survival 在载入链「众生入场」步才创建——构造期 renderGoal 首刷时跳过
     const it = world.interact;
     const sv = world.survival;
+    if (!it || !sv) return;
     const cre = world.creationCount;
     const top = topCondition({ coins: it.coins, yinde: it.yinde, peach: it.peach, hunger: sv.hunger, bossesDown: sv.bossesDown, hasCreation: cre > 0 });
     const condEl = document.getElementById('condNode');

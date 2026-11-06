@@ -721,3 +721,19 @@ Y 键命令条 → 输入「一条赤红色的龙」→ 关键词匹配龙模板
 - HUD 接线：目标链 goalchain 加 ⚡ 条件节点行（topCondition 实时驱动，uiTick 刷新）；world.creationCount 由 main 在造物成功后同步。
 - 单测 7 条（阈值/优先级排序/互斥抑制/全达标 null）全过——1 条测试期望修正（c-creation pri=4 正确高于 c-peach pri=5，hasCreation 抑制后才轮到 c-peach）。
 - 验证链：vitest **13 files / 131 tests** 全绿（+7）；tsc 0 错；determinism PASS。
+
+## 2026-11-07 · P1-2 主体收口：chunk 增量重建 + 方块功能差异 + 载入事故修复
+
+### chunk 增量重建（voxelMesh.ts 重写）
+- 8×8 格 chunk（48/8=6×6=36 片×3 组），放/拆只重建所在 chunk+贴边邻块（角部含对角）——旧版全区 ~30ms 尖峰消掉。
+- 功能方块分组：**琉璃(5)=glow 自发光**（emissive 0x354d44）、**玄墨(8)=半透明**（opacity 0.55）——独立 mesh 组按 chunk 聚合。
+- world.voxelMesh 类型 Mesh→Group（36 chunk×3 组容器）；probe V1a 遍历子 mesh 计 tri≈9600。
+- buildMode 放/拆改调 `onVoxelChanged(gx,gz)`（增量入口）；raycast 递归命中子 mesh。
+
+### 载入事故（本轮引入并当场修复，如实记录）
+- ①SaveDataV2 类型块被 regex 扩字段时截断（economy 对象吞了 `}` 和 entities 行）→ **载入即失败 "reading 'coins'"** → 类型块重写恢复。
+- ②ui.ts renderGoal 构造期首刷在 interact 创建前 → `!it || !sv` 守卫跳过。
+- ③贴地校正步 raycast×368 全场景遍历 → **ProtocolError 超时性能事故** → 粗判先行（人间 walkSurfaceY/天宫 PLATFORMS 能判则不走 raycast）+ InstancedMesh 自身命中排除 + 400 次预算。
+
+### 验收
+probe-voxel **8/8 PASS**（chunk 化后 V1a tri≈9600 适配）；probe-realm-floor 陷地 0/0/8 维持；vitest 14 files/131 tests 全绿（+7 conditions）；tsc 0 错；determinism PASS。

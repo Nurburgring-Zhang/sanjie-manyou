@@ -289,7 +289,7 @@ export class World {
   readonly survival = new Survival();
   /** P1-4：已造物数量（main 注入；条件节点 c-creation 用） */
   creationCount = 0;
-  voxelMesh: THREE.Mesh | null = null;
+  voxelMesh: THREE.Object3D | null = null;   // P1-2 chunk 化：现为 Group（含 36 chunk×3 组）
   voxelStore: typeof voxelStore = voxelStore;   // P1-2：探针/存档从实例取（避免 HMR 双实例分裂）
   poiGuide: PoiGuide | null = null;
   assetAudit: BakerStats | null = null;

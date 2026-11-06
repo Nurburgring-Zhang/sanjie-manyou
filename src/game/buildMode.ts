@@ -11,7 +11,7 @@
 // ============================================================================
 import * as THREE from 'three';
 import { BLOCK_COUNT, BLOCK_NAMES, VOX, inArea, voxelStore } from '../rt/voxelStore';
-import { rebuildVoxelMesh } from './voxelMesh';
+import { onVoxelChanged } from './voxelMesh';
 
 export class BuildMode {
   active = false;
@@ -19,7 +19,7 @@ export class BuildMode {
   /** P1-2 资源化：放置扣 10 文 / 拆除返 2 文（main 注入 interact.tryPay/earn——资源轴闭环） */
   spend: ((coins: number) => boolean) | null = null;
   earn: ((coins: number) => void) | null = null;                                  // 当前方块类型（1-8）
-  private mesh: THREE.Mesh | null = null;
+  private mesh: THREE.Object3D | null = null;
   private hotbar: HTMLElement | null = null;
   private crosshair: HTMLElement | null = null;
   private raycaster = new THREE.Raycaster();
@@ -44,7 +44,7 @@ export class BuildMode {
   }
 
   /** 挂世界网格 + hotbar DOM（world 就绪后调一次） */
-  init(mesh: THREE.Mesh, uiRoot: HTMLElement): void {
+  init(mesh: THREE.Object3D, uiRoot: HTMLElement): void {
     this.mesh = mesh;
     this.hotbar = document.createElement('div');
     this.hotbar.id = 'hotbar';
@@ -98,7 +98,7 @@ export class BuildMode {
     if (!this.mesh) return null;
     this.raycaster.setFromCamera(new THREE.Vector2(0, 0), this.camera());
     this.raycaster.far = this.maxDist;
-    const hits = this.raycaster.intersectObject(this.mesh, false);
+    const hits = this.raycaster.intersectObject(this.mesh, true);   // chunk 化：递归命中子 mesh
     if (hits.length === 0) return null;
     const hit = hits[0];
     const face = hit.face;
@@ -123,7 +123,7 @@ export class BuildMode {
     if (voxelStore.get(px, py, pz) !== 0) return;
     if (this.spend && !this.spend(10)) return;   // P1-2 资源化：10 文/块（买不起不落）
     voxelStore.set(px, py, pz, this.selected);
-    if (this.mesh) rebuildVoxelMesh(this.mesh);
+    onVoxelChanged(px, pz);   // P1-2 chunk 增量重建
   }
 
   /** 右键：拆除命中格（y=0 基座保护：拆了会漏出虚空穿模） */
@@ -134,6 +134,6 @@ export class BuildMode {
     if (voxelStore.get(aim.gx, aim.gy, aim.gz) === 0) return;
     if (this.earn) this.earn(2);                 // P1-2 资源化：拆除返 2 文（回收）
     voxelStore.set(aim.gx, aim.gy, aim.gz, 0);
-    if (this.mesh) rebuildVoxelMesh(this.mesh);
+    onVoxelChanged(aim.gx, aim.gz);   // P1-2 chunk 增量重建
   }
 }

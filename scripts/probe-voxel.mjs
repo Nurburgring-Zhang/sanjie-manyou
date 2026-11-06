@@ -43,7 +43,9 @@ try {
 
     // V1 平台就绪
     const mesh = Q.world.voxelMesh;
-    chk('V1a 体素网格挂场景', !!mesh && mesh.parent === Q.scene, mesh ? `tri≈${mesh.geometry.index?.count / 3 ?? '?'}` : '');
+    let triSum = 0, inScene = !!mesh && mesh.parent === Q.scene;
+    if (mesh) for (const child of mesh.children) triSum += (child.geometry?.index?.count ?? 0) / 3;
+    chk('V1a 体素网格挂场景', inScene && triSum > 0, `tri≈${Math.round(triSum)}（36 chunk×3 组）`);
     chk('V1b 基座就位', Q.world.voxelStore.get(24, 0, 24) === 2 && Q.world.voxelStore.nonEmpty >= VOX.nx * VOX.nz,
       `nonEmpty=${Q.world.voxelStore.nonEmpty}`);
     const poiOk = Q.world.poiGuide !== null;   // world 引用健在性
