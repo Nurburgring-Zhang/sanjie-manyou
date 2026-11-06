@@ -418,9 +418,11 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
     if (statT <= 0) {
       statT = 0.5;
       const sv = (window as unknown as { __qingming?: { world?: { survival?: { hp: number; hunger: number } } } }).__qingming?.world?.survival;
+      const km = world.karma.current();
       const vital = sv ? `<br>❤️ ${Math.round(sv.hp)} · 🍚 ${Math.round(sv.hunger)}` : '';
-      const weapon = world.playerWeapon ? ` · ⚔️ ${world.playerWeapon.label}` : '';
-      statsEl.innerHTML = `<b>${engine.fps.toFixed(0)}</b> fps · ${engine.drawCalls} calls<br>在场 ${world.liveCount()} 人${vital}${weapon}`;
+      const tierLine = `<br>✦ ${km.tier} · 业力 ${km.karma}`;
+      const weapon = world.playerWeapon ? `<br>⚔️ ${world.playerWeapon.label}` : '';
+      statsEl.innerHTML = `<b>${engine.fps.toFixed(0)}</b> fps · ${engine.drawCalls} calls<br>在场 ${world.liveCount()} 人${vital}${tierLine}${weapon}`;
     }
     mmT -= dt;
     if (mmT <= 0) { mmT = 0.25; drawMinimap(); }

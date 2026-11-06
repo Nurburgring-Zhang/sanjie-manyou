@@ -28,6 +28,7 @@ import { buildGhostFlora, buildCelestialFlora } from './sky/flora';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { PoiGuide } from './game/poiGuide';
 import { Survival } from './game/survival';
+import { Karma } from './game/karma';
 import { SaveManager, loadOrMigrateLegacy, type SaveData } from './rt/save';
 import { ensureWorkshopBase, voxelStore, VOX } from './rt/voxelStore';
 import { buildVoxelMesh } from './game/voxelMesh';
@@ -246,6 +247,8 @@ export class World {
   interact!: InteractSystem;
   /** P0-4 读档暂存：interact 创建时应用（economy 三币） */
   interactPending: { coins: number; yinde: number; peach: number } | null = null;
+  /** P1-5 地府动词暂存：interact 创建后注册 */
+  pendingKarmaVerb: { pos: THREE.Vector3; r: number; label: string; realm: 'underworld' } | null = null;
   /** S10 造物重演回调（main 注入 creation.rebuildAll） */
   onRebuildCreations: (() => void) | null = null;
   impacts!: ImpactSystem;
@@ -292,6 +295,8 @@ export class World {
   creatures: CreatureSystem | null = null;
   /** P1-2 玩法实体：生存循环（血量/饥饿/晕倒迁地府）——probe-economy 同代探针验收 */
   readonly survival = new Survival();
+  /** P1-5 六道阶位：业力轴（三界动词产出）——HUD 阶位行共用 */
+  readonly karma = new Karma();
   /** P1-4：已造物数量（main 注入；条件节点 c-creation 用） */
   creationCount = 0;
   voxelMesh: THREE.Object3D | null = null;   // P1-2 chunk 化：现为 Group（含 36 chunk×3 组）
@@ -348,6 +353,8 @@ export class World {
         POIS['zichen'] = { name: '紫宸殿', pos: new THREE.Vector3(0, 6, -4040), radius: 40 };
         POIS['fengdu'] = { name: '地府·丰都鬼城', pos: new THREE.Vector3(540, UNDER.y + 2, 85), radius: 120 };
         POIS['shibayu'] = { name: '地府·十八狱环', pos: new THREE.Vector3(0, UNDER.y + 2, 55), radius: 60 };
+        // P1-5 地府动词：十八狱巡环（可重复，业力 +5）
+        this.pendingKarmaVerb = { pos: new THREE.Vector3(0, UNDER.y + 2, 40), r: 6, label: '绕十八狱环巡行（业力 +5）', realm: 'underworld' as const };
         POIS['mengpo'] = { name: '地府·孟婆庄', pos: new THREE.Vector3(-40, UNDER.y + 2, -132), radius: 12 };
         POIS['sansheng'] = { name: '地府·三生石', pos: new THREE.Vector3(24, UNDER.y + 2, -104), radius: 10 };
         POIS['wangxiang'] = { name: '地府·望乡台', pos: new THREE.Vector3(-150, UNDER.y + 18, -150), radius: 14 };
@@ -751,6 +758,7 @@ export class World {
         // P1-1 资源轴：蟠桃宴幕 → 蟠桃 +1（蟠桃轴唯一 source；H6 断裂修复）
         this.havoc.onPeachBanquet = (n) => {
           this.interact.addPeach(n);
+          this.karma.gain(8, 'heaven');   // P1-5：天宫动词业力产出
         };
 
         // P0-4 全量写档入口：interact.save() 经 window 桥调 SaveManager.save（fire-and-forget）
@@ -809,6 +817,14 @@ export class World {
         document.getElementById('ui')!.appendChild(fade);
         this.player.setFadeEl(fade);
         this.interact = new InteractSystem(document.getElementById('ui')!, this.player);
+        if (this.pendingKarmaVerb) {
+          const kv = this.pendingKarmaVerb;
+          this.interact.add(kv.pos, kv.r, kv.label, () => {
+            this.interact.act('pray', 6, '你沿狱环缓缓而行，阅尽刑罚……');
+            window.setTimeout(() => { this.karma.gain(5, 'underworld'); bus.emit('ui:toast', '狱环巡行毕——业力 +5'); }, 6200);
+          });
+          this.pendingKarmaVerb = null;
+        }
         if (this.interactPending) {
           this.interact.coins = this.interactPending.coins;
           this.interact.yinde = this.interactPending.yinde;
@@ -819,6 +835,7 @@ export class World {
         // P1-2 生存循环接线：晕倒 → 罚半铜钱 → 孟婆庄重生；Boss 伏誅 → 蟠桃利品（资源轴联动）
         this.survival.onFaint = () => {
           const I = this.interact;
+          this.karma.penalty();               // P1-5：晕倒业力 -100
           const penalty = Math.floor(I.coins * this.survival.coinPenaltyRatio);
           if (penalty > 0) { I.coins -= penalty; I.save(); }
           bus.emit('ui:toast', penalty > 0
@@ -1594,7 +1611,11 @@ export class World {
     for (const [x, z] of [[-238, 38], [-252, 36], [-222, 36]] as const) {
       I.add(new THREE.Vector3(x, 0.95, z), 3.2, '帮码头扛包赚钱（+20 文）', () => {
         I.act('carryPole', 8, '你扛起货包往返奔走……');
-        window.setTimeout(() => { I.earn(20); bus.emit('ui:toast', '工头丢给你 20 文工钱'); }, 8200);
+        window.setTimeout(() => {
+          I.earn(20);
+          this.karma.gain(2, 'human');   // P1-5：人间动词业力产出
+          bus.emit('ui:toast', '工头丢给你 20 文工钱（业力 +2）');
+        }, 8200);
       });
     }
     // 铁匠铺：买钢刀（攻击力提升，视觉佩刀）

@@ -49,6 +49,8 @@ export interface SaveDataV2 {
   voxel?: number[];
   /** P1-2 生存循环快照（hp/hunger/faints/bossesDown） */
   survival?: { hp: number; hunger: number; faints: number; bossesDown: number };
+  /** P1-5 业力快照 */
+  karma?: number;
 }
 export type SaveData = SaveDataV2;
 

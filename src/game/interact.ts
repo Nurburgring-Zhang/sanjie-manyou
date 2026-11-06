@@ -81,7 +81,7 @@ export class InteractSystem {
     // P0-4/P1-2 全量写档：三币 + survival + voxel → IndexedDB（fire-and-forget，异常静默）
     try {
       // __saveSave 在 window 上（world.ts 注入）；voxelStore 走 __qingming.world（单例语义）
-      const W = (window as unknown as { __saveSave?: (d: unknown) => Promise<void>; __qingming?: { world?: { survival?: { serialize(): unknown }; voxelStore?: { serialize(): number[] } } } });
+      const W = (window as unknown as { __saveSave?: (d: unknown) => Promise<void>; __qingming?: { world?: { survival?: { serialize(): unknown }; voxelStore?: { serialize(): number[] }; karma?: { current(): { karma: number } } } } });
       const sv = W.__qingming?.world;
       if (W.__saveSave && sv?.survival && sv.voxelStore) {
         void W.__saveSave({
@@ -90,6 +90,7 @@ export class InteractSystem {
           entities: [],
           voxel: sv.voxelStore.serialize(),
           survival: sv.survival.serialize(),
+          karma: sv.karma ? sv.karma.current().karma : 0,
         });
       }
     } catch { /* 存档失败不阻断游戏 */ }

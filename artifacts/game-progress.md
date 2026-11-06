@@ -758,3 +758,13 @@ interact.save() → coins=333 / voxelLen=9216 读回一致（真实 IDB 全链�
 - **造物重演接线**：world 载入链「造物重演」步（营造司体素台后）→ onRebuildCreations 回调（main 注入 creation.rebuildAll）→ 读档后 persist 造物（龙/凤/麒麟…）mesh 全恢复，creationCount 同步。
 - **P1-3 建造产出**：拆除得 1 建材（库存优先，放置免扣费）；库存空才扣 10 文买新块；残料回收 2 文保留。hotbar 加「建材 N」角标。
 - 验证链：vitest 131/131、tsc 0 错、determinism PASS。
+
+## 2026-11-07 · P1-5 六道阶位收口（1 玩法段第四项）
+
+- `src/game/karma.ts`：业力轴（Karma 类，byRealm 三界分账）+ 六阶阈值表（人道 0/修罗 300/畜生 800/饿鬼 1600/天道 3200/佛道 6400——内容量重定，弃 480 反推口径）+ tierOf + 换阶沿 karma:ascend 广播。
+- **三界动词接线**：人间扛包业力+2（既有经济动词加产出）/ 天宫蟠桃宴幕业力+8 / 地府十八狱环交互点巡行业力+5（pendingKarmaVerb → interact 创建后注册）。
+- 晕倒代价：业力 -100（不低于 0，D4 业缘语义）。
+- HUD：右上状态区加「✦ 阶位 · 业力 N」实时行；存档 karma 字段 + payload。
+- 单测 6 条（阈值表/gain 换阶沿/晕倒钳 0/byRealm 分账/roundtrip/表单调）全过——测试 3 处期望修正（799 边界归修罗道/bus 非 window 事件）。
+- 验证链：vitest **15 files / 137 tests** 全绿（+6）；tsc 0 错；determinism PASS。
+- 诚实边界：六阶阈值是设计判断（D4 卷 §2.3 弃 480 反推），无用户测试；换阶内容（NPC 态度文案）未实装——每阶先有动词+产出（本批），态度文案随 P1-6 造物用途。
