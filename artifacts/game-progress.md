@@ -685,3 +685,13 @@ Y 键命令条 → 输入「一条赤红色的龙」→ 关键词匹配龙模板
 - 放置 10 文/块（买不起不落）、拆除返 2 文；build.spend/earn 由 main 注入 interact.tryPay/earn。
 - Boss 周期重生机制确认已有（spec.respawnDelay，state='respawning'）——可重复 Boss 内容 ✓。
 - probe-voxel **8/8 PASS**（V6a/V6b 资源化断言新增）。
+
+## 2026-11-06 · 玩法实体三：星宿九府驻场神仙（用户报障修复）
+
+### 取证（probe-realm-defects.mjs，冻结演员三界分桶）
+- 天宫带陷地 0 / 地府带陷地 0（freeze 演员坐标全对）——用户看到的"陷地"是**神佛雕像类**（deities 独立 mesh，非演员）+ 远景雾视效。
+- **星宿九府岛零驻场神仙实锤**：45 位天宫演员集中凌霄殿柱列院（cell 0_0），±200 岛链 0 位。
+
+### 修复
+- world.ts「众生入场」步：八星宿府（角木蛟/奎木狼/斗牛宮/虛日鼠/亢金龍/昴日雞/心月狐/畢月烏）各驻场**府主（pray 宣讲）+ 侍从（lookAround 立班）**共 16 位 deity 演员，走 heavenPoint 缩放前口径（dev probe 双实例教训：参数序 x,z,y 已校准）。
+- probe 复测：八府 cells 全有驻场（每府 2-3 位），RESULT=CLEAN。

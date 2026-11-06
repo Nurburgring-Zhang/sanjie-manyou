@@ -625,6 +625,19 @@ export class World {
           else this.crowd.spawnStation('vendor', s.x, s.z, 0.1, 'hawk', '摆摊吆喝', rng.range(0, 6.28));
         }
         this.crowd.spawnStation('vendor', -36, 58, 0.1, 'present', '茶博士点茶', 0);
+        // P0-9 缺口修复：星宿九府每府驻场神仙（府主宣讲+侍从立班，走 heavenPoint 缩放前口径）
+        {
+          const starPalaces: [string, number, number, number][] = [
+            ['角木蛟府', -220, 80, 209], ['奎木狼府', -230, 30, 209], ['斗牛宮', -225, -20, 210], ['虛日鼠府', -215, -70, 208],
+            ['亢金龍府', 220, 80, 209], ['昴日雞宮', 230, 30, 209], ['心月狐府', 225, -20, 210], ['畢月烏府', 215, -70, 208],
+          ];
+          for (const [nm, sx, sz, sy] of starPalaces) {
+            const [wx, wy, wz] = heavenPoint(sx + 1.5, sy + 0.16, sz);
+            this.crowd.spawnStation('deity', wx, wz, wy + 0.02, 'pray', nm + '·府主宣讲', Math.atan2(-sx, -sz), { name: nm.slice(0, 3), nick: '星宿府主', group: 'deity', desc: nm + ' 府主宣讲星纲' });
+            const [ox, oy, oz] = heavenPoint(sx - 1.2, sy + 0.16, sz + 0.8);
+            this.crowd.spawnStation('deity', ox, oz, oy + 0.02, 'lookAround', nm + '·侍从立班', Math.atan2(-sx, -sz), { name: '星官侍从', nick: nm.slice(0, 2) + '侍从', group: 'deity', desc: nm + ' 侍从立班听讲' });
+          }
+        }
         this.crowd.spawnStation('musician', 232, 58, 0.1, 'pluck', '栏前弹唱', 0);
         this.crowd.spawnStation('musician', 306, 66, 0.1, 'flute', '瓦子笛声', Math.PI);
         // 社会热点补全：茶坊/酒肆/赌坊/斗殴巷/闲话角/书场/庙宇/戏台/码头
