@@ -4251,7 +4251,7 @@ export function buildUnderworldDataOnly(b: Baker, sg: SignMesher, atlas: SignAtl
     // 两侧货桌（1.6×0.8×0.8）+ 桌上货堆
     for (const s of [-1, 1]) {
       put(0.8, 0.8, 1.6, s * 2.6, 0.4, 0.2, W42.woodD);
-      b.box('paper', 0.5, 0.3, 0.5, x + s * 2.6 * cs, sy + 0.95, z + 0.2 * cs + s * 0.1, s > 0 ? W42.paper : W42.cloth2, ry);
+      b.box('lacquer', 0.5, 0.3, 0.5, x + s * 2.6 * cs, sy + 0.95, z + 0.2 * cs + s * 0.1, s > 0 ? W42.paper : W42.cloth2, ry);
     }
     // 吊灯两盏（门前）
     for (const s of [-1, 1]) {
