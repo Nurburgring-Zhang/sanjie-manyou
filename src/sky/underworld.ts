@@ -4228,6 +4228,37 @@ export function buildUnderworldDataOnly(b: Baker, sg: SignMesher, atlas: SignAtl
   w42ReverseStairs(b, 486, 57.6, Math.PI);                               // 逆行梯影：D-ITM-0163
   // ---- D-HOU-10 杂货鬼铺（十字街坊）----
   w42AllGoodsPlaque(b, sg, atlas, 700, 149.6, Math.PI);             // 「万货全」匾：D-ITM-0172
+  // P1-2 玩法实体：豐都「萬貨全」内部家具包（柜台+货架+货桌——H6 資源軸 sink 佈景，D-ITM-0172 同址）
+  {
+    const x = 700, z = 149.6;                        // 同 w42AllGoodsPlaque 调用位（D-ITM-0172）
+    const sy = UNDER.y + 0.19, ry = Math.PI;
+    const cs = Math.cos(ry), sn = Math.sin(ry);
+    const put = (w: number, h: number, d: number, lx: number, ly: number, lz: number, hex: number) => {
+      b.box('wood', w, h, d, x + lx * cs + lz * sn, sy + ly, z - lx * sn + lz * cs, hex, ry);
+    };
+    // 柜台（3.0×0.85×0.62，面朝门）
+    put(3.0, 0.85, 0.62, 0, 0.43, -2.6, W42.wood);
+    put(3.2, 0.07, 0.74, 0, 0.89, -2.6, W42.woodD);
+    // 背墙货架两层（宽 3.4）
+    for (const [ly, hh] of [[0.4, 0.12], [1.1, 0.12], [1.8, 0.12]] as const) {
+      put(3.4, hh, 0.42, 0, ly, -4.1, W42.woodD);
+    }
+    // 货物罐/卷（按层摆）
+    for (let i = 0; i < 5; i++) {
+      b.cyl('lacquer', 0.14, 0.16, 0.34, 8, x + (-1.3 + i * 0.65) * cs, sy + 1.31, z + (-1.3 + i * 0.65) * sn, W42.paper, ry);
+      put(0.5, 0.36, 0.24, -1.3 + i * 0.65, 0.52, -4.1, i % 2 ? W42.paperD : W42.bone);
+    }
+    // 两侧货桌（1.6×0.8×0.8）+ 桌上货堆
+    for (const s of [-1, 1]) {
+      put(0.8, 0.8, 1.6, s * 2.6, 0.4, 0.2, W42.woodD);
+      b.box('paper', 0.5, 0.3, 0.5, x + s * 2.6 * cs, sy + 0.95, z + 0.2 * cs + s * 0.1, s > 0 ? W42.paper : W42.cloth2, ry);
+    }
+    // 吊灯两盏（门前）
+    for (const s of [-1, 1]) {
+      b.box('metal', 0.05, 0.9, 0.05, x + s * 1.9, sy + 2.0, z + Math.cos(ry) * 0.9, W42.iron, ry);
+      b.cyl('glow', 0.2, 0.24, 0.4, 8, x + s * 1.9, sy + 1.3, z + Math.cos(ry) * 0.9, 0x3dff9c, ry);
+    }
+  }
   // ---- D-HOU-12 游魂庙（庙前坊，小庙无墙、龛前幡带成林）----
   w42TempleKeeperSeat(b, 780, 149.6, Math.PI);                     // 庙祝空位：D-ITM-0183
 }
