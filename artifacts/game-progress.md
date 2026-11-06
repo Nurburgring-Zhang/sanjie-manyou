@@ -708,3 +708,9 @@ Y 键命令条 → 输入「一条赤红色的龙」→ 关键词匹配龙模板
 - 性能修正（曾致载入超时的性能事故）：粗判先行（人间 walkSurfaceY / 天宫 PLATFORMS 能判定不走 raycast）、InstancedMesh 命中排除、400 次 raycast 预算上限。
 - 探针复测（probe-realm-floor，368 位 freeze 演员全量）：**天宫陷地 14→0、地府陷地 50→0、人间 56→8（残余=浮空/边缘个案）**。
 - 行程：probe-realm-floor（raycast 终审取证）取代 probe-sunken-npcs（walkSurfaceY 口径无法覆盖天宫烘焙台面——61 位"站错层"实为校验层缺失）。
+
+## 2026-11-07 · 心跳批：装备栏 UI + 天宫柱列廊两端山墙
+
+- 装备显示：右上状态区实时 ⚔️ 武器名（playerWeapon.label，uiTick 0.5s 刷新——双拳/钢刀/伏魔锏随拾取即时反映）。
+- 天宫柱列廊（LEN=64.8）两端山墙封板：旧版 ±32.4 端头檐口到屋脊敞口（用户报「两侧房顶消失」同类），三级阶梯封板+脊端封柱补齐。
+- 验证链：vitest 124/124、tsc 0 错、determinism PASS。

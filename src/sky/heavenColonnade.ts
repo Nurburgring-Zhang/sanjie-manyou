@@ -242,6 +242,15 @@ function canopy(b: Baker, sgn: number): void {
   b.box('roof', half + 0.35, 0.22, LEN, x + sgn * half / 2, (ridgeY + eaveY) / 2, 0, TILE, 0, 0, -sgn * ang);
   // 正脊 + 脊头金饰
   b.box('roof', 0.44, 0.28, LEN, x, ridgeY + 0.14, 0, shade(TILE, 1.18));
+  // P1-8 报障修复：两端山墙三角封板（旧版 ±32.4 端头从檐口到屋脊是敞口——侧看穿进空腔）
+  for (const s of [-1, 1]) {
+    const ez = (LEN / 2) * s;
+    // 三级阶梯封板：从檐口线 (half, eaveY) 升到屋脊 (0, ridgeY)，宽 0.3
+    for (const [f, wStep, hStep] of [[0.34, half * 0.62, (eaveY + (ridgeY - eaveY) * 0.34)], [0.67, half * 0.32, (eaveY + (ridgeY - eaveY) * 0.67)]] as const) {
+      b.box('wall', wStep, (ridgeY - eaveY) * 0.34, 0.3, x, eaveY + (ridgeY - eaveY) * f, ez + s * 0.14, shade(TILE, 1.08));
+    }
+    b.box('wall', 0.3, ridgeY - eaveY + 0.1, 0.3, x, eaveY + (ridgeY - eaveY) / 2, ez + s * 0.14, shade(TILE, 1.08));
+  }
   b.box('wood', 0.50, 0.06, LEN, x, ridgeY + 0.30, 0, GOLD_D);
   for (const z of [Z0 - 0.2, Z1 + 0.2]) {
     b.box('wood', 0.40, 0.34, 0.22, x, ridgeY + 0.30, z, GOLD);
