@@ -1243,10 +1243,11 @@ export function buildUnderworld(b: Baker, sg: SignMesher, atlas: SignAtlas, rng:
   for (const s of [-1, 1]) b.box('wood', 0.7, 13.6, 0.9, px + s * 4.9, FLR + 6.8, Z1 + 0.1, shade(LACQ, 1.4));
   b.box('wood', 10.4, 0.8, 1.0, px, FLR + 13.8, Z1 + 0.1, shade(LACQ, 1.5));
   for (let i = 0; i < 4; i++) b.box('wood', 0.34, 0.34, 1.2, px - 3 + i * 2, FLR + 14.4, Z1 + 0.1, CU);
-  sg.quad(atlas.text('yanluo', '閻羅殿', 768, 192, { color: '#b8ffd8', glow: '#3dff9c', bg: 'rgba(4,8,6,0.92)', border: 'rgba(61,255,156,.9)', fontPx: 132 }), 15, 3.8, px, FLR + 17.1, Z1 + 1.05, 0);
-  b.box('wood', 16, 0.26, 0.3, px, FLR + 19.2, Z1 + 1.1, CU);
-  b.box('wood', 16, 0.26, 0.3, px, FLR + 15.0, Z1 + 1.1, CU);
-  for (const s of [-1, 1]) b.box('wood', 0.3, 4.4, 0.3, px + s * 7.8, FLR + 17.1, Z1 + 1.1, CU);
+  // P0-9 报障修复：匾原挂 Z1+1.05，嵌在檐柱体（Z1+0.4 柱心，半径 0.75→面前 Z1+1.15）内被中央柱遮挡——外移柱前悬挑
+  sg.quad(atlas.text('yanluo', '閻羅殿', 768, 192, { color: '#b8ffd8', glow: '#3dff9c', bg: 'rgba(4,8,6,0.92)', border: 'rgba(61,255,156,.9)', fontPx: 132 }), 15, 3.8, px, FLR + 17.1, Z1 + 2.35, 0);
+  b.box('wood', 16, 0.26, 0.3, px, FLR + 19.2, Z1 + 2.4, CU);
+  b.box('wood', 16, 0.26, 0.3, px, FLR + 15.0, Z1 + 2.4, CU);
+  for (const s of [-1, 1]) b.box('wood', 0.3, 4.4, 0.3, px + s * 7.8, FLR + 17.1, Z1 + 2.4, CU);
   // 楹联：挂在明间两侧金柱（x=±9.5）柱面，竖排七言
   sg.quad(atlas.text('yanluo_lianw', '陽世三間多昧己', 96, 460, { color: '#ffd9a8', glow: '#ffb060', vertical: true, fontPx: 58, bg: 'rgba(18,6,8,0.9)', border: 'rgba(255,176,96,.7)' }), 1.6, 7.6, px - 9.5, FLR + 9.4, Z1 + 1.35, 0);
   sg.quad(atlas.text('yanluo_liane', '陰司一筆不容情', 96, 460, { color: '#ffd9a8', glow: '#ffb060', vertical: true, fontPx: 58, bg: 'rgba(18,6,8,0.9)', border: 'rgba(255,176,96,.7)' }), 1.6, 7.6, px + 9.5, FLR + 9.4, Z1 + 1.35, 0);
