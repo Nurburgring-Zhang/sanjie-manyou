@@ -1,6 +1,9 @@
 # 赛博上河 · NEON BIANJING
 
+> 目前LLM开发的最大的3D世界，纯国产LLM coding开发
 > 用 Three.js 实时渲染的「全 3D 清明上河图」：整座北宋汴京城程序化生成，千人市井行为模拟，水浒 108 将全城在位，天空层《大闹天宫》十幕战斗循环上演。赛博国潮美术（暮色霓虹 + 昼夜循环）。**零外部资产、零后端、可完全离线运行。**
+> 由kimi k3.1pro搭建基础架构，deepseek v4.1 flash进行开发，腾讯 hy 4 审核润色，千问终审把关。
+
 
 ![类型](https://img.shields.io/badge/Three.js-r180-blue) ![测试](https://img.shields.io/badge/vitest-78%2F78-brightgreen) ![载入](https://img.shields.io/badge/load-9.3s-orange) ![drawcall](https://img.shields.io/badge/drawcall--peak-527-green)
 
