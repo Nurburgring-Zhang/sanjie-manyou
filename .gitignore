@@ -10,6 +10,7 @@ dist-r10/
 # ---- 打包产物（每个 release 的 exe 有 190MB，绝不能进仓库）----
 release-v*/
 release-*/
+release/
 *.exe
 *.asar
 *.nupkg

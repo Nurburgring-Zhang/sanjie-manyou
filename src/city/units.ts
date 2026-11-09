@@ -416,6 +416,8 @@ export class UnitSystems {
 
   // ============ 每帧更新 ============
   update(t: number, dt: number): void {
+    // 全量审核 2026-11-07（M-08）：记录本帧 dt，紧随其后无参调用的 updatePlayerBoat() 读取（world 不改调用）
+    this.lastDt = dt;
     this.updateMounts(t, dt);
     this.updateSedans(dt);
     this.updateCarts(dt);
@@ -554,6 +556,8 @@ export class UnitSystems {
   private pbSlot = 0;
   private pbOar = -1;
   private pbMeta: BoatParts | null = null;
+  /** 全量审核 2026-11-07（M-08）：update() 记下的本帧 dt，供无参调用的 updatePlayerBoat() 读取 */
+  private lastDt = 1 / 60;
 
   updatePlayerBoat(): void {
     if (!this.pbSet) {
@@ -564,7 +568,9 @@ export class UnitSystems {
     }
     const b = this.playerBoat;
     const meta = this.pbMeta!;
-    b.phase += 2 * 0.016;
+    // 全量审核 2026-11-07（M-08）：船相位按真实 dt 推进（钳制口径同 engine 主循环），消除每帧固定增量的帧率相关
+    const dt = Math.min(0.1, Math.max(0, this.lastDt));
+    b.phase += 2 * dt;
     const bobY = Math.sin(b.phase) * 0.05;
     _e.set(Math.sin(b.phase * 0.7) * 0.03, b.yaw - Math.PI / 2, 0); _q.setFromEuler(_e);
     _v.set(b.x, WATER_Y + bobY, b.z); _sv.setScalar(1);

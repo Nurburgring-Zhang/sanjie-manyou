@@ -1,0 +1,292 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "at": "2026-11-08T13:55:20.879Z",
+  "shots": [
+    {
+      "id": "01-wumen-inside",
+      "label": "午门五凤楼殿内 · 御座/屏风/仪仗/宫灯",
+      "cam": [
+        0,
+        17.2,
+        -2938,
+        0,
+        16.6,
+        -2958
+      ],
+      "file": "artifacts\\r23-01-wumen-inside.png"
+    },
+    {
+      "id": "02-wumen-wing",
+      "label": "午门殿内 · 两翼起居与兵器架",
+      "cam": [
+        -24,
+        18.4,
+        -2939,
+        22,
+        15.6,
+        -2956
+      ],
+      "file": "artifacts\\r23-02-wumen-wing.png"
+    },
+    {
+      "id": "03-grass-close",
+      "label": "坊间草地近景 · 草叶/花/枝叶",
+      "cam": [
+        330,
+        2.2,
+        195,
+        345,
+        1.4,
+        225
+      ],
+      "file": "artifacts\\r23-03-grass-close.png"
+    },
+    {
+      "id": "04-grass-eye",
+      "label": "草地人眼平视（另一坊）",
+      "cam": [
+        640,
+        1.8,
+        240,
+        660,
+        1.3,
+        272
+      ],
+      "file": "artifacts\\r23-04-grass-eye.png"
+    },
+    {
+      "id": "05-street",
+      "label": "环城大路俯瞰 · 街面应为石板",
+      "cam": [
+        900,
+        80,
+        400,
+        900,
+        0,
+        180
+      ],
+      "file": "artifacts\\r23-05-street.png"
+    },
+    {
+      "id": "06-yujie",
+      "label": "御街 · 街面",
+      "cam": [
+        0,
+        55,
+        760,
+        0,
+        0,
+        300
+      ],
+      "file": "artifacts\\r23-06-yujie.png"
+    },
+    {
+      "id": "07-palace-flora",
+      "label": "皇宫俯瞰 · 宫苑草地与花木",
+      "cam": [
+        0,
+        250,
+        -2660,
+        0,
+        0,
+        -3440
+      ],
+      "file": "artifacts\\r23-07-palace-flora.png"
+    },
+    {
+      "id": "08-palace-flora-close",
+      "label": "宫城内近景 · 花木草叶",
+      "cam": [
+        220,
+        30,
+        -3010,
+        220,
+        0,
+        -3160
+      ],
+      "file": "artifacts\\r23-08-palace-flora-close.png"
+    },
+    {
+      "id": "09-mtn-south",
+      "label": "恒山南坡 · 可攀登缓坡 + 满山树草花",
+      "cam": [
+        -3500,
+        950,
+        -11000,
+        -3500,
+        420,
+        -16200
+      ],
+      "file": "artifacts\\r23-09-mtn-south.png"
+    },
+    {
+      "id": "10-mtn-slope",
+      "label": "山腰近景 · 草木分带",
+      "cam": [
+        -3500,
+        760,
+        -13600,
+        -3500,
+        520,
+        -15800
+      ],
+      "file": "artifacts\\r23-10-mtn-slope.png"
+    },
+    {
+      "id": "11-palace-green-eye",
+      "label": "宫苑绿毯内部 · 人眼平视草叶与花",
+      "cam": [
+        215,
+        2.3,
+        -3073,
+        225,
+        1.2,
+        -3085
+      ],
+      "file": "artifacts\\r23-11-palace-green-eye.png"
+    }
+  ],
+  "pageErrors": [],
+  "greenSpot": [
+    225,
+    -3085
+  ],
+  "runtime": {
+    "bundle": [
+      "index-CNl-o32z.js"
+    ],
+    "errors": [],
+    "kits": {
+      "r23Tuft": 171825,
+      "r23Stone": 1005,
+      "r23GrassRect": 7289,
+      "palaceFloraClusters": 208,
+      "palaceFloraPlants": 4992,
+      "palaceFloraTufts": 4576,
+      "palaceFloraLawns": 208,
+      "palaceGreenCells": 1180,
+      "palaceGreenTufts": 10620,
+      "palaceGreenFlowers": 3540,
+      "palaceGreenCanopies": 295,
+      "wumenInterior": 1,
+      "wumenFurnish": 103,
+      "wumenLiving": 2,
+      "wumenHall": 1,
+      "slopeGrove": 5888,
+      "slopeMeadow": 5753,
+      "slopeFlowerField": 1858,
+      "ecoPlaced": 50347
+    },
+    "mountainLife": {
+      "trees": 10500,
+      "shrubs": 7365,
+      "flowers": 1980,
+      "grass": 14554,
+      "slopeCover": 13499,
+      "byMountain": {
+        "trees": {
+          "泰山": 1500,
+          "华山": 1500,
+          "衡山": 1500,
+          "恒山": 1500,
+          "嵩山": 1500,
+          "天山": 1500,
+          "昆仑": 1500
+        },
+        "grass": {
+          "泰山": 2200,
+          "华山": 2037,
+          "衡山": 2197,
+          "恒山": 2048,
+          "嵩山": 2200,
+          "天山": 2112,
+          "昆仑": 1760
+        },
+        "slopeCover": {
+          "泰山": 1257,
+          "华山": 1074,
+          "衡山": 3398,
+          "恒山": 1686,
+          "嵩山": 2694,
+          "天山": 2409,
+          "昆仑": 981
+        }
+      }
+    },
+    "render": {
+      "calls": 373,
+      "triangles": 102679309
+    }
+  },
+  "southSlope": {
+    "line": [
+      [
+        -16200,
+        365
+      ],
+      [
+        -15835,
+        1313
+      ],
+      [
+        -15471,
+        1200
+      ],
+      [
+        -15106,
+        1004
+      ],
+      [
+        -14742,
+        861
+      ],
+      [
+        -14377,
+        743
+      ],
+      [
+        -14012,
+        626
+      ],
+      [
+        -13648,
+        510
+      ],
+      [
+        -13283,
+        396
+      ],
+      [
+        -12919,
+        282
+      ],
+      [
+        -12554,
+        132
+      ],
+      [
+        -12190,
+        25
+      ],
+      [
+        -11825,
+        21
+      ]
+    ],
+    "slopeDegPerSegment": [
+      68.9,
+      17.2,
+      28.2,
+      21.4,
+      17.9,
+      17.8,
+      17.7,
+      17.3,
+      17.4,
+      22.3,
+      16.4,
+      0.6
+    ],
+    "maxSlopeDeg": 68.9
+  }
+}

@@ -1,0 +1,293 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "at": "2026-11-07T14:23:31.930Z",
+  "bundle": [
+    "index-Dqhrzdwb.js"
+  ],
+  "csp": true,
+  "loadingGone": true,
+  "realmEco": {
+    "plan": {
+      "flora": 5640,
+      "fauna": 332,
+      "species": 38,
+      "byRealm": {
+        "human": {
+          "flora": 3590,
+          "fauna": 154
+        },
+        "heaven": {
+          "flora": 870,
+          "fauna": 96
+        },
+        "underworld": {
+          "flora": 1180,
+          "fauna": 82
+        }
+      },
+      "drawCalls": 4
+    },
+    "flora": [
+      {
+        "realm": "human",
+        "species": "willow",
+        "label": "垂柳",
+        "requested": 260,
+        "placed": 260,
+        "pieces": 1040
+      },
+      {
+        "realm": "human",
+        "species": "elm",
+        "label": "槐榆",
+        "requested": 190,
+        "placed": 190,
+        "pieces": 760
+      },
+      {
+        "realm": "human",
+        "species": "peach",
+        "label": "桃杏",
+        "requested": 170,
+        "placed": 170,
+        "pieces": 850
+      },
+      {
+        "realm": "human",
+        "species": "pine",
+        "label": "松柏",
+        "requested": 130,
+        "placed": 130,
+        "pieces": 520
+      },
+      {
+        "realm": "human",
+        "species": "bamboo",
+        "label": "竹丛",
+        "requested": 320,
+        "placed": 320,
+        "pieces": 960
+      },
+      {
+        "realm": "human",
+        "species": "hedge",
+        "label": "灌木绿篱",
+        "requested": 380,
+        "placed": 380,
+        "pieces": 760
+      },
+      {
+        "realm": "human",
+        "species": "wildflower",
+        "label": "五色花丛",
+        "requested": 900,
+        "placed": 900,
+        "pieces": 1800
+      },
+      {
+        "realm": "human",
+        "species": "meadow",
+        "label": "野草牧草",
+        "requested": 620,
+        "placed": 620,
+        "pieces": 1860
+      },
+      {
+        "realm": "human",
+        "species": "lotus",
+        "label": "荷莲",
+        "requested": 220,
+        "placed": 220,
+        "pieces": 660
+      },
+      {
+        "realm": "human",
+        "species": "reed",
+        "label": "芦苇菖蒲",
+        "requested": 260,
+        "placed": 260,
+        "pieces": 1560
+      },
+      {
+        "realm": "human",
+        "species": "vine",
+        "label": "藤蔓",
+        "requested": 140,
+        "placed": 140,
+        "pieces": 420
+      },
+      {
+        "realm": "heaven",
+        "species": "peachTree",
+        "label": "蟠桃林",
+        "requested": 120,
+        "placed": 120,
+        "pieces": 600
+      },
+      {
+        "realm": "heaven",
+        "species": "osmanthus",
+        "label": "仙桂",
+        "requested": 80,
+        "placed": 80,
+        "pieces": 400
+      },
+      {
+        "realm": "heaven",
+        "species": "celestialPine",
+        "label": "不老松",
+        "requested": 70,
+        "placed": 70,
+        "pieces": 280
+      },
+      {
+        "realm": "heaven",
+        "species": "jadeBamboo",
+        "label": "玉竹",
+        "requested": 110,
+        "placed": 110,
+        "pieces": 330
+      },
+      {
+        "realm": "heaven",
+        "species": "yaocao",
+        "label": "瑶草",
+        "requested": 220,
+        "placed": 220,
+        "pieces": 440
+      },
+      {
+        "realm": "heaven",
+        "species": "lingzhi",
+        "label": "灵芝",
+        "requested": 90,
+        "placed": 90,
+        "pieces": 180
+      },
+      {
+        "realm": "heaven",
+        "species": "celestialLotus",
+        "label": "瑶池青莲",
+        "requested": 110,
+        "placed": 110,
+        "pieces": 330
+      },
+      {
+        "realm": "heaven",
+        "species": "cloudVine",
+        "label": "云藤",
+        "requested": 70,
+        "placed": 70,
+        "pieces": 210
+      },
+      {
+        "realm": "underworld",
+        "species": "deadWood",
+        "label": "冥槐",
+        "requested": 90,
+        "placed": 90,
+        "pieces": 360
+      },
+      {
+        "realm": "underworld",
+        "species": "boneBamboo",
+        "label": "骨竹",
+        "requested": 130,
+        "placed": 130,
+        "pieces": 390
+      },
+      {
+        "realm": "underworld",
+        "species": "spiderLily",
+        "label": "彼岸花",
+        "requested": 360,
+        "placed": 360,
+        "pieces": 720
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostOrchid",
+        "label": "幽兰鬼花",
+        "requested": 150,
+        "placed": 150,
+        "pieces": 300
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostMoss",
+        "label": "幽苔",
+        "requested": 220,
+        "placed": 220,
+        "pieces": 660
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostLotus",
+        "label": "忘川鬼莲",
+        "requested": 120,
+        "placed": 120,
+        "pieces": 360
+      },
+      {
+        "realm": "underworld",
+        "species": "netherVine",
+        "label": "幽冥藤",
+        "requested": 110,
+        "placed": 110,
+        "pieces": 330
+      }
+    ],
+    "fauna": {
+      "drawCalls": 4,
+      "instances": 332,
+      "byMotion": {
+        "fly": 96,
+        "swim": 72,
+        "run": 80,
+        "drift": 84
+      },
+      "meshes": [
+        "eco_fly",
+        "eco_swim",
+        "eco_run",
+        "eco_drift"
+      ]
+    },
+    "placedFlora": 5640,
+    "pieces": 17080
+  },
+  "realmSnap": {
+    "checked": 1088,
+    "fixed": 156,
+    "actors": 4758
+  },
+  "kits": {
+    "shopfrontFrame": 4,
+    "shopfrontLintel": 16,
+    "shopfrontPierWindow": 8,
+    "yamen": 55,
+    "parkInfillSites": 90,
+    "parkPavilion": 104,
+    "roomLivingRooms": 2950
+  },
+  "render": {
+    "calls": 252,
+    "triangles": 28773699,
+    "geometries": 330
+  },
+  "errors": [],
+  "cameraAB": {
+    "flat": {
+      "dy": 0,
+      "dz": -13.88,
+      "dist": 13.88
+    },
+    "up": {
+      "dy": 6.93,
+      "dz": -12.68,
+      "dist": 14.45
+    },
+    "pass": true
+  },
+  "pageErrors": []
+}

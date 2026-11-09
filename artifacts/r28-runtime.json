@@ -1,0 +1,872 @@
+{
+  "at": "2026-11-08T19:27:59.401Z",
+  "url": "http://127.0.0.1:4186/",
+  "pageErrors": [],
+  "shots": [
+    "artifacts/r28-01-wish-generated.png",
+    "artifacts/r28-02-shop-street.png",
+    "artifacts/r28-03-mountain-temple.png"
+  ],
+  "assetLedger": {
+    "pick": {
+      "mt.cliffPlankGate": 1,
+      "mt.iceCrackWindow": 12,
+      "mt.incensePavilion": 1,
+      "mt.interior.building": 170,
+      "mt.interior.carving": 7,
+      "mt.interior.cliffGate": 1,
+      "mt.interior.corridor": 14,
+      "mt.interior.dragonRidge": 1,
+      "mt.interior.gate": 7,
+      "mt.interior.generic": 1,
+      "mt.interior.hangingTemple": 1,
+      "mt.interior.high": 7,
+      "mt.interior.iceWindow": 4,
+      "mt.interior.incensePavilion": 1,
+      "mt.interior.items": 1211,
+      "mt.interior.jadePool": 1,
+      "mt.interior.low": 99,
+      "mt.interior.mainHall": 7,
+      "mt.interior.mid": 64,
+      "mt.interior.mountainGate": 13,
+      "mt.interior.paifang": 10,
+      "mt.interior.pavilion": 12,
+      "mt.interior.plank": 12,
+      "mt.interior.shaolinGate": 1,
+      "mt.interior.sideRoom": 14,
+      "mt.interior.snowGallery": 1,
+      "mt.interior.snowSutra": 1,
+      "mt.interior.southGate": 1,
+      "mt.interior.steps": 17,
+      "mt.interior.stoneStele": 1,
+      "mt.interior.sutraPillar": 21,
+      "mt.interior.tower": 20,
+      "mt.interior.yuanCanPavilion": 1,
+      "mt.landmark0": 20,
+      "mt.landmark1": 12,
+      "mt.landmark2": 10,
+      "mt.landmark3": 12,
+      "mt.landmark4": 7,
+      "mt.landmark5": 17,
+      "mt.landmark6": 21,
+      "mt.landmark7": 13,
+      "mt.snowGallery": 1,
+      "mt.stoneStele": 1,
+      "mt.yuanCanPavilion": 1,
+      "mtn.glacier": 9,
+      "mtn.hangingTemple": 1,
+      "mtn.landmark.恒山": 16,
+      "mtn.landmark.衡山": 16,
+      "mtn.landmark.华山": 16,
+      "mtn.landmark.昆仑": 16,
+      "mtn.landmark.嵩山": 16,
+      "mtn.landmark.泰山": 16,
+      "mtn.landmark.天山": 16,
+      "mtn.landmark.count": 112,
+      "mtn.shaolinGate": 1,
+      "mtn.slopeCover.flowerField": 5560,
+      "mtn.slopeCover.grove": 16340,
+      "mtn.slopeCover.meadow": 23087,
+      "mtn.southGate": 1,
+      "mtn.yaochi": 1,
+      "shopint.bank.items": 9034,
+      "shopint.bank.shop": 393,
+      "shopint.bookshop.items": 9567,
+      "shopint.bookshop.shop": 418,
+      "shopint.cloth.items": 9278,
+      "shopint.cloth.shop": 404,
+      "shopint.general.items": 7830,
+      "shopint.general.shop": 347,
+      "shopint.noodle.items": 13535,
+      "shopint.noodle.shop": 435,
+      "shopint.pharmacy.items": 9154,
+      "shopint.pharmacy.shop": 411,
+      "shopint.shopAll": 3242,
+      "shopint.shopStocked": 3242,
+      "shopint.src.autoPlot.all": 151,
+      "shopint.src.autoPlot.stocked": 151,
+      "shopint.src.imperialBack.all": 117,
+      "shopint.src.imperialBack.stocked": 117,
+      "shopint.src.imperialFront.all": 74,
+      "shopint.src.imperialFront.stocked": 74,
+      "shopint.stockItems": 91743,
+      "shopint.tavern.items": 16232,
+      "shopint.tavern.shop": 400,
+      "shopint.teahouse.items": 17113,
+      "shopint.teahouse.shop": 434,
+      "shopint.variant0": 1126,
+      "shopint.variant1": 1051,
+      "shopint.variant2": 1065
+    },
+    "totalDetailKeys": 2173
+  },
+  "perfBudget": {
+    "before": {
+      "enabled": true,
+      "frame": 4,
+      "tier": "saver",
+      "forcedTier": null,
+      "emaFrameMs": 38.14,
+      "tierChanges": 2,
+      "schedules": {
+        "shadowMinInterval": 4,
+        "farGateInterval": 3,
+        "reflectionInterval": 4,
+        "note": "档位只调「更新频率」；中近景分辨率/几何/贴图/阴影分辨率/LOD 距离一律不动"
+      },
+      "shadow": {
+        "refreshCount": 2,
+        "skippedFrames": 2,
+        "camMoveTriggers": 2,
+        "staticDirtyTriggers": 1,
+        "lastReason": "budget"
+      },
+      "staticDirty": false,
+      "nearGuardM": 400,
+      "chunkSizeM": 256,
+      "protection": {
+        "nearGuardM": 400,
+        "pixelRatioUntouched": true,
+        "composerFullRes": true,
+        "shadowMapSizeUntouched": true,
+        "shadowCameraUntouched": true,
+        "lodDistancesUntouched": true,
+        "geometryTexturesUntouched": true,
+        "logarithmicDepthKept": true,
+        "halfResPostDisabled": true,
+        "note": "所有降级只作用于 >400m 远景 / 被遮挡区块 / 更新频率；中近景零画质损失"
+      },
+      "chunkGate": {
+        "indexedObjects": 315,
+        "staticIndexedMeshes": 26,
+        "staticChunks": 467010,
+        "culledFarObjects": 183,
+        "visibleFarObjects": 128,
+        "nearProtectedObjects": 4,
+        "lastCullFrame": 4,
+        "mode": "sync-chunk-frustum(budget-gated)"
+      },
+      "occlusion": {
+        "mode": "pvs",
+        "queryWired": false,
+        "degradeReason": "occlusion query 需额外 proxy draw call 且会污染 EffectComposer/logarithmicDepthBuffer 的 GL 状态，如实降级为 CPU 侧 PVS 粗判（视锥+远平面+遮挡体射线）",
+        "webgl2": true,
+        "timerQueryExtAvailable": true,
+        "anySamplesPassed": true,
+        "occluders": 0,
+        "chunksTotal": 56,
+        "chunksVisible": 23,
+        "chunksRejected": 183,
+        "nearProtectedChunks": 1,
+        "queriesIssued": 0,
+        "pvsRecomputes": 2,
+        "frames": 4
+      },
+      "pools": {
+        "flushCalls": 296,
+        "matrixUploads": 242,
+        "colorUploads": 241,
+        "allocations": 99374,
+        "createdPools": 74
+      },
+      "vrs": {
+        "implemented": false,
+        "reason": "WebGL2 无公开扩展 / WebGPU 核心无 shading-rate 特性；等效替代=帧预算调度远景更新频率"
+      },
+      "dvs": {
+        "implemented": false,
+        "reason": "Arm Mali 硬件术语，应用层不可调用；等效替代=分区视锥剔除 + 空间分块索引"
+      },
+      "worker": {
+        "implemented": true,
+        "wired": false,
+        "reason": "culling.worker.ts 已实现纯函数；接线需改 main.ts 构建配置（禁止），如实标注未启用"
+      },
+      "halfResPost": {
+        "implemented": false,
+        "reason": "降分辨率会波及中近景，违反硬约束；改为帧预算只调更新频率"
+      }
+    },
+    "after": {
+      "enabled": true,
+      "frame": 17,
+      "tier": "saver",
+      "forcedTier": null,
+      "emaFrameMs": 81.53,
+      "tierChanges": 2,
+      "schedules": {
+        "shadowMinInterval": 4,
+        "farGateInterval": 3,
+        "reflectionInterval": 4,
+        "note": "档位只调「更新频率」；中近景分辨率/几何/贴图/阴影分辨率/LOD 距离一律不动"
+      },
+      "shadow": {
+        "refreshCount": 5,
+        "skippedFrames": 12,
+        "camMoveTriggers": 5,
+        "staticDirtyTriggers": 1,
+        "lastReason": "budget"
+      },
+      "staticDirty": false,
+      "nearGuardM": 400,
+      "chunkSizeM": 256,
+      "protection": {
+        "nearGuardM": 400,
+        "pixelRatioUntouched": true,
+        "composerFullRes": true,
+        "shadowMapSizeUntouched": true,
+        "shadowCameraUntouched": true,
+        "lodDistancesUntouched": true,
+        "geometryTexturesUntouched": true,
+        "logarithmicDepthKept": true,
+        "halfResPostDisabled": true,
+        "note": "所有降级只作用于 >400m 远景 / 被遮挡区块 / 更新频率；中近景零画质损失"
+      },
+      "chunkGate": {
+        "indexedObjects": 315,
+        "staticIndexedMeshes": 26,
+        "staticChunks": 467010,
+        "culledFarObjects": 183,
+        "visibleFarObjects": 128,
+        "nearProtectedObjects": 4,
+        "lastCullFrame": 17,
+        "mode": "sync-chunk-frustum(budget-gated)"
+      },
+      "occlusion": {
+        "mode": "pvs",
+        "queryWired": false,
+        "degradeReason": "occlusion query 需额外 proxy draw call 且会污染 EffectComposer/logarithmicDepthBuffer 的 GL 状态，如实降级为 CPU 侧 PVS 粗判（视锥+远平面+遮挡体射线）",
+        "webgl2": true,
+        "timerQueryExtAvailable": true,
+        "anySamplesPassed": true,
+        "occluders": 0,
+        "chunksTotal": 56,
+        "chunksVisible": 23,
+        "chunksRejected": 183,
+        "nearProtectedChunks": 1,
+        "queriesIssued": 0,
+        "pvsRecomputes": 6,
+        "frames": 17
+      },
+      "pools": {
+        "flushCalls": 1258,
+        "matrixUploads": 956,
+        "colorUploads": 954,
+        "allocations": 99374,
+        "createdPools": 74
+      },
+      "vrs": {
+        "implemented": false,
+        "reason": "WebGL2 无公开扩展 / WebGPU 核心无 shading-rate 特性；等效替代=帧预算调度远景更新频率"
+      },
+      "dvs": {
+        "implemented": false,
+        "reason": "Arm Mali 硬件术语，应用层不可调用；等效替代=分区视锥剔除 + 空间分块索引"
+      },
+      "worker": {
+        "implemented": true,
+        "wired": false,
+        "reason": "culling.worker.ts 已实现纯函数；接线需改 main.ts 构建配置（禁止），如实标注未启用"
+      },
+      "halfResPost": {
+        "implemented": false,
+        "reason": "降分辨率会波及中近景，违反硬约束；改为帧预算只调更新频率"
+      }
+    },
+    "perfCalls": 361,
+    "perfTris": 77651599
+  },
+  "wishes8": [
+    {
+      "text": "我要一只猫",
+      "expectShape": "cat",
+      "min": 1,
+      "ok": true,
+      "tier": "L2",
+      "count": 1,
+      "reused": false,
+      "spawned": 1,
+      "validation": {
+        "ok": true,
+        "passed": 8,
+        "total": 8
+      },
+      "steps": [
+        "lookup:ok",
+        "notice:ok",
+        "research:ok",
+        "design:ok",
+        "build:ok",
+        "verify:ok",
+        "hotload:ok",
+        "done:ok"
+      ],
+      "metrics": {
+        "matched": true,
+        "reuse": false,
+        "count": 1,
+        "researchBridge": "offline",
+        "researchStatus": "disabled",
+        "designUsedResearch": false,
+        "shape": "cat",
+        "tier": "L2"
+      }
+    },
+    {
+      "text": "我要一座皇宫",
+      "expectShape": "palace",
+      "min": 1,
+      "ok": true,
+      "tier": "L2",
+      "count": 1,
+      "reused": false,
+      "spawned": 1,
+      "validation": {
+        "ok": true,
+        "passed": 8,
+        "total": 8
+      },
+      "steps": [
+        "lookup:ok",
+        "notice:ok",
+        "research:ok",
+        "design:ok",
+        "build:ok",
+        "verify:ok",
+        "hotload:ok",
+        "done:ok"
+      ],
+      "metrics": {
+        "matched": true,
+        "reuse": false,
+        "count": 1,
+        "researchBridge": "offline",
+        "researchStatus": "disabled",
+        "designUsedResearch": false,
+        "shape": "palace",
+        "tier": "L2"
+      }
+    },
+    {
+      "text": "我要一座山",
+      "expectShape": "mountain",
+      "min": 1,
+      "ok": true,
+      "tier": "L2",
+      "count": 1,
+      "reused": false,
+      "spawned": 1,
+      "validation": {
+        "ok": true,
+        "passed": 8,
+        "total": 8
+      },
+      "steps": [
+        "lookup:ok",
+        "notice:ok",
+        "research:ok",
+        "design:ok",
+        "build:ok",
+        "verify:ok",
+        "hotload:ok",
+        "done:ok"
+      ],
+      "metrics": {
+        "matched": true,
+        "reuse": false,
+        "count": 1,
+        "researchBridge": "offline",
+        "researchStatus": "disabled",
+        "designUsedResearch": false,
+        "shape": "mountain",
+        "tier": "L2"
+      }
+    },
+    {
+      "text": "我要一支军队",
+      "expectShape": "army",
+      "min": 12,
+      "ok": true,
+      "tier": "L2",
+      "count": 24,
+      "reused": false,
+      "spawned": 24,
+      "validation": {
+        "ok": true,
+        "passed": 8,
+        "total": 8
+      },
+      "steps": [
+        "lookup:ok",
+        "notice:ok",
+        "research:ok",
+        "design:ok",
+        "build:ok",
+        "verify:ok",
+        "hotload:ok",
+        "done:ok"
+      ],
+      "metrics": {
+        "matched": true,
+        "reuse": false,
+        "count": 24,
+        "researchBridge": "offline",
+        "researchStatus": "disabled",
+        "designUsedResearch": false,
+        "shape": "army",
+        "tier": "L2"
+      }
+    },
+    {
+      "text": "我要天兵天将",
+      "expectShape": "battalion",
+      "min": 12,
+      "ok": true,
+      "tier": "L2",
+      "count": 36,
+      "reused": false,
+      "spawned": 36,
+      "validation": {
+        "ok": true,
+        "passed": 8,
+        "total": 8
+      },
+      "steps": [
+        "lookup:ok",
+        "notice:ok",
+        "research:ok",
+        "design:ok",
+        "build:ok",
+        "verify:ok",
+        "hotload:ok",
+        "done:ok"
+      ],
+      "metrics": {
+        "matched": true,
+        "reuse": false,
+        "count": 36,
+        "researchBridge": "offline",
+        "researchStatus": "disabled",
+        "designUsedResearch": false,
+        "shape": "battalion",
+        "tier": "L2"
+      }
+    },
+    {
+      "text": "我要特斯拉汽车",
+      "expectShape": "car",
+      "min": 1,
+      "ok": true,
+      "tier": "L2",
+      "count": 1,
+      "reused": false,
+      "spawned": 1,
+      "validation": {
+        "ok": true,
+        "passed": 8,
+        "total": 8
+      },
+      "steps": [
+        "lookup:ok",
+        "notice:ok",
+        "research:ok",
+        "design:ok",
+        "build:ok",
+        "verify:ok",
+        "hotload:ok",
+        "done:ok"
+      ],
+      "metrics": {
+        "matched": true,
+        "reuse": false,
+        "count": 1,
+        "researchBridge": "offline",
+        "researchStatus": "disabled",
+        "designUsedResearch": false,
+        "shape": "car",
+        "tier": "L2"
+      }
+    },
+    {
+      "text": "我要宇宙飞船",
+      "expectShape": "spaceship",
+      "min": 1,
+      "ok": true,
+      "tier": "L2",
+      "count": 1,
+      "reused": false,
+      "spawned": 1,
+      "validation": {
+        "ok": true,
+        "passed": 8,
+        "total": 8
+      },
+      "steps": [
+        "lookup:ok",
+        "notice:ok",
+        "research:ok",
+        "design:ok",
+        "build:ok",
+        "verify:ok",
+        "hotload:ok",
+        "done:ok"
+      ],
+      "metrics": {
+        "matched": true,
+        "reuse": false,
+        "count": 1,
+        "researchBridge": "offline",
+        "researchStatus": "disabled",
+        "designUsedResearch": false,
+        "shape": "spaceship",
+        "tier": "L2"
+      }
+    },
+    {
+      "text": "我要外星人",
+      "expectShape": "alien",
+      "min": 1,
+      "ok": true,
+      "tier": "L2",
+      "count": 1,
+      "reused": false,
+      "spawned": 1,
+      "validation": {
+        "ok": true,
+        "passed": 8,
+        "total": 8
+      },
+      "steps": [
+        "lookup:ok",
+        "notice:ok",
+        "research:ok",
+        "design:ok",
+        "build:ok",
+        "verify:ok",
+        "hotload:ok",
+        "done:ok"
+      ],
+      "metrics": {
+        "matched": true,
+        "reuse": false,
+        "count": 1,
+        "researchBridge": "offline",
+        "researchStatus": "disabled",
+        "designUsedResearch": false,
+        "shape": "alien",
+        "tier": "L2"
+      }
+    }
+  ],
+  "reusePath": {
+    "ok": true,
+    "count": 1,
+    "reused": true,
+    "steps": [
+      "lookup:ok",
+      "reuse:ok",
+      "done:ok"
+    ],
+    "metrics": {
+      "matched": true,
+      "reuse": true,
+      "count": 1,
+      "researchBridge": "offline",
+      "researchStatus": "offline-disabled",
+      "designUsedResearch": false,
+      "shape": "generic",
+      "tier": "L1"
+    }
+  },
+  "onlineResearch": {
+    "ok": true,
+    "count": 1,
+    "steps": [
+      "lookup:ok",
+      "notice:ok",
+      "research:ok",
+      "design:ok",
+      "build:ok",
+      "verify:ok",
+      "hotload:ok",
+      "done:ok"
+    ],
+    "metrics": {
+      "matched": true,
+      "reuse": false,
+      "count": 1,
+      "researchBridge": "online",
+      "researchStatus": "ok",
+      "designUsedResearch": true,
+      "shape": "cat",
+      "tier": "L2"
+    },
+    "pipeline": {
+      "ok": true,
+      "reused": false,
+      "name": "猫",
+      "spec": {
+        "name": "猫",
+        "archetype": "beast",
+        "traits": [
+          "利爪",
+          "迅捷",
+          "检索摘要：家猫体长约 46 厘米，四肢短，瞳孔竖立，被毛短而密；善攀爬与夜行。",
+          "检索摘要：骨架轻巧、尾长平衡；与人类共居捕鼠，可作伴侣动物。",
+          "检索摘要：行走、奔跑、跳跃的行为参考。",
+          "骨架轻巧、尾长平衡；与人类共居捕鼠，可作伴侣动物。"
+        ],
+        "colors": [
+          14267276,
+          3813160,
+          15787720
+        ],
+        "scale": 3,
+        "seed": 2423781355,
+        "source": "param",
+        "shape": "cat"
+      },
+      "research": {
+        "name": "猫",
+        "origin": "联网检索（provider=brave、endpoint=https://api.search.brave.com/res/v1/web/search?q={q}）：关键词「猫」· 命中 3 条结果（真实结果，非模型编造）",
+        "dimensions": "家猫体长约 46 厘米，四肢短，瞳孔竖立，被毛短而密；善攀爬与夜行。",
+        "form": "未检索到",
+        "features": [
+          "检索摘要：家猫体长约 46 厘米，四肢短，瞳孔竖立，被毛短而密；善攀爬与夜行。",
+          "检索摘要：骨架轻巧、尾长平衡；与人类共居捕鼠，可作伴侣动物。",
+          "检索摘要：行走、奔跑、跳跃的行为参考。"
+        ],
+        "abilities": [
+          "骨架轻巧、尾长平衡；与人类共居捕鼠，可作伴侣动物。"
+        ],
+        "structure": "未检索到",
+        "functions": [
+          "未检索到"
+        ],
+        "uses": [
+          "未检索到"
+        ],
+        "relations": [
+          "未检索到"
+        ],
+        "combat": false,
+        "crafting": false,
+        "usable": false,
+        "devourable": false,
+        "evolve": false,
+        "upgrade": false,
+        "creation": true,
+        "building": false,
+        "worldImpact": "未检索到",
+        "npcRelations": "未检索到",
+        "consequences": "未检索到",
+        "imageRefs": [
+          "https://example.org/cat.jpg"
+        ],
+        "videoRefs": [
+          "https://example.org/cat.mp4"
+        ],
+        "sources": [
+          "家猫 体型 形态 特征 — https://example.org/cat",
+          "猫 结构 与 用途 参考 — https://example.org/cat2",
+          "猫 视频 行为参考 — https://example.org/cat3"
+        ],
+        "offline": false,
+        "bridge": "online",
+        "status": "ok",
+        "error": "",
+        "provider": "brave",
+        "endpoint": "https://api.search.brave.com/res/v1/web/search?q={q}",
+        "merged": 8,
+        "resultCount": 3,
+        "capabilityNotes": "能力可否依检索摘要中明确出现的关键词判定；其余 未检索到 项保守置否，来源见 sources"
+      },
+      "design": {
+        "name": "猫",
+        "archetype": "cat",
+        "silhouette": "弓背竖耳、尾脊成弧",
+        "parts": [
+          "躯干",
+          "头吻",
+          "立耳",
+          "四足",
+          "长尾",
+          "双目",
+          "设计纹样：饕餮纹",
+          "光晕/装饰层（可选）",
+          "尺寸依据：家猫体长约 46 厘米，四肢短，瞳孔竖立，被毛短而密；善攀爬与夜行。",
+          "能力标签：骨架轻巧、尾长平衡；与人类共居捕鼠，可作伴侣动物"
+        ],
+        "palette": [
+          14267276,
+          3813160,
+          15787720
+        ],
+        "motif": "莲纹",
+        "budget": 12000,
+        "notes": "依据「联网检索（provider=brave、endpoint=https://api.search.brave.com/res/v1/web/search?q={q}）：关键词「猫」· 命中 3 条结果（真实结果，非模型编造）」设定：未检索到；能力=骨架轻巧、尾长平衡；与人类共居捕鼠，可作伴侣动物。；用途=未检索到。尺寸=家猫体长约 46 厘米，四肢短，瞳孔竖立，被毛短而密；善攀爬与夜行。；配色=0xd9b38c/0x3a2f28/0xf0e6c8。战斗=false 合成=false 进化=false。本设计已消费联网检索资料（bridge=online、采用 8 字段）。遵循 ≤20000 tri、确定性、传统色约束。",
+        "capabilities": [
+          "wishCatalog",
+          "research-engineering",
+          "deep-research-report",
+          "material-search",
+          "game-content-production",
+          "wishBlueprint",
+          "design-md",
+          "game-architecture-patterns",
+          "threejs-3d-scene",
+          "wishForge",
+          "threejs-3d-generator",
+          "asset-production-engineering",
+          "html-screenshot-image-gen",
+          "browser-testing-with-devtools",
+          "threejs-qa-release",
+          "wishBuild",
+          "threejs-game-director",
+          "deterministic-execution"
+        ],
+        "shape": "cat",
+        "usedResearch": true
+      },
+      "steps": [
+        {
+          "stage": "lookup",
+          "label": "检索内置资产",
+          "detail": "在 wishCatalog 内置资产目录中检索「猫」",
+          "index": 0,
+          "ok": true
+        },
+        {
+          "stage": "notice",
+          "label": "生成提示",
+          "detail": "猫正在生成。。。。请稍后。",
+          "index": 1,
+          "ok": true
+        },
+        {
+          "stage": "research",
+          "label": "资料研究与合并",
+          "detail": "真实 HTTP 联网检索成功（provider=brave、endpoint=https://api.search.brave.com/res/v1/web/search?q={q}）：解析 3 条结果，按白名单采用/覆盖 8 个字段；bridge=online、status=ok、offline=false",
+          "index": 2,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "label": "详细设计",
+          "detail": "产出设计文档：原型=cat、剪影=弓背竖耳、尾脊成弧、部件 10 项、传统色 3 色、纹样=莲纹、面数预算=12000 tri、编排能力 18 项",
+          "index": 3,
+          "ok": true
+        },
+        {
+          "stage": "build",
+          "label": "生成构建",
+          "detail": "调用 opts.specFor 生成 WishSpec：猫 / beast / traits 6 项 / seed 2423781355",
+          "index": 4,
+          "ok": true
+        },
+        {
+          "stage": "verify",
+          "label": "多角度截图验证",
+          "detail": "多机位截图验证：8 个视角、8 张截图，结果=通过；8 机位截图验证通过 8/8；包围盒 21.84×7.8×5.78",
+          "index": 5,
+          "ok": true
+        },
+        {
+          "stage": "hotload",
+          "label": "热载入游戏",
+          "detail": "生成热载入指令：将「猫」载入到角色或视角镜头附近；由 UI / 主线程执行实际 scene.add 与镜头定位，本纯逻辑模块只登记契约，不直接操作 three 场景",
+          "index": 6,
+          "ok": true
+        },
+        {
+          "stage": "done",
+          "label": "生成完毕",
+          "detail": "猫生成完毕，出现在你面前！",
+          "index": 7,
+          "ok": true
+        }
+      ],
+      "notice": "猫正在生成。。。。请稍后。",
+      "doneNotice": "猫生成完毕，出现在你面前！",
+      "capabilities": [
+        "wishCatalog",
+        "research-engineering",
+        "deep-research-report",
+        "material-search",
+        "game-content-production",
+        "wishBlueprint",
+        "design-md",
+        "game-architecture-patterns",
+        "threejs-3d-scene",
+        "wishForge",
+        "threejs-3d-generator",
+        "asset-production-engineering",
+        "html-screenshot-image-gen",
+        "browser-testing-with-devtools",
+        "threejs-qa-release",
+        "wishBuild",
+        "threejs-game-director",
+        "deterministic-execution"
+      ],
+      "verifyNote": "8 机位截图验证通过 8/8；包围盒 21.84×7.8×5.78"
+    },
+    "researchHits": [
+      "OPTIONS https://api.search.brave.com/res/v1/web/search?q=%E7%8C%AB",
+      "GET https://api.search.brave.com/res/v1/web/search?q=%E7%8C%AB"
+    ]
+  },
+  "r27Regression": {
+    "collision": {
+      "embedded": 0,
+      "sunken": 0,
+      "sample": []
+    },
+    "solids": {
+      "total": 399000,
+      "walls": 185343,
+      "floors": 61806,
+      "plants": 58322,
+      "broken": 0,
+      "skipped": 779144,
+      "cells": 126475,
+      "buildMs": 9.1
+    },
+    "destruction": {
+      "events": 0,
+      "chunks": 0,
+      "aliveChunks": 0,
+      "vertsDeformed": 0,
+      "solidsBroken": 0,
+      "plantsFelled": 0,
+      "actorsHit": 0,
+      "meshEdits": 0,
+      "drawCallsWhenIdle": 0,
+      "lastReport": null,
+      "physicsTrace": [],
+      "physicsDistinct": 0,
+      "physicsTrackedId": -1
+    }
+  },
+  "PASS": {
+    "shopFullCoverage": true,
+    "shopSourcesCovered": true,
+    "mountainInteriors": true,
+    "mountainLandmarks": true,
+    "wishesEightOk": true,
+    "wishesSemantic": true,
+    "wishesHonestOffline": true,
+    "pluralArmy": true,
+    "reuseFastPath": true,
+    "realOnlineResearch": true,
+    "perfBudgetExposed": true,
+    "nearQualityProtected": true,
+    "chunkCullingActive": true,
+    "shadowCached": true,
+    "poolUploadSplit": true,
+    "vrsDvsHonest": true,
+    "r27NoEmbedded": true,
+    "r27NoSunken": true,
+    "noPageErrors": true,
+    "all": true
+  }
+}

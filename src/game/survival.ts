@@ -98,6 +98,10 @@ export class Survival {
     if (typeof s.hunger === 'number') this.hunger = Math.max(0, Math.min(HUNGER_MAX, s.hunger));
     if (typeof s.faints === 'number') this.faints = s.faints;
     if (typeof s.bossesDown === 'number') this.bossesDown = s.bossesDown;
-    this.fainted = this.hp <= 0;
+    // 全量审核 2026-11-07（C14）：读档是新会话起点，不继承上一会话的「晕倒吸态」。
+    // 旧实现按 hp<=0 预置 fainted；而 onFaint 把 I.save() 排在 revive() 之前（world.ts），
+    // 会把 hp:0 写进档 → 读档后 fainted 恒 true → damage/faint 沿 hp<=0&&!fainted 永久失效。
+    // 写档时序这一根因已在 world.ts 修复，此处同时保证旧档 / 坏档不再把玩家锁进吸态。
+    this.fainted = false;
   }
 }

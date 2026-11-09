@@ -6,6 +6,7 @@ import { inRiverFootprint } from '../city/riverGeom';
 import { beltRoomSpecs } from '../city/centralbelt';
 import { riverRoomSpecs } from '../city/riverbank';
 import { STREET_HOUSE_SLOTS } from '../city/interiors';
+import { solidBlocked, solidFloorY, solidBreachAt } from '../rt/solids';
 
 // ============ 随机源与时钟：依赖注入，不是全局替换 ============
 // 全仓 189 处 Math.random，其中只有模拟路径必须确定；把 Math.random 全局换成某个
@@ -216,6 +217,20 @@ export function walkSurfaceY(x: number, z: number, fromY?: number): number | nul
       if (deck > best) best = deck;
     } else if (deck < lowest) lowest = deck;
   }
+  // ---- R27 全城实体台账叠加 ----
+  // 根因：WS 哈希只登记 3 类街屋，宫墙/衙门/寺观/室内隔断等全城 90% 建筑从未有墙带、
+  // 也无顶面高度。solids 在 Baker 两个统一入口登记全城静态构件，这里把「顶面 + 墙带」
+  // 叠到既有行走面上；桥面 bridgeDeckYAt 逻辑优先级保持原样不变。
+  // 顶面只抬升、绝不拉低既有街面/桥面/WS 结果。
+  const sTop = solidFloorY(x, z, fromY === undefined ? 1e6 : fromY);
+  if (sTop !== null && sTop > best) best = sTop;
+  // 撞墙且没有「更高且够得着」的可站顶面 → 等同墙带（返回 null，行走积分滑动/回退）。
+  // fromY 省略时是工具查询，不做墙带判定，避免改变探针语义。
+  if (fromY !== undefined && solidBlocked(x, z, 0.34, fromY, 1.7)
+    && !(sTop !== null && sTop > fromY + 0.05)) return null;
+  // R27 破口放行：墙被 solidDamage 打碎后 solids 侧已自动跳过 broken，
+  // 但旧 WS_GRID 墙带是独立判据，不清掉会让 NPC 仍走不过被打穿的墙。
+  if (blocked && solidBreachAt(x, z)) blocked = false;
   if (blocked && !anyFloor) return null;
   if (fromY === undefined) return best > -Infinity ? best : 0;
   if (best === -Infinity) {
@@ -532,6 +547,11 @@ export function markCrossing(a: Actor): void { CROSSING.add(a); }
 export function isCrossing(a: Actor): boolean { return CROSSING.has(a); }
 
 export function setPathTo(a: Actor, nav: NavGraph, target: THREE.Vector3): void {
+  // R27：终点落在全城实体墙内 → 拒绝这次路径（原地，下一帧由 wander/pickFreeTarget 重取）。
+  if (!a.sky && solidBlocked(target.x, target.z, 0.34, target.y, 1.7)) {
+    a.path = []; a.pathI = 0;
+    return;
+  }
   const from = nav.nearest(a.pos, 40);
   const to = nav.nearest(target, 40);
   a.path = nav.path(from, to);
@@ -642,6 +662,8 @@ function pickFreeTarget(a: Actor, ctx: BehCtx, rng: Random): THREE.Vector3 | nul
     }
     if (!a.sky && (!dryPoint(x, z) || !drySegment(a.pos.x, a.pos.z, x, z))) continue;
     const y = a.sky ? a.pos.y : (onBridgeSpan(x, z) ? bridgeDeckY(z) : 0);
+    // R27：目标点落在全城实体墙内 → 复用 8 次重试循环重取，别把人领进墙里被顶死。
+    if (!a.sky && solidBlocked(x, z, 0.34, y, 1.7)) continue;
     return new THREE.Vector3(x, y, z);
   }
   return null;
@@ -755,6 +777,8 @@ function wander(a: Actor, ctx: BehCtx, st: BehState, rng: Random): boolean {
       const x = post.x + Math.cos(ang) * rr;
       const z = post.z + Math.sin(ang) * rr;
       if (!a.sky && (!dryPoint(x, z) || !drySegment(a.pos.x, a.pos.z, x, z))) continue;
+      // R27：驻场游荡目标同样拒收落在全城实体墙内的点（复用 8 次重试循环）。
+      if (!a.sky && solidBlocked(x, z, 0.34, a.pos.y, 1.7)) continue;
       a.path = [new THREE.Vector3(x, a.pos.y, z)];
       a.pathI = 0;
       return true;
@@ -1000,7 +1024,8 @@ function tickInner(a: Actor, dt: number, ctx: BehCtx, job: NonNullable<ReturnTyp
       mx /= ml; mz /= ml;
       // ---- 行走面积分（R27）：先试探一步，撞墙按单轴滑动，两级都失败才回退 ----
       // 旧版只改 x/z：铺面墙体没有碰撞体，人直接穿墙；地坪/桥面高度也从不过问。
-      const useWalk = !a.sky && a.pos.y > -40 && a.pos.y <= 12;
+      // R27：上限 12 → 120，把高台/城墙戍卒纳入行走积分（否则他们不查碰撞，穿墙进室内）。
+      const useWalk = !a.sky && a.pos.y > -40 && a.pos.y <= 120;
       if (!useWalk) {
         a.pos.x += mx * sp * dt;
         a.pos.z += mz * sp * dt;

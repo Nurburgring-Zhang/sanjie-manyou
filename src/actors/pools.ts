@@ -1,13 +1,22 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { noReflect } from '../core/layers';
+import { bumpPoolStat } from '../core/perfBudget';
+
+/** 对象池稳态化统计（供 window.__perfBudget().pools 断言：没有每帧 new / dispose）。
+ *  存储放在 core/perfBudget.ts，避免 engine.ts 反向 import 本文件触发顶层几何/canvas 副作用。 */
+export { getPoolStats } from '../core/perfBudget';
+export type { PoolStats } from '../core/perfBudget';
 
 // ============ 实例化部件池：全部动态物体共用极少数 draw call ============
 // 用法：init 时 alloc 槽位；每帧向槽位写矩阵；未用槽位缩放为 0（不可见）。
 export class InstPool {
   readonly mesh: THREE.InstancedMesh;
   private cursor = 0;
-  private dirty = true;
+  /** 稳态化：矩阵与颜色分开标脏。角色每帧改矩阵、颜色几乎不变，分开后不再每帧上传
+   *  整块 instanceColor（数千实例 × 3 float），只上传真正变了的缓冲，画质不变。 */
+  private matrixDirty = true;
+  private colorDirty = true;
   private readonly zero = new THREE.Matrix4().makeScale(0, 0, 0);
   constructor(scene: THREE.Scene, geo: THREE.BufferGeometry, mat: THREE.Material, readonly max: number, name: string, glow = false, glowSoft = false, shadow = !glow) {
     this.mesh = new THREE.InstancedMesh(geo, mat, max);
@@ -29,8 +38,10 @@ export class InstPool {
     // 性能：count 只画已分配槽位（零缩放实例也要跑顶点着色器，未分配的直接不提交）
     this.mesh.count = 0;
     scene.add(this.mesh);
+    bumpPoolStat('createdPools');
   }
   alloc(n: number): number {
+    bumpPoolStat('allocations');
     const base = this.cursor;
     this.cursor += n;
     if (this.cursor > this.max) throw new Error(`池 ${this.mesh.name} 槽位不足：need ${this.cursor} > ${this.max}`);
@@ -38,21 +49,29 @@ export class InstPool {
       // 新槽位补零矩阵（隐藏态），count 抬升覆盖已分配区间
       for (let i = this.mesh.count; i < base + n; i++) this.mesh.setMatrixAt(i, this.zero);
       this.mesh.count = base + n;
-      this.dirty = true;
+      this.matrixDirty = true;
     }
     return base;
   }
   set(i: number, m: THREE.Matrix4, color?: THREE.Color): void {
     this.mesh.setMatrixAt(i, m);
-    if (color && this.mesh.instanceColor) this.mesh.setColorAt(i, color);
-    this.dirty = true;
+    this.matrixDirty = true;
+    if (color && this.mesh.instanceColor) { this.mesh.setColorAt(i, color); this.colorDirty = true; }
   }
-  hide(i: number): void { this.mesh.setMatrixAt(i, this.zero); this.dirty = true; }
+  hide(i: number): void { this.mesh.setMatrixAt(i, this.zero); this.matrixDirty = true; }
   flush(): void {
-    if (!this.dirty) return;
-    this.mesh.instanceMatrix.needsUpdate = true;
-    if (this.mesh.instanceColor) this.mesh.instanceColor.needsUpdate = true;
-    this.dirty = false;
+    bumpPoolStat('flushCalls');
+    // 稳态化核心：颜色缓冲只在 set 显式传 color 时上传，避免每帧整块上传
+    if (this.matrixDirty) {
+      this.mesh.instanceMatrix.needsUpdate = true;
+      bumpPoolStat('matrixUploads');
+      this.matrixDirty = false;
+    }
+    if (this.colorDirty && this.mesh.instanceColor) {
+      this.mesh.instanceColor.needsUpdate = true;
+      bumpPoolStat('colorUploads');
+      this.colorDirty = false;
+    }
   }
 }
 
@@ -126,11 +145,16 @@ export const SILHOUETTE_MAT = new THREE.MeshBasicMaterial({ color: 0xffffff, sid
 function tY(g: THREE.BufferGeometry, y: number): THREE.BufferGeometry { g.translate(0, y, 0); return g; }
 function rotZ(g: THREE.BufferGeometry, a: number): THREE.BufferGeometry { g.rotateZ(a); return g; }
 
-// 1600 → 4800：R12 人口预算。可见角色目标 4000–4500，非行走角色（摊档/名将/神佛/鬼差/戍卒/外城坊民）
-// 约 700 名，故行走人口上限留到 4800 才有 10% 以上余量。
+// 1600 → 4800 → 6000 → 7200：R12 人口预算 → R20 宫城扩容 → R20 俯瞰密集阵列再重算。
+// R19 实际占用 4758 槽；R20 第二轮宫城再扩编 20 个紧凑簇（Σcount 338）+ 新增具名 30，
+// 理论峰值约 5126（修后实测 actors=5126）。原 4800 会在 ensureVenues() 的显式断言处抛错。
+// 本轮宫城再补 8 个行列网格阵列（Σcount 715），宫城驻场计划 660 → 1375：
+// 总角色约 5126+715≈5841，且 ensureVenues 的「已用 + 场所计划」断言口径还要再叠 715，
+// 取 7200 留出约 19% 余量，避免 planned 断言与角色本体池任一环节溢出。
 // 池满时 alloc 会直接抛错把整个世界初始化打断（表现为加载卡死、loading 不下去），
 // 所以 crowd.spawnCrowd 在开池前先做「计划人数 + 已用槽位 ≤ MAX_HUMANS」的显式断言，池分配完再做一次后置断言。
-export const MAX_HUMANS = 4800;
+// 注意：POOL_DEFS 里各池 max 均以本常量为基数（含 *2 / *3 / +MAX_ANIMALS），改这里会同步放大实例池。
+export const MAX_HUMANS = 7200;
 export const MAX_ANIMALS = 56;
 export const MAX_VEHICLES = 26;
 export const MAX_BOATS = 24;
@@ -515,3 +539,27 @@ const POOL_DEFS: Record<string, { geo: THREE.BufferGeometry; max: number; glow?:
     new THREE.ConeGeometry(0.7, 1.7, 6).translate(0, 6.1, 0),
   ])!, max: 1600 },
 };
+
+// ---- R20 终局：手持道具池随人口规模自动缩放 ----
+// 背景：宫城扩编后总人口 4758 → 5011，而 staff/blade/spear/axe 等道具池的 max 是按
+// R12 基准人口 4800 写死的常量。生产包实拍实测 `池 pool_spear 槽位不足：need 421 > 420`，
+// 这个 throw 发生在 async init 分段里，会被 loading 阶段吞成「初始化中断 / 卡住」。
+// 角色本体池本来就用 MAX_HUMANS 表达式，会自动跟随；只有这一组写死的道具池需要统一缩放。
+// 本轮再补 8 个宫城行列网格阵列（715 人，显式持物：scroll +100 / spear +261 / blade +192 / fan +81），
+// 故把乘数 1.35 → 1.7（配合 MAX_HUMANS=7200 ⇒ SCALE=(7200/4800)*1.7=2.55）：
+//   新池 max = ceil(base*2.55)：staff 1020 / blade 612 / spear 1071 / axe 510 / fan 3570 /
+//     basket 2295 / jar 918 / scroll 918 / carryPole 2295 / rod 765 / abacus 765 /
+//     bucket 612 / bow 408 / plank 765 / hammer 612 / bannerPole 510。
+//   以「旧池 max（1.6875 档）作既有需求保守上界」+ 本轮显式增量核算：
+//     spear 709+261=970≤1071、blade 405+192=597≤612、scroll 608+100=708≤918、
+//     fan 2363+81=2444≤3570，其余池增量 0 且旧 max ≤ 新 max，全 16 池不溢出。
+//   注：max 只决定 InstancedMesh 实例缓冲上限，mesh.count 仍只画已分配槽位，放大不增加 draw call / 三角形。
+const HAND_PROP_POOLS = [
+  'staff', 'blade', 'spear', 'axe', 'fan', 'basket', 'jar', 'scroll',
+  'carryPole', 'rod', 'abacus', 'bucket', 'bow', 'plank', 'hammer', 'bannerPole',
+] as const;
+const PROP_POOL_SCALE = (MAX_HUMANS / 4800) * 1.7;
+for (const k of HAND_PROP_POOLS) {
+  const def = POOL_DEFS[k];
+  if (def) def.max = Math.ceil(def.max * PROP_POOL_SCALE);
+}

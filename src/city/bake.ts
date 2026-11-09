@@ -1,4 +1,21 @@
 import * as THREE from 'three';
+import { registerSolid } from '../rt/solids';
+import { tagStaticChunk } from '../core/layers';
+import { PERF_CHUNK } from '../core/perfBudget';
+
+/**
+ * 估算一个包围球覆盖了多少个空间区块（PERF_CHUNK 见 core/perfBudget.ts）。
+ * 仅供「空间分块索引」统计：Baker 的 city_* 网格跨全城，覆盖数会很大，
+ * 正好作为审计事实「为什么不能靠单个大网格做视锥剔除」的可断言证据。
+ * 不遍历顶点、不新增 draw call，只做一次 O(1) 的包围球换算。
+ */
+function staticChunkSpan(center: THREE.Vector3, radius: number): number {
+  const minX = center.x - radius, maxX = center.x + radius;
+  const minZ = center.z - radius, maxZ = center.z + radius;
+  const nx = Math.floor(maxX / PERF_CHUNK) - Math.floor(minX / PERF_CHUNK) + 1;
+  const nz = Math.floor(maxZ / PERF_CHUNK) - Math.floor(minZ / PERF_CHUNK) + 1;
+  return Math.max(1, nx) * Math.max(1, nz);
+}
 
 // ============ 几何烘焙器：整座静态城市合并为 7 个 draw call ============
 export type BGroup = 'wood' | 'wall' | 'ash' | 'earth' | 'roof' | 'ground' | 'glow' | 'leaf' | 'trunk' | 'water' | 'ceramic' | 'metal' | 'fabric' | 'lacquer';
@@ -280,7 +297,12 @@ function buildCurvedUnit(K: number, worldW: number, worldD = 0): THREE.BufferGeo
   // 顶点数在结构上是定值：两侧各 N 圈 × K 列 × 6 顶点，加脊顶盖 K × 6。
   // 旧实现用 number[] 的 spread push，且每个四边面要先造 4 个角数组 + 8 个 UV 数组；
   // 一片 16m 瓦顶就是 1128 个四边面 ≈ 1.3 万次小数组分配，全城 1368 片瓦顶合计上千万次。
-  const nVerts = (2 * N + 1) * K * 6;
+  // 2026-11-07 R19（用户「为什么很多房顶侧面还是空的」根修）：本单元自诞生起只有
+  // sides=[1,-1] 两片 ±Z 坡面 + 一条 K 列正脊平条，沿面阔（±X）两端完全敞口。
+  // gableTriangle() / capGables() / roofEndHips() 只补了中央商业带、河岸带与 palace 的
+  // 少量路径，全城绝大多数 roofC() 屋顶从街面斜看仍是「空壳」——这就是「修过还空」的真因。
+  // 在单元几何层补端封：每端 N 段 × 2 三角形 = 12N 顶点，一次改动覆盖全部调用点。
+  const nVerts = (2 * N + 1) * K * 6 + 12 * N;
   const pos = new Float32Array(nVerts * 3);
   const uv = new Float32Array(nVerts * 2);
   const ribOn = worldW > 0;
@@ -353,7 +375,7 @@ function buildCurvedUnit(K: number, worldW: number, worldD = 0): THREE.BufferGeo
       prevRow = curRow;
     }
   }
-  // 脊顶盖（前后 ring0 之间的平条）：借用贴图的瓦当面行，v 落在最后一格
+  // 脊顶盖（前后 ring0 之间的平条）：v 沿 k 按坡面 :327 的 (1-t)*sv 线性展开铺多行瓦；仅改 UV 的 v 数值、零几何增量（详见下方 G-01 审核注释）。
   const f0 = ring(0, 1), b0 = ring(0, -1);
   const capRow = ribOn ? ribRow(f0.sx) : null;
   const capC = (k: number): number => (capRow ? capRow[k] : ONE);
@@ -361,13 +383,57 @@ function buildCurvedUnit(K: number, worldW: number, worldD = 0): THREE.BufferGeo
   const capV = (k: number): number => b0.us[k];
   // 绕序：cap 的水平法线必须朝上（+Y）。旧序 (f0,b0,b0') 算出来是 (0,−1,0)——
   // 全城 1367 顶曲面屋顶的正脊盖都是背面，靠 DoubleSide 才没露馅；改序后法线转正。
+  // 全量审核 2026-11-07（G-01）：仅改 cap UV 的 v 数值，0 三角面 / 0 draw call / 0 顶点 / 0 构件 / 0 实例增量。
+  // 依据：坡面 :327 的 v=(1-t)*sv 沿进深从脊 sv 线性降到檐 0，铺满 RepeatWrapping 瓦纹（8 行/tile）的多行瓦片；
+  // 旧 cap 把 v 钉死在 sv*0.94 / sv*0.86 两个常量、且不随面阔 k 变化，顶面只读贴图一条 v 线 → 纯色平板（E-05 / 冲突 6）。
+  // 新 v 沿 k 复用坡面同款线性律：前排 (1-0.5·i/K)·sv（i=0 恰为脊线 v=sv，语义连续）、后排 (0.7-0.6·i/K)·sv；
+  // 取值集合 front∈[0.50,1.00]·sv、back∈[0.10,0.70]·sv ⊂ [0,sv] 且无 NaN；前后差值 (0.30+0.10·i/K)·sv 随 k 线性变化、恒正可见。
+  // u 仍取 capU/capV 不动；position / normal / 顶点色 / nVerts / 索引 / 材质组 / 实例数 / 随机源 / 贴图生成一律未动。
   for (let k = 0; k < K; k++) {
-    vert(f0.sx[k], 1, f0.hz, capU(k), sv * 0.94, capC(k));
-    vert(b0.sx[k + 1], 1, b0.hz, capV(k + 1), sv * 0.86, capC(k + 1));
-    vert(b0.sx[k], 1, b0.hz, capV(k), sv * 0.86, capC(k));
-    vert(f0.sx[k], 1, f0.hz, capU(k), sv * 0.94, capC(k));
-    vert(f0.sx[k + 1], 1, f0.hz, capU(k + 1), sv * 0.94, capC(k + 1));
-    vert(b0.sx[k + 1], 1, b0.hz, capV(k + 1), sv * 0.86, capC(k + 1));
+    vert(f0.sx[k], 1, f0.hz, capU(k), sv * (1 - 0.5 * (k / K)), capC(k));
+    vert(b0.sx[k + 1], 1, b0.hz, capV(k + 1), sv * (0.7 - 0.6 * ((k + 1) / K)), capC(k + 1));
+    vert(b0.sx[k], 1, b0.hz, capV(k), sv * (0.7 - 0.6 * (k / K)), capC(k));
+    vert(f0.sx[k], 1, f0.hz, capU(k), sv * (1 - 0.5 * (k / K)), capC(k));
+    vert(f0.sx[k + 1], 1, f0.hz, capU(k + 1), sv * (1 - 0.5 * ((k + 1) / K)), capC(k + 1));
+    vert(b0.sx[k + 1], 1, b0.hz, capV(k + 1), sv * (0.7 - 0.6 * ((k + 1) / K)), capC(k + 1));
+  }
+  // ---- R19 山面封口：±X 两端沿 t 把前后坡外缘连成三角带 ----
+  // 固定 t 时前后坡外缘只有 z 不同（x=±hx(t)、y=ys_edge(t) 相同），连成的水平线自
+  // z=-hz 到 +hz；沿 t 从脊扫到檐，其 yz 投影恰为「上窄（正脊带）下宽（檐口）」的
+  // 宋式山墙梯形，正好填满旧单元的敞口。顶点全部取自 ring()，天生贴面，不浮空不穿模。
+  // R20（实拍「端头仍读作一整片无纹理纯色」）：
+  //   ① uF/uR 两个常量 UV 让整片端封拉成一条贴图线 → 改为随顶点 z 与 t 变化的可平铺 UV：
+  //      u 由顶点 z（−z 后坡 / +z 前坡）线性映射到 [0, sv]，v 随 t=j/N 按 sv 推进，
+  //      roofTex 的筒瓦垄纹在端封上真正重复；pz∈[−hz,+hz]⊂[−0.5,0.5] 故 u 有限、非负、无 NaN。
+  //   ② 顶点色 0.74（偏亮、读作亮塑料板）→ 0.52~0.62 偏暗瓦面调，沿 t 做余弦明暗起伏
+  //      （幅度≈RIB_AMP/7，与坡面瓦垄同量级），读作背光山花暗部。
+  const gableU = (pz: number): number => (0.5 + pz) * sv;
+  const gableC = (t: number): number => 0.57 + 0.05 * Math.cos(t * Math.PI * 3);
+  for (const end of [1, -1] as const) {
+    const kEdge = end === 1 ? K : 0;
+    for (let j = 0; j < N; j++) {
+      const r0 = ring(j / N, 1), r1 = ring((j + 1) / N, 1);
+      const x0 = r0.sx[kEdge], y0 = r0.ys[kEdge], z0 = r0.hz;
+      const x1 = r1.sx[kEdge], y1 = r1.ys[kEdge], z1 = r1.hz;
+      const t0 = j / N, t1 = (j + 1) / N;
+      const v0 = t0 * sv, v1 = t1 * sv;
+      const c0 = gableC(t0), c1 = gableC(t1);
+      const A: [number, number, number] = [x0, y0, z0];   // 脊侧 · 前坡
+      const B: [number, number, number] = [x0, y0, -z0];  // 脊侧 · 后坡
+      const C: [number, number, number] = [x1, y1, -z1];  // 檐侧 · 后坡
+      const D: [number, number, number] = [x1, y1, z1];   // 檐侧 · 前坡
+      const put = (p: [number, number, number], v: number, c: number): void =>
+        vert(p[0], p[1], p[2], gableU(p[2]), v, c);
+      if (end === 1) {
+        // 右端：法线朝 +X
+        put(A, v0, c0); put(C, v1, c1); put(B, v0, c0);
+        put(A, v0, c0); put(D, v1, c1); put(C, v1, c1);
+      } else {
+        // 左端：法线朝 -X
+        put(A, v0, c0); put(B, v0, c0); put(C, v1, c1);
+        put(A, v0, c0); put(C, v1, c1); put(D, v1, c1);
+      }
+    }
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
@@ -809,11 +875,18 @@ export class Baker {
     // 于是深灰瓦被抬成亮灰、瓦垄的 ±23% 明暗被压平——「屋顶是一整块灰平板」的着色根因。
     src.applyMatrix4(_m4);
     const p = src.getAttribute('position'), n = src.getAttribute('normal');
+    // R27：同一遍历内顺带取世界 X/Z 包围盒（零额外遍历），供全城实体台账登记碰撞面/顶面。
+    // 只读取 position，绝不写 bp/bn/bc/buv —— 顶点字节不变，画面零漂移。
     let wMinY = Infinity, wMaxY = -Infinity;
+    let wMinX = Infinity, wMaxX = -Infinity, wMinZ = Infinity, wMaxZ = -Infinity;
     for (let i = 0; i < p.count; i++) {
-      const yy = p.getY(i);
+      const xx = p.getX(i), yy = p.getY(i), zz = p.getZ(i);
       if (yy < wMinY) wMinY = yy;
       if (yy > wMaxY) wMaxY = yy;
+      if (xx < wMinX) wMinX = xx;
+      if (xx > wMaxX) wMaxX = xx;
+      if (zz < wMinZ) wMinZ = zz;
+      if (zz > wMaxZ) wMaxZ = zz;
     }
     const wH = Math.max(0.001, wMaxY - wMinY);
     const uv = needsUv ? src.getAttribute('uv') : null;
@@ -856,6 +929,8 @@ export class Baker {
       });
       if (typeof window !== 'undefined') (window as unknown as { __groundTrace?: unknown }).__groundTrace = this.groundTrace;
     }
+    // R27：越界守卫之后、dispose 之前，把世界 AABB 登记进全城实体台账（push 慢路径统一入口）。
+    registerSolid(g, wMinX, wMaxX, wMinY, wMaxY, wMinZ, wMaxZ);
     src.dispose();
   }
 
@@ -1128,6 +1203,18 @@ export class Baker {
     }
     b.p.n = pi; b.n.n = ni; b.c.n = ci;
     if (buv) buv.n = ui;
+    // R27：_bxCorner[24] 已是 applyMatrix4 之后的 8 个世界角，取 AABB 登记全城实体
+    //（boxFast 快路径统一入口；只读角缓冲，绝不改顶点字节，画面零漂移）。
+    let sMinX = _bxCorner[0], sMaxX = _bxCorner[0];
+    let sMinY = _bxCorner[1], sMaxY = _bxCorner[1];
+    let sMinZ = _bxCorner[2], sMaxZ = _bxCorner[2];
+    for (let k = 1; k < 8; k++) {
+      const cx = _bxCorner[k * 3], cy = _bxCorner[k * 3 + 1], cz = _bxCorner[k * 3 + 2];
+      if (cx < sMinX) sMinX = cx; if (cx > sMaxX) sMaxX = cx;
+      if (cy < sMinY) sMinY = cy; if (cy > sMaxY) sMaxY = cy;
+      if (cz < sMinZ) sMinZ = cz; if (cz > sMaxZ) sMaxZ = cz;
+    }
+    registerSolid(g, sMinX, sMaxX, sMinY, sMaxY, sMinZ, sMaxZ);
     if (ROOF_AUDIT && g === 'roof') {
       const dims = [aMaxX - aMinX, aMaxY - aMinY, aMaxZ - aMinZ].sort((p, q) => p - q);
       const thin = dims[0] < 0.32 && dims[2] > 0.8;
@@ -1320,6 +1407,12 @@ export class Baker {
       if (b.uv) geo.setAttribute('uv', new THREE.Float32BufferAttribute(b.uv.take(), 2));
       const mesh = new THREE.Mesh(geo, mats[g]);
       mesh.name = batch === 0 ? 'city_' + g : 'city_' + g + '_' + batch;
+      // 空间分块索引：把「three 首次渲染本会隐式做一次的 computeBoundingSphere」提前到加载期，
+      // 既避免首帧 O(n) 卡顿，又把「该 batch 跨全城 / 覆盖多少区块」写成可断言的索引事实。
+      // 仅写 userData 统计信息：不改 mesh 命名 / 渲染层 / 材质 / 公共接口，不新增 draw call。
+      geo.computeBoundingSphere();
+      const bs = geo.boundingSphere;
+      if (bs) tagStaticChunk(mesh, staticChunkSpan(bs.center, bs.radius), bs.center.clone(), bs.radius);
       mesh.castShadow = cast.has(g);
       mesh.receiveShadow = g !== 'glow';
       mesh.matrixAutoUpdate = false;

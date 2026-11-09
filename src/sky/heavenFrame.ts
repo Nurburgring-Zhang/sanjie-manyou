@@ -13,8 +13,10 @@ export const HEAVEN_SCALE = 2.2;
 export const HEAVEN_BASE_Y = 196;
 /** 天庭层下界：汴京地面构件最高 <150m，y>150 只含天庭 */
 export const HEAVEN_Y_MIN = 150;
-/** 整层抬升量：旧天宫台面 ~215m → 2150m（云海顶面 196+1935=2131）。 */
-export const HEAVEN_LIFT = 1935;
+/** 整层抬升量：R24 用户「天宫的高度也升高一倍」→ 1935 ×2 = 3870。
+ *  云海顶面世界 y 由 196.65+1935≈2131 抬到 196.65+3870≈4066；
+ *  所有引用点（player 上限、云海淡出、POI、动态生态）都从本常量派生，改一处即全链生效。 */
+export const HEAVEN_LIFT = 3870;
 /** 抬升后的放大基准面（原 196）——即云海顶面的世界 y。 */
 export const HEAVEN_BASE_LIFTED = HEAVEN_BASE_Y + HEAVEN_LIFT;
 

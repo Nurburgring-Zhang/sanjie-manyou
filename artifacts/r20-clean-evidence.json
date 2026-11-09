@@ -1,0 +1,570 @@
+{
+  "ledger": {
+    "buildings": 270,
+    "facadeFeatures": 1495,
+    "byForm": {
+      "hip": 116,
+      "hall": 6,
+      "pavilion": 65,
+      "shopfront": 4,
+      "gable": 79
+    },
+    "byKind": {
+      "teahouse": 25,
+      "house": 110,
+      "shop": 93,
+      "tavern": 39,
+      "manor": 3
+    },
+    "byFacade": {
+      "f1": 68,
+      "f2": 67,
+      "f3": 67,
+      "f4": 68
+    },
+    "bySrc": {
+      "facade": 198,
+      "facade1": 209,
+      "facade2": 211,
+      "house": 452,
+      "facade3": 231,
+      "facade4": 166,
+      "shopfront-lintel": 16,
+      "shopfront-pier": 8,
+      "shopfront": 4
+    },
+    "lit": {
+      "true": 747,
+      "false": 748
+    },
+    "buildingsWithNoFacadeFeature": 0,
+    "auditFacadeKits": {
+      "facade.columnBase": 652,
+      "facade.counterLattice": 231,
+      "facade.counterRail": 67,
+      "facade.doorFrameTrim": 314,
+      "facade.doorNeon": 40,
+      "facade.doorStud": 2070,
+      "facade.gatePin": 136,
+      "facade.gateStud": 1224,
+      "facade.gateWall": 136,
+      "facade.plankSeam": 331,
+      "facade.plankWall": 66,
+      "facade.plasterFace": 65,
+      "facade.propWindow": 211,
+      "facade.shopfrontFrame": 4,
+      "facade.shopfrontLintel": 16,
+      "facade.shopfrontPierWindow": 8,
+      "facade.sideWindow": 314,
+      "facade.stoneSkirt": 157,
+      "facade.thresholdStep": 314,
+      "facade.windowLintel": 157,
+      "facade.windowSill": 157
+    }
+  },
+  "creamPick": [
+    {
+      "ndc": [
+        -0.1,
+        -0.65
+      ],
+      "hits": [
+        {
+          "name": "city_fabric_3",
+          "dist": 40,
+          "point": [
+            304.2,
+            9.7,
+            88.9
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.658,
+              0.474,
+              0.144
+            ]
+          ]
+        },
+        {
+          "name": "city_ground",
+          "dist": 63.1,
+          "point": [
+            283.5,
+            0.3,
+            84.8
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.156,
+              0.141,
+              0.175
+            ],
+            [
+              0.156,
+              0.141,
+              0.175
+            ],
+            [
+              0.156,
+              0.141,
+              0.175
+            ]
+          ]
+        },
+        {
+          "name": "pave_slab",
+          "dist": 63.4,
+          "point": [
+            283.3,
+            0.2,
+            84.8
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": null
+        }
+      ]
+    },
+    {
+      "ndc": [
+        0,
+        -0.8
+      ],
+      "hits": [
+        {
+          "name": "city_fabric_3",
+          "dist": 34.3,
+          "point": [
+            311,
+            9.8,
+            87.3
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.658,
+              0.474,
+              0.144
+            ]
+          ]
+        },
+        {
+          "name": "city_wood_5",
+          "dist": 51.3,
+          "point": [
+            296.6,
+            1.9,
+            83
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.068,
+              0.032,
+              0.014
+            ],
+            [
+              0.068,
+              0.032,
+              0.014
+            ],
+            [
+              0.068,
+              0.032,
+              0.014
+            ]
+          ]
+        },
+        {
+          "name": "city_wood_5",
+          "dist": 53.2,
+          "point": [
+            295,
+            0.9,
+            82.5
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.147,
+              0.068,
+              0.024
+            ],
+            [
+              0.121,
+              0.056,
+              0.02
+            ],
+            [
+              0.147,
+              0.068,
+              0.024
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ndc": [
+        -0.25,
+        -0.72
+      ],
+      "hits": [
+        {
+          "name": "city_ground",
+          "dist": 60,
+          "point": [
+            285.9,
+            0.3,
+            93
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.136,
+              0.122,
+              0.15
+            ],
+            [
+              0.111,
+              0.1,
+              0.123
+            ],
+            [
+              0.136,
+              0.122,
+              0.15
+            ]
+          ]
+        },
+        {
+          "name": "pave_slab",
+          "dist": 60.3,
+          "point": [
+            285.6,
+            0.2,
+            93
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": null
+        },
+        {
+          "name": "pave_slab",
+          "dist": 60.3,
+          "point": [
+            285.6,
+            0.2,
+            93
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": null
+        }
+      ]
+    },
+    {
+      "ndc": [
+        0.15,
+        -0.7
+      ],
+      "hits": [
+        {
+          "name": "city_fabric_3",
+          "dist": 34.6,
+          "point": [
+            311.6,
+            11.2,
+            82.8
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.658,
+              0.474,
+              0.144
+            ]
+          ]
+        },
+        {
+          "name": "city_roof_5",
+          "dist": 54.4,
+          "point": [
+            295.4,
+            2.8,
+            75.3
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.031,
+              0.04,
+              0.056
+            ],
+            [
+              0.026,
+              0.034,
+              0.048
+            ],
+            [
+              0.031,
+              0.04,
+              0.056
+            ]
+          ]
+        },
+        {
+          "name": "city_roof_5",
+          "dist": 54.7,
+          "point": [
+            295.1,
+            2.7,
+            75.2
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.025,
+              0.032,
+              0.046
+            ],
+            [
+              0.03,
+              0.038,
+              0.055
+            ],
+            [
+              0.025,
+              0.032,
+              0.046
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ndc": [
+        -0.45,
+        -0.55
+      ],
+      "hits": [
+        {
+          "name": "city_roof_5",
+          "dist": 65.1,
+          "point": [
+            279.2,
+            3.9,
+            103
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.034,
+              0.044,
+              0.063
+            ],
+            [
+              0.034,
+              0.044,
+              0.063
+            ],
+            [
+              0.034,
+              0.044,
+              0.063
+            ]
+          ]
+        },
+        {
+          "name": "city_roof_5",
+          "dist": 66,
+          "point": [
+            278.4,
+            3.6,
+            103.1
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.028,
+              0.036,
+              0.052
+            ],
+            [
+              0.028,
+              0.036,
+              0.052
+            ],
+            [
+              0.028,
+              0.036,
+              0.052
+            ]
+          ]
+        },
+        {
+          "name": "city_wall_3",
+          "dist": 74.4,
+          "point": [
+            270.5,
+            0.7,
+            104
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.624,
+              0.599,
+              0.54
+            ],
+            [
+              0.624,
+              0.599,
+              0.54
+            ],
+            [
+              0.761,
+              0.73,
+              0.658
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ndc": [
+        -0.45,
+        -0.6
+      ],
+      "hits": [
+        {
+          "name": "city_wood_5",
+          "dist": 64,
+          "point": [
+            280.7,
+            2.9,
+            102.9
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.068,
+              0.032,
+              0.014
+            ],
+            [
+              0.056,
+              0.026,
+              0.012
+            ],
+            [
+              0.068,
+              0.032,
+              0.014
+            ]
+          ]
+        },
+        {
+          "name": "city_roof_5",
+          "dist": 64.7,
+          "point": [
+            280.1,
+            2.7,
+            103
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.033,
+              0.042,
+              0.06
+            ],
+            [
+              0.033,
+              0.042,
+              0.06
+            ],
+            [
+              0.033,
+              0.042,
+              0.06
+            ]
+          ]
+        },
+        {
+          "name": "city_roof_5",
+          "dist": 65.3,
+          "point": [
+            279.5,
+            2.5,
+            103
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": [
+            [
+              0.027,
+              0.035,
+              0.049
+            ],
+            [
+              0.027,
+              0.035,
+              0.049
+            ],
+            [
+              0.027,
+              0.035,
+              0.049
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "hideAB": [
+    {
+      "name": "city_fabric_3",
+      "hidden": 1,
+      "file": "artifacts/r20-clean-hide-city_fabric_3.png"
+    },
+    {
+      "name": "city_roof_5",
+      "hidden": 1,
+      "file": "artifacts/r20-clean-hide-city_roof_5.png"
+    },
+    {
+      "name": "city_wood_5",
+      "hidden": 1,
+      "file": "artifacts/r20-clean-hide-city_wood_5.png"
+    }
+  ]
+}

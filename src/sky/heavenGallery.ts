@@ -88,11 +88,15 @@ const JADE_HI = shade(JADE, 1.04);
 const GOLD = 0xc79a35;          // 贴金（走 wood 组，不做金属反射）
 const GOLD_HI = 0xe8c163;
 const GOLD_D = shade(GOLD, 0.66);
-const TILE = 0x3a9270;          // 碧色琉璃（比旧廊的 0x35594c 亮两档）
-const TILE_L = shade(TILE, 1.2);
-const TILE_D = shade(TILE, 0.58);
-const TILE_RIDGE = 0x2b6a50;
-const TILE_TRIM = 0xc9a94f;     // 剪边（檐口一圈金绿）
+// R20 终局：原 0x3a9270 碧色琉璃 / 0x2b6a50 青绿脊是放大图 r20-crop2-gold.png 左上角
+// 那排蓝绿杂色瓦亭的真源。用户要求「天宫所有建筑配色都向凌霄宝殿匹配，不能灰了吧唧、
+// 土了吧唧，都要金碧辉煌」，故统一到 expansion H_TILE / H_TILE2 同一套中调金。
+// 用中调 0x9a7526 而非 GOLD_ROOF 0xd2ab3d：天宫强光下亮金会过曝成白板。
+const TILE = 0x9a7526;          // 金琉璃瓦主色（= expansion H_TILE / realm W18_TILE）
+const TILE_L = shade(TILE, 1.2); // 受光瓦，随主色自动跟随
+const TILE_D = shade(TILE, 0.58);// 檐下阴面瓦，随主色自动跟随
+const TILE_RIDGE = 0x70521c;    // 剪边深金（= expansion H_TILE2）
+const TILE_TRIM = 0xc9a94f;     // 檐口贴金线脚（原已是金色，保留）
 const RED = 0xb8422c;           // 朱漆柱
 const RED_D = shade(RED, 0.62);
 const RED_DD = 0x5e1d10;

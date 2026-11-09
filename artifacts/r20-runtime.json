@@ -1,0 +1,1545 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "at": "2026-11-08T08:16:21.896Z",
+  "bundle": [
+    "index-DPlJY3VX.js"
+  ],
+  "csp": true,
+  "loadingGone": true,
+  "realmEco": {
+    "plan": {
+      "flora": 50347,
+      "fauna": 6255,
+      "species": 65,
+      "byRealm": {
+        "human": {
+          "flora": 30390,
+          "fauna": 3230
+        },
+        "heaven": {
+          "flora": 11325,
+          "fauna": 1717
+        },
+        "underworld": {
+          "flora": 8632,
+          "fauna": 1308
+        }
+      },
+      "drawCalls": 4
+    },
+    "flora": [
+      {
+        "realm": "human",
+        "species": "willow",
+        "label": "垂柳",
+        "requested": 1650,
+        "placed": 1650,
+        "pieces": 6600
+      },
+      {
+        "realm": "human",
+        "species": "elm",
+        "label": "槐榆",
+        "requested": 1350,
+        "placed": 1350,
+        "pieces": 5400
+      },
+      {
+        "realm": "human",
+        "species": "peach",
+        "label": "桃杏",
+        "requested": 1170,
+        "placed": 1170,
+        "pieces": 5850
+      },
+      {
+        "realm": "human",
+        "species": "pine",
+        "label": "松柏",
+        "requested": 930,
+        "placed": 930,
+        "pieces": 3720
+      },
+      {
+        "realm": "human",
+        "species": "bamboo",
+        "label": "竹丛",
+        "requested": 2250,
+        "placed": 2250,
+        "pieces": 6750
+      },
+      {
+        "realm": "human",
+        "species": "hedge",
+        "label": "灌木绿篱",
+        "requested": 2550,
+        "placed": 2550,
+        "pieces": 5100
+      },
+      {
+        "realm": "human",
+        "species": "wildflower",
+        "label": "五色花丛",
+        "requested": 6300,
+        "placed": 6300,
+        "pieces": 12600
+      },
+      {
+        "realm": "human",
+        "species": "meadow",
+        "label": "野草牧草",
+        "requested": 4800,
+        "placed": 4800,
+        "pieces": 14400
+      },
+      {
+        "realm": "human",
+        "species": "lotus",
+        "label": "荷莲",
+        "requested": 1140,
+        "placed": 1140,
+        "pieces": 3420
+      },
+      {
+        "realm": "human",
+        "species": "reed",
+        "label": "芦苇菖蒲",
+        "requested": 1350,
+        "placed": 1350,
+        "pieces": 8100
+      },
+      {
+        "realm": "human",
+        "species": "vine",
+        "label": "藤蔓",
+        "requested": 840,
+        "placed": 840,
+        "pieces": 2520
+      },
+      {
+        "realm": "human",
+        "species": "peony",
+        "label": "牡丹·芍药",
+        "requested": 1050,
+        "placed": 1050,
+        "pieces": 2100
+      },
+      {
+        "realm": "human",
+        "species": "crabapple",
+        "label": "海棠·玉兰",
+        "requested": 780,
+        "placed": 780,
+        "pieces": 3900
+      },
+      {
+        "realm": "human",
+        "species": "phoenixTree",
+        "label": "梧桐·银杏",
+        "requested": 720,
+        "placed": 720,
+        "pieces": 2880
+      },
+      {
+        "realm": "human",
+        "species": "duckweed",
+        "label": "菱角·浮萍",
+        "requested": 600,
+        "placed": 600,
+        "pieces": 1800
+      },
+      {
+        "realm": "human",
+        "species": "chrysanthemum",
+        "label": "菊·萱草",
+        "requested": 930,
+        "placed": 930,
+        "pieces": 1860
+      },
+      {
+        "realm": "human",
+        "species": "wisteria",
+        "label": "紫藤·凌霄",
+        "requested": 630,
+        "placed": 630,
+        "pieces": 1890
+      },
+      {
+        "realm": "human",
+        "species": "creekReed",
+        "label": "溪畔菖蒲",
+        "requested": 780,
+        "placed": 780,
+        "pieces": 4680
+      },
+      {
+        "realm": "human",
+        "species": "plumBlossom",
+        "label": "梅·腊梅",
+        "requested": 570,
+        "placed": 570,
+        "pieces": 2850
+      },
+      {
+        "realm": "heaven",
+        "species": "peachTree",
+        "label": "蟠桃林",
+        "requested": 1080,
+        "placed": 1080,
+        "pieces": 5400
+      },
+      {
+        "realm": "heaven",
+        "species": "osmanthus",
+        "label": "仙桂",
+        "requested": 720,
+        "placed": 720,
+        "pieces": 3600
+      },
+      {
+        "realm": "heaven",
+        "species": "celestialPine",
+        "label": "不老松",
+        "requested": 645,
+        "placed": 645,
+        "pieces": 2580
+      },
+      {
+        "realm": "heaven",
+        "species": "jadeBamboo",
+        "label": "玉竹",
+        "requested": 990,
+        "placed": 990,
+        "pieces": 2970
+      },
+      {
+        "realm": "heaven",
+        "species": "yaocao",
+        "label": "瑶草",
+        "requested": 1650,
+        "placed": 1650,
+        "pieces": 3300
+      },
+      {
+        "realm": "heaven",
+        "species": "lingzhi",
+        "label": "灵芝",
+        "requested": 750,
+        "placed": 750,
+        "pieces": 1500
+      },
+      {
+        "realm": "heaven",
+        "species": "celestialLotus",
+        "label": "瑶池青莲",
+        "requested": 975,
+        "placed": 975,
+        "pieces": 2925
+      },
+      {
+        "realm": "heaven",
+        "species": "cloudVine",
+        "label": "云藤",
+        "requested": 600,
+        "placed": 600,
+        "pieces": 1800
+      },
+      {
+        "realm": "heaven",
+        "species": "immortalFruit",
+        "label": "仙果·蟠桃琼浆",
+        "requested": 510,
+        "placed": 510,
+        "pieces": 3570
+      },
+      {
+        "realm": "heaven",
+        "species": "fusang",
+        "label": "扶桑·建木神木",
+        "requested": 390,
+        "placed": 390,
+        "pieces": 2340
+      },
+      {
+        "realm": "heaven",
+        "species": "goldOsmanthus",
+        "label": "月桂·金桂",
+        "requested": 435,
+        "placed": 435,
+        "pieces": 2175
+      },
+      {
+        "realm": "heaven",
+        "species": "goldenLotus",
+        "label": "瑶池金莲·琼花",
+        "requested": 435,
+        "placed": 435,
+        "pieces": 1305
+      },
+      {
+        "realm": "heaven",
+        "species": "qionghua",
+        "label": "琼花·仙葩",
+        "requested": 585,
+        "placed": 585,
+        "pieces": 1170
+      },
+      {
+        "realm": "heaven",
+        "species": "xiancao",
+        "label": "仙草·瑶芝",
+        "requested": 510,
+        "placed": 510,
+        "pieces": 1530
+      },
+      {
+        "realm": "heaven",
+        "species": "jadeOrchid",
+        "label": "玉蕊·仙兰",
+        "requested": 570,
+        "placed": 570,
+        "pieces": 1140
+      },
+      {
+        "realm": "heaven",
+        "species": "cloudGrass",
+        "label": "云阶芝草",
+        "requested": 480,
+        "placed": 480,
+        "pieces": 1440
+      },
+      {
+        "realm": "underworld",
+        "species": "deadWood",
+        "label": "冥槐",
+        "requested": 546,
+        "placed": 546,
+        "pieces": 2184
+      },
+      {
+        "realm": "underworld",
+        "species": "boneBamboo",
+        "label": "骨竹",
+        "requested": 832,
+        "placed": 832,
+        "pieces": 2496
+      },
+      {
+        "realm": "underworld",
+        "species": "spiderLily",
+        "label": "彼岸花",
+        "requested": 2080,
+        "placed": 2080,
+        "pieces": 4160
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostOrchid",
+        "label": "幽兰鬼花",
+        "requested": 936,
+        "placed": 936,
+        "pieces": 1872
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostMoss",
+        "label": "幽苔",
+        "requested": 1430,
+        "placed": 1430,
+        "pieces": 4290
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostLotus",
+        "label": "忘川鬼莲",
+        "requested": 780,
+        "placed": 780,
+        "pieces": 2340
+      },
+      {
+        "realm": "underworld",
+        "species": "netherVine",
+        "label": "幽冥藤",
+        "requested": 728,
+        "placed": 728,
+        "pieces": 2184
+      },
+      {
+        "realm": "underworld",
+        "species": "bloodFungi",
+        "label": "血芝·鬼蕨",
+        "requested": 312,
+        "placed": 312,
+        "pieces": 624
+      },
+      {
+        "realm": "underworld",
+        "species": "netherWillow",
+        "label": "冥柳·枯梅",
+        "requested": 260,
+        "placed": 260,
+        "pieces": 1040
+      },
+      {
+        "realm": "underworld",
+        "species": "forgetLily",
+        "label": "忘川彼岸花·扩展色型",
+        "requested": 338,
+        "placed": 338,
+        "pieces": 676
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostFern",
+        "label": "冥蕨·骨叶",
+        "requested": 390,
+        "placed": 390,
+        "pieces": 1170
+      }
+    ],
+    "fauna": {
+      "drawCalls": 4,
+      "instances": 6255,
+      "byMotion": {
+        "fly": 1768,
+        "swim": 1207,
+        "run": 1572,
+        "drift": 1708
+      },
+      "meshes": [
+        "eco_fly",
+        "eco_swim",
+        "eco_run",
+        "eco_drift"
+      ]
+    },
+    "placedFlora": 50347,
+    "pieces": 158201
+  },
+  "realmSnap": {
+    "checked": 1089,
+    "fixed": 156,
+    "actors": 5840
+  },
+  "ledger": {
+    "buildings": 265,
+    "facadeFeatures": 2348,
+    "byForm": {
+      "hip": 115,
+      "gable": 71,
+      "hall": 8,
+      "pavilion": 67,
+      "shopfront": 4
+    },
+    "bySrc": {
+      "facade": 195,
+      "facade1": 193,
+      "facade2": 216,
+      "house": 416,
+      "courtyard-lattice": 358,
+      "facade3": 211,
+      "pavilion-street": 166,
+      "hall-street-front": 172,
+      "facade4": 171,
+      "upper-infill": 138,
+      "hall-street-upper": 84,
+      "shopfront-lintel": 16,
+      "shopfront-pier": 8,
+      "shopfront": 4
+    }
+  },
+  "kits": {
+    "shopfrontFrame": 4,
+    "shopfrontLintel": 16,
+    "shopfrontPierWindow": 8,
+    "courtyardWindow": 1190,
+    "pavilionStreetWindow": 166,
+    "upperInfillWindow": 138,
+    "gableEnd": 2304,
+    "gableDecor": 2304,
+    "r20NewFacade": 1873,
+    "yamen": 55,
+    "parkInfillSites": 2120,
+    "parkPavilion": 1073,
+    "parkSceneNodes": 3448,
+    "roomLivingRooms": 3110,
+    "roomLivingItems": 72295,
+    "roomLivingHigh": 22680,
+    "roomLivingMid": 37789,
+    "roomLivingLow": 11826,
+    "canopyStraw": 93,
+    "institutionTotal": 12,
+    "institutionParts": 5441,
+    "mtnLandmarks": 112,
+    "mtnLandmarkByMountain": 224,
+    "parkInfillLawn": 1060,
+    "parkInfillGrove": 14821,
+    "ecoPlaced": 50347,
+    "parkPlazaSite": 1091,
+    "parkPlazaLawn": 1091,
+    "parkPlazaPlant": 17422,
+    "parkCoreGapSite": 4801,
+    "parkCoreGapLawn": 4801,
+    "parkCoreGapPlant": 25669,
+    "instCourtLife": 1228,
+    "instLivingRooms": 100,
+    "skyRoomLivingRooms": 32,
+    "palaceLivingR22": 70,
+    "r22NewKeys": [
+      "inst.courtLife",
+      "inst.courtLife.item",
+      "inst.courtLife.plant",
+      "inst.living.items",
+      "inst.living.rooms",
+      "palace.living.roomsR22",
+      "park.coreGap.lawn",
+      "park.coreGap.plant",
+      "park.coreGap.site",
+      "park.plaza.feature",
+      "park.plaza.lawn",
+      "park.plaza.plant",
+      "park.plaza.site",
+      "sky.roomLiving.items",
+      "sky.roomLiving.rooms"
+    ],
+    "kitKeysNew": [
+      "inst.academy",
+      "inst.archive",
+      "inst.astral",
+      "inst.backHall",
+      "inst.camp",
+      "inst.campArmory",
+      "inst.campFence",
+      "inst.campGate",
+      "inst.campPlatform",
+      "inst.campRoom",
+      "inst.censor",
+      "inst.court",
+      "inst.courtLife",
+      "inst.courtLife.item",
+      "inst.courtLife.plant",
+      "inst.courtWall",
+      "inst.dali",
+      "inst.guozijian",
+      "inst.hanlin",
+      "inst.imperial",
+      "inst.jiangzuojian",
+      "inst.jinjun",
+      "inst.latticeWindow",
+      "inst.lion",
+      "inst.living.items",
+      "inst.living.rooms",
+      "inst.mainHall",
+      "inst.marshal",
+      "inst.medical",
+      "inst.pole",
+      "inst.qintianjian",
+      "inst.ritual",
+      "inst.ritualGate",
+      "inst.roof",
+      "inst.screenWall",
+      "inst.shumi",
+      "inst.sixRooms",
+      "inst.taichang",
+      "inst.taifusi",
+      "inst.taiyiyuan",
+      "inst.total",
+      "inst.treasury",
+      "inst.works",
+      "inst.xiangjun",
+      "inst.yushitai",
+      "mtn.glacier",
+      "mtn.hangingTemple",
+      "mtn.landmark.count",
+      "mtn.landmark.华山",
+      "mtn.landmark.天山",
+      "mtn.landmark.嵩山",
+      "mtn.landmark.恒山",
+      "mtn.landmark.昆仑",
+      "mtn.landmark.泰山",
+      "mtn.landmark.衡山",
+      "mtn.shaolinGate",
+      "mtn.southGate",
+      "mtn.yaochi"
+    ]
+  },
+  "plan": {
+    "eco": {
+      "plan": {
+        "flora": 50347,
+        "fauna": 6255,
+        "species": 65,
+        "byRealm": {
+          "human": {
+            "flora": 30390,
+            "fauna": 3230
+          },
+          "heaven": {
+            "flora": 11325,
+            "fauna": 1717
+          },
+          "underworld": {
+            "flora": 8632,
+            "fauna": 1308
+          }
+        },
+        "drawCalls": 4
+      },
+      "flora": [
+        {
+          "realm": "human",
+          "species": "willow",
+          "label": "垂柳",
+          "requested": 1650,
+          "placed": 1650,
+          "pieces": 6600
+        },
+        {
+          "realm": "human",
+          "species": "elm",
+          "label": "槐榆",
+          "requested": 1350,
+          "placed": 1350,
+          "pieces": 5400
+        },
+        {
+          "realm": "human",
+          "species": "peach",
+          "label": "桃杏",
+          "requested": 1170,
+          "placed": 1170,
+          "pieces": 5850
+        },
+        {
+          "realm": "human",
+          "species": "pine",
+          "label": "松柏",
+          "requested": 930,
+          "placed": 930,
+          "pieces": 3720
+        },
+        {
+          "realm": "human",
+          "species": "bamboo",
+          "label": "竹丛",
+          "requested": 2250,
+          "placed": 2250,
+          "pieces": 6750
+        },
+        {
+          "realm": "human",
+          "species": "hedge",
+          "label": "灌木绿篱",
+          "requested": 2550,
+          "placed": 2550,
+          "pieces": 5100
+        },
+        {
+          "realm": "human",
+          "species": "wildflower",
+          "label": "五色花丛",
+          "requested": 6300,
+          "placed": 6300,
+          "pieces": 12600
+        },
+        {
+          "realm": "human",
+          "species": "meadow",
+          "label": "野草牧草",
+          "requested": 4800,
+          "placed": 4800,
+          "pieces": 14400
+        },
+        {
+          "realm": "human",
+          "species": "lotus",
+          "label": "荷莲",
+          "requested": 1140,
+          "placed": 1140,
+          "pieces": 3420
+        },
+        {
+          "realm": "human",
+          "species": "reed",
+          "label": "芦苇菖蒲",
+          "requested": 1350,
+          "placed": 1350,
+          "pieces": 8100
+        },
+        {
+          "realm": "human",
+          "species": "vine",
+          "label": "藤蔓",
+          "requested": 840,
+          "placed": 840,
+          "pieces": 2520
+        },
+        {
+          "realm": "human",
+          "species": "peony",
+          "label": "牡丹·芍药",
+          "requested": 1050,
+          "placed": 1050,
+          "pieces": 2100
+        },
+        {
+          "realm": "human",
+          "species": "crabapple",
+          "label": "海棠·玉兰",
+          "requested": 780,
+          "placed": 780,
+          "pieces": 3900
+        },
+        {
+          "realm": "human",
+          "species": "phoenixTree",
+          "label": "梧桐·银杏",
+          "requested": 720,
+          "placed": 720,
+          "pieces": 2880
+        },
+        {
+          "realm": "human",
+          "species": "duckweed",
+          "label": "菱角·浮萍",
+          "requested": 600,
+          "placed": 600,
+          "pieces": 1800
+        },
+        {
+          "realm": "human",
+          "species": "chrysanthemum",
+          "label": "菊·萱草",
+          "requested": 930,
+          "placed": 930,
+          "pieces": 1860
+        },
+        {
+          "realm": "human",
+          "species": "wisteria",
+          "label": "紫藤·凌霄",
+          "requested": 630,
+          "placed": 630,
+          "pieces": 1890
+        },
+        {
+          "realm": "human",
+          "species": "creekReed",
+          "label": "溪畔菖蒲",
+          "requested": 780,
+          "placed": 780,
+          "pieces": 4680
+        },
+        {
+          "realm": "human",
+          "species": "plumBlossom",
+          "label": "梅·腊梅",
+          "requested": 570,
+          "placed": 570,
+          "pieces": 2850
+        },
+        {
+          "realm": "heaven",
+          "species": "peachTree",
+          "label": "蟠桃林",
+          "requested": 1080,
+          "placed": 1080,
+          "pieces": 5400
+        },
+        {
+          "realm": "heaven",
+          "species": "osmanthus",
+          "label": "仙桂",
+          "requested": 720,
+          "placed": 720,
+          "pieces": 3600
+        },
+        {
+          "realm": "heaven",
+          "species": "celestialPine",
+          "label": "不老松",
+          "requested": 645,
+          "placed": 645,
+          "pieces": 2580
+        },
+        {
+          "realm": "heaven",
+          "species": "jadeBamboo",
+          "label": "玉竹",
+          "requested": 990,
+          "placed": 990,
+          "pieces": 2970
+        },
+        {
+          "realm": "heaven",
+          "species": "yaocao",
+          "label": "瑶草",
+          "requested": 1650,
+          "placed": 1650,
+          "pieces": 3300
+        },
+        {
+          "realm": "heaven",
+          "species": "lingzhi",
+          "label": "灵芝",
+          "requested": 750,
+          "placed": 750,
+          "pieces": 1500
+        },
+        {
+          "realm": "heaven",
+          "species": "celestialLotus",
+          "label": "瑶池青莲",
+          "requested": 975,
+          "placed": 975,
+          "pieces": 2925
+        },
+        {
+          "realm": "heaven",
+          "species": "cloudVine",
+          "label": "云藤",
+          "requested": 600,
+          "placed": 600,
+          "pieces": 1800
+        },
+        {
+          "realm": "heaven",
+          "species": "immortalFruit",
+          "label": "仙果·蟠桃琼浆",
+          "requested": 510,
+          "placed": 510,
+          "pieces": 3570
+        },
+        {
+          "realm": "heaven",
+          "species": "fusang",
+          "label": "扶桑·建木神木",
+          "requested": 390,
+          "placed": 390,
+          "pieces": 2340
+        },
+        {
+          "realm": "heaven",
+          "species": "goldOsmanthus",
+          "label": "月桂·金桂",
+          "requested": 435,
+          "placed": 435,
+          "pieces": 2175
+        },
+        {
+          "realm": "heaven",
+          "species": "goldenLotus",
+          "label": "瑶池金莲·琼花",
+          "requested": 435,
+          "placed": 435,
+          "pieces": 1305
+        },
+        {
+          "realm": "heaven",
+          "species": "qionghua",
+          "label": "琼花·仙葩",
+          "requested": 585,
+          "placed": 585,
+          "pieces": 1170
+        },
+        {
+          "realm": "heaven",
+          "species": "xiancao",
+          "label": "仙草·瑶芝",
+          "requested": 510,
+          "placed": 510,
+          "pieces": 1530
+        },
+        {
+          "realm": "heaven",
+          "species": "jadeOrchid",
+          "label": "玉蕊·仙兰",
+          "requested": 570,
+          "placed": 570,
+          "pieces": 1140
+        },
+        {
+          "realm": "heaven",
+          "species": "cloudGrass",
+          "label": "云阶芝草",
+          "requested": 480,
+          "placed": 480,
+          "pieces": 1440
+        },
+        {
+          "realm": "underworld",
+          "species": "deadWood",
+          "label": "冥槐",
+          "requested": 546,
+          "placed": 546,
+          "pieces": 2184
+        },
+        {
+          "realm": "underworld",
+          "species": "boneBamboo",
+          "label": "骨竹",
+          "requested": 832,
+          "placed": 832,
+          "pieces": 2496
+        },
+        {
+          "realm": "underworld",
+          "species": "spiderLily",
+          "label": "彼岸花",
+          "requested": 2080,
+          "placed": 2080,
+          "pieces": 4160
+        },
+        {
+          "realm": "underworld",
+          "species": "ghostOrchid",
+          "label": "幽兰鬼花",
+          "requested": 936,
+          "placed": 936,
+          "pieces": 1872
+        },
+        {
+          "realm": "underworld",
+          "species": "ghostMoss",
+          "label": "幽苔",
+          "requested": 1430,
+          "placed": 1430,
+          "pieces": 4290
+        },
+        {
+          "realm": "underworld",
+          "species": "ghostLotus",
+          "label": "忘川鬼莲",
+          "requested": 780,
+          "placed": 780,
+          "pieces": 2340
+        },
+        {
+          "realm": "underworld",
+          "species": "netherVine",
+          "label": "幽冥藤",
+          "requested": 728,
+          "placed": 728,
+          "pieces": 2184
+        },
+        {
+          "realm": "underworld",
+          "species": "bloodFungi",
+          "label": "血芝·鬼蕨",
+          "requested": 312,
+          "placed": 312,
+          "pieces": 624
+        },
+        {
+          "realm": "underworld",
+          "species": "netherWillow",
+          "label": "冥柳·枯梅",
+          "requested": 260,
+          "placed": 260,
+          "pieces": 1040
+        },
+        {
+          "realm": "underworld",
+          "species": "forgetLily",
+          "label": "忘川彼岸花·扩展色型",
+          "requested": 338,
+          "placed": 338,
+          "pieces": 676
+        },
+        {
+          "realm": "underworld",
+          "species": "ghostFern",
+          "label": "冥蕨·骨叶",
+          "requested": 390,
+          "placed": 390,
+          "pieces": 1170
+        }
+      ],
+      "fauna": {
+        "drawCalls": 4,
+        "instances": 6255,
+        "byMotion": {
+          "fly": 1768,
+          "swim": 1207,
+          "run": 1572,
+          "drift": 1708
+        },
+        "meshes": [
+          "eco_fly",
+          "eco_swim",
+          "eco_run",
+          "eco_drift"
+        ]
+      },
+      "placedFlora": 50347,
+      "pieces": 158201
+    },
+    "crowd": {
+      "actors": 5840,
+      "venueReport": {
+        "planned": 3187,
+        "spawned": 3177,
+        "wards": 882,
+        "temples": 48,
+        "palace": 1375,
+        "washe": 72,
+        "sky": 301,
+        "hell": 499
+      }
+    },
+    "assetAuditKeys": [
+      "belt.coverageCourt",
+      "eco.heaven.celestialLotus",
+      "eco.heaven.celestialPine",
+      "eco.heaven.cloudGrass",
+      "eco.heaven.cloudVine",
+      "eco.heaven.fusang",
+      "eco.heaven.goldenLotus",
+      "eco.heaven.goldOsmanthus",
+      "eco.heaven.immortalFruit",
+      "eco.heaven.jadeBamboo",
+      "eco.heaven.jadeOrchid",
+      "eco.heaven.lingzhi",
+      "eco.heaven.osmanthus",
+      "eco.heaven.peachTree",
+      "eco.heaven.qionghua",
+      "eco.heaven.xiancao",
+      "eco.heaven.yaocao",
+      "eco.human.bamboo",
+      "eco.human.chrysanthemum",
+      "eco.human.crabapple",
+      "eco.human.creekReed",
+      "eco.human.duckweed",
+      "eco.human.elm",
+      "eco.human.hedge",
+      "eco.human.lotus",
+      "eco.human.meadow",
+      "eco.human.peach",
+      "eco.human.peony",
+      "eco.human.phoenixTree",
+      "eco.human.pine",
+      "eco.human.plumBlossom",
+      "eco.human.reed",
+      "eco.human.vine",
+      "eco.human.wildflower",
+      "eco.human.willow",
+      "eco.human.wisteria",
+      "eco.underworld.bloodFungi",
+      "eco.underworld.boneBamboo",
+      "eco.underworld.deadWood",
+      "eco.underworld.forgetLily",
+      "eco.underworld.ghostFern",
+      "eco.underworld.ghostLotus",
+      "eco.underworld.ghostMoss",
+      "eco.underworld.ghostOrchid",
+      "eco.underworld.netherVine",
+      "eco.underworld.netherWillow",
+      "eco.underworld.spiderLily",
+      "imperial.palace",
+      "item.shop.wineCounter",
+      "palace.architrave",
+      "palace.avenue",
+      "palace.balustrade",
+      "palace.banner",
+      "palace.barracks",
+      "palace.barracksRow",
+      "palace.baseMolding",
+      "palace.baseTier",
+      "palace.bay",
+      "palace.beast",
+      "palace.board"
+    ]
+  },
+  "render": {
+    "calls": 398,
+    "triangles": 84147927,
+    "geometries": 335
+  },
+  "errors": [],
+  "cameraAB": {
+    "flat": {
+      "dy": 0,
+      "dz": -14.47,
+      "dist": 14.47
+    },
+    "up": {
+      "dy": 6.96,
+      "dz": -12.74,
+      "dist": 14.52
+    },
+    "pass": true
+  },
+  "pageErrors": [],
+  "indoorHide": {
+    "hiddenMeshes": 37,
+    "hiddenRoof": 36,
+    "hiddenWallOccluders": [
+      {
+        "name": "city_wall",
+        "hits": 1469
+      }
+    ],
+    "restored": 37,
+    "misShown": 0,
+    "driftCleared": 4,
+    "baselineHiddenMeshes": 260
+  },
+  "shots": [
+    {
+      "id": "01-roof-gable",
+      "label": "R20 街面斜视 · 山花与屋顶端封",
+      "tp": "bridge",
+      "c": [
+        180,
+        10,
+        48
+      ],
+      "p": [
+        340,
+        26,
+        96
+      ],
+      "file": "artifacts\\r20-01-roof-gable.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "02-street-facade",
+      "label": "R20 临街立面 · 门框 / 格窗",
+      "tp": "bridge",
+      "c": [
+        200,
+        5,
+        42
+      ],
+      "p": [
+        200,
+        8,
+        98
+      ],
+      "file": "artifacts\\r20-02-street-facade.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "03-infill",
+      "label": "R20 城内空地 · 亭台院落花圃",
+      "tp": "countryside",
+      "c": [
+        500,
+        0,
+        185
+      ],
+      "p": [
+        500,
+        120,
+        440
+      ],
+      "file": "artifacts\\r20-03-infill.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "04-palace",
+      "label": "R20 皇宫 · 殿宇 / 宫苑 / 人群",
+      "tp": "countryside",
+      "c": [
+        0,
+        14,
+        -3420
+      ],
+      "p": [
+        0,
+        96,
+        -2920
+      ],
+      "file": "artifacts\\r20-04-palace.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "05-mountain",
+      "label": "R20 远山 · 岩壁色带",
+      "tp": "countryside",
+      "c": [
+        14000,
+        900,
+        -6000
+      ],
+      "p": [
+        9000,
+        900,
+        -1800
+      ],
+      "file": "artifacts\\r20-05-mountain.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "06-heaven",
+      "label": "R20 天宫 · 金瓦朱柱",
+      "tp": "pantao",
+      "c": [
+        0,
+        2159,
+        0
+      ],
+      "p": [
+        120,
+        2231,
+        120
+      ],
+      "file": "artifacts\\r20-06-heaven.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "07-underworld",
+      "label": "R20 地府 · 演员贴地",
+      "tp": "fengdu",
+      "c": [
+        540,
+        -256,
+        85
+      ],
+      "p": [
+        612,
+        -232,
+        152
+      ],
+      "file": "artifacts\\r20-07-underworld.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "08-yamen",
+      "label": "R20 开封府 · 衙前仪门与两庑",
+      "tp": "bridge",
+      "c": [
+        560,
+        4,
+        -72
+      ],
+      "p": [
+        560,
+        30,
+        -14
+      ],
+      "file": "artifacts\\r20-08-yamen.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "09-gable-detail",
+      "label": "近景 · 山花博风板 / 悬鱼 / 直棂格",
+      "tp": "bridge",
+      "c": [
+        250,
+        4,
+        112
+      ],
+      "p": [
+        310,
+        24,
+        158
+      ],
+      "file": "artifacts\\r20-09-gable-detail.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "10-canopy",
+      "label": "近景 · 30m 苇席棚编织质感与扎结",
+      "tp": "bridge",
+      "c": [
+        305,
+        9,
+        85
+      ],
+      "p": [
+        350,
+        22,
+        124
+      ],
+      "file": "artifacts\\r20-10-canopy.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "11-courtyard-wall",
+      "label": "近景 · 院墙直棂漏窗",
+      "tp": "bridge",
+      "c": [
+        200,
+        4,
+        50
+      ],
+      "p": [
+        200,
+        7,
+        90
+      ],
+      "file": "artifacts\\r20-11-courtyard-wall.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "12-heaven-colonnade",
+      "label": "近景 · 白玉长廊金瓦",
+      "tp": "pantao",
+      "c": [
+        30,
+        2186,
+        0
+      ],
+      "p": [
+        112,
+        2215,
+        96
+      ],
+      "file": "artifacts\\r20-12-heaven-colonnade.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "13-mountain-rock",
+      "label": "近景 · 岩壁 / 色带 / 竖向岩沟",
+      "tp": "countryside",
+      "c": [
+        14000,
+        850,
+        -6000
+      ],
+      "p": [
+        10500,
+        700,
+        -3900
+      ],
+      "file": "artifacts\\r20-13-mountain-rock.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "14-street-halls",
+      "label": "近景 · 单层厅堂临街门窗",
+      "tp": "bridge",
+      "c": [
+        200,
+        2.6,
+        64
+      ],
+      "p": [
+        215,
+        5,
+        82
+      ],
+      "file": "artifacts\\r20-14-street-halls.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "15-room-living",
+      "label": "近景 · 室内起居资产 (趙太丞家 @ 168,64)",
+      "tp": "bridge",
+      "c": [
+        168,
+        1,
+        61.8
+      ],
+      "p": [
+        168,
+        1.7,
+        66.6
+      ],
+      "file": "artifacts\\r20-15-room-living.png",
+      "indoor": true,
+      "institution": false
+    },
+    {
+      "id": "16-room-living",
+      "label": "近景 · 室内起居资产 (解庫 @ 258,64)",
+      "tp": "bridge",
+      "c": [
+        258,
+        1,
+        61.8
+      ],
+      "p": [
+        258,
+        1.7,
+        66.6
+      ],
+      "file": "artifacts\\r20-16-room-living.png",
+      "indoor": true,
+      "institution": false
+    },
+    {
+      "id": "17-room-living",
+      "label": "近景 · 室内起居资产 (王家紙馬 @ 352,66)",
+      "tp": "bridge",
+      "c": [
+        352,
+        1,
+        63.8
+      ],
+      "p": [
+        352,
+        1.7,
+        68.6
+      ],
+      "file": "artifacts\\r20-17-room-living.png",
+      "indoor": true,
+      "institution": false
+    },
+    {
+      "id": "18-institution-shumi",
+      "label": "近景 · 樞密院官署 · 照壁/仪门/正堂/两庑/院墙",
+      "tp": "bridge",
+      "c": [
+        1080,
+        6,
+        770
+      ],
+      "p": [
+        1080,
+        55,
+        860
+      ],
+      "file": "artifacts\\r20-18-institution-shumi.png",
+      "indoor": false,
+      "institution": true
+    },
+    {
+      "id": "19-institution-aerial",
+      "label": "俯瞰 · 樞密院与周边官署院落",
+      "tp": "bridge",
+      "c": [
+        1080,
+        6,
+        770
+      ],
+      "p": [
+        1080,
+        110,
+        980
+      ],
+      "file": "artifacts\\r20-19-institution-aerial.png",
+      "indoor": false,
+      "institution": true
+    },
+    {
+      "id": "20-institution-cluster",
+      "label": "俯瞰 · 官署集群与全城绿地",
+      "tp": "bridge",
+      "c": [
+        1080,
+        6,
+        770
+      ],
+      "p": [
+        1080,
+        170,
+        1050
+      ],
+      "file": "artifacts\\r20-20-institution-cluster.png",
+      "indoor": false,
+      "institution": true
+    },
+    {
+      "id": "21-court-array",
+      "label": "近景 · 丹陛广场彩色仪仗阵列与朝会班列",
+      "tp": "countryside",
+      "c": [
+        0,
+        2,
+        -3160
+      ],
+      "p": [
+        230,
+        26,
+        -3030
+      ],
+      "file": "artifacts\\r20-21-court-array.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "22-r22-city-green",
+      "label": "俯瞰 · 城内公园绿地与亭台连片（零空地）",
+      "tp": "countryside",
+      "c": [
+        1600,
+        0,
+        600
+      ],
+      "p": [
+        1600,
+        190,
+        1050
+      ],
+      "file": "artifacts\\r20-22-r22-city-green.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "23-r22-grove-close",
+      "label": "近景 · 坊间花木 / 曲水 / 亭廊",
+      "tp": "bridge",
+      "c": [
+        320,
+        2,
+        180
+      ],
+      "p": [
+        360,
+        22,
+        250
+      ],
+      "file": "artifacts\\r20-23-r22-grove-close.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "24-r22-heaven-flora",
+      "label": "天宫 · 蟠桃园与朝房台面满地仙花仙草",
+      "tp": "pantao",
+      "c": [
+        -330,
+        2153,
+        99.00000000000001
+      ],
+      "p": [
+        -211.20000000000002,
+        2205.8,
+        259.6
+      ],
+      "file": "artifacts\\r20-24-r22-heaven-flora.png",
+      "indoor": false,
+      "institution": false
+    },
+    {
+      "id": "25-r22-court-life",
+      "label": "俯瞰 · 樞密院院落布局与庭院起居陈设",
+      "tp": "bridge",
+      "c": [
+        1080,
+        2,
+        770
+      ],
+      "p": [
+        1080,
+        42,
+        815
+      ],
+      "file": "artifacts\\r20-25-r22-court-life.png",
+      "indoor": false,
+      "institution": true
+    }
+  ],
+  "shotCounts": {
+    "total": 25,
+    "sheet": 8,
+    "closeups": 17,
+    "closeupRows": 9
+  }
+}

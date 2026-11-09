@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Baker, SignMesher, SignAtlas, shade, roofProfile, type BGroup } from '../city/bake';
 import { POIS } from '../city/layout';
 import { HEAVEN_BASE_Y, HEAVEN_LIFT, HEAVEN_SCALE, LINGXIAO_ANCHOR_PRESCALE, LINGXIAO_HALF_X, LINGXIAO_HALF_Z, LINGXIAO_SCALE, LINGXIAO_Y_MIN_PRESCALE } from './heavenFrame';
+import { buildRoomLiving } from '../city/roomLiving';
 
 // ============ B5：天宫三殿内饰（47 卷 §一凌霄/§三兜率/§四广寒；瑶池水榭因与兜率壳坐标带冲突延 B6 迁正一并做——留痕） ============
 // 天宫光色纪律：玉白 #FFF3D8 宫光；金色三档见下；不老化只光变
@@ -82,7 +83,9 @@ export function skyRoofOn(
   // ① 屋面：反宇曲面 + 瓦垄顶点色（rib=true；不铺瓦垄 box）
   // 瓦垄是顶点色乘子（RIB_HI 1.24）：金瓦线性 0.32 × 1.24 × 3.2 = 1.27 → 垄脊被裁成纯白，
   // 一条条白亮纹就是"过曝反光"。这里把瓦面本身压到 0.66，垄脊才落在 0.86 不裁顶。
-  b.roofC('roof', x, y, z, shade(tileC, 0.66), ry, sx, H, sz, 0, 0, true);
+  // R19：0.66 是为旧青灰瓦定的防过曝系数；换成金瓦色板后瓦面被压成近黑的蓝灰，
+  // 实拍「金碧辉煌」完全读不出来。提到 0.86 让金色落在可见区间，垄脊局部高光正是琉璃反光。
+  b.roofC('roof', x, y, z, shade(tileC, 0.86), ry, sx, H, sz, 0, 0, true);
 
   // ② 两端坡面：旧 roofC 只造 ±z 两坡，±x 是敞口。沿 t 分 8 段，段宽取两端较大者让相邻段互压，
   //    接缝正好压在四条垂脊下面
@@ -761,7 +764,7 @@ function cornerPavilion(b: Baker, x: number, y: number, z: number, s: number): v
   skyCaihuaBand(b, x, yT, z, 2 * s + 0.7, 2 * s + 0.7, 0);
   skyDougongRing(b, x, yT + 0.32, z, 2 * s + 0.5, 2 * s + 0.5, 0, 1.1, GOLD_TRIM, 0.55);
   benchRailRect(b, x, z, s - 0.1, s - 0.1, y0, 's', 1.5, shade(RED, 0.96));
-  skyRoofOn(b, x, yT + 0.32, z, 2 * s + 2.6, 2 * s + 2.6, 2.5, 0, 'zanjian', shade(0x5c6878, 1.08), GOLD_TRIM);
+  skyRoofOn(b, x, yT + 0.32, z, 2 * s + 2.6, 2 * s + 2.6, 2.5, 0, 'zanjian', shade(0x9a7526, 1.08), GOLD_TRIM);
   for (let k = 0; k < 3; k++) b.box('ash', 2.0, 0.3, 0.34, x, y + 0.15 + k * 0.3, z + s + 1.25 + (2 - k) * 0.34, shade(MO, 1.0 + k * 0.01));
   b.box('wood', 1.5, 0.42, 0.12, x, y0 + 3.15, z + s + 0.12, shade(GOLD_TRIM, 0.7));
   b.box('glow', 1.2, 0.3, 0.05, x, y0 + 3.15, z + s + 0.2, shade(0xfff3d8, 0.55));
@@ -794,7 +797,7 @@ function storeyTower(b: Baker, x: number, y: number, z: number): void {
   }
   eaveFrame(b, x, z, W1, D1, y0, y0 + 4.1, 0.6);
   // 腰檐：13.5×10.5（檐口 12.5×9.7），举高 2.4 —— 二层墙身从屋面里长出来
-  skyRoofOn(b, x, y0 + 4.1, z, 13.5, 10.5, 2.4, 0, 'wudian', shade(0x5c6878, 1.0), GOLD_TRIM);
+  skyRoofOn(b, x, y0 + 4.1, z, 13.5, 10.5, 2.4, 0, 'wudian', shade(0x9a7526, 1.0), GOLD_TRIM);
   // 平座：楼板 8.8×7.4 + 平座斗栱 + 栏杆（+x 侧留楼梯口 1.5）
   const bY = y0 + 5.0;
   b.box('wood', W2 + 1.8, 0.24, D2 + 1.8, x, bY, z, shade(0x6b4a2b, 1.0));
@@ -814,7 +817,7 @@ function storeyTower(b: Baker, x: number, y: number, z: number): void {
     }
   }
   eaveFrame(b, x, z, W2, D2, bY + 0.3, bY + 3.7, 0.45);
-  skyRoofOn(b, x, bY + 3.7, z, W2 + 2.4, D2 + 2.2, 2.6, 0, 'xieshan', shade(0x5c6878, 1.06), GOLD_TRIM);
+  skyRoofOn(b, x, bY + 3.7, z, W2 + 2.4, D2 + 2.2, 2.6, 0, 'xieshan', shade(0x9a7526, 1.06), GOLD_TRIM);
   // 外楼梯：台基顶（y0）→ 平座（bY），13 级 0.31 踢面 / 0.33 踏面，落在 +x 侧
   const nS = 13, rise = (bY - y0) / nS, tread = 0.33;
   for (let i = 0; i < nS; i++) {
@@ -1770,7 +1773,7 @@ export function buildYaochi(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   skyDougongRing(b, cx, wy + 6.8, cz, 17, 7.5, 0, 1.2, GOLD_TRIM); // 40 攒
   skyCaihuaBand(b, cx, wy + 6.35, cz, 17, 7.5, 0);
   // W17：水榭改歇山（收山 + 山花 + 山花下沿戗脊）
-  skyRoofOn(b, cx, wy + 6.8, cz, 20.6, 10.2, 2.35, 0, 'xieshan', shade(0x5c6878, 1.06), GOLD_TRIM);
+  skyRoofOn(b, cx, wy + 6.8, cz, 20.6, 10.2, 2.35, 0, 'xieshan', shade(0x9a7526, 1.06), GOLD_TRIM);
   b.box('glow', 4.2, 0.3, 4.2, cx, wy + 5.9, cz, shade(0x1e3a5f, 1.15));
   b.cyl('glow', 0.9, 1.3, 0.6, 8, cx, wy + 5.6, cz, GOLD);
   for (let k = 0; k < 8; k++) { const a = k * 0.785; b.box('glow', 0.07, 0.5, 0.07, cx + Math.cos(a) * 1.0, wy + 5.35, cz + Math.sin(a) * 1.0, k % 2 ? GOLD : 0xffb7c5); }
@@ -1974,7 +1977,7 @@ export function buildTianfuAnnex(b: Baker, sg: SignMesher, atlas: SignAtlas): vo
   // 御膳房（75,206,70）：全院 30×22 + 九眼聚灵灶×3 + 醒神茶树行（后园）
   platform2(b, 75, 206, 70, 15);
   b.box('wall', 12, 3.8, 8, 75, 206 + 1.9, 70, shade(0xc8c0b0, 1.0));
-  skyRoofOn(b, 75, 206 + 4.1, 70, 13.6, 9.4, 2.33, 0, 'xieshan', shade(0x5c6878, 0.96), GOLD_TRIM); // W17 膳房：歇山
+  skyRoofOn(b, 75, 206 + 4.1, 70, 13.6, 9.4, 2.33, 0, 'xieshan', shade(0x9a7526, 0.96), GOLD_TRIM); // W17 膳房：歇山
   // W25：御膳房补檐柱 + 额枋 + 斗栱；+z 侧（灶间）不立柱——三灶列就摆在那面檐下，立柱会插进灶膛
   eaveFrame(b, 75, 70, 12, 8, 206, 206 + 4.1, 0.6, 1);
   for (let k = 0; k < 3; k++) { // 三灶列（W25：北墙 74 与旧灶膛 73.3 重叠 0.7m → 灶膛收到 74.1×75.7，灶眼移到北面可见）
@@ -1987,7 +1990,7 @@ export function buildTianfuAnnex(b: Baker, sg: SignMesher, atlas: SignAtlas): vo
   // 天库（-75,207,75）：灵晶匣×9 + 夜明珠×6 恒亮 + 仙衡天平（赵公明驻守列 B9）
   platform2(b, -75, 207, 75, 13);
   b.box('wall', 11, 4.2, 7.5, -75, 207 + 2.1, 75, shade(0xc8c0b0, 0.98));
-  skyRoofOn(b, -75, 207 + 4.5, 75, 12.6, 8.8, 2.21, 0, 'xieshan', shade(0x5c6878, 0.92), GOLD_TRIM); // W17 天库：歇山
+  skyRoofOn(b, -75, 207 + 4.5, 75, 12.6, 8.8, 2.21, 0, 'xieshan', shade(0x9a7526, 0.92), GOLD_TRIM); // W17 天库：歇山
   // W25：天库补檐柱列 + 额枋 + 斗栱（台明由 realm 的 26×20 院落台明承担，这里不再叠台基）
   eaveFrame(b, -75, 75, 11, 7.5, 207, 207 + 4.5, 0.55);
   for (let k = 0; k < 9; k++) b.box('glow', 0.6, 0.4, 0.4, -79.5 + (k % 3) * 4.4, 207 + 1.4, 73 + Math.floor(k / 3) * 2.2, shade(0x7fffd4, 0.7)); // 灵晶通货匣
@@ -2056,7 +2059,7 @@ export function buildTianfuAnnex(b: Baker, sg: SignMesher, atlas: SignAtlas): vo
       }
     }
   }
-  skyRoofOn(b, -75, 206 + 5.3, 15, 14.6, 10.4, 2.53, 0, 'wudian', shade(0x333a45, 1.12), GOLD_TRIM); // W17 武库：庑殿
+  skyRoofOn(b, -75, 206 + 5.3, 15, 14.6, 10.4, 2.53, 0, 'wudian', shade(0x70521c, 1.12), GOLD_TRIM); // W17 武库：庑殿
   // W25：武库补檐柱列 + 额枋 + 斗栱（13×9 厚墙，柱列落在院落台明上）
   eaveFrame(b, -75, 15, 13, 9, 206, 206 + 5.3, 0.58);
   for (let k = 0; k < 6; k++) { b.box('wood', 0.16, 2.6, 0.16, -80.5 + k * 2.2, 206 + 1.3, 11.6, 0x3a4e6a); b.box('glow', 0.3, 0.2, 0.06, -80.5 + k * 2.2, 206 + 2.3, 11.7, shade(GOLD_TRIM, 0.8)); } // 甲胄架+甲光
@@ -2098,7 +2101,7 @@ export function buildTianfuAnnex(b: Baker, sg: SignMesher, atlas: SignAtlas): vo
     b.kit('sky.jiangtai.door', 1, y0 + 1.6);
     b.kit('sky.jiangtai.slit', 14, y0 + 2.7);
   }
-  skyRoofOn(b, 22, 206 + 7.2, -35, 11.6, 11.6, 2.77, 0, 'wudian', shade(0x333a45, 1.18), GOLD_TRIM); // W17 将台：庑殿
+  skyRoofOn(b, 22, 206 + 7.2, -35, 11.6, 11.6, 2.77, 0, 'wudian', shade(0x70521c, 1.18), GOLD_TRIM); // W17 将台：庑殿
   b.box('wood', 0.18, 12, 0.18, 22, 206 + 6.2, -28.6, shade(GOLD_TRIM, 1.15)); // 帅旗杆 12m
   b.box('glow', 1.8, 1.0, 0.06, 22, 206 + 11.2, -28.3, GOLD_LINE, 0, 0, 0.08); // 帅字旗
   for (let k = 0; k < 5; k++) { const a = -1.57 + (k - 2) * 0.5; b.box('glow', 0.4, 2.2, 0.06, 22 + Math.sin(a) * 5.6, 206 + 7.4, -35 + Math.cos(a) * 5.6, [GOLD_LINE, 0x00e5ff, 0xa63a2b, 0x4a8b6f, 0xdcdce8][k], 0, 0, a); } // 五方令旗
@@ -3357,7 +3360,7 @@ function yaochiPalace(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   b.box('wall', T, H, CZ - dw / 2 - z0, x0 + T / 2, Y + H / 2, (z0 + CZ - dw / 2) / 2, shade(0xd8d0c0, 1));
   b.box('wall', T, H, z1 - CZ - dw / 2, x0 + T / 2, Y + H / 2, (z1 + CZ + dw / 2) / 2, shade(0xd8d0c0, 1));
   b.box('wall', T, H - dh, dw, x0 + T / 2, Y + dh + (H - dh) / 2, CZ, shade(0xd8d0c0, 1));
-  skyRoofOn(b, CX, Y + H, CZ, W + 2, D + 2, 4.85, 0, 'wudian', shade(0x5c6878, 1.1), GOLD_TRIM); // W17 瑶池宫正殿：庑殿
+  skyRoofOn(b, CX, Y + H, CZ, W + 2, D + 2, 4.85, 0, 'wudian', shade(0x9a7526, 1.1), GOLD_TRIM); // W17 瑶池宫正殿：庑殿
   // W25：瑶池宫正殿补台基须弥座 + 檐柱列 + 额枋 + 斗栱——
   //   旧版 34×20 的实心盒直接压在一枚 0.55 厚的薄板上，柱列/额枋/斗栱一概没有。
   //   台基三层外轮廓 36×22（玉盘 r21.3，角点 21.1 仍在盘内，不悬空）。
@@ -3403,7 +3406,7 @@ function pantaoHalls(b: Baker): void {
     b.box('wall', 1.8, H - 3.0, T, hx, Y + 3.0 + (H - 3.0) / 2, 22.25, shade(0xc8c0b0, 0.98));
     b.box('wall', W, H, T, hx, Y + H / 2, 32.75, shade(0xc8c0b0, 0.98));
     for (const sx of [-1, 1]) b.box('wall', T, H, D - 2 * T, hx + sx * (W / 2 - T / 2), Y + H / 2, CZ, shade(0xc8c0b0, 0.98));
-    skyRoofOn(b, hx, Y + H, CZ, W + 1.2, D + 1.2, 2.89, 0, 'xieshan', shade(0x5c6878, 0.98), GOLD_TRIM); // W17 看园厅：歇山
+    skyRoofOn(b, hx, Y + H, CZ, W + 1.2, D + 1.2, 2.89, 0, 'xieshan', shade(0x9a7526, 0.98), GOLD_TRIM); // W17 看园厅：歇山
     // W25：看园厅补檐柱列 + 额枋 + 斗栱（旧版屋面直接扣在 12×11 的墙上，檐下是空的）
     eaveFrame(b, hx, CZ, 11.4, 10.4, Y, Y + H, 0.4);
     b.kit(h === 0 ? 'pantao.hallWest' : 'pantao.hallEast', 1, Y);
@@ -3990,8 +3993,43 @@ function itmDawnFork(b: Baker, x: number, y: number, z: number, ry: number): voi
   b.kit('palace.item.dawnFork', 1, y + 0.3);
 }
 
+/**
+ * R22：天宫室内生活小件（妆奁 / 香合 / 经卷箱 / 茶盏托 / 瓶花几，共 5 件）。
+ * 尺寸一律按「缩放前」口径 0.16–0.31m：不超过 winMax 的预缩放上限（凌霄 0.333 / 其余 0.909），
+ * 被 scaleHeavenGeometry / enlargeLingxiao 逐顶点放大后仍是案头小器。
+ * 位置只由 a.cx/a.cz 与 idx 确定性派生，零随机源、不消耗共享 RNG；全部走既有 BGroup 合批，不新增材质组。
+ */
+function skyWares(b: Baker, a: RoomAnchors, idx: number): void {
+  const q = a.fy + 0.02;
+  const ox = ((idx * 7) % 5 - 2) * 0.22, oz = ((idx * 3) % 5 - 2) * 0.22;
+  const bx = a.cx + ox, bz = a.cz + oz;
+  // 妆奁：漆盒 + 金扣
+  b.box('lacquer', 0.26, 0.12, 0.2, bx, q + 0.06, bz, 0x7a2f28);
+  b.box('metal', 0.06, 0.13, 0.21, bx, q + 0.065, bz, 0xc8a54a);
+  // 香合：瓷圆盒
+  b.cyl('ceramic', 0.09, 0.1, 0.1, 8, bx + 0.3, q + 0.05, bz, 0xf2efe9);
+  // 经卷箱：木匣 + 盖
+  b.box('wood', 0.3, 0.18, 0.18, bx - 0.32, q + 0.09, bz + 0.12, 0x6b4a2b);
+  b.box('wood', 0.31, 0.03, 0.19, bx - 0.32, q + 0.19, bz + 0.12, 0x8b5e3c);
+  // 茶盏托：托碟 + 盏
+  b.cyl('ceramic', 0.11, 0.11, 0.02, 10, bx + 0.16, q + 0.01, bz + 0.3, 0xe8e0d0);
+  b.cyl('ceramic', 0.06, 0.05, 0.08, 10, bx + 0.16, q + 0.06, bz + 0.3, 0xfffdf5);
+  // 瓶花几：小几 + 插花瓶
+  b.box('wood', 0.16, 0.22, 0.16, bx - 0.1, q + 0.11, bz - 0.3, 0x4a3220);
+  b.cyl('ceramic', 0.05, 0.06, 0.14, 8, bx - 0.1, q + 0.29, bz - 0.3, 0x88abda);
+}
+
 /** 灵霄八间：案面各置一副灵墨玉简笔砚；R02 文书房另置值殿名录（T-ITM-0078 / T-ITM-0160） */
 function furnishLingxiao(b: Baker, a: RoomAnchors, idx: number): void {
+  // R22：接入统一起居资产库（凌霄殿总放大 ×6 → 器件预缩放 1/6，高档）
+  const variant = (idx * 31 + Math.abs(Math.round(a.cx * 3 + a.cz * 7))) % 997;
+  const rLx = buildRoomLiving(b, {
+    cx: a.cx, cz: a.cz, w: a.iw * 2, d: a.ih * 2, y0: a.fy, h: 3.6,
+    ux: 1, uz: 0, vx: 0, vz: 1, variant, tier: 'high', scale: 1/6,
+  });
+  b.kit('sky.roomLiving.rooms', 1);
+  b.kit('sky.roomLiving.items', rLx.count);
+  skyWares(b, a, idx);
   const y = a.fy + 1.09, ry = deskRy(a);
   const [ix, iz] = onDesk(a, 1.55, 0);
   itmInkSlabSet(b, ix, y, iz, ry);
@@ -4003,6 +4041,15 @@ function furnishLingxiao(b: Baker, a: RoomAnchors, idx: number): void {
 
 /** 瑶池八间：R01 窖室龛位 / R02 妆间 / R03 装间 / R04 器物间 / R05 书案间 / R06 酒窖 */
 function furnishYaochi(b: Baker, a: RoomAnchors, idx: number): void {
+  // R22：接入统一起居资产库（瑶池殿仅 ×2.2 → 器件预缩放 1/2.2，高档）
+  const variant = (idx * 31 + Math.abs(Math.round(a.cx * 3 + a.cz * 7))) % 997;
+  const rYc = buildRoomLiving(b, {
+    cx: a.cx, cz: a.cz, w: a.iw * 2, d: a.ih * 2, y0: a.fy, h: 3.6,
+    ux: 1, uz: 0, vx: 0, vz: 1, variant, tier: 'high', scale: 1/2.2,
+  });
+  b.kit('sky.roomLiving.rooms', 1);
+  b.kit('sky.roomLiving.items', rYc.count);
+  skyWares(b, a, idx);
   const y = a.fy + 1.09, ry = deskRy(a);
   if (idx === 0) {
     itmSundialShard(b, a.cx + 1.5, a.fy, a.cz + 2.6, 0);
@@ -4027,6 +4074,15 @@ function furnishYaochi(b: Baker, a: RoomAnchors, idx: number): void {
 
 /** 蟠桃看园房：R01 案上园志玉简（T-ITM-0027） */
 function furnishPantao(b: Baker, a: RoomAnchors, idx: number): void {
+  // R22：接入统一起居资产库（看园厅仅 ×2.2 → 器件预缩放 1/2.2，中档；放在 early-return 之前，8 间全覆盖）
+  const variant = (idx * 31 + Math.abs(Math.round(a.cx * 3 + a.cz * 7))) % 997;
+  const rPt = buildRoomLiving(b, {
+    cx: a.cx, cz: a.cz, w: a.iw * 2, d: a.ih * 2, y0: a.fy, h: 3.6,
+    ux: 1, uz: 0, vx: 0, vz: 1, variant, tier: 'mid', scale: 1/2.2,
+  });
+  b.kit('sky.roomLiving.rooms', 1);
+  b.kit('sky.roomLiving.items', rPt.count);
+  skyWares(b, a, idx);
   if (idx !== 0) return;
   const [gx, gz] = onDesk(a, 1.42, 0);
   itmGardenLog(b, gx, a.fy + 1.09, gz, deskRy(a));
@@ -4034,6 +4090,15 @@ function furnishPantao(b: Baker, a: RoomAnchors, idx: number): void {
 
 /** 星宿八府：角木蛟（蛟角冠 + 角宿令牌）/ 亢金龙（金鳞宝甲）/ 奎木狼（星图壁挂 + 府侧磨爪场）/ 斗牛宫（獬豸冠 + 檐下铜铃）/ 昴日鸡（天鸡冠 + 晨啼音叉）/ 心月狐（心宿迷香） */
 function furnishXingxiu(b: Baker, a: RoomAnchors, idx: number): void {
+  // R22：接入统一起居资产库（星宿府仅 ×2.2 → 器件预缩放 1/2.2，中档）
+  const variant = (idx * 31 + Math.abs(Math.round(a.cx * 3 + a.cz * 7))) % 997;
+  const rXx = buildRoomLiving(b, {
+    cx: a.cx, cz: a.cz, w: a.iw * 2, d: a.ih * 2, y0: a.fy, h: 3.6,
+    ux: 1, uz: 0, vx: 0, vz: 1, variant, tier: 'mid', scale: 1/2.2,
+  });
+  b.kit('sky.roomLiving.rooms', 1);
+  b.kit('sky.roomLiving.items', rXx.count);
+  skyWares(b, a, idx);
   const y = a.fy + 1.09, ry = deskRy(a);
   if (idx === 0) {
     itmDragonCrown(b, a.cx + 0.9, a.fy, a.cz - 0.45, 0.4);

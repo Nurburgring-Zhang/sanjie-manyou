@@ -166,9 +166,12 @@ export async function buildSkyExpansion(b: Baker, ps: PoolSet, scene: THREE.Scen
     [-7900, 470, 5700], [9200, 495, -7000], [11400, 510, 9200], [-10500, 500, -8400], [1300, 545, 15000],
   ];
   palaces.forEach(([x, y, z], i) => {
-    b.box('wall', 60, 14, 34, x, y + 7, z, shade(0xcab8d8, 1.15));
-    roofOn(b, 74, 44, y + 14.5, x, z, 0, shade(0xb0a0c8, 1.1), 0xe8d8f0);
-    roofOn(b, 44, 26, y + 20.5, x, z, 0, shade(0xbcaac8, 1.05), 0xe8d8f0);
+    // R20 终局：原淡紫墙 0xcab8d8 + 淡紫瓦 0xb0a0c8/0xbcaac8 + 冷白脊 0xe8d8f0
+    // 是云海远景里五座仙宫读作「灰了吧唧、土了吧唧」的真源。统一到 H_TILE 金瓦三档 +
+    // 暖白玉台身，与凌霄宝殿同色系（用字面量避免依赖本文件后段才声明的 H_TILE）。
+    b.box('wall', 60, 14, 34, x, y + 7, z, shade(0xd6cebc, 1.06));
+    roofOn(b, 74, 44, y + 14.5, x, z, 0, shade(0x9a7526, 1.1), 0xbd9a2c);
+    roofOn(b, 44, 26, y + 20.5, x, z, 0, shade(0x9a7526, 1.05), 0xbd9a2c);
     for (let k = 0; k < 5; k++) {
       b.box('glow', 0.3, 10, 0.3, x - 24 + k * 12, y + 7, z + 17.4, k % 2 ? 0xffd25e : 0xffb300);
     }
@@ -1293,20 +1296,28 @@ export function buildUnderworldExpansion(b: Baker, sg: SignMesher, atlas: SignAt
 //     屋顶壳随面阔线性增长 +164k（外环 40 座 +1.4k / 中环 32 座 +2.25k / 内环 30 座 +1.2k）；
 //     realm 侧 15 座文档建筑与 8 座星宿府岛净 +22k（已扣旧九府/旧朝房对/旧天库武库对 80k）。
 //     合计 ≈0.33M，天宫一层 0.70M → 1.03M（300 万预算的 11%）。
-const H_STONE = 0x7e7a8c;    // 天宫石材（线性 0.21）
-const H_STONE_L = 0x86828f;  // 受光上限：线性 0.238 × 3.2 = 0.76 < 0.8（0x8e8a98 会到 0.87）
-const H_STONE_D = 0x6a6678;
-const H_DECK = 0x86828f;     // W18 台面石作（与 H_STONE_L 同值：受光 0.76 < 0.8）
-const H_JOINT = 0x4a4760;    // 同心石缝（比台面暗两档，只做 0.16m 细线）
-const H_PAVE = 0x565264;     // 台面铺砖（与 realm.platform 同档）
-const H_RED = 0xb8b2a6;      // 玉白殿身（参考图主体色；朱红只留门窗与柱头）
-const H_RED_D = 0x9c968a;    // 玉白背光面
-const H_BRICK = 0x8a8478;    // 暖灰砖（原青砖在玉白群殿里显得脏）
-const H_WOOD = 0x6b4a2b;
-const H_WOOD_D = 0x4a3220;
-const H_TILE = 0x35594c;     // 青绿琉璃（压暗一档：0x46705f 在玉白群殿里糊成一片灰绿）
-const H_TILE2 = 0x3f4752;
-const H_TILE_L = 0x5c6878;   // 瓦灰青（上限）
+// R19（用户「天宫建筑配色灰土，必须向凌霄宝殿看齐、金碧辉煌」）：
+// 旧色板是灰紫石 0x7e7a8c + 青绿琉璃瓦 0x35594c + 木褐柱，与 palace.ts 的
+// GOLD_ROOF 0xd2ab3d / GOLD_TRIM 0xb08d2a / GOLD_LINE 0xbd9a2c 完全不是一套，
+// 实拍整片读作灰扑扑的凡间衙署。统一为「金瓦 + 朱红柱 + 暖白玉台基 + 暖米白殿身」。
+// 亮度仍压在 W18 注释的受光上限附近（光照 ×3.2，避免整片过曝成白板）：石作只改色相、
+// 明度基本不动；金色与朱红本身较暗，天然安全。瓦受光档直接对齐 GOLD_LINE。
+const H_STONE = 0x827a6c;    // 暖白玉台基（去紫、加暖，明度对齐旧 0x7e7a8c）
+const H_STONE_L = 0x8c8374;  // 受光面（仍贴着 0.8 过曝线）
+const H_STONE_D = 0x645d50;
+const H_DECK = 0x8c8374;     // W18 台面石作
+const H_JOINT = 0x443e34;    // 同心石缝（比台面暗两档，只做 0.16m 细线）
+const H_PAVE = 0x5e5546;     // 台面铺砖（暖金灰）
+const H_RED = 0xc0b096;      // 暖米白殿身
+const H_RED_D = 0x9b8e76;    // 殿身背光面
+const H_PILLAR = 0x9c3324;   // 朱红柱（凌霄宝殿同款，原柱复用 H_RED 导致整殿无红）
+const H_PILLAR_D = 0x6d2218; // 朱红柱背光 / 望柱
+const H_BRICK = 0x95794c;    // 暖金砖
+const H_WOOD = 0x8a3322;     // 格扇 / 栏杆木作改朱红
+const H_WOOD_D = 0x5d2118;
+const H_TILE = 0x9a7526;     // 金琉璃瓦主色（压暗一档防过曝）
+const H_TILE2 = 0x70521c;    // 剪边深金
+const H_TILE_L = 0xbd9a2c;   // 受光金瓦（= GOLD_LINE，与凌霄宝殿同色）
 
 type HForm = 'dian' | 'ge' | 'lou' | 'tai' | 'guan' | 'ta' | 'ting';
 
@@ -1543,7 +1554,7 @@ function hBody(b: Baker, x: number, y: number, z: number, w: number, d: number, 
   if (door) {
     for (const sg of [-1, 1]) {
       const [px, pz] = at(sg * dw / 2, d / 2);
-      b.cyl('wood', 0.2, 0.26, hh, 8, px, y + hh / 2, pz, shade(H_RED, 1.02), ry);
+      b.cyl('wood', 0.2, 0.26, hh, 8, px, y + hh / 2, pz, shade(H_PILLAR, 1.02), ry);
     }
     const [lx2, lz2] = at(0, d / 2);
     b.box('wood', dw * 0.98, 0.34, 0.34, lx2, y + hh - 0.18, lz2, GOLD_TRIM, ry);
@@ -1656,7 +1667,7 @@ function hRail(b: Baker, x: number, y: number, z: number, w: number, d: number, 
     else if (t < 2 * w + d) { lx = w / 2 - (t - w - d); lz = -d / 2; }
     else { lx = -w / 2; lz = -d / 2 + (t - 2 * w - d); }
     const [px, pz] = at(lx, lz);
-    b.box('wood', 0.16, 0.92, 0.16, px, y + 0.55, pz, shade(H_RED_D, 1.06), ry);
+    b.box('wood', 0.16, 0.92, 0.16, px, y + 0.55, pz, shade(H_PILLAR_D, 1.06), ry);
     b.box('wood', 0.26, 0.1, 0.26, px, y + 1.05, pz, H_WOOD_D, ry);
   }
   for (const sg of [-1, 1]) {
@@ -1698,7 +1709,7 @@ function hColonnade(b: Baker, x: number, y: number, z: number, w: number, d: num
     const lx = -w / 2 + (w * i) / (n - 1);
     for (const sg of [-1, 1]) {
       const [px, pz] = at(lx, sg * (d / 2 + 0.52));
-      b.cyl('wood', 0.24 * k, 0.3 * k, hh, 7, px, y + hh / 2, pz, shade(H_RED, 1.04), ry);
+      b.cyl('wood', 0.24 * k, 0.3 * k, hh, 7, px, y + hh / 2, pz, shade(H_PILLAR, 1.04), ry);
       b.cyl('wood', 0.28 * k, 0.28 * k, 0.2 * k, 7, px, y + hh - 0.14 * k, pz, GOLD_TRIM, ry);
       b.cyl('wall', 0.34 * k, 0.38 * k, 0.24 * k, 7, px, y + 0.12 * k, pz, H_STONE_D, ry);
     }
@@ -1818,7 +1829,7 @@ function hTai(b: Baker, x: number, y: number, z: number, s: number, ry: number, 
   for (let ix = 0; ix < 3; ix++) {
     for (const sg of [-1, 1]) {
       const [px, pz] = at(-w / 2 + (w * ix) / 2, sg * d / 2);
-      b.cyl('wood', 0.3, 0.36, hh, 8, px, top + hh / 2, pz, shade(H_RED, 1.05), ry);
+      b.cyl('wood', 0.3, 0.36, hh, 8, px, top + hh / 2, pz, shade(H_PILLAR, 1.05), ry);
       b.cyl('wood', 0.34, 0.34, 0.24, 8, px, top + hh - 0.16, pz, GOLD_TRIM, ry);
       b.cyl('wall', 0.42, 0.46, 0.28, 8, px, top + 0.14, pz, H_STONE_D, ry);
     }
@@ -1933,7 +1944,7 @@ function hTing(b: Baker, x: number, y: number, z: number, s: number, ry: number,
   for (const sx2 of [-1, 1]) {
     for (const sz2 of [-1, 1]) {
       const [px, pz] = at(sx2 * w * 0.42, sz2 * w * 0.42);
-      b.cyl('wood', 0.2, 0.26, hh, 7, px, top + hh / 2, pz, shade(H_RED, 1.04), ry);
+      b.cyl('wood', 0.2, 0.26, hh, 7, px, top + hh / 2, pz, shade(H_PILLAR, 1.04), ry);
       b.cyl('wall', 0.3, 0.34, 0.22, 7, px, top + 0.11, pz, H_STONE_D, ry);
     }
   }
@@ -1983,6 +1994,59 @@ const H_LAY: [number, number, number][][] = [
   [[0.25, 0, 0.38], [-0.29, -0.33, 0.265], [-0.29, 0.33, 0.265]],
 ];
 
+/**
+ * R24：用户「天宫中现在只有凌霄宝殿周边布满植被，所有的建筑附近都要有！！」
+ * 根因：ecoExpansion 的 HEAVEN_GARDEN_ANCHORS 只覆盖 |x|≤270 / |z|≤220 的中心区，
+ * 而三环群岛（内 12 / 中 24 / 外 40 共 76 座）落在 r=220–580，锚点表根本没覆盖。
+ * 修法：把仙花仙草直接挂进 hIsland —— 与岛台面、殿阁同坐标、同 ×2.2 缩放，
+ * 天然落在每座建筑的岛面上，绝不飘到云海空隙；逐丛避开建筑占位。
+ */
+function hIslandGarden(b: Baker, is: HIsle, seed: number, kinds: HForm[], vh: number): void {
+  const { x, y, z, r } = is;
+  const deckY = y + 0.19;                       // 台面铺砖顶 y+0.16，草皮略抬 3cm
+  const lay = H_LAY[Math.min(kinds.length, 3) - 1];
+  const cr = Math.cos(is.a), sr = Math.sin(is.a);
+  const blocks: [number, number, number][] = [];
+  for (let k = 0; k < kinds.length; k++) {
+    const [lx, lz] = lay[k];
+    const sf = kinds.length === 1 && kinds[0] === 'ting' ? 0.63 : lay[k][2];
+    const cap = (kinds[k] === 'ta' ? 22 : 26) * vh;
+    blocks.push([
+      x + (lx * cr - lz * sr) * r, z + (lx * sr + lz * cr) * r,
+      Math.max(4.0, Math.min(r * sf, cap)) * 0.78,
+    ]);
+  }
+  const n = Math.max(10, Math.min(26, Math.round(r * 0.55)));
+  const petals = [0xe6d06a, 0xd8798c, 0xc98ad0, 0xe8a05a, 0xe9e4c8, 0xbdd05e];
+  let placed = 0;
+  for (let k = 0; k < n; k++) {
+    const a = (k / n) * Math.PI * 2 + (skyJitter(seed + k, 61.1) - 0.5) * 0.5;
+    const rr = r * (0.42 + skyJitter(seed + k, 62.3) * 0.46);
+    const px = x + Math.cos(a) * rr, pz = z + Math.sin(a) * rr;
+    if (blocks.some(([bx, bz, br]) => Math.hypot(px - bx, pz - bz) < br)) continue;
+    const u = skyJitter(seed + k, 63.7);
+    b.cyl('leaf', 2.2 + u * 2.6, 2.2 + u * 2.6, 0.05, 9, px, deckY, pz,
+      shade(0x6d9a48, 0.86 + u * 0.28));
+    for (let t = 0; t < 4; t++) {
+      const aa = (t / 4) * Math.PI * 2 + u * 3;
+      b.box('leaf', 0.34, 1.2 + u * 0.9, 0.7,
+        px + Math.cos(aa) * 0.5, deckY + 0.62 + u * 0.4, pz + Math.sin(aa) * 0.5,
+        shade(t % 2 ? 0xa8d45c : 0x8fbe4a, 0.94 + u * 0.2),
+        aa, 0.2 * Math.cos(aa), 0.2 * Math.sin(aa));
+    }
+    b.sphere('ceramic', 0.38, 5, px, deckY + 1.45, pz,
+      petals[(k + (seed | 0)) % petals.length], 0, 0, 0, 1, 0.85, 1);
+    if (k % 4 === 0) {                        // 每 4 丛一株仙树/神木
+      const th = 3.4 + u * 2.2;
+      b.cyl('trunk', 0.16, 0.24, th, 6, px + 1.2, deckY + th / 2, pz + 0.8, 0x6a4a30);
+      b.sphere('leaf', 1.9 + u, 7, px + 1.2, deckY + th + 0.7, pz + 0.8,
+        shade(0x4f7f3e, 0.92 + u * 0.2), 0, 0, 0, 1.1, 0.85, 1.1);
+    }
+    placed++;
+  }
+  b.kit('sky.islandGarden', placed, deckY);
+}
+
 /** 一座岛：石作台面 + 岛缘栏杆 + 登岛石阶 + 石座 + 裙边 + 建筑
  *  gateA：W20 白玉长阶的出挑方位（只有宿主岛传，岛缘栏杆在此留口） */
 function hIsland(b: Baker, is: HIsle, seed: number, kinds: HForm[], vh = 1, gateA?: number): void {
@@ -2017,6 +2081,8 @@ function hIsland(b: Baker, is: HIsle, seed: number, kinds: HForm[], vh = 1, gate
     const s2 = Math.max(4.0, Math.min(r * sf, cap));
     hForm(b, kinds[k], bx, y + 0.16, bz, s2, face + (skyJitter(seed + k, 11.3) - 0.5) * 0.14, seed + k * 13, vh);
   }
+  // R24：每座岛的殿阁周边都补仙花仙草神木（此前只有凌霄宝殿中心区有植被）
+  hIslandGarden(b, is, seed, kinds, vh);
 }
 
 /** 云桥：桥面宽 4.6–5.8、长 = 两岛间距，两侧望柱 + 栏板 + 寻杖，桥下 2–3 云墩 */
@@ -2150,8 +2216,8 @@ const W_JADE = 0x9d9689;      // 汉白玉（132 级踏步拼成 150m 斜面，�
 const W_JADE_HI = 0x99937f;   // 望柱头 / 压顶（原 0xc6c0b1 受光 1.12 → 越过 bloom 阈值）
 const W_JADE_D = 0x767065;    // 阶竖板 / 檐下阴面
 const W_JADE_DD = 0x615d50;   // 阶底石托（暗三档，仰视才读得出厚度）
-const W_TILE_C = 0x5c6878;    // 青瓦（受光上限档）
-const W_TILE_D = 0x46505c;
+const W_TILE_C = 0x9a7526;    // R19：金琉璃瓦（与 H_TILE 同色，原青灰瓦让长廊读作灰土）
+const W_TILE_D = 0x70521c;    // R20 终局：青灰剪边统一为深金（= H_TILE2），与 W_TILE_C 同套
 const W_RED_C = 0xa63a2b;     // 朱柱（任务指定）
 const W_RED_DD = 0x8a2f24;
 const W_WALL_R = 0x93372a;    // 宫墙（面积比柱大，再压一档）
@@ -2375,12 +2441,12 @@ function hSkyArcCorridor(b: Baker, cx: number, cz: number, R: number, a0: number
       b.box('ash', arc * 1.03, 0.1, 0.12, mx + nx * 2.95, hy, mz + nz * 2.95, JADE, ry);
     }
     b.box('ash', 0.16, 1.06, 0.16, mx + nx * 2.95, y0 + 0.53, mz + nz * 2.95, 0xd0cabc, ry);
-    // ⑥ 青绿琉璃瓦顶（随弧，前后两坡 + 正脊）
+    // ⑥ 金琉璃瓦顶（随弧，前后两坡 + 正脊；R20 正脊随两坡金色化，去残留暗青绿）
     const roofY = y0 + 5.16;
     for (const sgn of [-1, 1] as const) {
-      b.box('roof', arc * 1.05, 0.22, 3.5, mx + nx * sgn * 1.55, roofY + 0.34, mz + nz * sgn * 1.55, 0x35594c, ry, sgn * 0.16, 0);
+      b.box('roof', arc * 1.05, 0.22, 3.5, mx + nx * sgn * 1.55, roofY + 0.34, mz + nz * sgn * 1.55, 0x9a7526, ry, sgn * 0.16, 0);
     }
-    b.box('roof', arc * 1.05, 0.3, 0.42, mx, roofY + 0.78, mz, 0x4e6a61, ry);
+    b.box('roof', arc * 1.05, 0.3, 0.42, mx, roofY + 0.78, mz, GOLD_TRIM, ry);
     b.box('metal', arc * 1.02, 0.08, 0.5, mx, roofY + 0.96, mz, 0x9a7c1e, ry);
   }
   // 两端石阶 + 端柱

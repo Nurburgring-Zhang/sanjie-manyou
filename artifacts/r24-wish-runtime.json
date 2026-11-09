@@ -1,0 +1,298 @@
+{
+  "at": "2026-11-08T16:57:04.871Z",
+  "url": "http://127.0.0.1:4184/",
+  "steps": [
+    {
+      "step": "type",
+      "value": "我要一条神龙"
+    }
+  ],
+  "pageErrors": [],
+  "catalog": {
+    "count": 2320,
+    "stats": {
+      "total": 2320,
+      "uniqueNames": 2320,
+      "byCategory": {
+        "神": 77,
+        "仙": 47,
+        "佛": 36,
+        "鬼": 30,
+        "神兽": 100,
+        "怪": 26,
+        "西游角色": 32,
+        "妖精": 72,
+        "魔": 50,
+        "建筑": 48,
+        "兵器": 46,
+        "物品": 46,
+        "植物": 45,
+        "载具": 26,
+        "家具": 33,
+        "异兽": 57,
+        "异禽": 22,
+        "水族": 19,
+        "山神": 31,
+        "异民": 24,
+        "灵木": 33,
+        "神巫": 13,
+        "天将": 56,
+        "佛圣": 44,
+        "龙宫": 19,
+        "妖王": 33,
+        "小妖": 18,
+        "凡人": 19,
+        "别称": 13,
+        "洞府": 55,
+        "法宝": 12,
+        "古帝": 31,
+        "仙真": 38,
+        "佛法": 31,
+        "俗神": 46,
+        "封神将": 67,
+        "星君": 120,
+        "阴神": 23,
+        "志怪": 27,
+        "搜神": 35,
+        "搜神仙": 13,
+        "商号": 48,
+        "机构": 45,
+        "起居": 69,
+        "陈设": 74,
+        "铺陈": 47,
+        "物种": 28,
+        "持物": 31,
+        "小吃": 28,
+        "山岳": 47,
+        "洞天": 32,
+        "太岁": 60,
+        "粗用": 78,
+        "花神": 14,
+        "护法": 20,
+        "封神正神": 29,
+        "雷部": 23,
+        "名山": 34
+      },
+      "bySource": {
+        "中国神话": 140,
+        "道教": 140,
+        "佛经": 67,
+        "地府志": 53,
+        "山海经": 384,
+        "西游记": 361,
+        "星宿": 208,
+        "封神演义": 146,
+        "聊斋志异": 59,
+        "游戏内": 714,
+        "搜神记": 48
+      },
+      "byArchetype": {
+        "deity": 435,
+        "spirit": 355,
+        "dragon": 37,
+        "beast": 220,
+        "bird": 42,
+        "humanoid": 354,
+        "building": 309,
+        "item": 464,
+        "plant": 78,
+        "vehicle": 26
+      },
+      "archetypeCount": 10
+    },
+    "stages": [
+      "卵",
+      "幼体",
+      "成体",
+      "灵体",
+      "神体"
+    ],
+    "xpThresholds": [
+      0,
+      100,
+      300,
+      700,
+      1500
+    ],
+    "config": {
+      "baseUrl": "https://api.openai.com/v1",
+      "apiKey": "",
+      "model": "gpt-4o-mini",
+      "enabled": false
+    },
+    "panelExists": true,
+    "inputId": "wish-panel-input",
+    "inputVisible": true,
+    "tabs": [
+      "探索",
+      "战斗",
+      "创造",
+      "进化",
+      "升级"
+    ],
+    "hint": "预设 2320 件 · 已开发资产 0 件 · 回车许愿 · 8 机位截图验证 · 吞噬 / 合并 / 进化 · R 旋转 / Enter 放置 / Z 撤销 · 自动存档"
+  },
+  "spawn": {
+    "entities": [
+      {
+        "id": "wish-0-2678460648",
+        "name": "神龙",
+        "stage": "卵",
+        "level": 1,
+        "xp": 0,
+        "tier": "L1",
+        "archetype": "dragon",
+        "catalogId": "w164",
+        "pos": {
+          "x": -16.446364772590606,
+          "y": 1.6150356785328306,
+          "z": 62.816441486510804
+        },
+        "hp": 194,
+        "behavior": "follow",
+        "lineage": "土·镇岳",
+        "hostile": false,
+        "devoured": 0
+      }
+    ],
+    "status": "神龙生成完毕，出现在你面前！ · 热更新载入：把 神龙（L1）就地挂载到玩家附近 dropPoint，无需刷新场景即可见于街市，可互动、可进化。 · 神龙 ×1 · L1 · 截图验证 8/8",
+    "cam": {
+      "x": -426.6942600412706,
+      "y": 13.045283113117707,
+      "z": 59.226415565588546
+    },
+    "player": {
+      "x": -20,
+      "y": 0,
+      "z": 58
+    },
+    "listRows": 1,
+    "labels": [
+      "神龙 · 卵"
+    ]
+  },
+  "nearPlayerMeters": 5.985518517427494,
+  "nearPlayerBasis": "player.actor.pos",
+  "evolved": [
+    {
+      "stage": "卵",
+      "level": 1,
+      "bodyVerts": 5220,
+      "meshes": 2
+    },
+    {
+      "stage": "成体",
+      "level": 5,
+      "bodyVerts": 8541,
+      "meshes": 1
+    },
+    {
+      "stage": "灵体",
+      "level": 9,
+      "bodyVerts": 8541,
+      "meshes": 2
+    },
+    {
+      "stage": "神体",
+      "level": 13,
+      "bodyVerts": 9705,
+      "meshes": 2
+    },
+    {
+      "stage": "神体",
+      "level": 17,
+      "bodyVerts": 9705,
+      "meshes": 2
+    }
+  ],
+  "play": {
+    "presetId": "w001",
+    "presetSpawned": "wish-1-3094171992",
+    "countAfterTwoWishes": 3,
+    "before": {
+      "stage": "神体",
+      "level": 17,
+      "xp": 2000
+    },
+    "after": {
+      "stage": "神体",
+      "level": 19,
+      "xp": 2200
+    },
+    "mergedId": "wish-3-864421927",
+    "finalEntities": [
+      {
+        "id": "wish-2-3233979601",
+        "name": "凤凰",
+        "stage": "卵",
+        "level": 1,
+        "xp": 0,
+        "tier": "L1",
+        "archetype": "bird",
+        "catalogId": "w222",
+        "pos": {
+          "x": -22.783423840499697,
+          "y": 1.6,
+          "z": 48.14644471654327
+        },
+        "hp": 142,
+        "behavior": "follow",
+        "lineage": "光·曜灵",
+        "hostile": false,
+        "devoured": 0
+      },
+      {
+        "id": "wish-3-864421927",
+        "name": "神龙盘古·化生",
+        "stage": "神体",
+        "level": 20,
+        "xp": 1100,
+        "tier": "融合",
+        "archetype": "dragon",
+        "pos": {
+          "x": -17.426578737442476,
+          "y": 1.7373361667806098,
+          "z": 56.76456040045365
+        },
+        "hp": 306,
+        "behavior": "follow",
+        "lineage": "混元·未定",
+        "hostile": false,
+        "devoured": 0
+      }
+    ],
+    "status": "神龙：神体 · 土·镇岳「骨节厚重，岩甲隆起」 · 能力「孕育、镇岳、感知、腾跃、通灵、化形」 · HP 194"
+  },
+  "agent": {
+    "buttonFound": true,
+    "shown": true,
+    "fields": [
+      {
+        "key": "baseUrl",
+        "type": "text"
+      },
+      {
+        "key": "apiKey",
+        "type": "password"
+      },
+      {
+        "key": "model",
+        "type": "text"
+      }
+    ],
+    "hasEnableL3": true
+  },
+  "pass": {
+    "runtime": true,
+    "catalog": true,
+    "input": true,
+    "wishSpawned": true,
+    "nearPlayer": true,
+    "fiveTabs": true,
+    "evolution": true,
+    "merge": true,
+    "agentSettings": true,
+    "stageShapes": true,
+    "all": true
+  }
+}

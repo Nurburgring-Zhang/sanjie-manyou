@@ -1,0 +1,287 @@
+{
+  "at": "2026-11-08T16:55:07.813Z",
+  "url": "http://127.0.0.1:4184/",
+  "steps": [
+    "artifacts/r25-fusion-01-wish-input.png",
+    "artifacts/r25-fusion-02-spawned.png",
+    "artifacts/r25-fusion-02b-dragon-close.png",
+    "artifacts/r25-fusion-03-presets.png",
+    "artifacts/r25-fusion-04-build.png",
+    "artifacts/r25-fusion-04b-build-close.png",
+    "artifacts/r25-fusion-05-gameplay.png",
+    "artifacts/r25-fusion-06-god-close.png",
+    "artifacts/r25-fusion-06b-evolved.png",
+    "artifacts/r25-fusion-07-agent.png",
+    "artifacts/r25-fusion-08-reload.png"
+  ],
+  "pageErrors": [],
+  "catalog": {
+    "count": 2320,
+    "uniqueNames": 2320,
+    "bySource": {
+      "中国神话": 140,
+      "道教": 140,
+      "佛经": 67,
+      "地府志": 53,
+      "山海经": 384,
+      "西游记": 361,
+      "星宿": 208,
+      "封神演义": 146,
+      "聊斋志异": 59,
+      "游戏内": 714,
+      "搜神记": 48
+    },
+    "byCategory": 58,
+    "archetypeCount": 10,
+    "sourceCoverage": {
+      "中国神话": 140,
+      "山海经": 384,
+      "西游记": 361,
+      "游戏内": 714,
+      "道教": 140,
+      "佛经": 67,
+      "封神演义": 146
+    }
+  },
+  "develop": {
+    "ok": true,
+    "name": "神龙",
+    "epithet": "昆仑玄圃 · 潜渊驭水之灵",
+    "appearance": "但见神龙蟠身而起，鎏金色鳞片层叠成纹，颈鬣与霜青背鳍连作一带。鹿角崚嶒、鲤须垂拂，爪若霜钩，扇尾扫处风雷并起；遍体腾云缠绕，鳞光随呼吸明灭。",
+    "powers": [
+      "鳞甲御兵，刀矢难伤",
+      "潜渊蹈海，吞吐风云",
+      "摄取「长躯」精魄，久蓄不竭",
+      "腾云驾雾，瞬息千里"
+    ],
+    "backstory": "山海经所载尝记其类而未著其名。及至「我要一条神龙」出口，三界造物录其声，取鎏金与霜青之精、赋腾云之性，造神龙降世。自兹大江回漩之底间，便多了一桩可寻的灵迹。",
+    "steps": [
+      "意图解析：愿望「我要一条神龙」→ 名称=神龙，archetype=dragon，档位=L1；据 traits=[鳞甲、腾云、兴雨、长躯] 与 colors=[0xd4af37,0x4fa8a0,0xa8503c] 消歧。",
+      "设定撰写：成称号「昆仑玄圃 · 潜渊驭水之灵」，立五行水 · 润下主智，潜流而变，列神通 4 条（鳞甲御兵，刀矢难伤…）；出典取「山海经 · 神兽｜神龙·山海经龙蛇之属，能幽能明…」。",
+      "几何锻造：archetype=dragon，seed=1080042517，scale=1.7，colors=[0xd4af37,0x4fa8a0,0xa8503c]；按「龙」部件谱生成可见网格，无随机数。",
+      "资产登记：以 id=bp-f0995cea 写入登记本 cyber-qingming.blueprints.v1，version=1；同 id 覆盖、上限 200 条，绝不写入任何密钥。",
+      "热更新载入：把 神龙（L1）就地挂载到玩家附近 dropPoint，无需刷新场景即可见于街市，可互动、可进化。"
+    ],
+    "tiers": "L1",
+    "cardLength": 1794,
+    "cardHasPowers": true,
+    "assetCount": 1,
+    "blueprints": 1
+  },
+  "spawn": {
+    "entity": {
+      "id": "wish-0-2678460648",
+      "name": "神龙",
+      "stage": "卵",
+      "level": 1,
+      "xp": 0,
+      "tier": "L1",
+      "archetype": "dragon",
+      "catalogId": "w164",
+      "pos": {
+        "x": -15.484798987129421,
+        "y": 1.4717990064776518,
+        "z": 56.95370834758532
+      },
+      "hp": 194,
+      "behavior": "follow",
+      "lineage": "土·镇岳",
+      "hostile": false,
+      "devoured": 0
+    },
+    "player": {
+      "x": -20,
+      "y": 0,
+      "z": 58
+    },
+    "nearPlayerMeters": 4.63484265197214,
+    "basis": "player.actor.pos",
+    "status": "神龙生成完毕，出现在你面前！ · 热更新载入：把 神龙（L1）就地挂载到玩家附近 dropPoint，无需刷新场景即可见于街市，可互动、可进化。 · 神龙 ×1 · L1 · 截图验证 8/8",
+    "loreVisible": true,
+    "sceneChildren": 593
+  },
+  "hatch": {
+    "id": "wish-0-2678460648",
+    "stage": "成体",
+    "level": 3,
+    "lineage": "土·镇岳"
+  },
+  "presets": {
+    "picks": [
+      "山海经:龙",
+      "西游记:唐僧",
+      "中国神话:盘古",
+      "游戏内:亭子",
+      "佛经:释迦牟尼",
+      "封神演义:姜子牙"
+    ],
+    "spawned": [
+      {
+        "source": "山海经",
+        "name": "龙",
+        "id": "wish-1-190114431"
+      },
+      {
+        "source": "西游记",
+        "name": "唐僧",
+        "id": "wish-2-3361135486"
+      },
+      {
+        "source": "中国神话",
+        "name": "盘古",
+        "id": "wish-3-3127727230"
+      },
+      {
+        "source": "游戏内",
+        "name": "亭子",
+        "id": "wish-4-2345834724"
+      },
+      {
+        "source": "佛经",
+        "name": "释迦牟尼",
+        "id": "wish-5-127232869"
+      },
+      {
+        "source": "封神演义",
+        "name": "姜子牙",
+        "id": "wish-6-1662462186"
+      }
+    ],
+    "before": 1,
+    "after": 7
+  },
+  "build": {
+    "enabled": true,
+    "placed": 3,
+    "id4": true,
+    "partsBefore": 3,
+    "partsAfter": 0,
+    "ry": 1.5707963267948966,
+    "stack": 1,
+    "stackedY": 3.4000000000000004,
+    "combo": true,
+    "comboId": "wish-11-81181447",
+    "comboEntity": "亭子4合体"
+  },
+  "gameplay": {
+    "beforeDiscoveries": 0,
+    "afterDiscoveries": 121,
+    "xpAwarded": 1772,
+    "coinsAwarded": 726,
+    "travelled": 5696.905317890943,
+    "hostile": true,
+    "hits": 7,
+    "kills": 1,
+    "bossHits": 16,
+    "rideId": "wish-0-2678460648",
+    "rideDelta": 717.1088138240372,
+    "events": [
+      "kill:胜战：神龙 击溃 试炼妖兽·12，获灵力 90 / 铜钱 36 文",
+      "boss:斗法：神龙 助战，对 Boss 造成 7 伤害",
+      "boss:斗法：龙 助战，对 Boss 造成 5 伤害",
+      "boss:斗法：唐僧 助战，对 Boss 造成 3 伤害",
+      "boss:斗法：盘古 助战，对 Boss 造成 5 伤害",
+      "boss:斗法：亭子 助战，对 Boss 造成 5 伤害",
+      "boss:斗法：释迦牟尼 助战，对 Boss 造成 3 伤害",
+      "boss:斗法：姜子牙 助战，对 Boss 造成 1 伤害"
+    ]
+  },
+  "evolution": {
+    "id": "wish-13-3135177626",
+    "shapes": [
+      {
+        "stage": "卵",
+        "level": 1,
+        "verts": 5220,
+        "lineage": "木·青荣",
+        "form": "{\"scale\":1,\"glow\":0.2,\"aura\":0.4,\"extraLimbs\":0}"
+      },
+      {
+        "stage": "成体",
+        "level": 5,
+        "verts": 8511,
+        "lineage": "木·青荣",
+        "form": "{\"scale\":1.51,\"glow\":0.53,\"aura\":1.15,\"extraLimbs\":2}"
+      },
+      {
+        "stage": "灵体",
+        "level": 9,
+        "verts": 8511,
+        "lineage": "木·青荣",
+        "form": "{\"scale\":1.69,\"glow\":0.68,\"aura\":1.35,\"extraLimbs\":2}"
+      },
+      {
+        "stage": "神体",
+        "level": 13,
+        "verts": 9675,
+        "lineage": "木·青荣",
+        "form": "{\"scale\":1.87,\"glow\":0.83,\"aura\":1.55,\"extraLimbs\":3}"
+      },
+      {
+        "stage": "神体",
+        "level": 17,
+        "verts": 9675,
+        "lineage": "木·青荣",
+        "form": "{\"scale\":1.87,\"glow\":0.83,\"aura\":1.55,\"extraLimbs\":3}"
+      }
+    ],
+    "vertsDistinct": 3,
+    "lineage": [
+      "木·青荣"
+    ],
+    "merged": true
+  },
+  "agent": {
+    "buttonFound": true,
+    "shown": true,
+    "inputs": [
+      {
+        "key": "baseUrl",
+        "type": "text"
+      },
+      {
+        "key": "apiKey",
+        "type": "password"
+      },
+      {
+        "key": "model",
+        "type": "text"
+      },
+      {
+        "key": "checkbox",
+        "type": "checkbox"
+      }
+    ],
+    "config": {
+      "baseUrl": "https://api.openai.com/v1",
+      "apiKey": "",
+      "model": "gpt-4o-mini",
+      "enabled": false
+    },
+    "hasEnableL3": true
+  },
+  "persistence": {
+    "entities": 8,
+    "blueprints": 8,
+    "buildParts": 0,
+    "beforeReload": 8
+  },
+  "pass": {
+    "catalogFull": true,
+    "sourceCoverage": true,
+    "agentDeveloped": true,
+    "wishSpawned": true,
+    "nearPlayer": true,
+    "hatch": true,
+    "presetsLoaded": true,
+    "build": true,
+    "explore": true,
+    "combat": true,
+    "ride": true,
+    "evolution": true,
+    "agentSettings": true,
+    "persistence": true,
+    "noPageErrors": true,
+    "all": true
+  }
+}

@@ -1,0 +1,3156 @@
+{
+  "census": [
+    {
+      "name": "(unnamed)",
+      "count": 32,
+      "visible": 28,
+      "yMin": -45978,
+      "yMax": 46022
+    },
+    {
+      "name": "city_wood",
+      "count": 7,
+      "visible": 7,
+      "yMin": -262.91,
+      "yMax": 4286.05
+    },
+    {
+      "name": "city_roof",
+      "count": 6,
+      "visible": 6,
+      "yMin": -260,
+      "yMax": 4290.02
+    },
+    {
+      "name": "voxel-main-c0",
+      "count": 6,
+      "visible": 6,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "voxel-glow-c0",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-glass-c0",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-main-c1",
+      "count": 6,
+      "visible": 6,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "voxel-glow-c1",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-glass-c1",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-main-c2",
+      "count": 6,
+      "visible": 6,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "voxel-glow-c2",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-glass-c2",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-main-c3",
+      "count": 6,
+      "visible": 6,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "voxel-glow-c3",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-glass-c3",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-main-c4",
+      "count": 6,
+      "visible": 6,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "voxel-glow-c4",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-glass-c4",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-main-c5",
+      "count": 6,
+      "visible": 6,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "voxel-glow-c5",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "voxel-glass-c5",
+      "count": 6,
+      "visible": 6,
+      "yMin": null,
+      "yMax": null
+    },
+    {
+      "name": "city_leaf",
+      "count": 5,
+      "visible": 5,
+      "yMin": -260.12,
+      "yMax": 2236.66
+    },
+    {
+      "name": "city_ash",
+      "count": 5,
+      "visible": 5,
+      "yMin": -269.35,
+      "yMax": 4285.38
+    },
+    {
+      "name": "sky_cloudSheets",
+      "count": 4,
+      "visible": 4,
+      "yMin": 2076.05,
+      "yMax": 2188.34
+    },
+    {
+      "name": "city_earth",
+      "count": 3,
+      "visible": 3,
+      "yMin": -263,
+      "yMax": 4037.27
+    },
+    {
+      "name": "city_metal",
+      "count": 3,
+      "visible": 3,
+      "yMin": -261.64,
+      "yMax": 4286.74
+    },
+    {
+      "name": "city_glow",
+      "count": 3,
+      "visible": 3,
+      "yMin": -269.07,
+      "yMax": 4286.73
+    },
+    {
+      "name": "infill_block_3:-2",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:-2",
+      "count": 2,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "infill_body_2:-2",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:-2",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:-2",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:-2",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:-2",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_body_1:-1",
+      "count": 2,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_gable_1:-1",
+      "count": 2,
+      "visible": 1,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_1:-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_1:-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_1:-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_1:-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_1:-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_2:1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_block_3:1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:1",
+      "count": 2,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "court_body_0:court-1",
+      "count": 2,
+      "visible": 2,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_roof_0:court-1",
+      "count": 2,
+      "visible": 2,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "court_gable_0:court-1",
+      "count": 2,
+      "visible": 2,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_0:court-1",
+      "count": 2,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_0:court-1",
+      "count": 2,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_slab_0:court-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "court_leaf_0:court-1",
+      "count": 2,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_fabric_0:court-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_0:court-1",
+      "count": 2,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_0:court0",
+      "count": 2,
+      "visible": 2,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_roof_0:court0",
+      "count": 2,
+      "visible": 2,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "court_gable_0:court0",
+      "count": 2,
+      "visible": 2,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_0:court0",
+      "count": 2,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_0:court0",
+      "count": 2,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_slab_0:court0",
+      "count": 2,
+      "visible": 1,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "court_leaf_0:court0",
+      "count": 2,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_fabric_0:court0",
+      "count": 2,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_0:court0",
+      "count": 2,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_1:court-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_gable_1:court-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_1:court-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_1:court-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_leaf_1:court-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_1:court-1",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_1:court0",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_gable_1:court0",
+      "count": 2,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_1:court0",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_1:court0",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_leaf_1:court0",
+      "count": 2,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_1:court0",
+      "count": 2,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "city_wall",
+      "count": 2,
+      "visible": 2,
+      "yMin": -261.3,
+      "yMax": 4285.78
+    },
+    {
+      "name": "city_trunk",
+      "count": 2,
+      "visible": 2,
+      "yMin": -260,
+      "yMax": 2225.8
+    },
+    {
+      "name": "city_ceramic",
+      "count": 2,
+      "visible": 2,
+      "yMin": -261.3,
+      "yMax": 2222.85
+    },
+    {
+      "name": "cloudSea",
+      "count": 2,
+      "visible": 0,
+      "yMin": 2096.59,
+      "yMax": 2140.43
+    },
+    {
+      "name": "city_fabric",
+      "count": 2,
+      "visible": 2,
+      "yMin": -261.48,
+      "yMax": 4038.68
+    },
+    {
+      "name": "pool_hem",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1.11,
+      "yMax": 0
+    },
+    {
+      "name": "pool_band",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1,
+      "yMax": 0
+    },
+    {
+      "name": "pool_sash",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1,
+      "yMax": 0
+    },
+    {
+      "name": "pool_cloak",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1,
+      "yMax": 0
+    },
+    {
+      "name": "pool_umbrella",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1.09
+    },
+    {
+      "name": "pool_bookBox",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.27,
+      "yMax": 0.35
+    },
+    {
+      "name": "pool_horn",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "pool_muzzle",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.25,
+      "yMax": 0.25
+    },
+    {
+      "name": "terrain",
+      "count": 1,
+      "visible": 1,
+      "yMin": -14.01,
+      "yMax": 4268.05
+    },
+    {
+      "name": "terrain_bed",
+      "count": 1,
+      "visible": 1,
+      "yMin": -14.12,
+      "yMax": 2973.59
+    },
+    {
+      "name": "water_lakes",
+      "count": 1,
+      "visible": 1,
+      "yMin": -3.2,
+      "yMax": -3.2
+    },
+    {
+      "name": "water_rivers",
+      "count": 1,
+      "visible": 1,
+      "yMin": -3.26,
+      "yMax": 1
+    },
+    {
+      "name": "pool_treeTrunk",
+      "count": 1,
+      "visible": 1,
+      "yMin": -2.2,
+      "yMax": 2.2
+    },
+    {
+      "name": "pool_treeCanopy",
+      "count": 1,
+      "visible": 1,
+      "yMin": 1.8,
+      "yMax": 6.95
+    },
+    {
+      "name": "pool_head",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.2,
+      "yMax": 0.14
+    },
+    {
+      "name": "pool_torso",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.47,
+      "yMax": 0.28
+    },
+    {
+      "name": "pool_armU",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.37,
+      "yMax": 0
+    },
+    {
+      "name": "pool_armL",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.33,
+      "yMax": 0
+    },
+    {
+      "name": "pool_legU",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.43,
+      "yMax": 0
+    },
+    {
+      "name": "pool_legL",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.41,
+      "yMax": 0
+    },
+    {
+      "name": "pool_foot",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 0.12
+    },
+    {
+      "name": "pool_belt",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 0.05
+    },
+    {
+      "name": "pool_collar",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.23,
+      "yMax": 0.04
+    },
+    {
+      "name": "pool_wrist",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 0.05
+    },
+    {
+      "name": "pool_sleeve",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.27,
+      "yMax": 0.03
+    },
+    {
+      "name": "pool_hatFujin",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.31,
+      "yMax": 0.16
+    },
+    {
+      "name": "pool_carryPole",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.57,
+      "yMax": 0.03
+    },
+    {
+      "name": "pool_footStraw",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 0.07
+    },
+    {
+      "name": "pool_hatDongpo",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.22,
+      "yMax": 0.34
+    },
+    {
+      "name": "pool_plank",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.03,
+      "yMax": 0.03
+    },
+    {
+      "name": "pool_fan",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.24,
+      "yMax": 0.24
+    },
+    {
+      "name": "pool_apron",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.43,
+      "yMax": 0.27
+    },
+    {
+      "name": "pool_basket",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.15,
+      "yMax": 0.38
+    },
+    {
+      "name": "pool_bannerPole",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 3.41
+    },
+    {
+      "name": "pool_jar",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.17,
+      "yMax": 0.24
+    },
+    {
+      "name": "pool_hatFlat",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.07,
+      "yMax": 0.05
+    },
+    {
+      "name": "pool_scroll",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 0.05
+    },
+    {
+      "name": "pool_spear",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.1,
+      "yMax": 2.39
+    },
+    {
+      "name": "pool_armor",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.25,
+      "yMax": 0.31
+    },
+    {
+      "name": "infill_block_3:-2_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:-2_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "infill_block_3:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "infill_body_2:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_body_2:-2_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:-2_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:-2_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:-2_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:-2_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_body_1:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_gable_1:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_1:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_1:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_1:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_1:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_1:-2_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_1:-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_gable_1:-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_1:-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_1:-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_1:-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_1:-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_1:-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_block_3:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "infill_body_2:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_body_1:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_gable_1:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_1:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_1:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_1:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_1:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_1:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_2:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_block_3:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "infill_body_1:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_gable_1:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_1:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_1:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_1:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_1:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_1:-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_0:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_roof_0:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "infill_gable_0:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_0:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_0:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_0:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_0:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_fabric_0:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_0:-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_0:-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_roof_0:-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "infill_gable_0:-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_0:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_0:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_0:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_0:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_fabric_0:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_0:-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_block_3:0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "infill_body_2:0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_body_1:0_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_gable_1:0_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_1:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_1:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_1:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_1:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_1:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_0:0_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_roof_0:0_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "infill_gable_0:0_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_0:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_0:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_0:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_0:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_fabric_0:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_0:0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_0:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_roof_0:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "infill_gable_0:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_0:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_0:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_0:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_0:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_fabric_0:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_0:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_1:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_gable_1:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_1:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_1:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_1:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_1:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_1:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_2:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_block_3:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:0",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "infill_block_3:1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "infill_body_2:1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_body_2:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_tent_2:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1.12
+    },
+    {
+      "name": "infill_wall_2:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_2:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_2:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_body_1:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_gable_1:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_1:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_1:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_1:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_1:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_1:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_body_1:1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_gable_1:1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "infill_wall_1:1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_road_1:1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_slab_1:1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "infill_leaf_1:1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_furn_1:1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "lod_impostor",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "infill_block_3:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "infill_blockroof_3:1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.1,
+      "yMax": 1.16
+    },
+    {
+      "name": "court_body_0:court-1_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_roof_0:court-1_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "court_gable_0:court-1_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_0:court-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_0:court-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_slab_0:court-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "court_leaf_0:court-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_fabric_0:court-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_0:court-1_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_0:court0_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_roof_0:court0_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "court_gable_0:court0_-1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_0:court0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_0:court0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_slab_0:court0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "court_leaf_0:court0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_fabric_0:court0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_0:court0_-1",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_0:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_roof_0:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "court_gable_0:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_0:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_0:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_slab_0:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "court_leaf_0:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_fabric_0:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_0:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_0:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_roof_0:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.07,
+      "yMax": 1.2
+    },
+    {
+      "name": "court_gable_0:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_0:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_0:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_slab_0:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0.32,
+      "yMax": 0.68
+    },
+    {
+      "name": "court_leaf_0:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_fabric_0:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_0:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_1:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_gable_1:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_1:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_1:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_leaf_1:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_1:court-1_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_1:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_gable_1:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_1:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_1:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_leaf_1:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_1:court0_-2",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_1:court-1_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_gable_1:court-1_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_1:court-1_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_1:court-1_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_leaf_1:court-1_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_1:court-1_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_body_1:court0_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_gable_1:court0_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.09,
+      "yMax": 1.19
+    },
+    {
+      "name": "court_wall_1:court0_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_road_1:court0_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "court_leaf_1:court0_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "court_furn_1:court0_-3",
+      "count": 1,
+      "visible": 0,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "ward_all_thatch",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.1,
+      "yMax": 1.14
+    },
+    {
+      "name": "ward_all_shed",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.07,
+      "yMax": 1
+    },
+    {
+      "name": "ward_all_gwall",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 1.02
+    },
+    {
+      "name": "ward_all_trunk",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "ward_all_glow",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.6,
+      "yMax": 0.6
+    },
+    {
+      "name": "pave_slab",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.03,
+      "yMax": 0.03
+    },
+    {
+      "name": "pave_patch",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 0.05
+    },
+    {
+      "name": "sky_windFlora",
+      "count": 1,
+      "visible": 1,
+      "yMin": -260.8,
+      "yMax": 3971.97
+    },
+    {
+      "name": "eco_fly",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.06,
+      "yMax": 0.06
+    },
+    {
+      "name": "eco_swim",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.16,
+      "yMax": 0.24
+    },
+    {
+      "name": "eco_run",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 0.52
+    },
+    {
+      "name": "eco_drift",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.03,
+      "yMax": 0.03
+    },
+    {
+      "name": "city_signs",
+      "count": 1,
+      "visible": 1,
+      "yMin": -259.6,
+      "yMax": 4288.41
+    },
+    {
+      "name": "bian_river",
+      "count": 1,
+      "visible": 1,
+      "yMin": 1,
+      "yMax": 1
+    },
+    {
+      "name": "bian_river_ripple",
+      "count": 1,
+      "visible": 1,
+      "yMin": 1,
+      "yMax": 1
+    },
+    {
+      "name": "bian_shoal_n",
+      "count": 1,
+      "visible": 1,
+      "yMin": 1.01,
+      "yMax": 1.01
+    },
+    {
+      "name": "bian_shoal_s",
+      "count": 1,
+      "visible": 1,
+      "yMin": 1.01,
+      "yMax": 1.01
+    },
+    {
+      "name": "bian_wake",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 0
+    },
+    {
+      "name": "veh_boat_fleet",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "veh_boat_fleet_glow",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "veh_boat_fleet_wake",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 0
+    },
+    {
+      "name": "pool_blade",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.02,
+      "yMax": 0.95
+    },
+    {
+      "name": "pool_hairKid",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 0.18
+    },
+    {
+      "name": "pool_hatCone",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.31,
+      "yMax": 0.1
+    },
+    {
+      "name": "pool_bun",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.04,
+      "yMax": 0.14
+    },
+    {
+      "name": "pool_abacus",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.13,
+      "yMax": 0.13
+    },
+    {
+      "name": "pool_hatMonk",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.03,
+      "yMax": 0.19
+    },
+    {
+      "name": "pool_hammer",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 0.97
+    },
+    {
+      "name": "pool_hatDao",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.16,
+      "yMax": 0.25
+    },
+    {
+      "name": "pool_staff",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.85,
+      "yMax": 0.98
+    },
+    {
+      "name": "pool_rod",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.15,
+      "yMax": 2.54
+    },
+    {
+      "name": "pool_axe",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 1.18
+    },
+    {
+      "name": "pool_bow",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 0.54
+    },
+    {
+      "name": "pool_bucket",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.16,
+      "yMax": 0.16
+    },
+    {
+      "name": "veh_oar",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.07,
+      "yMax": 0.07
+    },
+    {
+      "name": "veh_lamp",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.19,
+      "yMax": 0.19
+    },
+    {
+      "name": "veh_wheel",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1.08,
+      "yMax": 1.08
+    },
+    {
+      "name": "veh_leg",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1,
+      "yMax": 0
+    },
+    {
+      "name": "veh_legBird",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1.03,
+      "yMax": 0
+    },
+    {
+      "name": "veh_camel",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.89,
+      "yMax": 2.46
+    },
+    {
+      "name": "veh_horse",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.61,
+      "yMax": 2.17
+    },
+    {
+      "name": "veh_donkey",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.48,
+      "yMax": 1.77
+    },
+    {
+      "name": "veh_ox",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.39,
+      "yMax": 1.58
+    },
+    {
+      "name": "veh_goose",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.18,
+      "yMax": 0.85
+    },
+    {
+      "name": "veh_pig",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.21,
+      "yMax": 0.75
+    },
+    {
+      "name": "veh_dog",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.28,
+      "yMax": 0.97
+    },
+    {
+      "name": "veh_sedan0",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.06,
+      "yMax": 1.82
+    },
+    {
+      "name": "veh_sedanCloth0",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.46,
+      "yMax": 1.08
+    },
+    {
+      "name": "veh_sedan1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 1.14
+    },
+    {
+      "name": "veh_sedanCloth1",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.42,
+      "yMax": 0.97
+    },
+    {
+      "name": "veh_cart0",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.6,
+      "yMax": 2.32
+    },
+    {
+      "name": "veh_cartCloth0",
+      "count": 1,
+      "visible": 1,
+      "yMin": 1.7,
+      "yMax": 2.29
+    },
+    {
+      "name": "veh_cart1",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.15,
+      "yMax": 0.97
+    },
+    {
+      "name": "veh_cart2",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.56,
+      "yMax": 2.57
+    },
+    {
+      "name": "veh_cartCloth2",
+      "count": 1,
+      "visible": 1,
+      "yMin": 2.06,
+      "yMax": 2.54
+    },
+    {
+      "name": "veh_cart3",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.42,
+      "yMax": 1.23
+    },
+    {
+      "name": "veh_boat1:1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.82,
+      "yMax": 2.83
+    },
+    {
+      "name": "veh_boatRig1:1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.02,
+      "yMax": 6.58
+    },
+    {
+      "name": "veh_boatSail1:1",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.64,
+      "yMax": 4.66
+    },
+    {
+      "name": "veh_boat2:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.66,
+      "yMax": 2.02
+    },
+    {
+      "name": "veh_boatCloth2:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.74,
+      "yMax": 2.5
+    },
+    {
+      "name": "veh_boatRig2:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.01,
+      "yMax": 5.06
+    },
+    {
+      "name": "veh_boatSail2:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.84,
+      "yMax": 4.45
+    },
+    {
+      "name": "veh_boat0:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.38,
+      "yMax": 1.11
+    },
+    {
+      "name": "veh_boat3:1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.7,
+      "yMax": 4.7
+    },
+    {
+      "name": "veh_boatCloth3:1",
+      "count": 1,
+      "visible": 1,
+      "yMin": 1.17,
+      "yMax": 4.61
+    },
+    {
+      "name": "veh_boat4:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.44,
+      "yMax": 2.04
+    },
+    {
+      "name": "veh_boatCloth4:0",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.95,
+      "yMax": 1.13
+    },
+    {
+      "name": "veh_boat5:1",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.26,
+      "yMax": 0.61
+    },
+    {
+      "name": "pool_halo",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.45,
+      "yMax": 0.45
+    },
+    {
+      "name": "pool_aura",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.81,
+      "yMax": 0.81
+    },
+    {
+      "name": "pool_lotus",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.04,
+      "yMax": 0.21
+    },
+    {
+      "name": "pool_mandorla",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.62,
+      "yMax": 0.62
+    },
+    {
+      "name": "pool_goldRing",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.42,
+      "yMax": 0.42
+    },
+    {
+      "name": "sky_pantheon",
+      "count": 1,
+      "visible": 1,
+      "yMin": 2142.26,
+      "yMax": 2174.64
+    },
+    {
+      "name": "sky_halo",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1.02,
+      "yMax": 1.02
+    },
+    {
+      "name": "pool_beast_body",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "pool_beast_head",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "pool_beast_leg",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1,
+      "yMax": 0
+    },
+    {
+      "name": "pool_beast_tail",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.4
+    },
+    {
+      "name": "pool_beast_horn",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1
+    },
+    {
+      "name": "pool_beast_wing",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.03,
+      "yMax": 0.03
+    },
+    {
+      "name": "pool_beast_mane",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.18,
+      "yMax": 0.18
+    },
+    {
+      "name": "pool_beast_spine",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 0.8
+    },
+    {
+      "name": "pool_beast_eye",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "beast_qilin",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 2.46
+    },
+    {
+      "name": "beast_long",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 2.36
+    },
+    {
+      "name": "beast_feng",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 2.19
+    },
+    {
+      "name": "beast_kun",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.54,
+      "yMax": 0.6
+    },
+    {
+      "name": "beast_yaksha",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 2.1
+    },
+    {
+      "name": "beast_luocha",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.01,
+      "yMax": 2.37
+    },
+    {
+      "name": "beast_baize",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.01,
+      "yMax": 2.19
+    },
+    {
+      "name": "beast_crane",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 2.31
+    },
+    {
+      "name": "pool_horseBody",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.3,
+      "yMax": 0.72
+    },
+    {
+      "name": "pool_horseHeadN",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.16,
+      "yMax": 0.27
+    },
+    {
+      "name": "pool_horseLeg",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.72,
+      "yMax": 0
+    },
+    {
+      "name": "pool_craneBody",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.33,
+      "yMax": 0.33
+    },
+    {
+      "name": "pool_craneWing",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.05,
+      "yMax": 0.05
+    },
+    {
+      "name": "pool_craneNeck",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0.26,
+      "yMax": 0.4
+    },
+    {
+      "name": "pool_craneHead",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.11,
+      "yMax": 0.18
+    },
+    {
+      "name": "pool_dragonHead",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.31,
+      "yMax": 0.47
+    },
+    {
+      "name": "pool_dragonSeg",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.39,
+      "yMax": 0.61
+    },
+    {
+      "name": "pool_dragonFin",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.25,
+      "yMax": 0.25
+    },
+    {
+      "name": "pool_dragonLeg",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.28,
+      "yMax": 0.28
+    },
+    {
+      "name": "pool_dragonHorn",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.5,
+      "yMax": 0.5
+    },
+    {
+      "name": "pool_qilinBody",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.33,
+      "yMax": 0.51
+    },
+    {
+      "name": "pool_qilinHead",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.25,
+      "yMax": 0.58
+    },
+    {
+      "name": "pool_qilinLeg",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.76,
+      "yMax": 0
+    },
+    {
+      "name": "pool_qilinMane",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.15,
+      "yMax": 0.15
+    },
+    {
+      "name": "pool_qilinTail",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.45,
+      "yMax": 0.35
+    },
+    {
+      "name": "city_ground",
+      "count": 1,
+      "visible": 1,
+      "yMin": -262,
+      "yMax": 4279.78
+    },
+    {
+      "name": "city_water",
+      "count": 1,
+      "visible": 1,
+      "yMin": -262.58,
+      "yMax": 3676.05
+    },
+    {
+      "name": "city_lacquer",
+      "count": 1,
+      "visible": 1,
+      "yMin": -260,
+      "yMax": 3680.3
+    },
+    {
+      "name": "cloudSeaBank",
+      "count": 1,
+      "visible": 0,
+      "yMin": 2140.9,
+      "yMax": 2144.36
+    },
+    {
+      "name": "pool_cloud",
+      "count": 1,
+      "visible": 1,
+      "yMin": -1,
+      "yMax": 1
+    },
+    {
+      "name": "pool_cloudFar",
+      "count": 1,
+      "visible": 0,
+      "yMin": -1,
+      "yMax": 1
+    },
+    {
+      "name": "pool_lodLow",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1.75
+    },
+    {
+      "name": "pool_lodSil",
+      "count": 1,
+      "visible": 1,
+      "yMin": 0,
+      "yMax": 1.82
+    },
+    {
+      "name": "heavenMist",
+      "count": 1,
+      "visible": 1,
+      "yMin": -0.98,
+      "yMax": 0.98
+    }
+  ],
+  "hideGround": 12,
+  "hideLeaf": 11
+}

@@ -1,0 +1,313 @@
+{
+  "at": "2026-11-08T08:19:58.036Z",
+  "url": "http://127.0.0.1:4173/",
+  "bundle": [
+    "index-DPlJY3VX.js"
+  ],
+  "hiddenMeshes": 37,
+  "hiddenRoof": 36,
+  "hiddenWallOccluders": [
+    {
+      "name": "city_wall",
+      "uuid": "5acec001-a7ff-4b1e-86a8-a36eb528d71b",
+      "hits": 2058
+    }
+  ],
+  "wallCandidates": [
+    {
+      "name": "court_wall_0:court-1_-1",
+      "verts": 24,
+      "hits": 0,
+      "hidden": false
+    },
+    {
+      "name": "court_wall_0:court0_-1",
+      "verts": 24,
+      "hits": 0,
+      "hidden": false
+    },
+    {
+      "name": "court_wall_0:court-1_0",
+      "verts": 24,
+      "hits": 0,
+      "hidden": false
+    },
+    {
+      "name": "court_wall_0:court0_0",
+      "verts": 24,
+      "hits": 0,
+      "hidden": false
+    },
+    {
+      "name": "ward_all_gwall",
+      "verts": 48,
+      "hits": 0,
+      "hidden": false
+    },
+    {
+      "name": "city_wall_11",
+      "verts": 1579080,
+      "hits": 0,
+      "hidden": false
+    },
+    {
+      "name": "city_wall",
+      "verts": 1296024,
+      "hits": 2058,
+      "hidden": true
+    }
+  ],
+  "hiddenNames": [
+    "pool_treeCanopy",
+    "city_roof_5",
+    "city_roof_9",
+    "infill_gable_1:-1_-1",
+    "infill_gable_1:-1_0",
+    "infill_roof_0:-1_-1",
+    "infill_gable_0:-1_-1",
+    "infill_roof_0:-1_0",
+    "infill_gable_0:-1_0",
+    "infill_gable_1:0_-1",
+    "infill_roof_0:0_-1",
+    "infill_gable_0:0_-1",
+    "infill_roof_0:0_0",
+    "infill_gable_0:0_0",
+    "infill_gable_1:0_0",
+    "court_roof_0:court-1_-1",
+    "court_gable_0:court-1_-1",
+    "court_roof_0:court0_-1",
+    "court_gable_0:court0_-1",
+    "court_roof_0:court-1_-2",
+    "court_gable_0:court-1_-2",
+    "court_roof_0:court0_-2",
+    "court_gable_0:court0_-2",
+    "court_roof_0:court-1_0",
+    "court_gable_0:court-1_0",
+    "court_roof_0:court0_0",
+    "court_gable_0:court0_0",
+    "court_roof_0:court-1_1",
+    "court_gable_0:court-1_1",
+    "court_roof_0:court0_1",
+    "court_gable_0:court0_1",
+    "city_roof_11",
+    "city_roof_17",
+    "city_wall",
+    "city_roof",
+    "city_roof_3",
+    "heavenMist"
+  ],
+  "restored": 37,
+  "misShown": 0,
+  "driftCleared": 0,
+  "baselineHiddenMeshes": 257,
+  "cams": [
+    {
+      "tag": "eye",
+      "label": "室内人眼平视",
+      "p": [
+        0,
+        1.7,
+        2.6
+      ],
+      "c": [
+        0,
+        1,
+        -2.2
+      ]
+    },
+    {
+      "tag": "top",
+      "label": "室内揭顶斜视",
+      "p": [
+        0,
+        2.7,
+        2.6
+      ],
+      "c": [
+        0,
+        0.9,
+        -2
+      ]
+    }
+  ],
+  "houses": [
+    {
+      "name": "趙太丞家",
+      "x": 168,
+      "z": 64,
+      "w": 9,
+      "d": 8,
+      "tag": "eye",
+      "label": "室内人眼平视",
+      "file": "artifacts\\r20-interior-168-eye.png",
+      "camera": [
+        168,
+        1.7,
+        66.6
+      ],
+      "cameraOffset": [
+        0,
+        1.7,
+        2.6
+      ],
+      "insideRoom": true,
+      "teleport": true
+    },
+    {
+      "name": "趙太丞家",
+      "x": 168,
+      "z": 64,
+      "w": 9,
+      "d": 8,
+      "tag": "top",
+      "label": "室内揭顶斜视",
+      "file": "artifacts\\r20-interior-168-top.png",
+      "camera": [
+        168,
+        2.7,
+        66.6
+      ],
+      "cameraOffset": [
+        0,
+        2.7,
+        2.6
+      ],
+      "insideRoom": true,
+      "teleport": true
+    },
+    {
+      "name": "解庫",
+      "x": 258,
+      "z": 64,
+      "w": 10,
+      "d": 8,
+      "tag": "eye",
+      "label": "室内人眼平视",
+      "file": "artifacts\\r20-interior-258-eye.png",
+      "camera": [
+        258,
+        1.7,
+        66.6
+      ],
+      "cameraOffset": [
+        0,
+        1.7,
+        2.6
+      ],
+      "insideRoom": true,
+      "teleport": true
+    },
+    {
+      "name": "解庫",
+      "x": 258,
+      "z": 64,
+      "w": 10,
+      "d": 8,
+      "tag": "top",
+      "label": "室内揭顶斜视",
+      "file": "artifacts\\r20-interior-258-top.png",
+      "camera": [
+        258,
+        2.7,
+        66.6
+      ],
+      "cameraOffset": [
+        0,
+        2.7,
+        2.6
+      ],
+      "insideRoom": true,
+      "teleport": true
+    },
+    {
+      "name": "王家紙馬",
+      "x": 352,
+      "z": 66,
+      "w": 12,
+      "d": 9,
+      "tag": "eye",
+      "label": "室内人眼平视",
+      "file": "artifacts\\r20-interior-352-eye.png",
+      "camera": [
+        352,
+        1.7,
+        68.6
+      ],
+      "cameraOffset": [
+        0,
+        1.7,
+        2.6
+      ],
+      "insideRoom": true,
+      "teleport": true
+    },
+    {
+      "name": "王家紙馬",
+      "x": 352,
+      "z": 66,
+      "w": 12,
+      "d": 9,
+      "tag": "top",
+      "label": "室内揭顶斜视",
+      "file": "artifacts\\r20-interior-352-top.png",
+      "camera": [
+        352,
+        2.7,
+        68.6
+      ],
+      "cameraOffset": [
+        0,
+        2.7,
+        2.6
+      ],
+      "insideRoom": true,
+      "teleport": true
+    },
+    {
+      "name": "香藥鋪",
+      "x": 40,
+      "z": 62,
+      "w": 10,
+      "d": 8,
+      "tag": "eye",
+      "label": "室内人眼平视",
+      "file": "artifacts\\r20-interior-40-eye.png",
+      "camera": [
+        40,
+        1.7,
+        64.6
+      ],
+      "cameraOffset": [
+        0,
+        1.7,
+        2.6
+      ],
+      "insideRoom": true,
+      "teleport": true
+    },
+    {
+      "name": "香藥鋪",
+      "x": 40,
+      "z": 62,
+      "w": 10,
+      "d": 8,
+      "tag": "top",
+      "label": "室内揭顶斜视",
+      "file": "artifacts\\r20-interior-40-top.png",
+      "camera": [
+        40,
+        2.7,
+        64.6
+      ],
+      "cameraOffset": [
+        0,
+        2.7,
+        2.6
+      ],
+      "insideRoom": true,
+      "teleport": true
+    }
+  ],
+  "allCamerasInsideRoom": true,
+  "pageErrors": []
+}

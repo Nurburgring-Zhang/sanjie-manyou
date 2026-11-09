@@ -7,13 +7,19 @@ import { buildPalaceHall, roofEndHips } from './palaceDetail';
 import { buildPalaceGrounds, buildPalaceOuterGrounds, palaceGroundsAudit } from './palaceGrounds';
 import { RNG } from '../core/rng';
 import { inRiverFootprint } from './riverGeom';
+import { buildRoomLiving } from './roomLiving';
+// R24 商业街行业经营用品：宫前/宫后铺面接入 interiors.ts 的 8 业态 TRADE_KIT
+import { buildTradeInterior, pickTrade } from './interiors';
+// R24b：宫苑草毯也换成任意不规则自由轮廓（不再是一格格圆盘）
+import { freeBlobGeometries, putFreeBlob } from './freeBlob';
 
 // ============ 十公里帝都：城墙十二门/里坊百格/宫城皇城/东西两市/御街 ============
 export const WALL = 5000;
 
 /**
  * 直坡双坡顶的端头山花：局部 X 沿脊向，三角面立在端头平面上（底边沿 z、顶点在脊高）。
- * 与 interiors.gableTriangle 同形，但自带双面法线与 3.2m 一张的 UV，不跨文件耦合。
+ * 与 interiors.gableTriangle 同形同装饰：双法线粉刷三角 + 前后两面宋式木作（博风板/悬鱼/
+ * 直棂格/团花），UV 密度 0.8/m 让粉刷肌理真正重复，不跨文件耦合。
  */
 function gableEnd(b: Baker, g: BGroup, x: number, y: number, z: number, ry: number, halfSpan: number, rise: number, hex: number): void {
   const geo = new THREE.BufferGeometry();
@@ -24,10 +30,72 @@ function gableEnd(b: Baker, g: BGroup, x: number, y: number, z: number, ry: numb
   geo.setAttribute('normal', new THREE.Float32BufferAttribute([
     0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1,
   ], 3));
-  const u = (halfSpan * 2) / 3.2, v = rise / 3.2;
+  // R20：粉刷肌理 UV 密度 3.2m/张 → 0.8/m，wallTex 真正重复，端头不再是一整片纯色。
+  const GUV = 0.8;
+  const u = halfSpan * 2 * GUV, v = rise * GUV;
   geo.setAttribute('uv', new THREE.Float32BufferAttribute([0, 0, u, 0, u / 2, v, u, 0, 0, 0, u / 2, v], 2));
   b.addGeo(g, geo, x, y, z, hex, ry, 0, 0);
   b.kit('roof.gableEnd', 1, y + rise);
+
+  // ---- R20 宋式山花装饰（与 interiors.gableTriangle 同一套，外坊平民屋顶不再读作空白三角）----
+  // 局部 XY 平面与三角同一套，z 略偏 ±off 免 z-fighting；ry 由 addGeo 统一处理，
+  // 天然适配 ry=0/π 与 ry=±π/2。全部尺寸由 halfSpan/rise 确定性推导，不消耗共享 RNG；
+  // 前后两面各一组（wood 为 FrontSide，须各自保证绕序）。
+  const m = Math.min(halfSpan, rise);
+  const off = 0.045;                       // 前后饰面各偏 0.045
+  const bw = 0.18 * m;                     // 博风板宽
+  const L = Math.max(1e-6, Math.hypot(halfSpan, rise));
+  const uK = 0.8;                          // 木作 UV 密度
+  const dpos: number[] = [], dnor: number[] = [], duv: number[] = [];
+  // 压一个三角形；nz<0（背面）时反转绕序，FrontSide 材质下从两侧都可见。
+  const tri = (a: [number, number], bb: [number, number], c: [number, number], zz: number, nz: number): void => {
+    const p = nz > 0 ? [a, bb, c] : [a, c, bb];
+    for (const q of p) { dpos.push(q[0], q[1], zz); dnor.push(0, 0, nz); duv.push(q[0] * uK, q[1] * uK); }
+  };
+  // 凸四边形 → 2 三角形；自动规范成从 +z 看逆时针（FrontSide 正确朝向）。
+  const quad = (p0: [number, number], p1: [number, number], p2: [number, number], p3: [number, number], zz: number, nz: number): void => {
+    const cross = (p1[0] - p0[0]) * (p2[1] - p0[1]) - (p1[1] - p0[1]) * (p2[0] - p0[0]);
+    const q = cross >= 0 ? [p0, p1, p2, p3] : [p0, p3, p2, p1];
+    tri(q[0], q[1], q[2], zz, nz);
+    tri(q[0], q[2], q[3], zz, nz);
+  };
+  const bar = (cx: number, cy: number, hx: number, hy: number, zz: number, nz: number): void =>
+    quad([cx - hx, cy - hy], [cx + hx, cy - hy], [cx + hx, cy + hy], [cx - hx, cy + hy], zz, nz);
+  const diamond = (cx: number, cy: number, rx: number, ry: number, zz: number, nz: number): void =>
+    quad([cx - rx, cy], [cx, cy - ry], [cx + rx, cy], [cx, cy + ry], zz, nz);
+  // 博风板：沿斜边 A→B 朝三角内法线 (nx,ny) 偏 bw；檐角内缘 y 钳到 0，不穿出底边。
+  const barge = (ax: number, ay: number, bx: number, by: number, nx: number, ny: number, zz: number, nz: number): void =>
+    quad([ax, ay], [bx, by], [bx + nx * bw, Math.max(0, by + ny * bw)], [ax + nx * bw, Math.max(0, ay + ny * bw)], zz, nz);
+  // 团花 / 透气孔：6 段三角扇。
+  const rosette = (cx: number, cy: number, r: number, zz: number, nz: number): void => {
+    for (let i = 0; i < 6; i++) {
+      const a0 = (i / 6) * Math.PI * 2, a1 = ((i + 1) / 6) * Math.PI * 2;
+      tri([cx, cy], [cx + r * Math.cos(a0), cy + r * Math.sin(a0)], [cx + r * Math.cos(a1), cy + r * Math.sin(a1)], zz, nz);
+    }
+  };
+  for (const s of [1, -1] as const) {
+    const zz = s * off, nz = s;
+    // 两条博风板：右斜边内法线 (-rise,-halfSpan)/L，左斜边内法线 (rise,-halfSpan)/L。
+    barge(halfSpan, 0, 0, rise, -rise / L, -halfSpan / L, zz, nz);
+    barge(-halfSpan, 0, 0, rise, rise / L, -halfSpan / L, zz, nz);
+    // 悬鱼：脊点下方 rise*0.83 的小菱形吊饰。
+    diamond(0, rise * 0.83, 0.06 * m, 0.085 * m, zz, nz);
+    // 直棂山花格：中下部 4 根竖棂 + 2 根横枋，留出粉刷面不铺满。
+    const yLo = rise * 0.12, yHi = rise * 0.5, cyMid = (yLo + yHi) / 2, hBar = (yHi - yLo) / 2;
+    const sw = 0.03 * m;
+    for (let i = 0; i < 4; i++) bar((-0.3 + 0.2 * i) * halfSpan, cyMid, sw, hBar, zz, nz);
+    const fh = 0.028 * m, fx = 0.34 * halfSpan;
+    bar(0, rise * 0.16, fx, fh, zz, nz);
+    bar(0, rise * 0.46, fx, fh, zz, nz);
+    // 悬鱼上方一个小圆团花 / 透气孔。
+    rosette(0, rise * 0.66, 0.045 * m, zz, nz);
+  }
+  const dgeo = new THREE.BufferGeometry();
+  dgeo.setAttribute('position', new THREE.Float32BufferAttribute(dpos, 3));
+  dgeo.setAttribute('normal', new THREE.Float32BufferAttribute(dnor, 3));
+  dgeo.setAttribute('uv', new THREE.Float32BufferAttribute(duv, 2));
+  b.addGeo('wood', dgeo, x, y, z, 0x3a2a20, ry, 0, 0);
+  b.kit('roof.gableDecor', 1, y + rise * 0.5);
 }
 
 /** 原版 roofOn：roofOnCapped 只包一层，屋面本体仍走它，避免复制一份曲面参数 */
@@ -1137,24 +1205,69 @@ function buildMeridianGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   const gz = PALACE.z1;         // −2950
   const TOP = 12.6;
   const PW = 236, PD = 36;
-  // 城台：石基 + 夯土芯 + 三道石皮 + 隅石
-  b.box('ash', PW + 2.0, 1.4, PD + 2.0, 0, 0.7, gz, 0x8b877b);
-  b.box('earth', PW, TOP - 1.4, PD, 0, 1.4 + (TOP - 1.4) / 2, gz, shade(PAL_RED, 0.82));
-  for (const yy of [4.2, 8.0, 11.4]) b.box('ash', PW + 0.3, 0.5, PD + 0.3, 0, yy, gz, 0x948f80);
-  for (const su of [-1, 1]) for (const sv of [-1, 1]) b.box('ash', 1.1, TOP, 1.1, su * (PW / 2 - 0.05), TOP / 2, gz + sv * (PD / 2 - 0.05), 0x8d8a80);
-  // 三个门洞：中门 22×12、侧门 12×9.6（x ±52）
-  const holes: [number, number, number][] = [[0, 22, 12], [-52, 12, 9.6], [52, 12, 9.6]];
+  // ---- R24：城台结构重建（用户截图「午门殿内上下两片灰板 + 中间一条缝」）----
+  // 旧版是「一整块 236×11.2×36 实心 earth + 三条横贯全宽的 yy=4.2/8.0/11.4 石带」，
+  // 门洞只是贴在南立面的装饰朱扉，背后根本没有隧道。相机进到实心体内部时，夯土立面
+  // 因背面剔除消失，只剩石带顶面/底面两片灰板 —— 射线实测上撞 y=7.75、下撞 y=4.45
+  // （artifacts/r24-wumen-probe.json）。现在拆成门墩 + 门楣 + 三条真隧道，石带只贴外立面。
+  const holes: [number, number, number][] = [[0, 22, 12], [-52, 12, 9.6], [52, 12, 9.6]]; // 中门/侧门：中心x, 净宽, 券顶高
+  const spans = holes.map(([hx, hw]) => [hx - hw / 2, hx + hw / 2] as [number, number])
+    .sort((a, c) => a[0] - c[0]);
+  const piers: [number, number][] = [];
+  let cursor = -PW / 2;
+  for (const [a, c] of spans) { if (a > cursor) piers.push([cursor, a]); cursor = c; }
+  if (cursor < PW / 2) piers.push([cursor, PW / 2]);
+  // ① 石基：只在门墩区段铺（门洞区段让出真实地面），夯土芯同区段全高
+  for (const [a, c] of piers) {
+    const w = c - a;
+    b.box('ash', w + 1.0, 1.4, PD + 2.0, (a + c) / 2, 0.7, gz, 0x8b877b);
+    b.box('earth', w, TOP - 1.4, PD, (a + c) / 2, 1.4 + (TOP - 1.4) / 2, gz, shade(PAL_RED, 0.82));
+  }
+  // ② 门楣：每个洞券顶以上到城台顶补实体，保证顶平台连续
   for (const [hx, hw, hh] of holes) {
-    b.box('ash', hw + 3.2, 1.2, 0.8, hx, hh + 0.6, gz + PD / 2 + 0.1, 0x9c9a90);
-    for (const s of [-1, 1]) b.box('ash', 1.1, hh + 1.2, 0.8, hx + s * (hw / 2 + 0.55), (hh + 1.2) / 2, gz + PD / 2 + 0.1, 0x9c9a90);
-    b.box('lacquer', hw, hh, 0.4, hx, hh / 2, gz + PD / 2 - 0.2, 0x161417);
-    // 朱扉 + 九路门钉
+    const lh = TOP - hh;
+    if (lh > 0.2) b.box('earth', hw + 1.2, lh, PD, hx, hh + lh / 2, gz, shade(PAL_RED, 0.86));
+  }
+  // ③ 三道石皮只贴南北外立面（0.35m 厚），不再横贯城台内部；门洞上方按券顶高度补段
+  for (const yy of [4.2, 8.0, 11.4]) {
+    for (const sz of [-1, 1]) {
+      const zf = gz + sz * (PD / 2 + 0.04);
+      for (const [a, c] of piers) b.box('ash', c - a, 0.5, 0.35, (a + c) / 2, yy, zf, 0x948f80);
+      for (const [hx, hw, hh] of holes)
+        if (yy > hh + 0.1) b.box('ash', hw, 0.5, 0.35, hx, yy, zf, 0x948f80);
+    }
+  }
+  for (const su of [-1, 1]) for (const sv of [-1, 1]) b.box('ash', 1.1, TOP, 1.1, su * (PW / 2 - 0.05), TOP / 2, gz + sv * (PD / 2 - 0.05), 0x8d8a80);
+  // ④ 三条真门道：墁地 + 双侧衬墙 + 券顶 + 阶梯券脸 + 向两侧敞开的朱扉门钉
+  for (const [hx, hw, hh] of holes) {
+    b.box('ground', hw, 0.14, PD + 2.0, hx, 0.07, gz, 0x8a8272);
     for (const s of [-1, 1]) {
-      b.box('lacquer', hw / 2 - 0.3, hh - 1.4, 0.35, hx + s * (hw / 4), (hh - 1.4) / 2 + 0.2, gz + PD / 2 - 0.5, 0x7a1f1a);
-      for (let r = 0; r < 7; r++) for (let c = 0; c < 4; c++) {
-        b.box('metal', 0.3, 0.3, 0.2, hx + s * (hw / 4) - hw / 8 + 0.9 + c * (hw / 4 - 1.8) / 3, 1.6 + r * (hh - 3.2) / 6, gz + PD / 2 - 0.28, 0xd8b028);
+      b.box('ash', 0.55, hh, PD, hx + s * (hw / 2 - 0.275), hh / 2, gz, 0x9c9a90);
+      for (let k = 1; k < 4; k++)
+        b.box('ash', 0.08, 0.07, PD, hx + s * (hw / 2 - 0.57), k * hh / 4, gz, 0x7e7a70);
+    }
+    b.box('ash', hw, 0.5, PD, hx, hh - 0.25, gz, 0x948f80);
+    for (const sz of [-1, 1]) {
+      const zf = gz + sz * (PD / 2 + 0.16);
+      for (let k = 0; k < 4; k++)
+        b.box('ash', hw + 2.4 - k * hw * 0.15, 0.42, 0.5, hx, hh + 0.12 + k * 0.42, zf, 0xa5a196);
+      b.box('ash', hw + 3.2, 1.0, 0.8, hx, hh + 0.6, zf + sz * 0.12, 0x9c9a90);
+    }
+    // 朱扉不再是一整块封死门道的背板：两扇绕门轴向两侧敞开，中央留净宽可通行
+    const leafW = hw / 2 - 0.6, leafH = hh - 1.4;
+    for (const s of [-1, 1]) {
+      const ry = s * 1.30;
+      const lx = hx + s * (hw / 2 - 0.45), lz = gz + PD / 2 - 1.6;
+      b.box('lacquer', leafW, leafH, 0.3, lx, leafH / 2 + 0.2, lz, 0x7a1f1a, ry);
+      for (let r = 0; r < 5; r++) for (let cc = 0; cc < 3; cc++) {
+        const ox = (cc - 1) * leafW * 0.27, oz = 0.22;
+        b.box('metal', 0.28, 0.28, 0.2,
+          lx + ox * Math.cos(ry) - oz * Math.sin(ry),
+          1.5 + r * (leafH - 2.0) / 4,
+          lz + ox * Math.sin(ry) + oz * Math.cos(ry), 0xd8b028, ry);
       }
     }
+    b.kit('palace.gate.wumen.passage', 1, 0);
   }
   // 城台顶：平台 + 垛口（外沿）
   b.box('ash', PW + 1.2, 0.4, PD + 1.2, 0, TOP + 0.2, gz, 0x9a9282);
@@ -1162,7 +1275,43 @@ function buildMeridianGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   for (let i = -14; i <= 14; i++) b.box('ash', 2.6, 1.3, 0.8, i * 8.2, TOP + 1.2, gz + PD / 2 - 0.6, 0x9a9282);
   // 五凤楼：面阔 130、进深 30、殿身 11m、重檐庑殿；四角崇楼 4 座
   const hallY = TOP + 0.7;
-  b.box('wall', 130, 11, 30, 0, hallY + 5.5, gz, shade(PAL_RED, 0.98));
+  // R23：旧版是一整块 130×11×30 的**实心 wall**，殿内根本不存在空间，
+  // 连 buildPalaceLiving 落的起居家具也埋在城台实心芯里 —— 用户点名「午门这个宫殿内为什么什么都没有」。
+  // 改成四壁围合的可进入殿身：外观（屋顶 / 斗拱 / 窗光 / 柱列）全部沿用，内部补礼制陈设与起居资产。
+  const WT = 0.9;
+  b.box('wall', 130, 11, WT, 0, hallY + 5.5, gz + 15 - WT / 2, shade(PAL_RED, 0.98));   // 南壁（临街）
+  b.box('wall', 130, 11, WT, 0, hallY + 5.5, gz - 15 + WT / 2, shade(PAL_RED, 0.94));   // 北壁（面朝宫城）
+  for (const sx2 of [-1, 1]) b.box('wall', WT, 11, 30, sx2 * (65 - WT / 2), hallY + 5.5, gz, shade(PAL_RED, 0.96));
+  b.box('ash', 128, 0.36, 28, 0, hallY + 0.18, gz, 0x9a8f76);                          // 金砖地面
+  b.box('fabric', 34, 0.04, 13, 0, hallY + 0.38, gz - 6, 0x8c2f2a);                     // 御座前红毯
+  b.kit('palace.gate.wumen.hall', 1, hallY);
+  // ---- R24 殿内木构：金柱列 / 梁架 / 斗八藻井 / 北壁槅扇 ----
+  // 旧版四壁围合后只有四面光墙 + 家具，抬头是整片瓦底、没有柱梁，结构读不出「殿」。
+  for (let ci = -3; ci <= 3; ci++) {
+    const cx = ci * 17;
+    for (const cz of [gz - 9, gz + 9]) {
+      b.box('wood', 1.1, 9.6, 1.1, cx, hallY + 4.8, cz, 0x8c2f2a);
+      b.box('metal', 1.4, 0.32, 1.4, cx, hallY + 0.16, cz, 0xb8892f);   // 柱础
+      b.box('metal', 1.5, 0.3, 1.5, cx, hallY + 9.5, cz, 0xb8892f);     // 柱头
+    }
+  }
+  for (const cz of [gz - 9, gz + 9]) b.box('wood', 122, 0.85, 1.2, 0, hallY + 9.75, cz, 0x6d3a26);
+  for (let ci = -3; ci <= 3; ci++) b.box('wood', 1.0, 0.65, 19.5, ci * 17, hallY + 10.05, gz, 0x6d3a26);
+  for (let ix = -5; ix <= 5; ix++) for (let iz = -2; iz <= 2; iz++) {
+    const px = ix * 11, pz = gz + iz * 5.2;
+    const mid = Math.abs(ix) <= 1 && Math.abs(iz) <= 1;
+    b.box('wood', 10.4, 0.14, 4.8, px, hallY + 10.66, pz, mid ? 0xb8892f : 0x7a4a2c);
+    b.box('lacquer', 9.4, 0.05, 3.8, px, hallY + 10.58, pz, mid ? 0x24455c : 0x4a3524);
+  }
+  // 北壁内面槅扇：御座两侧各三扇，木框 + 直棂 + 绦环板
+  for (const s of [-1, 1]) for (let k = 0; k < 3; k++) {
+    const px = s * (16 + k * 6.5);
+    b.box('wood', 5.6, 6.2, 0.22, px, hallY + 3.4, gz - 13.9, 0x6d3a26);
+    for (let t = -2; t <= 2; t++)
+      b.box('wood', 0.16, 4.4, 0.1, px + t * 1.05, hallY + 3.6, gz - 13.75, 0xb8892f);
+    b.box('glow', 5.0, 4.2, 0.06, px, hallY + 3.6, gz - 13.72, 0xc9a24a);
+  }
+  b.kit('palace.gate.wumen.frame', 1, hallY);
   for (let i = 0; i <= 10; i++) {
     b.box('wood', 1.3, 11, 1.3, -60 + i * 12, hallY + 5.5, gz + 15.4, 0xd8b028);
     // 旧版是 8.2×6.4 的无框 glow 贴片（52㎡ 一块），夜里读作"墙上一排黄板"；补框/棂/窗台
@@ -1207,6 +1356,77 @@ function buildMeridianGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   }
   sg.quad(atlas.text('pal_wumen', '午門', 480, 120, { color: '#ffe9c8', glow: '#ffd25e', bg: 'rgba(20,8,8,0.92)', border: 'rgba(255,210,94,.9)', fontPx: 78 }),
     14, 3.4, 0, 13.4, gz + PD / 2 + 0.5, 0);
+
+  // ---- R23：五凤楼殿内陈设（礼制 + 起居 + 仪仗），全部落在四壁围合的空间内 ----
+  const fy = hallY + 0.4;              // 殿内地面完成面 y≈13.7
+  const seatZ = gz - 8;
+  let wmFurn = 0;
+  // ① 御座区：须弥台 + 宝座 + 三扇屏风 + 脚踏 + 御案
+  b.box('ash', 9.2, 0.66, 5.6, 0, fy + 0.33, seatZ, 0x9a8f76);
+  b.box('wood', 4.2, 1.1, 2.8, 0, fy + 1.2, seatZ, 0x8c2f2a);
+  b.box('lacquer', 4.0, 2.6, 0.5, 0, fy + 2.9, seatZ - 1.2, 0x74231f);
+  for (let i = -1; i <= 1; i++)
+    b.box('fabric', 3.4, 4.2, 0.16, i * 3.7, fy + 3.0, seatZ - 3.2, i === 0 ? 0xb8892f : 0x8e6a26);
+  b.box('wood', 2.2, 0.22, 1.1, 0, fy + 0.12, seatZ + 2.4, 0x3a2a20);
+  b.box('wood', 5.0, 0.18, 1.4, 0, fy + 1.1, seatZ + 3.0, 0x4a3324);
+  for (const sx3 of [-1, 1]) b.box('wood', 0.22, 1.05, 1.2, sx3 * 2.3, fy + 0.55, seatZ + 3.0, 0x4a3324);
+  wmFurn += 9;
+  // ② 铜鼎 / 香炉 / 铜鹤：御座两列
+  for (const sx3 of [-1, 1]) for (let i = 0; i < 3; i++) {
+    const px = sx3 * (8 + i * 6), pz = gz - 2 + i * 1.5;
+    b.cyl('metal', 0.38, 0.46, 0.9, 8, px, fy + 0.45, pz, 0xb08b3c);
+    b.sphere('metal', 0.3, 7, px, fy + 1.02, pz, 0xc9a24a);
+    b.cyl('metal', 0.1, 0.13, 0.6, 6, px + sx3 * 1.6, fy + 0.3, pz, 0xa8843a);
+    wmFurn += 3;
+  }
+  // ③ 仪仗兵器架 + 戟（东西两壁）
+  for (const sx3 of [-1, 1]) {
+    const bx = sx3 * 46, bz = gz + 4;
+    b.box('wood', 9.0, 0.16, 0.5, bx, fy + 1.6, bz, 0x4a3324);
+    for (const t of [-1, 1]) b.box('wood', 0.2, 1.8, 0.2, bx + t * 4.3, fy + 0.9, bz, 0x4a3324);
+    for (let k = 0; k < 7; k++) {
+      const px = bx - 3.6 + k * 1.2;
+      b.cyl('wood', 0.035, 0.05, 3.4, 5, px, fy + 1.7, bz, 0x5a4128);
+      b.cyl('metal', 0.02, 0.16, 0.55, 5, px, fy + 3.65, bz, 0xd8c48a);
+    }
+    wmFurn += 16;
+  }
+  // ④ 宫灯立柱 6 盏
+  for (const sx3 of [-1, 1]) for (let i = 0; i < 3; i++) {
+    const px = sx3 * (20 + i * 16), pz = gz + 9;
+    b.cyl('wood', 0.09, 0.13, 2.8, 6, px, fy + 1.4, pz, 0x4a3324);
+    b.box('fabric', 0.8, 0.9, 0.8, px, fy + 2.95, pz, 0x9d2933);
+    b.sphere('glow', 0.34, 8, px, fy + 2.95, pz, C.neonGold, 0, 0, 0, 1, 1.2, 1);
+    wmFurn += 3;
+  }
+  // ⑤ 案几 / 卷轴 / 烛台（两翼起居与功能用品）
+  for (const sx3 of [-1, 1]) {
+    const px = sx3 * 28, pz = gz + 5;
+    b.box('wood', 3.4, 0.14, 1.5, px, fy + 0.85, pz, 0x5a3d28);
+    for (const t of [-1, 1]) for (const u of [-1, 1])
+      b.box('wood', 0.14, 0.8, 0.14, px + t * 1.5, fy + 0.42, pz + u * 0.6, 0x4a3324);
+    b.cyl('ceramic', 0.22, 0.26, 0.4, 8, px - 0.9, fy + 1.1, pz, 0xe0d8b8);
+    for (let k = 0; k < 3; k++)
+      b.cyl('ceramic', 0.09, 0.09, 0.7, 6, px + 0.4 + k * 0.3, fy + 1.05, pz, 0xd8c48a);
+    wmFurn += 9;
+  }
+  // ⑥ 挂轴 4 幅（贴北壁）
+  for (let i = 0; i < 4; i++) {
+    const px = -40 + i * 26;
+    b.box('fabric', 3.0, 4.4, 0.06, px, fy + 5.0, gz - 13.9, i % 2 ? 0xd8cdae : 0xc9b998);
+    b.box('wood', 3.2, 0.12, 0.1, px, fy + 7.25, gz - 13.9, 0x4a3324);
+  }
+  wmFurn += 8;
+  // ⑦ 起居资产：左右两翼各一组高档陈设（床榻 / 箱笼 / 妆奁 / 盆架 / 灯檠 / 挂轴…）
+  for (const [sx3, variant] of [[-1, 501], [1, 502]] as const) {
+    buildRoomLiving(b, {
+      cx: sx3 * 36, cz: gz + 1, w: 40, d: 20, y0: fy, h: 8.2,
+      ux: 1, uz: 0, vx: 0, vz: 1, variant, tier: 'high',
+    });
+  }
+  b.kit('palace.gate.wumen.interior', 1, hallY);
+  b.kit('palace.gate.wumen.furnish', wmFurn, hallY);
+  b.kit('palace.gate.wumen.living', 2, hallY);
   b.kit('palace.gate.wumen', 1, TOP);
 }
 
@@ -1776,6 +1996,164 @@ function palaceCourtFurnish(b: Baker): void {
   b.kit('imperial.zichenPlaza', 1, 0.2);
 }
 
+// ============ R27 太和殿丹陛广场 · 仪仗陈设（可机检 / 可 grep） ============
+// R20 实拍 r20-04-palace.png：丹陛广场是一整片灰白大铺装、边缘空荡。
+// 沿广场东西两侧补「仪仗带」，中轴 |x|<20 完全留空，保持大朝广场的空阔形制。
+const COURT_FURNISH_X_FLAG = 104;   // 仪仗旗幡列 |x|
+const COURT_FURNISH_X_TREE = 120;   // 宫树阵列 |x|
+const COURT_FURNISH_X_BED = 82;     // 花坛列 |x|
+const COURT_FURNISH_Z0 = -3112;     // 南端（靠太和门）
+const COURT_FURNISH_Z1 = -3186;     // 北端（靠太和殿月台）
+const COURT_FURNISH_ROWS = 5;       // 沿 z 的仪仗排数
+
+/** 仪仗旗幡：石础 + 细木杆 + 朱/黄/青三色幡面 + 鎏金杆顶（细高，不遮中轴甬道） */
+function courtBanner(b: Baker, x: number, z: number, salt: number): void {
+  const h = 5.4 + wardHash(x, z, salt) * 0.9;
+  const cols = [0x9d2933, 0xd8a24a, 0x24483a];   // 朱 / 明黄 / 青
+  const fc = cols[(wardHash(x, z, salt + 1) * cols.length) | 0];
+  b.box('ash', 1.1, 0.24, 1.1, x, 0.30, z, 0x8d8a80);
+  b.cyl('wood', 0.09, 0.12, h, 6, x, 0.42 + h / 2, z, 0x4a3524);
+  b.sphere('metal', 0.17, 8, x, 0.42 + h + 0.12, z, 0xd8b028);
+  b.box('wood', 1.6, 0.09, 0.09, x + 0.65, 0.42 + h - 0.25, z, 0x4a3524);
+  b.box('fabric', 0.06, 2.6, 1.2, x + 1.35, 0.42 + h - 1.6, z, fc, 0, 0, (wardHash(x, z, salt + 2) - 0.5) * 0.14);
+  b.box('metal', 1.2, 0.10, 0.06, x + 1.35, 0.42 + h - 2.9, z, 0xd8b028);
+}
+
+/** 花坛：汉白玉矮栏 + 土面 + 五色花球（低矮 0.6m，不挡视线） */
+function courtFlowerBed(b: Baker, x: number, z: number, salt: number): void {
+  b.box('ash', 4.6, 0.42, 3.0, x, 0.39, z, PAL_MARBLE);
+  b.box('ground', 4.0, 0.06, 2.4, x, 0.63, z, 0x4a4335);
+  const cols = [0xc2677a, 0xd8a24a, 0xd8d0b0, 0x9a6fb0, 0x9d2933];
+  for (let i = 0; i < 7; i++) {
+    const a = wardHash(x, z, salt + i);
+    b.sphere('leaf', 0.32 + a * 0.16, 6,
+      x + (wardHash(x, z, salt + 20 + i) - 0.5) * 3.2,
+      0.80, z + (wardHash(x, z, salt + 40 + i) - 0.5) * 1.8,
+      cols[(a * cols.length) | 0], 0, 0, 0, 1, 0.8, 1);
+  }
+}
+
+/** 丹陛石雕：须弥座 + 云龙浅浮雕斜板 + 云头石兽（成对列于月台前，低矮 1.1m） */
+function courtDanbiCarving(b: Baker, x: number, z: number, sx: number): void {
+  b.box('ash', 3.2, 0.30, 2.2, x, 0.33, z, 0x8d8a80);
+  b.box('ash', 2.8, 0.34, 1.8, x, 0.65, z, PAL_MARBLE);
+  b.box('wall', 2.4, 0.16, 1.5, x, 0.90, z, shade(PAL_MARBLE, 0.94), 0, 0.24, 0);
+  for (let i = 0; i < 4; i++) {
+    b.box('metal', 2.0, 0.02, 0.07, x, 1.00 - i * 0.02, z - 0.5 + i * 0.3, 0xc9a13a, 0, 0.24, 0);
+  }
+  b.sphere('ash', 0.34, 8, x + sx * 1.0, 1.06, z, shade(PAL_MARBLE, 0.9), 0, 0, 0, 1, 0.7, 1);
+}
+
+/**
+ * R27 太和殿丹陛广场仪仗陈设：旗幡 / 花坛 / 宫树阵列 / 品级山 / 丹陛石雕 / 铜鹤 / 香炉。
+ * 全部落在 |x| ∈ [30, 132]、z ∈ [−3190, −3110]，中轴 |x|<20 完全留空，
+ * 保持大朝广场的空阔形制；不种满树堵住中轴、不加有顶建筑（沿用 SPEC 仪制）。
+ * 复用 courtPinji / courtDing / courtCrane / courtPine，新增小件全走既有材质组、Baker 合批。
+ * 位置与选型全由 wardHash 整数坐标 hash 派生，零共享 RNG、不用 Math.random。
+ */
+function palaceCourtFurnishR27(b: Baker): void {
+  let n = 0;
+  const dz = (COURT_FURNISH_Z0 - COURT_FURNISH_Z1) / (COURT_FURNISH_ROWS - 1);
+  for (const sx of [-1, 1]) {
+    const side = sx > 0 ? 1 : 0;
+    for (let i = 0; i < COURT_FURNISH_ROWS; i++) {
+      const z = COURT_FURNISH_Z0 - i * dz;
+      courtBanner(b, sx * COURT_FURNISH_X_FLAG, z, 701 + i * 3 + side); n++;   // 仪仗旗幡
+      courtFlowerBed(b, sx * COURT_FURNISH_X_BED, z, 811 + i * 3 + side); n++; // 花坛
+    }
+    for (let i = 0; i < 4; i++) {                                               // 宫树阵列（复用 courtPine）
+      courtPine(b, sx * COURT_FURNISH_X_TREE, -3116 - i * 24, 0.78 + wardHash(sx, i, 907) * 0.18); n++;
+    }
+    for (let i = 0; i < 3; i++) {                                               // 品级山（北侧补列，复用 courtPinji）
+      courtPinji(b, sx * 44, -3178 - i * 4.6); n++;
+    }
+    courtDanbiCarving(b, sx * 30, -3188, sx); n++;                              // 丹陛石雕
+    courtCrane(b, sx * 56, -3110, -sx); n++;                                    // 铜鹤
+    courtDing(b, sx * 68, -3110); n++;                                          // 铜鹤香炉（铜鼎）
+  }
+  b.kit('palace.courtFurnish', n, 0.6);
+}
+
+// ============ R28 太和殿丹陛广场 · 彩色仪仗方阵（可机检 / 可 grep） ============
+// R20 实拍 r20-04-palace.png：广场人群在 500m 外只是深色小点，crowd.ts 的服色被 LOD 压成剪影，
+// 靠改 NPC 救不回远景可辨性。这一层改走场景几何：8 组 10×10 彩色仪仗幡 / 伞盖 / 甲仗立柱，
+// 俯瞰下连成可数的彩色条带，与 crowd.ts 的 8 个 palaceDense 身份一一对应。
+const COURT_ARRAY_NX = 10;        // 每组列数
+const COURT_ARRAY_NZ = 10;        // 每组行数（10×10 = 100 根/组，8 组共 800 根）
+const COURT_ARRAY_STEP = 2.0;     // 1.8–2.2m 间距档：密实矩形、俯瞰成块
+const COURT_ARRAY_X_INNER = 155;  // 内侧列 |x|：方阵 x 146–164，贴 PALACE_COURT 缘 148 之外
+const COURT_ARRAY_X_OUTER = 196;  // 外侧列 |x|：方阵 x 187–205，落在 |x|=172 庑房之后的 178–214 夹道
+const COURT_ARRAY_Z_S = -3116;    // 南排（靠太和门）
+const COURT_ARRAY_Z_N = -3170;    // 北排（靠太和殿月台）；z 覆盖 −3107…−3179，不触大殿台基 −3218
+
+interface CourtArrayGroup { x: number; z: number; hex: number; role: string }
+
+/** 8 组：左右严格镜像分列，中轴 |x|<20 全空；8 色全部用上，同色系的东西对位 */
+const COURT_ARRAY_GROUPS: readonly CourtArrayGroup[] = [
+  { x: -COURT_ARRAY_X_INNER, z: COURT_ARRAY_Z_S, hex: 0x6b5bff, role: '王公大臣·石青紫' },
+  { x:  COURT_ARRAY_X_INNER, z: COURT_ARRAY_Z_S, hex: 0x3f6ee0, role: '禁军·靛青' },
+  { x: -COURT_ARRAY_X_OUTER, z: COURT_ARRAY_Z_S, hex: 0xff3b2f, role: '侍卫·朱红' },
+  { x:  COURT_ARRAY_X_OUTER, z: COURT_ARRAY_Z_S, hex: 0xff8a2a, role: '侍卫·橙红' },
+  { x: -COURT_ARRAY_X_INNER, z: COURT_ARRAY_Z_N, hex: 0xfbb81c, role: '将军·金甲' },
+  { x:  COURT_ARRAY_X_INNER, z: COURT_ARRAY_Z_N, hex: 0xf7d23a, role: '将军·金甲' },
+  { x: -COURT_ARRAY_X_OUTER, z: COURT_ARRAY_Z_N, hex: 0xffd23f, role: '帝后·明黄' },
+  { x:  COURT_ARRAY_X_OUTER, z: COURT_ARRAY_Z_N, hex: 0xff5fa8, role: '宫女·胭脂粉' },
+];
+
+/**
+ * 一根仪仗：彩色漆杆（高 3.1–3.9m、直径 0.36–0.54m）+ 顶部鎏金球 +
+ * 小方旗 / 圆伞盖 / 甲仗横旗三形制轮换。颜色全部由 b.cyl / b.box 的 hex 直接给出，
+ * 走既有 lacquer / fabric / wood / metal 材质组；不是一排彩色方柱。
+ * 位置与选型全由 wardHash(x,z,salt) 整数坐标 hash 派生，零共享 RNG、不用 Math.random。
+ */
+function courtArrayPennant(b: Baker, x: number, z: number, hex: number, salt: number): void {
+  const h = 3.1 + wardHash(x, z, salt) * 0.8;          // 3.1–3.9m
+  const r = 0.18 + wardHash(x, z, salt + 1) * 0.09;    // 半径 0.18–0.27 → 直径 0.36–0.54m
+  const y0 = 0.18;                                     // 宫城方砖 / 金砖铺装顶
+  b.cyl('lacquer', r * 0.82, r, h, 5, x, y0 + h / 2, z, hex);
+  b.sphere('metal', 0.15, 5, x, y0 + h + 0.16, z, 0xf7d23a);
+  const k = salt % 3;
+  if (k === 0) {
+    // 小方旗：横挑 + 彩色方旗面
+    b.box('wood', 1.0, 0.06, 0.06, x + 0.48, y0 + h - 0.24, z, 0x4a3524);
+    b.box('fabric', 0.06, 1.05, 1.15, x + 1.0, y0 + h - 0.78, z, hex, 0, 0, (wardHash(x, z, salt + 2) - 0.5) * 0.10);
+  } else if (k === 1) {
+    // 圆伞盖：上宽下窄的彩色扁锥台 + 一道伞垂
+    b.cyl('fabric', 0.62, 0.30, 0.26, 8, x, y0 + h - 0.34, z, hex);
+    b.box('fabric', 0.05, 0.36, 0.62, x, y0 + h - 0.62, z, shade(hex, 0.92));
+  } else {
+    // 甲仗：横挑 + 彩色竖旗 + 鎏金叉
+    b.box('wood', 1.0, 0.06, 0.06, x - 0.48, y0 + h - 0.30, z, 0x4a3524);
+    b.box('fabric', 0.06, 0.72, 1.0, x - 0.95, y0 + h - 0.66, z, hex, 0, 0, (wardHash(x, z, salt + 3) - 0.5) * 0.10);
+    b.box('metal', 0.07, 0.30, 0.07, x, y0 + h + 0.02, z, 0xd8b028);
+  }
+}
+
+/**
+ * 8 组彩色仪仗方阵：每组 10×10 = 100 根、8 组共 800 根，1.8–2.2m 间距排成密实矩形。
+ * 落位只取两条无建筑空带（|x| 146–164 与 187–205），避开：
+ * 中轴御道 |x|<20 / 大殿台基 z≤−3218 / 既有 40 件 courtFurnish（|x|≤132）/
+ * |x|=172 分节庑房（166–178）/ 院群（214–320）/ |x|=332 外庑（324–340）。
+ * 全部走 Baker 合批，不新增 Mesh / draw call；salt 为固定整数序列，零 RNG。
+ */
+function palaceCourtArrayR28(b: Baker): void {
+  let flags = 0;
+  for (let gi = 0; gi < COURT_ARRAY_GROUPS.length; gi++) {
+    const g = COURT_ARRAY_GROUPS[gi];
+    for (let r = 0; r < COURT_ARRAY_NZ; r++) {
+      for (let c = 0; c < COURT_ARRAY_NX; c++) {
+        const x = g.x + (c - (COURT_ARRAY_NX - 1) / 2) * COURT_ARRAY_STEP;
+        const z = g.z + (r - (COURT_ARRAY_NZ - 1) / 2) * COURT_ARRAY_STEP;
+        courtArrayPennant(b, x, z, g.hex, 1201 + gi * 137 + r * 11 + c);
+        flags++;
+      }
+    }
+  }
+  b.kit('palace.courtArray', COURT_ARRAY_GROUPS.length, 0.6);  // 8 组
+  b.kit('palace.courtArray.group', COURT_ARRAY_GROUPS.length, 3.2);
+  b.kit('palace.courtArray.flag', flags, 3.2);                 // 800 根
+}
+
 /**
  * 午门内值房：东西各一排 6 间（面阔 8.2 / 进深 8.5 / 檐高 4.4），内立面 |x| = 87.75。
  * 南端起于 z = −2986——午门内侧 24m 处是御沟（水面 −2978…−2970），值房不能站在沟里。
@@ -1881,6 +2259,10 @@ function buildPalaceCourt(b: Baker): void {
   for (const sx of [-1, 1]) palaceCourtVeranda(b, sx, PALACE_COURT.z1, COURT_VERANDA_Z0, COURT_BAY);
   for (const sx of [-1, 1]) palaceDutyRooms(b, sx);
   palaceCourtFurnish(b);
+  // R27：丹陛广场两侧仪仗陈设（旗幡 / 花坛 / 宫树 / 丹陛石雕 / 铜鹤香炉），中轴留空
+  palaceCourtFurnishR27(b);
+  // R28：8 组彩色仪仗方阵（800 根幡 / 伞盖 / 甲仗），远景俯瞰读成朝会班列的彩色条带
+  palaceCourtArrayR28(b);
   // 午门内广场（前庭）：御路石 / 日晷 / 嘉量 / 铜龟 / 铜鹤 / 品级山两列——只加地面陈设，不加有顶建筑
   palaceFrontFurnish(b);
   // 千分比：928 = 92.8%
@@ -2079,7 +2461,7 @@ const SHOP_FLAG_C = [0x9d2933, 0x2a5c42, 0xa87a2a, 0x5c1b24, 0x24483a];
  * 台基 + 双坡瓦顶 + 板门 + 两扇窗 + 柜台 + 两侧幌子 + 檐下灯。
  * sgn=+1 建在中轴东侧（正面朝 −x），−1 为西侧；xFace 是临街面到中轴的距离。
  */
-function palaceShop(b: Baker, sgn: number, xFace: number, z0: number, w: number, depth: number, floors: number, salt: number): void {
+function palaceShop(b: Baker, sgn: number, xFace: number, z0: number, w: number, depth: number, floors: number, salt: number, src: string): void {
   const xc = sgn * (xFace + depth / 2);
   const zc = z0 + w / 2;
   const wallC = SHOP_WALL_C[(wardHash(salt, 7, 11) * SHOP_WALL_C.length) | 0];
@@ -2088,8 +2470,17 @@ function palaceShop(b: Baker, sgn: number, xFace: number, z0: number, w: number,
   const h = floors === 2 ? 6.6 + wardHash(salt, 29, 31) * 1.4 : 3.9 + wardHash(salt, 37, 41) * 1.2;
   // 台基与地坪
   b.box('ash', depth + 1.4, 1.0, w + 1.2, xc, 0.1, zc, shade(wallC, 0.84));
-  // 墙体
-  b.box('wall', depth, h, w, xc, 0.6 + h / 2, zc, wallC);
+  // R24：旧实现是实心墙盒（16×5×10 那类空壳的同类问题），从街上看不到任何店内经营用品。
+  // 改成薄壁壳 + 明间对街开敞（与 centralbelt 临街排同法），行业经营用品陈设才可见。
+  const TW = 0.5, gy0 = 0.6;                 // 台基顶 = 室内地坪
+  b.box('wall', TW, h, w, sgn * (xFace + depth - TW / 2), gy0 + h / 2, zc, wallC);           // 背墙（远街侧）
+  for (const sz of [-1, 1])
+    b.box('wall', depth - TW * 2, h, TW, xc, gy0 + h / 2, zc + sz * (w / 2 - TW / 2), wallC); // 两山墙
+  const openW = Math.min(w * 0.62, 7.0);     // 明间开敞净宽
+  const pier = Math.max(0.2, (w - openW) / 2), doorH = 2.7;
+  b.box('wall', TW, h - doorH, w, sgn * (xFace + TW / 2), gy0 + doorH + (h - doorH) / 2, zc, wallC); // 门楣过梁
+  for (const sz of [-1, 1])
+    b.box('wall', TW, doorH, pier, sgn * (xFace + TW / 2), gy0 + doorH / 2, zc + sz * (w / 2 - pier / 2), wallC); // 两端墙垛
   // 双坡瓦顶（脊沿街）
   const rh = 1.1 + w * 0.05;
   const half = depth / 2 + 0.65;
@@ -2113,8 +2504,13 @@ function palaceShop(b: Baker, sgn: number, xFace: number, z0: number, w: number,
     for (let k = 0; k < 4; k++) b.box('wood', 0.12, 0.7, 0.12, sgn * (xFace - 0.95), 4.45, zc - w * 0.36 + k * w * 0.24, 0x4a3220);
     for (let k = 0; k < 2; k++) b.box('glow', 0.12, 1.5, 2.2, sgn * (xFace - 0.02), 5.2, zc - w * 0.2 + k * w * 0.4, C.winGlow);
   }
-  // 板门 + 窗 + 柜台（临街面）
-  b.box('wood', 0.16, 2.3, Math.min(w * 0.42, 4.4), sgn * (xFace + 0.06), 1.75, zc, 0x3a2418);
+  // 板门双扇推开到两侧（营业时段敞开），明间居中让出净空；否则整扇实心板门会把刚摆好的
+  // 行业经营用品挡在后面，从街面依旧只看见一块黑板。窗 + 柜台仍在临街面。
+  const leafW = Math.min(w * 0.2, 2.0);
+  for (const sd of [-1, 1]) {
+    b.box('wood', 0.16, 2.3, leafW, sgn * (xFace + 0.06), 1.75,
+      zc + sd * (openW / 2 - leafW / 2), 0x3a2418);
+  }
   for (const s of [-1, 1]) b.box('glow', 0.12, 1.5, 2.2, sgn * (xFace + 0.03), 2.2, zc + s * w * 0.3, 0xffd8a0);
   b.box('wood', 0.9, 0.9, w * 0.5, sgn * (xFace - 0.55), 1.05, zc, shade(wallC, 1.12));
   b.box('wood', 1.0, 0.12, w * 0.52, sgn * (xFace - 0.55), 1.53, zc, shade(0x8a6a3a, 1.1));
@@ -2128,13 +2524,25 @@ function palaceShop(b: Baker, sgn: number, xFace: number, z0: number, w: number,
   // 货担 / 箩筐（街面）
   b.cyl('wood', 0.34, 0.28, 0.44, 10, sgn * (xFace - 1.35), 0.82, zc - w * 0.3, 0x8a6a3a);
   b.box('fabric', 0.7, 0.3, 0.7, sgn * (xFace - 1.9), 0.75, zc + w * 0.28, shade(flagC, 0.9));
+  // R24：行业经营用品 + 家具/摆设/装饰/饰品/日常用品（全城 8 业态 TRADE_KIT + 起居层）。
+  // 面阔沿 z、进深沿 x；门在近街侧（x=sgn*xFace），由门指向店内 = +sgn·x。
+  // 业态/形态只走 pickTrade 坐标 hash，零共享 RNG；全部走 Baker 合批。
+  const { trade, variant } = pickTrade(xc, zc);
+  buildTradeInterior(b, {
+    cx: xc, cz: zc,
+    w: w - TW * 2 - 0.1, d: depth - TW * 2 - 0.1,
+    y0: gy0, h: h - 0.1,
+    trade, variant,
+    ux: 0, uz: 1, vx: sgn, vz: 0,
+    ceiling: false, compact: true, src,
+  });
 }
 
 /**
  * 一条商业街：沿 z 铺两排铺面（sgn=±1），铺面间距 10.5–18m（实体夹道 2.2–5m）。
  * 同时铺临街石板（御街两侧各 20m），保证店面不悬在裸地形上。
  */
-function buildPalaceStreet(b: Baker, z0: number, z1: number, kitId: string): number {
+function buildPalaceStreet(b: Baker, z0: number, z1: number, kitId: string, src: string): number {
   const cz = (z0 + z1) / 2, len = Math.abs(z1 - z0);
   for (const s of [-1, 1]) b.box('ground', 20, 0.12, len, s * 23, 0.06, cz, shade(C.road, 1.04));
   let n = 0;
@@ -2148,7 +2556,9 @@ function buildPalaceStreet(b: Baker, z0: number, z1: number, kitId: string): num
       const gap = 2.2 + wardHash(salt, 5, 53) * 2.8;             // 夹道 2.2–5.0 → 中心距 10.2–18
       const depth = 10 + wardHash(salt, 9, 57) * 3;              // 进深 10–13
       const floors = wardHash(salt, 11, 59) > 0.68 ? 2 : 1;
-      palaceShop(b, sgn, 19, z, w, depth, floors, salt);
+      palaceShop(b, sgn, 19, z, w, depth, floors, salt, src);
+      // R24 台账（真实计数）：该来源「全部店铺数」，与 interiors 落位侧 .stocked 可逐项断言相等
+      b.kit(`shopint.src.${src}.all`, 1, 3);
       b.kit(kitId, 1, 3);
       n++;
       z += w + gap;
@@ -2160,7 +2570,7 @@ function buildPalaceStreet(b: Baker, z0: number, z1: number, kitId: string): num
 
 /** 宫前商业街（午门前 130m 广场之后，520m）：铺面数记 palace.shopFront */
 function buildPalaceFrontStreet(b: Baker): void {
-  const n = buildPalaceStreet(b, -2820, -2300, 'palace.shopFront');
+  const n = buildPalaceStreet(b, -2820, -2300, 'palace.shopFront', 'imperialFront');
   b.kit('palace.shopFront.total', n, 0);
   // 街口牌坊 + 街尾灯棚，让这条街有头有尾
   for (const z of [-2790, -2340]) {
@@ -2175,7 +2585,7 @@ function buildPalaceFrontStreet(b: Baker): void {
 
 /** 宫后商业街（北御沟石栏以北，840m）：铺面数记 palace.shopBack */
 function buildPalaceBackStreet(b: Baker): void {
-  const n = buildPalaceStreet(b, -4060, -4900, 'palace.shopBack');
+  const n = buildPalaceStreet(b, -4060, -4900, 'palace.shopBack', 'imperialBack');
   b.kit('palace.shopBack.total', n, 0);
 }
 
@@ -2203,6 +2613,672 @@ function buildShenwuGate(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   sg.quad(atlas.text('pal_shenwu', '神武門', 360, 100, { color: '#ffe9c8', glow: '#00e5ff', bg: 'rgba(10,14,22,0.9)', border: 'rgba(0,229,255,.7)', fontPx: 60 }),
     8, 2.4, 0, 12.9, gz + 12.6, 0);
   b.kit('palace.gate.shenwu', 1, 11.8);
+}
+
+// ============ R25：宫内补景（亭台楼阁 / 水榭 / 廊庑 / 花木 / 湖石 / 曲桥） ============
+// 用户判词：「皇宫内亭台楼阁、花草树木、山水景观造型不足」。
+// R24 的 palaceGrounds 把宫内空地填成了值房 / 庑房 / 院群等功能性房屋，另在 |x| 294–436、
+// z −3880…−3720 做了两处完整御花园（本文件不重复落件、不修改 palaceGrounds）。
+// 本层在那之外的**中轴仪制广场**（|x|<166，殿与殿之间的金砖院）补一组独立的园亭小品：
+// 攒尖亭 / 廊庑花架 / 湖石 / 花圃 / 宫树，个别节点再带方池曲桥（水榭）。
+// 落点由 scClear 逐点排除三大殿与寝殿台基包络、后寝院墙、门楼、中轴御路，**不与已有殿宇叠压**；
+// 所有器件只叠在广场地面（方砖 / 金砖）层，与 R24 的鼎 / 缸 / 宫灯 / 树池同属院落陈设。
+// 随机只读 wardHash 坐标 hash，不消耗共享 rng。
+const SC_LEAF = 0x3f6a3c, SC_LEAF_W = 0x59793c, SC_TRUNK = 0x4a3524;
+const SC_STONE = 0x8e8b7f, SC_STONE_D = 0x65625a;
+
+function scTree(b: Baker, x: number, z: number, s: number, salt: number): void {
+  const h = (5.4 + wardHash(x, z, salt) * 2.2) * s;
+  b.cyl('trunk', 0.16 * s, 0.32 * s, h * 0.6, 6, x, h * 0.3, z, SC_TRUNK);
+  const lc = shade(wardHash(x, z, salt + 1) < 0.5 ? SC_LEAF : SC_LEAF_W, 0.92 + wardHash(x, z, salt + 2) * 0.16);
+  const cy = h * 0.72;
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2 + wardHash(x, z, salt + 3 + i);
+    const r = (1.35 + wardHash(x, z, salt + 9 + i) * 0.5) * s;
+    b.sphere('leaf', r, 7, x + Math.cos(a) * r * 0.8, cy + (wardHash(x, z, salt + 15 + i) - 0.5) * 0.7 * s,
+      z + Math.sin(a) * r * 0.8, lc, 0, 0, 0, 1.05, 0.8, 1.05);
+  }
+  b.sphere('leaf', 1.75 * s, 7, x, cy + 0.25 * s, z, lc, 0, 0, 0, 1.1, 0.78, 1.1);
+  b.kit('palace.scenery.tree', 1, cy);
+}
+
+function scRockery(b: Baker, x: number, z: number, s: number, salt: number): void {
+  b.box('ash', 3.4 * s, 0.32, 2.6 * s, x, 0.16, z, SC_STONE_D);
+  for (let i = 0; i < 6; i++) {
+    const a = wardHash(x, z, salt + i) * Math.PI * 2;
+    const rr = (0.4 + wardHash(x, z, salt + 20 + i) * 1.2) * s;
+    b.sphere('ash', (0.5 + wardHash(x, z, salt + 40 + i) * 0.7) * s, 6,
+      x + Math.cos(a) * rr, 0.4 + wardHash(x, z, salt + 60 + i) * 1.9 * s, z + Math.sin(a) * rr * 0.7,
+      shade(SC_STONE_D, 0.85 + wardHash(x, z, salt + 80 + i) * 0.3), 0, 0, 0, 1.2, 0.9, 1.1);
+  }
+  // R21 假山瀑布：主峰上一挂白水帘 + 峰下落水潭（山水景观造型，非空叠石）
+  for (let i = 0; i < 3; i++) {
+    b.box('water', 0.9 * s, (1.7 - i * 0.28) * s, 0.1, x - 0.5 * s + i * 0.55 * s,
+      (1.9 - i * 0.2) * s, z - 0.6 * s, shade(0x4a8a90, 1.0 - i * 0.05));
+  }
+  b.box('water', 4.2 * s, 0.08, 2.4 * s, x, 0.36, z - 1.8 * s, 0x1d4d53);
+  b.kit('palace.scenery.waterfall', 1, 1.6);
+  b.kit('palace.scenery.rock', 1, 1.2);
+}
+
+function scFlowerBed(b: Baker, x: number, z: number, w: number, d: number, salt: number): void {
+  b.box('earth', w, 0.16, d, x, 0.09, z, shade(0x6b5842, 1.04));
+  const cols = [0xc2677a, 0xd8a24a, 0xd8d0b0, 0x9a6fb0];
+  const n = Math.max(6, Math.round((w * d) / 3));
+  for (let i = 0; i < n; i++) {
+    b.sphere('leaf', 0.2 + wardHash(x + i, z, salt) * 0.16, 5,
+      x + (wardHash(x, z + i, salt + 1) - 0.5) * (w - 0.4), 0.28 + wardHash(x, z, salt + 2 + i) * 0.14,
+      z + (wardHash(x + i, z, salt + 3) - 0.5) * (d - 0.4),
+      cols[(wardHash(x, z, salt + 5 + i) * cols.length) | 0], 0, 0, 0, 1, 0.8, 1);
+  }
+  // R21 花圃带廊架：花圃后缘两柱一横梁 + 攀藤（花圃不再是一块孤立的花毯）
+  const bz = z + d / 2 + 0.6;
+  for (const s of [-1, 1]) b.cyl('wood', 0.1, 0.13, 2.0, 5, x + s * (w / 2 - 0.3), 1.0, bz, shade(C.woodDark, 1.02));
+  b.box('wood', w + 0.4, 0.12, 0.16, x, 2.05, bz, shade(C.wood, 1.06));
+  for (let i = 0; i < 4; i++) b.sphere('leaf', 0.32, 5, x - w / 2 + (i + 0.5) * w / 4, 2.15, bz, shade(SC_LEAF_W, 1.02));
+  b.kit('palace.scenery.flowerPergola', 1, 2.0);
+  b.kit('palace.scenery.flower', 1, 0.3);
+}
+
+/** 攒尖小亭：台明 + 柱 + 阑额 + 攒尖顶 + 宝顶 + 亭内石桌凳 */
+function scPavilion(b: Baker, x: number, z: number, r: number, sides: 4 | 6, ry: number, salt: number): void {
+  const deck = 0.42, colH = 2.7;
+  const tile = shade(PAL_TILE, 1.16 + wardHash(x, z, salt) * 0.16);
+  b.box('ash', r * 2 + 1.6, 0.3, r * 2 + 1.6, x, 0.15, z, PAL_MARBLE, ry);
+  b.box('ash', r * 2 + 1.2, 0.14, r * 2 + 1.2, x, 0.37, z, shade(PAL_MARBLE, 1.06), ry);
+  const pts: [number, number][] = [];
+  if (sides === 4) {
+    const c = Math.cos(Math.PI / 4) * r * 1.06;
+    const ring: [number, number][] = [[c, c], [c, -c], [-c, -c], [-c, c]];
+    for (const [ox, oz] of ring) {
+      pts.push([x + ox * Math.cos(ry) + oz * Math.sin(ry), z - ox * Math.sin(ry) + oz * Math.cos(ry)]);
+    }
+  } else {
+    for (let i = 0; i < 6; i++) {
+      const a = ry + (i / 6) * Math.PI * 2;
+      pts.push([x + Math.sin(a) * r, z + Math.cos(a) * r]);
+    }
+  }
+  for (const [px, pz] of pts) b.cyl('wood', 0.13, 0.16, colH, 7, px, deck + colH / 2, pz, shade(C.woodRed, 0.94));
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], c2 = pts[(i + 1) % pts.length];
+    const dx = c2[0] - a[0], dz = c2[1] - a[1];
+    b.box('wood', Math.hypot(dx, dz), 0.2, 0.16, (a[0] + c2[0]) / 2, deck + colH - 0.1, (a[1] + c2[1]) / 2,
+      shade(C.woodDark, 1.06), Math.atan2(-dz, dx));
+  }
+  const roofY = deck + colH;
+  b.cyl('roof', r + 1.1, r + 1.45, 0.28, sides, x, roofY, z, tile, ry);
+  b.cyl('roof', 0.28, r + 1.35, 1.9, sides, x, roofY + 1.05, z, shade(tile, 1.06), ry);
+  b.sphere('ceramic', 0.26, 8, x, roofY + 2.2, z, 0xd8c48a);
+  b.cyl('ash', 0.5, 0.56, 0.12, 10, x, deck + 0.66, z, PAL_MARBLE);
+  b.cyl('ash', 0.2, 0.26, 0.56, 8, x, deck + 0.32, z, SC_STONE_D);
+  for (const s of [-1, 1]) b.cyl('ash', 0.23, 0.25, 0.4, 8, x + s * 0.9, deck + 0.2, z + s * 0.18, SC_STONE);
+  b.kit('palace.scenery.pavilion', 1, deck + colH);
+}
+
+/** R21 二层小楼阁：台明 + 一层柱墙 + 平座腰檐 + 二层柱墙 + 攒尖顶 + 宝顶（亭台楼阁类的「楼」） */
+function scTower(b: Baker, x: number, z: number, salt: number): void {
+  const tile = shade(PAL_TILE, 1.18 + wardHash(x, z, salt) * 0.12);
+  b.box('ash', 7.6, 0.36, 6.4, x, 0.18, z, PAL_MARBLE);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1])
+    b.cyl('wood', 0.15, 0.18, 3.0, 6, x + sx * 3.1, 1.9, z + sz * 2.6, shade(C.woodRed, 0.94));
+  b.box('wall', 6.0, 2.6, 5.0, x, 1.7, z, shade(C.plaster2, 1.02));
+  b.box('ash', 8.0, 0.2, 6.8, x, 3.4, z, shade(PAL_MARBLE, 1.04));
+  b.box('roof', 9.2, 0.26, 8.0, x, 3.62, z, tile);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1])
+    b.cyl('wood', 0.12, 0.15, 2.2, 6, x + sx * 2.3, 4.7, z + sz * 1.9, shade(C.woodRed, 0.96));
+  b.box('wall', 4.4, 1.9, 3.6, x, 4.6, z, shade(C.plaster2, 1.0));
+  b.box('roof', 6.8, 0.22, 6.0, x, 5.8, z, shade(tile, 1.06));
+  b.cyl('roof', 0.26, 3.9, 1.7, 4, x, 6.7, z, shade(tile, 1.12), Math.PI / 4);
+  b.sphere('ceramic', 0.24, 8, x, 7.75, z, 0xd8c48a);
+  b.kit('palace.scenery.tower', 1, 6.0);
+}
+
+/** 廊庑花架：一列柱 + 单坡瓦顶 + 攀藤 */
+function scPergola(b: Baker, x: number, z: number, len: number, ry: number, salt: number): void {
+  const n = Math.max(3, Math.round(len / 3.2));
+  const cs = Math.cos(ry), sn = Math.sin(ry);
+  for (let i = 0; i <= n; i++) {
+    const t = (i / n - 0.5) * len;
+    b.cyl('wood', 0.13, 0.16, 2.5, 6, x + t * cs, 1.25, z - t * sn, shade(C.woodDark, 1.0));
+  }
+  b.box('roof', len + 1.2, 0.2, 2.9, x, 2.62, z, shade(PAL_TILE, 1.16), ry);
+  b.box('wood', len, 0.12, 0.14, x, 2.45, z, shade(C.wood, 1.04), ry);
+  for (let i = 0; i < 8; i++) {
+    const t = (wardHash(x, z, salt + i) - 0.5) * len;
+    b.sphere('leaf', 0.45 + wardHash(x, z, salt + 20 + i) * 0.25, 5,
+      x + t * cs, 2.7, z - t * sn + (wardHash(x, z, salt + 40 + i) - 0.5) * 2.2,
+      shade(wardHash(x, z, salt + 60 + i) < 0.5 ? SC_LEAF : SC_LEAF_W, 1.0), 0, 0, 0, 1.1, 0.7, 1.1);
+  }
+  b.kit('palace.scenery.pergola', 1, 2.6);
+}
+
+/** 水榭：方池 + 石岸 + 荷叶 + 三段折线曲桥 */
+function scWater(b: Baker, x: number, z: number, r: number, salt: number): void {
+  b.box('ash', r * 2 + 2.4, 0.4, r * 2 + 2.4, x, 0.2, z, SC_STONE_D);
+  b.box('water', r * 2, 0.1, r * 2, x, 0.42, z, 0x1d4d53);
+  for (const s of [-1, 1]) {
+    b.box('ash', r * 2 + 2.4, 0.3, 0.6, x, 0.5, z + s * (r + 0.9), PAL_MARBLE);
+    b.box('ash', 0.6, 0.3, r * 2 + 2.4, x + s * (r + 0.9), 0.5, z, PAL_MARBLE);
+  }
+  for (let i = 0; i < 6; i++) {
+    const a = wardHash(x, z, salt + i) * Math.PI * 2;
+    const rr = r * (0.3 + wardHash(x, z, salt + 10 + i) * 0.55);
+    b.cyl('leaf', 0.4, 0.4, 0.03, 7, x + Math.cos(a) * rr, 0.5, z + Math.sin(a) * rr, shade(SC_LEAF, 1.0));
+  }
+  for (let i = -1; i <= 1; i++) {
+    const bz = z + (i === 0 ? r * 0.18 : -r * 0.18);
+    b.box('ash', r * 0.9, 0.18, 1.8, x + i * r * 0.62, 0.62, bz, PAL_MARBLE, i * 0.24);
+    for (const s of [-1, 1]) b.box('ash', 0.16, 0.5, 0.16, x + i * r * 0.62, 0.9, bz + s * 0.8, shade(PAL_MARBLE, 1.04));
+  }
+  // R21 水榭：池北岸四柱小榭（平台 + 柱 + 攒尖顶），与三段折线曲桥连成「水榭带曲桥」
+  const wx = x, wz = z - r - 3.2;
+  b.box('ash', r * 1.5, 0.24, 3.2, wx, 0.62, wz, PAL_MARBLE);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1])
+    b.cyl('wood', 0.12, 0.15, 2.2, 6, wx + sx * r * 0.6, 1.75, wz + sz * 1.2, shade(C.woodRed, 0.96));
+  b.box('roof', r * 1.8, 0.22, 4.2, wx, 3.0, wz, shade(PAL_TILE, 1.18));
+  b.cyl('roof', 0.2, r * 0.95, 1.3, 4, wx, 3.7, wz, shade(PAL_TILE, 1.24), Math.PI / 4);
+  b.kit('palace.scenery.waterPavilion', 1, 3.0);
+  b.kit('palace.scenery.water', 1, 0.6);
+}
+
+/** 补景落位判据：只留仪制广场内、殿宇台基之外的地面（不碰御花园 / 六宫 / 门楼 / 御路） */
+/**
+ * R22 多带落位判据（世界口径）：补景节点不再只堆在中轴几条 z 线上，而是分落 4 类空地，
+ * 每带各自排除已知建筑包络，逐点判定，绝不把殿宇 / 值房 / 官署 / 御花园亭楼盖住。
+ *   带① 中轴仪制广场 |x|16–160：太和殿前院 / 三殿间院 / 后寝院两厢（沿用台基-门楼-御路避让）；
+ *   带② 御花园中心隙地（园心 |x|365、z−3800）：只取 r<30 的中心，避开 6 亭(r34)/3 楼(r62)/水池/假山；
+ *   带③ 宫墙内侧沿墙隙地 |x|1052–1096：避开 |x|1074 值房带与北墙内值房 z−3966；
+ *   带④ 宫墙外侧隙地 |x|1104–1130：宫墙(1100)与官署(1132)之间的 26m 自由带。
+ */
+function scClear(x: number, z: number): boolean {
+  const ax = Math.abs(x);
+  if (z > -3000 || z < -3980) return false;
+  // 带① 中轴仪制广场
+  if (ax >= 16 && ax <= 160) {
+    for (const [hz, hw, hd] of [[PALACE.taiheZ, 112, 52], [PALACE.zhongheZ, 80, 44], [PALACE.baoheZ, 100, 48], [-3840, 70, 40]] as const) {
+      if (Math.abs(z - hz) < hd + 8 && ax < hw + 8) return false;   // 三大殿 / 寝殿台基包络
+    }
+    if (Math.abs(z + 3752) < 7) return false;                        // 后寝横院墙
+    if (Math.abs(z + 3080) < 16 || Math.abs(z + 2960) < 20) return false; // 太和门 / 午门
+    return true;
+  }
+  // 带② 御花园中心隙地
+  if (ax >= 305 && ax <= 425 && z >= -3865 && z <= -3735) {
+    const cx = x > 0 ? 365 : -365, cz = -3800;
+    return Math.hypot(x - cx, z - cz) < 30;
+  }
+  // 带③ 宫墙内侧沿墙隙地
+  if (ax >= 1052 && ax <= 1096) {
+    if (ax > 1062 && ax < 1086) return false;                        // 值房带
+    if (Math.abs(z + 3966) < 14) return false;                        // 北墙内一排值房
+    return true;
+  }
+  // 带④ 宫墙外侧隙地
+  if (ax >= 1104 && ax <= 1130) return true;
+  return false;
+}
+
+/**
+ * R22 扩容：**88 组**补景节点（旧 20 组），世界口径 x / z / 组合变体。
+ * 不再只堆在中轴几条 z 线上，按 4 类空地分落（逐点过 scClear，全部 88/88 通过）：
+ *   带① 中轴仪制广场 48 组（太和殿前院 / 三殿间院 / 后寝院两厢，|x| 34–152）；
+ *   带② 御花园中心隙地 10 组（|x| 351–379，避开 6 亭/3 楼/水池/假山）；
+ *   带③ 宫墙内侧沿墙隙地 16 组（|x| 1058 / 1090）；
+ *   带④ 宫墙外侧隙地 14 组（|x| 1116）。
+ * |x| 分布 34…1116、z 分布 −3900…−3010（23 个不同 z 值），覆盖御花园与宫墙内外。
+ * variant 0–5 按 %3 分三类：0/3 亭台楼阁、1/4 花草树木、2/5 山水景观；侧带节点由 scCluster 只补成簇花木/山水，不放大亭楼。
+ */
+const SCENE_NODES: readonly (readonly [number, number, number])[] = [
+  // 带① 中轴仪制广场（太和殿前院 / 三殿间院 / 后寝院两厢） — 48 组
+  [-34, -3010, 0], [-96, -3010, 1], [-152, -3010, 2], [34, -3010, 3],
+  [96, -3010, 4], [152, -3010, 5], [-34, -3040, 0], [-96, -3040, 1],
+  [-152, -3040, 2], [34, -3040, 3], [96, -3040, 4], [152, -3040, 5],
+  [-34, -3130, 0], [-96, -3130, 1], [-152, -3130, 2], [34, -3130, 3],
+  [96, -3130, 4], [152, -3130, 5], [-34, -3170, 0], [-96, -3170, 1],
+  [-152, -3170, 2], [34, -3170, 3], [96, -3170, 4], [152, -3170, 5],
+  [-34, -3330, 0], [-96, -3330, 1], [-152, -3330, 2], [34, -3330, 3],
+  [96, -3330, 4], [152, -3330, 5], [-34, -3400, 0], [-96, -3400, 1],
+  [-152, -3400, 2], [34, -3400, 3], [96, -3400, 4], [152, -3400, 5],
+  [-34, -3545, 0], [-96, -3545, 1], [-152, -3545, 2], [34, -3545, 3],
+  [96, -3545, 4], [152, -3545, 5], [-34, -3615, 0], [-96, -3615, 1],
+  [-152, -3615, 2], [34, -3615, 3], [96, -3615, 4], [152, -3615, 5],
+  // 带② 御花园中心隙地（东西各一，避开 6 亭/3 楼/水池/假山） — 10 组
+  [-365, -3800, 0], [-379, -3808, 1], [-351, -3808, 2], [-379, -3790, 3],
+  [-351, -3790, 4], [365, -3800, 5], [351, -3808, 0], [379, -3808, 1],
+  [351, -3790, 2], [379, -3790, 3],
+  // 带③ 宫墙内侧沿墙隙地 — 16 组
+  [-1058, -3040, 4], [-1090, -3160, 5], [-1058, -3280, 0], [-1090, -3400, 1],
+  [-1058, -3520, 2], [-1090, -3640, 3], [-1058, -3760, 4], [-1090, -3880, 5],
+  [1058, -3040, 0], [1090, -3160, 1], [1058, -3280, 2], [1090, -3400, 3],
+  [1058, -3520, 4], [1090, -3640, 5], [1058, -3760, 0], [1090, -3880, 1],
+  // 带④ 宫墙外侧隙地（墙与官署之间） — 14 组
+  [-1116, -3060, 2], [-1116, -3200, 3], [-1116, -3340, 4], [-1116, -3480, 5],
+  [-1116, -3620, 0], [-1116, -3760, 1], [-1116, -3900, 2], [1116, -3060, 3],
+  [1116, -3200, 4], [1116, -3340, 5], [1116, -3480, 0], [1116, -3620, 1],
+  [1116, -3760, 2], [1116, -3900, 3],
+];
+
+/**
+ * R22 每节点成簇花木 + 山水景观造型：3 片成片花圃（自带廊架）+ 10 株成簇花木（聚成 3 个小簇）
+ * + 3 处湖石群（叠石 + 瀑布水帘 + 落水潭）+ 一条曲水/方池，全部确定性 wardHash、零 RNG、全 Baker 合批。
+ * 88 组节点**每一组**都调用，俯视能读到「满地花草树木」，不是均匀稀疏撒点。
+ */
+function scCluster(b: Baker, cx: number, cz: number, salt: number): void {
+  const cols = [0xc2677a, 0xd8a24a, 0xd8d0b0, 0x9a6fb0, 0xb05a72];
+  // 成片花圃 3 处（花圃自带后缘廊架）
+  for (let i = 0; i < 3; i++) {
+    const a = (i / 3) * Math.PI * 2 + wardHash(cx, cz, salt + i);
+    const r = 5 + wardHash(cx, cz, salt + 10 + i) * 4;
+    scFlowerBed(b, cx + Math.cos(a) * r, cz + Math.sin(a) * r, 4.0, 2.6, salt + 20 + i);
+  }
+  // 成簇花木 10 株：聚成 3 个小簇（簇心距节点 6m、簇内半径 3–9m），花丛 / 灌木 / 乔木三选一
+  for (let i = 0; i < 10; i++) {
+    const cl = i % 3;
+    const a = wardHash(cx, cz, salt + 100 + i) * Math.PI * 2;
+    const rr = 3 + wardHash(cx, cz, salt + 200 + i) * 6;
+    const ang = (cl / 3) * Math.PI * 2;
+    const bx = cx + Math.cos(ang) * 6 + Math.cos(a) * rr;
+    const bz = cz + Math.sin(ang) * 6 + Math.sin(a) * rr;
+    const u = wardHash(cx, cz, salt + 300 + i);
+    if (u < 0.5) {
+      b.sphere('leaf', 0.5, 5, bx, 0.32, bz, shade(SC_LEAF_W, 1.04), 0, 0, 0, 1.2, 0.6, 1.2);
+      b.sphere('leaf', 0.22, 5, bx + 0.3, 0.5, bz, cols[(wardHash(cx, cz, salt + 400 + i) * cols.length) | 0]);
+    } else if (u < 0.8) {
+      b.sphere('leaf', 0.8, 5, bx, 0.6, bz, shade(SC_LEAF, 1.02), 0, 0, 0, 1.2, 0.8, 1.2);
+    } else {
+      b.cyl('trunk', 0.12, 0.18, 1.9, 5, bx, 0.95, bz, SC_TRUNK);
+      b.sphere('leaf', 1.4, 6, bx, 2.4, bz, shade(SC_LEAF, 1.0));
+    }
+  }
+  // 湖石群 3 处（每处叠石 + 瀑布水帘 + 落水潭，构成山水景观造型）
+  for (let i = 0; i < 3; i++) {
+    const a = (i / 3) * Math.PI * 2 + wardHash(cx, cz, salt + 500 + i);
+    scRockery(b, cx + Math.cos(a) * 8, cz + Math.sin(a) * 8,
+      0.5 + wardHash(cx, cz, salt + 510 + i) * 0.3, salt + 520 + i);
+  }
+  // 曲水 / 方池：一条细长水带 + 两岸条石 + 三块汀步
+  const wz = cz + 11;
+  b.box('water', 12, 0.08, 1.4, cx, 0.10, wz, 0x1d4d53);
+  for (const s of [-1, 1]) b.box('ash', 12.6, 0.16, 0.32, cx, 0.14, wz + s * 0.9, shade(SC_STONE_D, 1.02));
+  for (let i = 0; i < 3; i++) b.box('ash', 0.8, 0.12, 1.6, cx - 3.6 + i * 3.6, 0.19, wz, shade(SC_STONE, 1.02));
+  b.kit('palace.scenery.cluster', 1, 0.3);
+  b.kit('palace.scenery.clusterFlower', 3, 0.3);
+  b.kit('palace.scenery.clusterPlant', 10, 0.3);
+  b.kit('palace.scenery.clusterRock', 3, 0.3);
+  b.kit('palace.scenery.clusterWater', 1, 0.3);
+}
+
+/**
+ * R22 宫苑补景总装：88 组节点。带①中轴（|x|≤160）按 variant % 3 做三类完整组合
+ * （0/3 亭台楼阁：攒尖亭 + 二层小楼阁 + 廊架 + 湖石 + 花圃 + 宫树；
+ *  1/4 花草树木：攒尖小亭 + 3 处带廊架花圃 + 树列；
+ *  2/5 山水景观：水榭曲桥 + 假山瀑布 + 廊架 + 花圃 + 宫树）；
+ * 带②③④（御花园 / 宫墙内外）只补 scCluster 小型成簇花木与山水，不放大亭楼以免叠压既有建筑；
+ * 全部 88 组都叠一层 scCluster（3 片成片花圃 + 10 株成簇花木 + 3 处湖石群 + 一条曲水）。
+ * 落点逐点过 scClear，随机只读 wardHash 整数坐标 hash，不消耗共享 rng；
+ * 新增统计键 palace.scenery（每节点一个），保留 palace.scenery.node / .nodes 旧语义。
+ */
+function buildPalaceScenery(b: Baker): void {
+  let n = 0;
+  for (const [x0, z0, variant] of SCENE_NODES) {
+    if (!scClear(x0, z0)) continue;
+    const salt = (Math.round(x0) * 31 + Math.round(z0) * 17 + variant * 131) | 0;
+    const px = x0 + (wardHash(x0, z0, salt) - 0.5) * 6;
+    const pz = z0 + (wardHash(x0, z0, salt + 1) - 0.5) * 6;
+    if (Math.abs(x0) <= 160) {
+      const kind = variant % 3;
+      if (kind === 0) {
+        // 亭台楼阁：攒尖亭 + 二层小楼阁 + 廊架 + 湖石 + 花圃 + 宫树
+        scPavilion(b, px, pz, 2.6 + wardHash(x0, z0, salt + 2) * 0.9,
+          (variant % 2 === 0 ? 4 : 6) as 4 | 6, wardHash(x0, z0, salt + 3) * 0.6, salt + 10);
+        scTower(b, x0 + (x0 > 0 ? -11 : 11), z0 - 10, salt + 12);
+        scPergola(b, x0 + (x0 > 0 ? -8 : 8), z0 + 11, 12, Math.PI / 2, salt + 20);
+        scRockery(b, x0 - 6, z0 - 9, 0.9 + wardHash(x0, z0, salt + 4) * 0.3, salt + 30);
+        scFlowerBed(b, x0 + 5, z0 - 8, 5.5, 3.0, salt + 40);
+        for (let i = 0; i < 3; i++) {
+          const a = (i / 3) * Math.PI * 2 + wardHash(x0, z0, salt + 50 + i);
+          scTree(b, x0 + Math.cos(a) * 10, z0 + Math.sin(a) * 10, 0.85 + wardHash(x0, z0, salt + 60 + i) * 0.3, salt + 70 + i);
+        }
+      } else if (kind === 1) {
+        // 花草树木：攒尖小亭 + 3 处花圃（花圃带廊架） + 6 株宫树
+        scPavilion(b, px, pz, 2.2 + wardHash(x0, z0, salt + 2) * 0.6, 6, wardHash(x0, z0, salt + 3) * 0.6, salt + 10);
+        scFlowerBed(b, x0 + 6, z0 - 9, 6.0, 3.2, salt + 40);
+        scFlowerBed(b, x0 - 7, z0 + 7, 5.0, 2.8, salt + 45);
+        scFlowerBed(b, x0 + 3, z0 + 12, 4.5, 2.6, salt + 48);
+        scPergola(b, x0 + (x0 > 0 ? -8 : 8), z0, 11, Math.PI / 2, salt + 20);
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2 + wardHash(x0, z0, salt + 50 + i);
+          const rr = 8 + wardHash(x0, z0, salt + 60 + i) * 5;
+          scTree(b, x0 + Math.cos(a) * rr, z0 + Math.sin(a) * rr, 0.8 + wardHash(x0, z0, salt + 70 + i) * 0.35, salt + 80 + i);
+        }
+      } else {
+        // 山水景观：水榭曲桥 + 假山瀑布 + 廊架 + 花圃 + 宫树
+        scWater(b, x0 + (x0 > 0 ? 9 : -9), z0 + 14, 4.2, salt + 90);
+        scRockery(b, x0 - 7, z0 - 9, 1.0 + wardHash(x0, z0, salt + 4) * 0.3, salt + 30);
+        scPergola(b, x0 + (x0 > 0 ? -8 : 8), z0 + 11, 10, Math.PI / 2, salt + 20);
+        scFlowerBed(b, x0 + 5, z0 - 6, 5.0, 2.8, salt + 40);
+        for (let i = 0; i < 3; i++) {
+          const a = (i / 3) * Math.PI * 2 + wardHash(x0, z0, salt + 50 + i);
+          scTree(b, x0 + Math.cos(a) * 10, z0 + Math.sin(a) * 10, 0.85 + wardHash(x0, z0, salt + 60 + i) * 0.3, salt + 70 + i);
+        }
+      }
+    }
+    // 每节点成簇花木与山水景观造型：88 组全有（侧带节点的主要构件）
+    scCluster(b, x0, z0, salt + 200);
+    b.kit('palace.scenery', 1, 3.0);
+    b.kit('palace.scenery.node', 1, 3.0);
+    n++;
+  }
+  b.kit('palace.scenery.nodes', n, 0);
+}
+
+// ============ R21：宫城「满地花草树木」· 确定性成簇花木 ============
+/**
+ * 宫城空地成片花木：32 个簇心（16 个 z 行 × 东西两侧），每簇半径 24–40m、固定 20 株，
+ * 合计 **640 株**（花丛 / 灌木 / 乔木三选一），按簇而不是均匀撒点。逐点过 floraClear 排除
+ * 御道中轴、三大殿台基与丹陛礼制区、门楼、后寝横院墙、六宫、御花园核心圈、文华/武英合院、
+ * 庑房带与值房带；随机只读 wardHash 坐标 hash，零共享 RNG，全部 Baker 合批。
+ * 统计键 palace.groundFlora（簇数 32）/ palace.groundFlora.plant（株数 640）。
+ */
+function floraClear(x: number, z: number): boolean {
+  const ax = Math.abs(x);
+  if (ax < 18 || ax > 1080) return false;                       // 御道中轴 / 宫墙内
+  if (z > -2980 || z < -3985) return false;                     // 宫城南北界内
+  for (const [hz, hw, hd] of [[PALACE.taiheZ, 112, 52], [PALACE.zhongheZ, 80, 44], [PALACE.baoheZ, 100, 48], [-3840, 70, 40]] as const)
+    if (Math.abs(z - hz) < hd + 10 && ax < hw + 10) return false;   // 三大殿 / 寝殿台基与丹陛礼制区
+  if (Math.abs(z + 3080) < 20 || Math.abs(z + 2960) < 24) return false;  // 太和门 / 午门
+  if (Math.abs(z + 3752) < 10 && ax < 170) return false;             // 后寝横院墙
+  for (const sx of [-1, 1]) for (let col = 0; col < 3; col++) for (let row = 0; row < 2; row++) {
+    const cx = sx * (500 + col * 150), cz = -3820 - row * 118;
+    if (Math.abs(x - cx) < 54 && Math.abs(z - cz) < 42) return false;   // 东西六宫 12 院（R23 收窄，夹道可种）
+  }
+  // R23 放宽：御花园只保留核心亭楼水池圈，外围一圈可种（用户「皇宫内花草树木特别少」）
+  if (ax > 320 && ax < 410 && z > -3860 && z < -3740) return false;
+  if (ax > 465 && ax < 775 && ((z > -3345 && z < -3115) || (z > -3725 && z < -3515))) return false; // 文华/武英合院
+  if (ax > 160 && ax < 185) return false;                          // 庑房带
+  if (ax > 1055 && ax < 1092) return false;                        // 值房带
+  return true;
+}
+
+/**
+ * R23：旧版只写死 32 个簇心 × 20 株 = 640 株，铺在 1050×2160m 的宫城里，
+ * 俯瞰与近景都「几乎看不见花草树木」。改成整宫城 90m 网格程序化簇心，
+ * 逐点过 floraClear；簇数与株数由判据实算，台账 palace.groundFlora 记录真实值。
+ */
+function makeFloraClusters(): (readonly [number, number])[] {
+  const out: (readonly [number, number])[] = [];
+  for (let z = -3010; z >= -3970; z -= 90) {
+    for (const sx of [-1, 1]) {
+      for (let ax = 45; ax <= 1035; ax += 90) {
+        const x = sx * ax;
+        if (floraClear(x, z)) out.push([x, z] as const);
+      }
+    }
+  }
+  return out;
+}
+const FLORA_CLUSTERS: readonly (readonly [number, number])[] = makeFloraClusters();
+const PLANTS_PER_CLUSTER = 24;
+
+/** 一株宫苑花木：花丛 / 灌木 / 乔木三选一，全部低面数（sphere 5 段 + 短 cyl） */
+function floraPlant(b: Baker, x: number, z: number, u: number, salt: number): void {
+  // R23 第四轮：宫苑草皮抬到铺装顶面之上（0.302），花木同步抬 0.10，
+  // 否则花丛下半截埋在 city_ash_9 的 0.24 铺装里，俯瞰只读成零星黑点。
+  const L = 0.10;
+  const cols = [0xc2677a, 0xd8a24a, 0xd8d0b0, 0x9a6fb0, 0xb05a72];
+  if (u < 0.55) {
+    // 花丛：一团矮叶 + 三粒花色小球
+    b.sphere('leaf', 0.55, 5, x, L + 0.32, z, shade(SC_LEAF, 1.05), 0, 0, 0, 1.2, 0.6, 1.2);
+    for (let i = 0; i < 3; i++) {
+      const a = wardHash(x, z, salt + i) * Math.PI * 2;
+      b.sphere('leaf', 0.2, 5, x + Math.cos(a) * 0.45, L + 0.5, z + Math.sin(a) * 0.45,
+        cols[(wardHash(x, z, salt + 10 + i) * cols.length) | 0]);
+    }
+  } else if (u < 0.85) {
+    // 灌木：一团压扁叶球 + 一粒花
+    b.sphere('leaf', 0.85, 5, x, L + 0.62, z, shade(SC_LEAF_W, 1.02), 0, 0, 0, 1.2, 0.8, 1.2);
+    b.sphere('leaf', 0.24, 5, x + 0.4, L + 0.9, z, cols[(wardHash(x, z, salt) * cols.length) | 0]);
+  } else {
+    // 乔木：短干 + 一团树冠
+    b.cyl('trunk', 0.12, 0.18, 1.9, 5, x, L + 0.95, z, SC_TRUNK);
+    b.sphere('leaf', 1.5, 6, x, L + 2.5, z, shade(SC_LEAF, 0.98 + wardHash(x, z, salt) * 0.12), 0, 0, 0, 1.05, 0.85, 1.05);
+  }
+}
+
+/**
+ * R23 第四轮：宫苑「连续绿毯」。
+ * 根因（A/B 实拍 + Raycaster 实测）：宫城灰白铺装来自 city_ash_9（顶面 0.14 / 0.24），
+ * 与 city_ground 无关；而旧版 208 个半径 20–32m 的孤立草块只覆盖宫城不到一成面积，
+ * 所以 250m 俯瞰仍是一片灰白。这里按 30m 网格铺 9 点避让判据通过的连片草皮，
+ * 并补「人眼尺度草叶 + 彩花 + 3m 级树冠」，让俯瞰与近景都能读出满地花木。
+ * 全部坐标 hash 派生，零共享 RNG；全部 Baker 合批，不新增 draw call。
+ */
+const PAL_GREEN_STEP = 30;
+const PAL_GREEN_Y = 0.302;                  // 高于 city_ash 0.24 / city_ground 0.28
+const PAL_BLADES = [0xa8d45c, 0xb8dd6a, 0x93c24c, 0x9ecb56, 0xc2e078, 0x86bd52] as const;
+const PAL_FLOWERS = [0xe6d06a, 0xd8798c, 0xc98ad0, 0xe8a05a, 0xe9e4c8, 0xb96a86] as const;
+
+function palaceGreenOk(x: number, z: number, half: number): boolean {
+  for (const dx of [-half, 0, half])
+    for (const dz of [-half, 0, half])
+      if (!floraClear(x + dx, z + dz)) return false;
+  return true;
+}
+
+/** 3m 级宫苑乔木：俯瞰是一团能读出来的树冠，近景有主干 + 两层叶球 + 花点 */
+function palaceCanopy(b: Baker, x: number, z: number, salt: number): void {
+  const u = wardHash(x, z, salt);
+  const h = 3.6 + u * 1.8;
+  b.cyl('trunk', 0.22, 0.34, h, 6, x, PAL_GREEN_Y + h / 2, z, SC_TRUNK);
+  const crown = shade(u < 0.5 ? 0x4f7f3e : 0x648c42, 0.92 + u * 0.22);
+  b.sphere('leaf', 2.9 + u, 7, x, PAL_GREEN_Y + h + 1.1, z, crown, 0, 0, 0, 1.1, 0.86, 1.1);
+  for (let i = 0; i < 2; i++) {
+    const a = wardHash(x, z, salt + 11 + i) * Math.PI * 2;
+    b.sphere('leaf', 1.5, 6, x + Math.cos(a) * 2.1, PAL_GREEN_Y + h + 0.2,
+      z + Math.sin(a) * 2.1, shade(crown, 1.06), 0, 0, 0, 1, 0.8, 1);
+  }
+  for (let i = 0; i < 3; i++) {
+    const a = wardHash(x, z, salt + 31 + i) * Math.PI * 2;
+    b.sphere('ceramic', 0.34, 5, x + Math.cos(a) * 2.6, PAL_GREEN_Y + h + 1.5,
+      z + Math.sin(a) * 2.6, PAL_FLOWERS[(Math.abs(salt) + i) % PAL_FLOWERS.length]);
+  }
+}
+
+/**
+ * R23：每簇 = 一块宫苑草地（深浅草色 + 18 丛倾斜草叶 + 花）+ 24 株花木。
+ * R23 第四轮：草皮统一抬到 y=0.302（方砖顶 0.14 / 0.24、city_ground 顶 0.28 之上），
+ * 并先铺一层 30m 网格连续绿毯 + 3m 级树冠，解决「208 个孤立草块只覆盖一成宫城」的画面级稀疏。
+ * 全部走既有 leaf/ceramic/trunk 组 + Baker 合批，坐标 hash 派生，零共享 RNG。
+ */
+function buildPalaceGroundFlora(b: Baker): void {
+  let clusters = 0, plants = 0, tufts = 0;
+  // R23 第四轮：0.20 会被 city_ash_9 的 0.24 铺装盖住，抬到所有铺装顶面之上。
+  const LAWN_Y = PAL_GREEN_Y;
+
+  // ---- ① 连续绿毯：30m 网格，9 点避让，草叶 / 彩花 / 3m 级乔木 ----
+  let cells = 0, carpetTufts = 0, carpetFlowers = 0, canopies = 0, carpetBlobs = 0;
+  for (let z = -3025; z >= -3965; z -= PAL_GREEN_STEP) {
+    for (let x = -1065; x <= 1065; x += PAL_GREEN_STEP) {
+      if (!palaceGreenOk(x, z, PAL_GREEN_STEP / 2)) continue;
+      const salt = (Math.round(x) * 31 + Math.round(z) * 17) | 0;
+      const hs = wardHash(x, z, salt + 7701);
+      // R24b：位置抖动的「重叠圆盘群」仍是圆 → 改成任意不规则自由轮廓
+      // （非等分角度 / 多频半径 / 连续深凹 / 尖尾枝杈 / 长条扁片），3 张错开搭接
+      // 保证连片不露灰白铺装；30m 网格只作为布点参考，不再是肉眼可见的方格边界。
+      const B = freeBlobGeometries();
+      const rad0 = 15 + hs * 4;
+      for (let q = 0; q < 3; q++) {
+        const uq = wardHash(x, z, salt + 7711 + q * 7);
+        const vq = wardHash(x, z, salt + 7713 + q * 11);
+        const jx = (uq - 0.5) * 11;
+        const jz = (vq - 0.5) * 11;
+        const rr = rad0 * (0.72 + uq * 0.20);
+        carpetBlobs++;
+        putFreeBlob(b, B[(Math.abs(salt + q * 37) >>> 0) % B.length],
+          x + jx, PAL_GREEN_Y + (cells % 4) * 0.0015 + q * 0.0012, z + jz,
+          shade(0x8ab84f, 0.90 + hs * 0.22 + q * 0.03), uq * 6.28,
+          rr, rr * (0.72 + vq * 0.35));
+      }
+      for (let q = 0; q < 2; q++) {
+        const uq = wardHash(x, z, salt + 7721 + q);
+        const aq = uq * Math.PI * 2;
+        carpetBlobs++;
+        putFreeBlob(b, B[(Math.abs(salt + 7901 + q) >>> 0) % B.length],
+          x + Math.cos(aq) * 17, PAL_GREEN_Y + 0.003 + q * 0.001, z + Math.sin(aq) * 17,
+          shade(0x8ab84f, 0.88 + uq * 0.24), aq, 4 + uq * 4, 3 + uq * 3);
+      }
+      // R23 第四轮：3×3 共 9 丛亮叶 / 30m 格，4 片/丛，人眼近景能分辨出草叶而非纯色膜
+      for (let k = 0; k < 9; k++) {
+        const u1 = wardHash(x, z, salt + 7800 + k * 3);
+        const u2 = wardHash(x, z, salt + 7801 + k * 3);
+        const px = x + ((k % 3) - 1) * 9 + (u1 - 0.5) * 3.4;
+        const pz = z + (((k / 3) | 0) - 1) * 9 + (u2 - 0.5) * 3.4;
+        const blade = PAL_BLADES[(Math.abs(salt) + k) % PAL_BLADES.length];
+        for (let t = 0; t < 4; t++) {
+          const a = (t / 4) * Math.PI * 2 + u1 * 3;
+          const hgt = 0.9 + u2 * 0.7;
+          b.box('leaf', 0.26, hgt, 0.54,
+            px + Math.cos(a) * 0.4, PAL_GREEN_Y + hgt / 2, pz + Math.sin(a) * 0.4,
+            shade(blade, 0.96 + u1 * 0.14), a, 0.22 * Math.cos(a), 0.22 * Math.sin(a));
+        }
+        if (k % 3 === 0)
+          b.sphere('ceramic', 0.3, 5, px, PAL_GREEN_Y + 1.25, pz,
+            PAL_FLOWERS[(Math.abs(salt) + k) % PAL_FLOWERS.length], 0, 0, 0, 1, 0.85, 1);
+        carpetTufts++;
+        carpetFlowers += k % 3 === 0 ? 1 : 0;
+      }
+      // 每 4 格一棵 3m 级乔木：250m 俯瞰也能读出成片树冠
+      if ((cells & 3) === 0) {
+        palaceCanopy(b, x + (hs - 0.5) * 10, z + (wardHash(x, z, salt + 7901) - 0.5) * 10, salt + 8100);
+        canopies++;
+      }
+      cells++;
+    }
+  }
+  b.kit('palace.greenCarpet.cell', cells, PAL_GREEN_Y);
+  b.kit('palace.greenCarpet.freeBlob', carpetBlobs, PAL_GREEN_Y);
+  b.kit('palace.greenCarpet.tuft', carpetTufts, 0);
+  b.kit('palace.greenCarpet.flower', carpetFlowers, 0);
+  b.kit('palace.greenCarpet.canopy', canopies, 0);
+
+  // ---- ② 原簇状花木层：与绿毯叠加，提供簇内 24 株花 / 灌木 / 小乔木 ----
+  for (const [cx, cz] of FLORA_CLUSTERS) {
+    const salt = (Math.round(cx) * 31 + Math.round(cz) * 17) | 0;
+    const radius = 20 + wardHash(cx, cz, salt + 1) * 12;      // 20–32m
+    const gw = radius * 1.8, gd = radius * 1.5;
+    // ① 真草地：底色 + 深浅草斑 + 倾斜草叶 + 花，取代「方砖上几粒孤立小球」
+    // R23 第三轮：草叶按画面尺度放大并提亮（第一轮 0.08m 细叶在宫内近景同样看不见）
+    // 簇状草斑比绿毯高 16mm，避免两层共面 z-fighting（R23 第四轮）
+    b.box('leaf', gw, 0.03, gd, cx, LAWN_Y + 0.016, cz, shade(0x7ea94a, 0.94));
+    for (let k = 0; k < 22; k++) {
+      const hs = wardHash(cx + k * 7, cz - k * 5, salt + 400 + k);
+      const px = cx + (hs - 0.5) * gw * 0.92;
+      const pz = cz + (wardHash(cx, cz + k * 3, salt + 500 + k) - 0.5) * gd * 0.92;
+      b.box('leaf', gw * 0.16, 0.012, gd * 0.2, px, LAWN_Y + 0.042, pz, shade(SC_LEAF_W, 0.9 + hs * 0.25));
+      for (let t = 0; t < 4; t++) {
+        const a = (t / 4) * Math.PI * 2 + hs * 3;
+        b.box('leaf', 0.22, 0.8 + hs * 0.6, 0.48,
+          px + Math.cos(a) * 0.4, LAWN_Y + 0.55, pz + Math.sin(a) * 0.4,
+          shade(t % 2 ? 0xa8d45c : 0x8fbe4a, 0.92 + hs * 0.24), a,
+          0.24 * Math.cos(a), 0.24 * Math.sin(a));
+      }
+      if (k % 2 === 0) {
+        const cols2 = [0xc2677a, 0xd8a24a, 0xe6e0c6, 0x9a6fb0, 0xe08a48];
+        b.sphere('ceramic', 0.26, 5, px, LAWN_Y + 1.16, pz, cols2[k % 5]);
+      }
+      tufts++;
+    }
+    // ② 花木 24 株（花丛 / 灌木 / 乔木三选一），簇内按面积均匀撒点，拒绝点顺延重试
+    let placed = 0, tries = 0;
+    while (placed < PLANTS_PER_CLUSTER && tries < PLANTS_PER_CLUSTER * 6) {
+      const a = wardHash(cx, cz, salt + 100 + tries) * Math.PI * 2;
+      const rr = radius * Math.sqrt(wardHash(cx, cz, salt + 200 + tries));
+      const px = cx + Math.cos(a) * rr, pz = cz + Math.sin(a) * rr;
+      tries++;
+      if (!floraClear(px, pz)) continue;
+      floraPlant(b, px, pz, wardHash(cx, cz, salt + 300 + tries), salt + tries);
+      placed++; plants++;
+    }
+    clusters++;
+  }
+  b.kit('palace.groundFlora', clusters, 0);
+  b.kit('palace.groundFlora.plant', plants, 0);
+  b.kit('palace.groundFlora.tuft', tufts, 0);
+  b.kit('palace.groundFlora.lawn', clusters, 0.2);
+}
+
+// ============ R25：殿阁室内起居陈设层 ============
+/**
+ * 旧 furnishHall / furnishCourt 只落礼制陈设（宝座 / 屏风 / 香炉 / 宫灯 / 仪仗），
+ * 用户点名「皇宫房间内家具、摆设、装饰、起居用品、功能用品缺失」。
+ * 这里对主要殿阁补一层 buildRoomLiving 的三档起居资产（床榻 / 箱笼 / 妆奁 / 盆架 / 灯檠 / 挂轴…），
+ * 与街屋同一套资产表、同一套坐标 hash，不消耗共享 rng；器件贴墙贴角，不压明间宝座与甬道。
+ * 坐标全部是世界口径（与 furnishHall 的 x/z/y 同口径），ux=+X / vx=+Z 即不旋转的房间。
+ */
+function buildPalaceLiving(b: Baker): void {
+  const room = (cx: number, cz: number, w: number, d: number, y0: number, h: number, variant: number): void => {
+    buildRoomLiving(b, { cx, cz, w, d, y0, h, ux: 1, uz: 0, vx: 0, vz: 1, variant });
+  };
+  // 三大殿（台基顶 y = 4.65，与 furnishHall 同口径）
+  room(0, PALACE.taiheZ - 6, 200, 84, 4.65, 20, 1);
+  room(0, PALACE.zhongheZ - 4, 140, 70, 4.65, 18, 2);
+  room(0, PALACE.baoheZ - 5, 180, 78, 4.65, 19, 3);
+  // 后寝寝殿（R24 中轴北段，台基 y = 3.1）
+  room(0, -3840, 110, 52, 3.1, 14, 4);
+  // R23：旧值 room(0,-2960,60,24,6.2,9,5) 落在午门**城台实心芯**内（城台 y 1.4–12.6），
+  // 28 件起居家具全被夯土墙埋掉，这正是「午门宫殿内什么都没有」的根因之一。
+  // 改到五凤楼真实楼层（hallY=13.3，地面完成面 13.7），与 buildMeridianGate 的四壁空间对齐。
+  // 太和门门楼（furnishGateHall 只落灯与仪仗）
+  room(0, -2950, 116, 24, 13.75, 10.2, 5);
+  room(0, -3086, 44, 20, 2.78, 7, 6);
+  // 东西六宫 12 院：每院正殿 + 东西配殿（台基顶 y ≈ 1.26），共 36 间
+  let k = 10;
+  for (const sx of [-1, 1]) {
+    for (let col = 0; col < 3; col++) {
+      for (let row = 0; row < 2; row++) {
+        const cx = sx * (500 + col * 150), cz = -3820 - row * 118;
+        room(cx, cz - 14, 42, 22, 1.26, 6.4, k++);
+        for (const s of [-1, 1]) room(cx + s * 44, cz - 6, 13, 30, 1.26, 4.6, k++);
+      }
+    }
+  }
+  b.kit('palace.living.rooms', 42, 0);
+  // ============ R22 追加：东西六宫夹道值房 / 后寝值房 / 宫苑厅阁，共 28 间 ============
+  // 固定整数坐标 + 变体序号，零随机源、不消耗共享 RNG；坐标全部落在宫城
+  // z ∈ [-3000, -3690]、|x| ≤ 1040（< 1160）的既有殿阁两翼，不改动上面任何已有 room(...) 调用。
+  // —— 三大殿两翼廊庑 / 六宫夹道值房（10 间）
+  room(-300, -3060, 30, 18, 1.26, 5.4, 100);
+  room( 300, -3060, 30, 18, 1.26, 5.4, 101);
+  room(-560, -3060, 26, 16, 1.26, 5.0, 102);
+  room( 560, -3060, 26, 16, 1.26, 5.0, 103);
+  room(-820, -3200, 24, 18, 1.26, 5.0, 104);
+  room( 820, -3200, 24, 18, 1.26, 5.0, 105);
+  room(-300, -3300, 30, 18, 1.26, 5.4, 106);
+  room( 300, -3300, 30, 18, 1.26, 5.4, 107);
+  room(-620, -3340, 28, 20, 1.26, 5.2, 108);
+  room( 620, -3340, 28, 20, 1.26, 5.2, 109);
+  // —— 后寝值房（内廷东西，8 间）
+  room(-160, -3560, 22, 14, 3.1, 6.0, 110);
+  room( 160, -3560, 22, 14, 3.1, 6.0, 111);
+  room(-360, -3600, 24, 16, 3.1, 6.0, 112);
+  room( 360, -3600, 24, 16, 3.1, 6.0, 113);
+  room(-160, -3660, 22, 14, 3.1, 6.0, 114);
+  room( 160, -3660, 22, 14, 3.1, 6.0, 115);
+  room(-420, -3690, 26, 16, 3.1, 6.0, 116);
+  room( 420, -3690, 26, 16, 3.1, 6.0, 117);
+  // —— 宫苑厅阁（外翼，10 间）
+  room(-900, -3000, 20, 20, 0.6, 4.6, 118);
+  room( 900, -3000, 20, 20, 0.6, 4.6, 119);
+  room(-1000, -3200, 22, 18, 0.6, 4.6, 120);
+  room( 1000, -3200, 22, 18, 0.6, 4.6, 121);
+  room(-900, -3400, 20, 20, 0.6, 4.6, 122);
+  room( 900, -3400, 20, 20, 0.6, 4.6, 123);
+  room(-1040, -3560, 24, 18, 0.6, 4.6, 124);
+  room( 1040, -3560, 24, 18, 0.6, 4.6, 125);
+  room(-960, -3660, 20, 20, 0.6, 4.6, 126);
+  room( 960, -3660, 20, 20, 0.6, 4.6, 127);
+  b.kit('palace.living.roomsR22', 70, 0);  // 42 原有 + 28 新增 = 房间总数 70
 }
 
 /** 宫城总装：地坪 → 宫墙 → 午门/太和门/神武门 → 三大殿 → 广场 → 六宫 → 角楼 → 廊庑 → 御沟 → 宫前宫后商业街 */
@@ -2236,6 +3312,11 @@ export function buildPalace(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   furnishHall(b, { x: 0, z: PALACE.baoheZ - 5, y: 4.65, w: 180, d: 78, scale: 0.94, salt: 37 });
   furnishGateHall(b, 0, -2960, 6.2, 1.0, 51);
   furnishGateHall(b, 0, -3086, 2.78, 0.8, 67);
+  // R22 叠加层：88 组多带补景（中轴 / 御花园 / 宫墙内外，每组含成簇花木与山水） + 32 簇 640 株成片花木；
+  // R25 殿阁内补三档起居陈设
+  buildPalaceScenery(b);
+  buildPalaceGroundFlora(b);
+  buildPalaceLiving(b);
   b.kit('imperial.palace', 1, 0);
 }
 

@@ -1,4 +1,5 @@
 import { Baker, SignMesher, SignAtlas, shade, BGroup } from './bake';
+import { buildRoomLiving } from './roomLiving';
 import * as THREE from 'three';
 import { RNG } from '../core/rng';
 import {
@@ -1710,6 +1711,13 @@ export function buildStreetInteriors(
     else if (s.kind === 'house') dressHouse(R, F);
     else if (s.kind === 'tavern') dressTavern(R, s, i, F);
     else dressTeahouse(R, F);
+    // R17：9 座手工街屋同样落三档起居资产（与 2894 间铺面同一套资产表、同一套审计）。
+    // 必须在 yawAbout 复位之前调用，镜像街屋的局部坐标才和 dress* 一起被正确翻转。
+    buildRoomLiving(b, {
+      cx: s.x, cz: s.z, w: R.u * 2, d: R.v * 2, y0: F, h: R.h,
+      ux: 1, uz: 0, vx: 0, vz: 1,
+      variant: i, trade: s.trade, compact: false,
+    });
     if (mirrored) { b.yawAbout(); sg.yawAbout(); }
     built++;
   }
@@ -2956,6 +2964,7 @@ export function flowerBush(b: Baker, x: number, z: number, s: number, tone: numb
  * @param ry    旋转：法线朝 +z 用 0，朝 −z 用 π，朝 ±x 用 ∓π/2
  */
 export function gableTriangle(b: Baker, halfW: number, rise: number, x: number, y: number, z: number, ry: number, hex: number): void {
+  // 原三角：6 顶点、双法线（+z / −z 各一片），在 wall 组 FrontSide 下双面可见 —— 结构保持不变。
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute([
     -halfW, 0, 0, halfW, 0, 0, 0, rise, 0,
@@ -2964,9 +2973,70 @@ export function gableTriangle(b: Baker, halfW: number, rise: number, x: number, 
   geo.setAttribute('normal', new THREE.Float32BufferAttribute([
     0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1,
   ], 3));
-  const uu = halfW * 2 * 0.24, vv = rise * 0.24;
+  // R20：粉刷肌理 UV 密度 0.24/m → 0.8/m，wallTex 真正重复，端头不再是一整片纯色。
+  const GUV = 0.8;
+  const uu = halfW * 2 * GUV, vv = rise * GUV;
   geo.setAttribute('uv', new THREE.Float32BufferAttribute([0, 0, uu, 0, uu * 0.5, vv, uu, 0, 0, 0, uu * 0.5, vv], 2));
   b.addGeo('wall', geo, x, y, z, hex, ry, 0, 0);
+
+  // ---- R20 宋式山花装饰（判词「端头仍读作一整片无纹理的浅赭三角面」）----
+  // 局部 XY 平面与三角同一套，z 略偏 ±off 免 z-fighting；ry 由 addGeo 统一处理，
+  // 天然适配 centralbelt 的 ry=0/π 与 riverbank 的 ry=±π/2。全部尺寸由 halfW/rise
+  // 确定性推导，不消耗共享 RNG；前后两面各一组（wall/wood 均为 FrontSide，须各自保证绕序）。
+  const m = Math.min(halfW, rise);
+  const off = 0.045;                       // 前后饰面各偏 0.045
+  const bw = 0.18 * m;                     // 博风板宽（0.16~0.22 × min(halfW,rise)）
+  const L = Math.max(1e-6, Math.hypot(halfW, rise));
+  const uK = 0.8;                          // 木作 UV 密度
+  const dpos: number[] = [], dnor: number[] = [], duv: number[] = [];
+  // 压一个三角形；nz<0（背面）时反转绕序，FrontSide 材质下从两侧都可见。
+  const tri = (a: [number, number], bb: [number, number], c: [number, number], zz: number, nz: number): void => {
+    const p = nz > 0 ? [a, bb, c] : [a, c, bb];
+    for (const q of p) { dpos.push(q[0], q[1], zz); dnor.push(0, 0, nz); duv.push(q[0] * uK, q[1] * uK); }
+  };
+  // 凸四边形 → 2 三角形；自动规范成从 +z 看逆时针（FrontSide 正确朝向）。
+  const quad = (p0: [number, number], p1: [number, number], p2: [number, number], p3: [number, number], zz: number, nz: number): void => {
+    const cross = (p1[0] - p0[0]) * (p2[1] - p0[1]) - (p1[1] - p0[1]) * (p2[0] - p0[0]);
+    const q = cross >= 0 ? [p0, p1, p2, p3] : [p0, p3, p2, p1];
+    tri(q[0], q[1], q[2], zz, nz);
+    tri(q[0], q[2], q[3], zz, nz);
+  };
+  const bar = (cx: number, cy: number, hx: number, hy: number, zz: number, nz: number): void =>
+    quad([cx - hx, cy - hy], [cx + hx, cy - hy], [cx + hx, cy + hy], [cx - hx, cy + hy], zz, nz);
+  const diamond = (cx: number, cy: number, rx: number, ry: number, zz: number, nz: number): void =>
+    quad([cx - rx, cy], [cx, cy - ry], [cx + rx, cy], [cx, cy + ry], zz, nz);
+  // 博风板：沿斜边 A→B 朝三角内法线 (nx,ny) 偏 bw；檐角内缘 y 钳到 0，不穿出底边。
+  const barge = (ax: number, ay: number, bx: number, by: number, nx: number, ny: number, zz: number, nz: number): void =>
+    quad([ax, ay], [bx, by], [bx + nx * bw, Math.max(0, by + ny * bw)], [ax + nx * bw, Math.max(0, ay + ny * bw)], zz, nz);
+  // 团花 / 透气孔：6 段三角扇。
+  const rosette = (cx: number, cy: number, r: number, zz: number, nz: number): void => {
+    for (let i = 0; i < 6; i++) {
+      const a0 = (i / 6) * Math.PI * 2, a1 = ((i + 1) / 6) * Math.PI * 2;
+      tri([cx, cy], [cx + r * Math.cos(a0), cy + r * Math.sin(a0)], [cx + r * Math.cos(a1), cy + r * Math.sin(a1)], zz, nz);
+    }
+  };
+  for (const s of [1, -1] as const) {
+    const zz = s * off, nz = s;
+    // 两条博风板：右斜边内法线 (-rise,-halfW)/L，左斜边内法线 (rise,-halfW)/L。
+    barge(halfW, 0, 0, rise, -rise / L, -halfW / L, zz, nz);
+    barge(-halfW, 0, 0, rise, rise / L, -halfW / L, zz, nz);
+    // 悬鱼：脊点下方 rise*0.83 的小菱形吊饰。
+    diamond(0, rise * 0.83, 0.06 * m, 0.085 * m, zz, nz);
+    // 直棂山花格：中下部 4 根竖棂 + 2 根横枋，留出粉刷面不铺满。
+    const yLo = rise * 0.12, yHi = rise * 0.5, cyMid = (yLo + yHi) / 2, hBar = (yHi - yLo) / 2;
+    const sw = 0.03 * m;
+    for (let i = 0; i < 4; i++) bar((-0.3 + 0.2 * i) * halfW, cyMid, sw, hBar, zz, nz);
+    const fh = 0.028 * m, fx = 0.34 * halfW;
+    bar(0, rise * 0.16, fx, fh, zz, nz);
+    bar(0, rise * 0.46, fx, fh, zz, nz);
+    // 悬鱼上方一个小圆团花 / 透气孔。
+    rosette(0, rise * 0.66, 0.045 * m, zz, nz);
+  }
+  const dgeo = new THREE.BufferGeometry();
+  dgeo.setAttribute('position', new THREE.Float32BufferAttribute(dpos, 3));
+  dgeo.setAttribute('normal', new THREE.Float32BufferAttribute(dnor, 3));
+  dgeo.setAttribute('uv', new THREE.Float32BufferAttribute(duv, 2));
+  b.addGeo('wood', dgeo, x, y, z, 0x3a2a20, ry, 0, 0);
 }
 
 
@@ -3001,6 +3071,12 @@ export interface TradeRoomSpec {
   floor?: 'wood' | 'brick' | 'stone';
   /** 只落前 N 件（缺省全落） */
   maxItems?: number;
+  /**
+   * 来源标识（R24 台账用）：'imperialFront' / 'imperialBack' / 'autoPlot' 等。
+   * 生成侧按此键打 `shopint.src.<src>.all`，本函数打 `shopint.src.<src>.stocked`，
+   * 主进程即可按来源断言「全部店铺数 = 带行业经营用品店铺数」。不传则不记分项。
+   */
+  src?: string;
 }
 
 interface Put {
@@ -3052,6 +3128,9 @@ export function endTradeInteriorAudit(): TradeRoomAudit[] {
  * 返回落位件数，供调用方打 kit 台账。
  */
 export function buildTradeInterior(b: Baker, s: TradeRoomSpec): number {
+  // R24 台账：每间铺面恰好调用本函数一次 → shopint.shopAll 即「全部店铺数」的真实计数
+  // （centralbelt 临街/后巷、riverbank、宫前/宫后商业街、buildings 自动地块全部经此入口）。
+  b.kit('shopint.shopAll', 1, s.y0);
   const halfU = s.w / 2;
   const halfV = s.d / 2;
   const F = s.y0;
@@ -3257,7 +3336,29 @@ export function buildTradeInterior(b: Baker, s: TradeRoomSpec): number {
   if (halfU > 2.2) { pieces += placeItem(wallK, -halfU * 0.55, vBack); count++; }
   if (halfU > 3.4) { pieces += placeItem(wallK, halfU * 0.55, vBack); count++; }
   pieces += placeItem('lantern', 0, -halfV + 1.9, 1); count++;
+
+  // —— R17 起居资产叠加层（2026-11-07）——
+  // R16 铺的是营生器物，这层补「谁住在这里」：家具 / 物品 / 生活 / 洗漱 / 起居 / 装饰六类。
+  // 档次由面阔 + 业态 + 坐标 hash 推出，组合也只走坐标 hash（不消耗共享 RNG）；
+  // 所有器件贴墙贴角，挂件不落地，因此 R16 的「最大空白矩形」判据只会更满、不会变差。
+  const living = buildRoomLiving(b, {
+    cx: s.cx, cz: s.cz, w: s.w, d: s.d, y0: F, h: s.h,
+    ux: s.ux, uz: s.uz, vx: s.vx, vz: s.vz,
+    variant: s.variant, compact: s.compact === true, trade: s.trade,
+    record: (key, name, u, v, wu, dv, top, wall) => rec(key, name, u, v, wu, dv, top, wall),
+  });
+  pieces += living.pieces;
   if (room) room.pieces = pieces;
+  // R24 台账（真实计数、不硬编码，运行期可读于 world.assetAudit.detail）：
+  //   · shopint.shopStocked —— 带行业经营用品的店铺数：本业态 TRADE_KIT 实际落了 ≥1 件经营器物。
+  //     与 shopint.shopAll 相等即证明「全城所有店铺都有对应业态经营用品」。
+  //   · shopint.src.<src>.stocked —— 按来源分项（生成侧另有 .all），可按来源逐一断言覆盖。
+  //   · shopint.stockItems —— 全城累计落位经营器件数（件数深度）。
+  if (count > 0) {
+    b.kit('shopint.shopStocked', 1, F);
+    if (s.src) b.kit(`shopint.src.${s.src}.stocked`, 1, F);
+  }
+  b.kit('shopint.stockItems', count, F);
   b.kit(`shopint.${s.trade}.shop`, 1);
   b.kit(`shopint.${s.trade}.items`, count);
   b.kit(`shopint.variant${s.variant}`, 1);

@@ -5,7 +5,7 @@ import { ACTIONS, newPose, Pose, ActView, ActionFn } from './actions';
 import type { Actor } from './types';
 import { JOBS, JOB_MAP, SpotRegistry } from '../data/jobs';
 import { allocate } from '../rt/entity';
-import { NavGraph, H_STREETS, V_STREETS, BRIDGE_HALF, POIS, bridgeDeckY } from '../city/layout';
+import { NavGraph, H_STREETS, V_STREETS, BRIDGE_HALF, POIS, bridgeDeckY, bridgeDeckYAt } from '../city/layout';
 import {
   tickActor, BehCtx, markCrossing, isCrossing, actionKindOf, behaviorChangeStats,
   ACTION_KINDS, CROSS_SHARE, navBounds, BehaviorKind, initBehavior, setPost, rebuildAvoidGrid,
@@ -20,6 +20,7 @@ import { inRiverFootprint, riverCenterZ, riverHalfWidth, RIVER_WATER_Y } from '.
 // R12-D：地府地面高程只从 sky/underworld.ts 只读导入（该文件不做任何修改）
 import { UNDER } from '../sky/underworld';
 import type { Clock, Random } from './behaviors';
+import { solidFloorY, solidPushOut, solidBlocked } from '../rt/solids';
 
 // ============ 随机源与时钟：依赖注入（与 behaviors.ts / physics.ts 同一套写法）============
 // crowd 的随机全部落在「出生」这条线上：撒点顺序、落点抖动、出生朝向、步速、外观抽签。
@@ -113,8 +114,16 @@ function keepOnBridgeDeck(a: Actor): void {
   if (a.pos.y > 12) return;
   if (Math.abs(a.pos.z) > BRIDGE_HALF + 10 || Math.abs(a.pos.x) > 10) return;
   if (Math.abs(a.pos.z) > BRIDGE_HALF) {
-    // 刚走下桥（桥端外 10m 内）：桥面高度收回到街面，否则会带着 0.7m 的桥端高度在街上飘
-    if (a.pos.y > 0.4 && a.pos.y < 9) a.pos.y = 0;
+    // R27 真根因修复：桥端外 10m 内（|x|≤10，实测 z≈±50）同时分布着 0.6~9m 的街屋
+    // 台基 / 室内楼板。旧逻辑把 y∈(0.4,9) 一律归零，逐帧把站在楼板上的人打回街面，
+    // 行走面兜底每 4 帧再抬回来，形成永久拉锯 —— collisionAudit 恒有 18~21 个 sunken。
+    // 改为先查该点真实可行走面：只有脚下没有更高面（纯街面）才收回 0；有台基/楼板
+    // 就贴上去，既不下沉也不悬空。判据与 collisionAudit 同为 walkSurfaceY(x,z,fromY)。
+    if (a.pos.y > 0.4 && a.pos.y < 9) {
+      const sy = walkSurfaceY(a.pos.x, a.pos.z, a.pos.y);
+      if (sy === null || sy <= 0.4) a.pos.y = 0;
+      else a.pos.y = sy;
+    }
     return;
   }
   // E3 复审（2026-11-04）：探针抓到的 5 个「off-deck」逐一取证后全部为合法状态——
@@ -124,7 +133,17 @@ function keepOnBridgeDeck(a: Actor): void {
   // 行为改坏；判据缺陷已在 probe-water-clash 判据 C 修正（排除船上人与出河带岸段）。
   // 已经悬空/站在桥面上的人按净宽 ±10 收回来（实测悬空点在 x=-8.2）；
   // 贴地的人只有本来就落在桥面足迹（±5.2）内才抬上桥，避免把桥头的岸上行人吸到桥面。
-  const deck = bridgeDeckY(THREE.MathUtils.clamp(a.pos.z, -BRIDGE_HALF, BRIDGE_HALF));
+  // R27：桥面高度必须和 walkSurfaceY / collisionAudit 同源。旧代码只用 bridgeDeckY(z)
+  // 的解析抛物线（z=4.07 → 9.04m），而 walkSurfaceY 叠加的是 bridgeDeckYAt(x,z) 的
+  // MAIN_BRIDGES 剖面（同点 9.87m）；逐帧把桥上行人贴到旧曲线，审计按新曲线判，
+  // 15~17 个桥上行人恒被报「陷地 0.83m」。这里优先取同源剖面，取不到再回退旧曲线。
+  // 真正同源：直接问 walkSurfaceY（collisionAudit 用的就是它）。实测这批点的 9.87m
+  // 来自 solidFloorY 叠加的实体桥面顶面，bridgeDeckYAt 在这些点返回 null，只换剖面函数
+  // 会回退到旧曲线、问题依旧。取不到时再依次回退解析剖面。
+  const legacy = bridgeDeckY(THREE.MathUtils.clamp(a.pos.z, -BRIDGE_HALF, BRIDGE_HALF));
+  const surface = walkSurfaceY(a.pos.x, a.pos.z, a.pos.y);
+  const deck = surface !== null ? surface
+    : (bridgeDeckYAt(a.pos.x, a.pos.z) ?? legacy);
   // 桥下纤道（y≈0）与桥面（最高 9.1）是同一 (x,z) 的两层：只有本来就贴着桥面的人才吸上去，
   // 否则从桥下走过会被抬到 8m 高——这正是「人悬在桥面之上」的另一个来源（R27）。
   if (Math.abs(a.pos.y - deck) > 2.2) return;
@@ -222,6 +241,52 @@ function pushOutOfBuildings(pos: THREE.Vector3): boolean {
     if (pos.y < f.y) pos.y = f.y;
   }
   return moved;
+}
+
+/**
+ * R27 落位收敛：出生兜底与逐帧兜底共用的唯一函数，判定口径与 collisionAudit() 完全一致
+ * （embedded = solidBlocked 命中；sunken = walkSurfaceY 高于脚下 0.3m 以上）。
+ *
+ * 修前的真根因：出生时 walkSurfaceY(x,z,y) 落在「墙带」返回 null，只调 pushOutOfBuildings
+ * 改 x/z 却不重查行走面 → 新位置有 0.6~9.9m 台基/楼板，人仍停在 y=0；只能靠逐帧兜底
+ * 每 8 帧慢慢救，实测加载 3s 后仍有 121 个陷地、行走后 22 个。这里改为出生即收敛：
+ *   ① solidPushOut 推出实心墙；
+ *   ② 贴行走面并迭代到稳定（walkSurfaceY 的结果依赖 fromY，一次赋值不稳）；
+ *   ③ 仍不达标则在同心环上确定性找合法落脚点（不用 Math.random、不消耗共享 RNG）。
+ */
+function settleWalkPos(pos: THREE.Vector3, r = 0.34): boolean {
+  const H = 1.7;
+  const ok = (x: number, y: number, z: number): boolean => {
+    if (solidBlocked(x, z, r, y, H)) return false;
+    const sy = walkSurfaceY(x, z, y);
+    return sy === null || y >= sy - 0.3;
+  };
+  solidPushOut(pos, r, pos.y);
+  for (let i = 0; i < 4; i++) {
+    let sy = walkSurfaceY(pos.x, pos.z, pos.y);
+    if (sy === null) {
+      pushOutOfBuildings(pos);
+      sy = walkSurfaceY(pos.x, pos.z, pos.y);
+      if (sy === null) sy = walkSurfaceY(pos.x, pos.z);
+    }
+    if (sy !== null && Math.abs(pos.y - sy) > 0.02) pos.y = sy;
+    else break;
+  }
+  if (ok(pos.x, pos.y, pos.z)) return true;
+  const ox = pos.x, oz = pos.z, oy = pos.y;
+  for (let ring = 1; ring <= 18; ring++) {
+    const rad = ring * 0.85;
+    for (let k = 0; k < 16; k++) {
+      const ang = (k / 16) * Math.PI * 2;
+      const nx = ox + Math.cos(ang) * rad, nz = oz + Math.sin(ang) * rad;
+      const sy = walkSurfaceY(nx, nz, oy);
+      const ny = sy !== null ? sy : oy;
+      if (!ok(nx, ny, nz)) continue;
+      pos.set(nx, ny, nz);
+      return true;
+    }
+  }
+  return false;
 }
 
 const DARK = new THREE.Color(0x241f1a);const STRAW = new THREE.Color(0xa8905a);
@@ -1149,6 +1214,9 @@ export class Crowd {
   private spawned = new WeakSet<Actor>();
   /** 最近一次 update 的仿真时间（行为类变化日志按它裁 60s 窗口） */
   private simT = 0;
+  /** R27 首帧全量落位收敛：所有 spawn（含首帧 ensureVenues 补建）完成、solids 索引齐备后再跑一次 */
+  private settledAll = false;
+  private settleAllStat = { checked: 0, fixed: 0, failed: 0 };
 
   /**
    * @param rng   注入随机源。省略 = 旧路径默认源（Math.random 本体），既有调用点行为不变；
@@ -1178,6 +1246,71 @@ export class Crowd {
 
   /** 单点行走面（探针/调试用）：null = 墙带内不可站立 */
   walkSurfaceAt(x: number, z: number, fromY?: number): number | null { return walkSurfaceY(x, z, fromY); }
+
+  /**
+   * R27 首帧全量落位收敛。世界装配期间 solids 台账与 WS_GRID 是增量构建的，早于台账
+   * 完成就出生的角色会残留「脚下有 0.6~9m 台基、y 却还是 0」。等到首帧（含 ensureVenues
+   * 补建的场所人群都在场、索引齐备）对全部人间角色跑一次与 collisionAudit 同口径的
+   * settleWalkPos，把嵌墙/陷地在加载阶段一次性清干净，而不是靠逐帧兜底慢慢救。
+   */
+  settleAll(): {
+    checked: number; fixed: number; failed: number;
+    before: { embedded: number; sunken: number }; after: { embedded: number; sunken: number };
+  } {
+    const before = this.collisionAudit();
+    let checked = 0, fixed = 0, failed = 0;
+    for (const a of this.actors) {
+      if (a.hidden || a.attach || a.sky) continue;
+      if (a.pos.y < -60 || a.pos.y > 120) continue;
+      const ox = a.pos.x, oy = a.pos.y, oz = a.pos.z;
+      const ok = settleWalkPos(a.pos, 0.34);
+      checked++;
+      if (!ok) failed++;
+      if (Math.abs(a.pos.x - ox) > 0.01 || Math.abs(a.pos.y - oy) > 0.01
+        || Math.abs(a.pos.z - oz) > 0.01) fixed++;
+    }
+    const after = this.collisionAudit();
+    this.settleAllStat = { checked, fixed, failed };
+    return {
+      checked, fixed, failed,
+      before: { embedded: before.embedded, sunken: before.sunken },
+      after: { embedded: after.embedded, sunken: after.sunken },
+    };
+  }
+
+  /** R27 首帧收敛的可断言统计（验收脚本读 window.__qingming.world.crowd.settleStats()） */
+  settleStats(): { done: boolean; checked: number; fixed: number; failed: number } {
+    return { done: this.settledAll, ...this.settleAllStat };
+  }
+
+  /**
+   * R27 碰撞可断言统计（验收脚本读 window.__crowd.collision，或直接调用本方法）：
+   * embedded = 仍嵌在实心墙里的人数（solidBlocked 命中）；
+   * sunken   = 脚下有可站顶面但 y 与该顶面偏差 >0.3m 的人数（陷地/浮空）；
+   * sample   = 前若干问题角色的真实坐标，便于实拍复核。
+   * 全部遍历 this.actors 真实计算，绝不硬编码 0。
+   */
+  collisionAudit(): { embedded: number; sunken: number; sample: { id: number; x: number; y: number; z: number }[] } {
+    let embedded = 0, sunken = 0;
+    const sample: { id: number; x: number; y: number; z: number }[] = [];
+    for (const a of this.actors) {
+      if (a.hidden || a.attach || a.sky) continue;
+      if (a.pos.y < -60 || a.pos.y > 120) continue;           // 只统计人间层
+      const hit = solidBlocked(a.pos.x, a.pos.z, 0.34, a.pos.y, 1.7);
+      // R27 口径修正：「陷地」参考面改用 walkSurfaceY（R19 已有的多层街屋/桥面/台基
+      // 融合行走面），不再用 solidFloorY 的「每 8m 格只留一个最高顶面」——后者会把
+      // 同格另一栋楼的 9.9m 楼板当成楼下角色的参考面，实机误报 138 个。
+      // 且只判「脚低于行走面」：角色高于地面（楼上/城墙/桥面）不算陷地。
+      const sy = walkSurfaceY(a.pos.x, a.pos.z, a.pos.y);
+      const off = sy !== null && a.pos.y < sy - 0.3;
+      if (hit) embedded++;
+      if (off) sunken++;
+      if ((hit || off) && sample.length < 16) {
+        sample.push({ id: a.id, x: +a.pos.x.toFixed(2), y: +a.pos.y.toFixed(2), z: +a.pos.z.toFixed(2) });
+      }
+    }
+    return { embedded, sunken, sample };
+  }
 
   /**
    * 行走面探针（R27）：全城 actor 的 y 与脚下可行走面高差 >0.15m 的人数。
@@ -1314,10 +1447,16 @@ export class Crowd {
     // 出生行走面贴合（R27）：先看脚下有没有可行走面——
     // 室内/台基/桥面就直接站上去（茶博士 (-36,58) 在茶坊 (–36,62) 室内，不再陷进 0.6m 台基），
     // 真落在墙带里（walkSurfaceY === null）才用旧守卫推出墙面。
-    if (a.pos.y > -0.4 && a.pos.y < 12 && !a.sky) {
-      const sy = walkSurfaceY(a.pos.x, a.pos.z, a.pos.y);
-      if (sy === null) pushOutOfBuildings(a.pos);
-      else a.pos.y = sy;
+    // 出生兜底（R27）：覆盖全部人间角色，含 freeze:true 的仪仗侍卫与玩家。
+    // 根因：spawnVenue grid 分支按整数行列直接落点 + freeze，freeze 不进 tickActor，
+    // 截图里半嵌进宫墙的正是这批侍卫，只能在出生时修正。
+    // 先 solidFloorY 贴地（台基/石板顶面），再 solidPushOut 推出实心墙；
+    // 旧 walkSurfaceY / pushOutOfBuildings 保留作 3 类街屋足迹的补充，主判定走全城 solids。
+    if (a.pos.y > -0.4 && a.pos.y <= 120 && !a.sky) {
+      const fy = solidFloorY(a.pos.x, a.pos.z, a.pos.y);
+      if (fy !== null && fy > a.pos.y && fy - a.pos.y <= 0.95) a.pos.y = fy;
+      // R27 一次性收敛：与 collisionAudit 同口径，出生即无嵌墙 / 无陷地，不靠逐帧兜底慢慢救。
+      settleWalkPos(a.pos, 0.34);
     }
     if (a.hat === 0 && (card ? cardStraw(a.occ, card.s) : this.rng() < (STRAW_HAT[a.occ] ?? 0))) a.hat = 2;
     // W6 冠分型：按职业换冠（僧/道/童/女/兵必戴，官/士高档，其余七至九成）；显式传入的 hat 不覆盖
@@ -1722,21 +1861,303 @@ export class Crowd {
       });
     }
 
+    // ---- 12-C 宫城扩编：三大殿两庑 / 丹陛广场 / 太和门 / 廊庑 / 御花园 / 宫墙内外 ----
+    // 全部追加在 plan 末尾：原 4 个宫城锚点与其余场所的 rng 消耗序列一字不改，
+    // 新增人群与具名角色的随机只排在序列末尾，保证「同 seed 截图可比」。
+    // name 统一以 '宫城' 开头，纳入 venueReport.palace 台账（见下方 startsWith 分支）。
+    const palaceExtra: {
+      name: string; x: number; z: number; r: number; count: number;
+      kinds: BehaviorKind[]; occ: string[];
+    }[] = [
+      { name: '宫城·太和殿丹陛东', x: 170, z: PALACE.taiheZ, r: 38, count: 14,
+        kinds: ['guard', 'serve', 'patrol'], occ: ['soldier', 'official', 'watchman', 'porter'] },
+      { name: '宫城·太和殿丹陛西', x: -170, z: PALACE.taiheZ, r: 38, count: 14,
+        kinds: ['guard', 'serve', 'patrol'], occ: ['soldier', 'official', 'watchman', 'porter'] },
+      { name: '宫城·中和保和东庑', x: 210, z: -3530, r: 48, count: 14,
+        kinds: ['serve', 'patrol', 'guard'], occ: ['soldier', 'official', 'porter', 'watchman'] },
+      { name: '宫城·中和保和西庑', x: -210, z: -3530, r: 48, count: 14,
+        kinds: ['serve', 'patrol', 'guard'], occ: ['soldier', 'official', 'porter', 'watchman'] },
+      { name: '宫城·丹陛广场东班', x: 300, z: -3120, r: 44, count: 12,
+        kinds: ['guard', 'serve', 'patrol', 'chat'], occ: ['soldier', 'official', 'watchman', 'scholar'] },
+      { name: '宫城·丹陛广场西班', x: -300, z: -3120, r: 44, count: 12,
+        kinds: ['guard', 'serve', 'patrol', 'chat'], occ: ['soldier', 'official', 'watchman', 'scholar'] },
+      { name: '宫城·太和门内', x: 0, z: -3130, r: 40, count: 12,
+        kinds: ['guard', 'serve', 'patrol'], occ: ['soldier', 'official', 'porter', 'watchman'] },
+      { name: '宫城·东廊庑', x: 560, z: -3400, r: 52, count: 12,
+        kinds: ['patrol', 'serve', 'rest'], occ: ['soldier', 'official', 'porter', 'watchman'] },
+      { name: '宫城·西廊庑', x: -560, z: -3400, r: 52, count: 12,
+        kinds: ['patrol', 'serve', 'rest'], occ: ['soldier', 'official', 'porter', 'watchman'] },
+      { name: '宫城·御花园', x: 0, z: -3890, r: 56, count: 16,
+        kinds: ['sightsee', 'serve', 'chat', 'religion'], occ: ['lady', 'official', 'kid', 'customer', 'musician'] },
+      { name: '宫城·御花园东', x: 300, z: -3870, r: 44, count: 12,
+        kinds: ['sightsee', 'serve', 'chat'], occ: ['lady', 'kid', 'customer', 'musician'] },
+      { name: '宫城·御花园西', x: -300, z: -3870, r: 44, count: 12,
+        kinds: ['sightsee', 'serve', 'chat'], occ: ['lady', 'kid', 'customer', 'musician'] },
+      { name: '宫城·午门外', x: 0, z: -2890, r: 38, count: 10,
+        kinds: ['guard', 'patrol'], occ: ['soldier', 'watchman', 'porter'] },
+      { name: '宫城·东华门外', x: 1180, z: -3400, r: 42, count: 10,
+        kinds: ['guard', 'patrol'], occ: ['soldier', 'watchman'] },
+      { name: '宫城·西华门外', x: -1180, z: -3400, r: 42, count: 10,
+        kinds: ['guard', 'patrol'], occ: ['soldier', 'watchman'] },
+    ];
+    for (const p of palaceExtra) {
+      plan.push({ name: p.name, x: p.x, y: palaceY, z: p.z, r: p.r, count: p.count, sky: false, kinds: p.kinds, occ: p.occ });
+    }
+
+    // ---- R20 宫城再扩编：紧凑簇让「成群」可读 ----
+    // 背景：R19 把宫城驻场计划数从 72 扩到 292（含 34 位具名核心角色），但丹陛广场尺度极大，
+    // r=38~56m 的均匀散点铺开后只是稀疏黑点，实拍 r20-04-palace.png 里仍「没人」。
+    // 本轮 20 个新锚点把 r 全部收紧到 14~20m（要求 12~24m），同一身份聚成一小群人；
+    // 坐标沿用既有 palaceExtra 的皇城可站立区，全部落在 PALACE 矩形 x∈[-1100,1100]、
+    // z∈[-4000,-2950] 内，避开殿宇中轴台基，y=palaceY=0 由既有贴地逻辑处理。
+    // 硬约束：① 追加在 plan 末尾（palaceExtra 之后），for (const v of plan) 顺序 spawn，
+    //   既有 4 个「宫城」锚点与其余场所的 rng 消耗序列一字不改，新增项随机全排在序列末尾；
+    //   ② 不新增任何 this.rng() 调用点、不用 Math.random；③ name 一律以「宫城」开头，
+    //   纳入 venueReport.palace（startsWith 口径）与 window.__realmSnap.actors 台账；
+    //   ④ kinds/occ 全取自既有 BehaviorKind / JOB_MAP 键，不引入未知字段。
+    // 计划数台账（可 grep）：原 4 锚点 72 + R19 扩编 186 + R20 新增 20 锚点 Σcount 338
+    //   + R19 具名 34 + R20 新增具名 30 = 宫城驻场计划数 660（≥620）。
+    const palaceExtra2: {
+      name: string; x: number; z: number; r: number; count: number;
+      kinds: BehaviorKind[]; occ: string[];
+    }[] = [
+      { name: '宫城·太和殿丹陛仪仗东', x: 210, z: PALACE.taiheZ, r: 16, count: 18,
+        kinds: ['guard', 'serve', 'patrol'], occ: ['soldier', 'official', 'porter', 'watchman'] },
+      { name: '宫城·太和殿丹陛仪仗西', x: -210, z: PALACE.taiheZ, r: 16, count: 18,
+        kinds: ['guard', 'serve', 'patrol'], occ: ['soldier', 'official', 'porter', 'watchman'] },
+      { name: '宫城·中和殿朝班东', x: 170, z: PALACE.zhongheZ, r: 14, count: 16,
+        kinds: ['serve', 'guard', 'chat'], occ: ['official', 'soldier', 'scholar', 'porter'] },
+      { name: '宫城·中和殿朝班西', x: -170, z: PALACE.zhongheZ, r: 14, count: 16,
+        kinds: ['serve', 'guard', 'chat'], occ: ['official', 'soldier', 'scholar', 'porter'] },
+      { name: '宫城·保和殿宴列东', x: 170, z: PALACE.baoheZ, r: 16, count: 16,
+        kinds: ['serve', 'sightsee', 'chat'], occ: ['official', 'lady', 'musician', 'customer'] },
+      { name: '宫城·保和殿宴列西', x: -170, z: PALACE.baoheZ, r: 16, count: 16,
+        kinds: ['serve', 'sightsee', 'chat'], occ: ['official', 'lady', 'musician', 'customer'] },
+      { name: '宫城·太和门御前侍卫', x: 90, z: -3120, r: 14, count: 18,
+        kinds: ['guard', 'patrol', 'serve'], occ: ['soldier', 'watchman', 'porter'] },
+      { name: '宫城·太和门外候朝王公', x: 0, z: -3040, r: 18, count: 18,
+        kinds: ['guard', 'serve', 'chat', 'rest'], occ: ['official', 'soldier', 'scholar', 'porter'] },
+      { name: '宫城·朝房王公大臣东', x: 380, z: -3040, r: 16, count: 18,
+        kinds: ['serve', 'chat', 'rest'], occ: ['official', 'scholar', 'lady', 'porter'] },
+      { name: '宫城·朝房王公大臣西', x: -380, z: -3040, r: 16, count: 18,
+        kinds: ['serve', 'chat', 'rest'], occ: ['official', 'scholar', 'lady', 'porter'] },
+      { name: '宫城·值房随侍太监东', x: 260, z: -3080, r: 14, count: 16,
+        kinds: ['serve', 'chores', 'patrol'], occ: ['official', 'porter', 'watchman'] },
+      { name: '宫城·值房随侍太监西', x: -260, z: -3080, r: 14, count: 16,
+        kinds: ['serve', 'chores', 'patrol'], occ: ['official', 'porter', 'watchman'] },
+      { name: '宫城·东六宫宫女班', x: 700, z: -3600, r: 18, count: 18,
+        kinds: ['serve', 'chores', 'chat', 'sightsee'], occ: ['lady', 'kid', 'customer', 'porter'] },
+      { name: '宫城·西六宫宫女班', x: -700, z: -3600, r: 18, count: 18,
+        kinds: ['serve', 'chores', 'chat', 'sightsee'], occ: ['lady', 'kid', 'customer', 'porter'] },
+      { name: '宫城·御花园宫女班', x: 120, z: -3880, r: 16, count: 18,
+        kinds: ['serve', 'sightsee', 'chat', 'chores'], occ: ['lady', 'kid', 'musician', 'customer'] },
+      { name: '宫城·御花园王公游宴', x: -160, z: -3900, r: 18, count: 16,
+        kinds: ['sightsee', 'chat', 'religion'], occ: ['official', 'lady', 'scholar', 'musician'] },
+      { name: '宫城·东廊庑戍卫', x: 620, z: -3360, r: 16, count: 16,
+        kinds: ['patrol', 'guard', 'rest'], occ: ['soldier', 'watchman', 'porter'] },
+      { name: '宫城·西廊庑戍卫', x: -620, z: -3360, r: 16, count: 16,
+        kinds: ['patrol', 'guard', 'rest'], occ: ['soldier', 'watchman', 'porter'] },
+      { name: '宫城·宫墙内巡道东', x: 1020, z: -3400, r: 20, count: 16,
+        kinds: ['patrol', 'guard'], occ: ['soldier', 'watchman'] },
+      { name: '宫城·宫墙内巡道西', x: -1020, z: -3400, r: 20, count: 16,
+        kinds: ['patrol', 'guard'], occ: ['soldier', 'watchman'] },
+    ];
+    for (const p of palaceExtra2) {
+      plan.push({ name: p.name, x: p.x, y: palaceY, z: p.z, r: p.r, count: p.count, sky: false, kinds: p.kinds, occ: p.occ });
+    }
+
+    // ---- 宫城俯瞰密集阵列（补充 / 二轮精修）：朝会班列 / 仪仗卫队 / 禁军列阵 / 侍从簇 ----
+    // 背景：既有 plan 全部走 spawnVenue 的 rng 极坐标随机撒点（ang/rr 各吃一次 rng），
+    // r=14~56m 铺开后俯瞰仍是一片稀疏小点；首轮 8 个网格方阵又因 card 哈希灰暗杂色
+    // 被实拍判为「散落黑点」。本轮：① 每方阵统一鲜明服色（COURT_UNIFORMS，俯瞰成彩色条带）；
+    // ② 步距 COURT_GRID_STEP 1.6m 收紧成密实色块；③ 中轴 COURT_AXIS_CLEAR 留白，班列分列两侧；
+    // ④ 朝向统一 COURT_YAW（面朝太和殿）；⑤ freeze 站定，count 全部落地（不经 2m 排斥）。
+    // 10 类身份覆盖：侍卫(2/3/8)、宫女(7)、太监(6)、王公大臣(1)、将军将士(4/5)、
+    //   皇帝/皇后/妃嫔/王子/公主(6 内廷 stripe，叠加既有 courtRows 64 位具名)。
+    // 硬约束：① 纯追加在 plan 末尾，palaceExtra / palaceExtra2 / courtRows 一字不改；
+    //   ② name 一律以 '宫城' 开头，纳入 venueReport.palace（startsWith 口径）；
+    //   ③ 坐标 = 整数行列 × 步距（无 rng 撒点），外观 = 整数坐标 hash 编 cardId + 显式服色覆盖卡色；
+    //   ④ 每阵列统一显式 prop（null / 具体池名），道具峰值可静态精确核算（见 pools.ts 注释）；
+    //   ⑤ grid 项的 spawn 由主循环跳过、延到具名角色之后（既有 rng 消耗序列一字不改）。
+    // 宫城计划数台账：既有 660 + 本批 Σcount 715 = 1375（≥1100）；count 均 = rows*cols，本轮不变。
+    const palaceDense: {
+      name: string; x: number; z: number; r: number; count: number;
+      rows: number; cols: number; dx: number; dz: number; prop: string | null;
+      uniform: string; axisGap?: number; kinds: BehaviorKind[]; occ: string[];
+    }[] = [
+      // 太和殿丹陛朝会班列：按品级分列（occ 按列循环），王公大臣执笏/表（scroll），分列御道两侧
+      { name: '宫城·太和殿朝会班列·王公大臣', x: 0, z: -3240, r: 11, count: 100,
+        rows: 10, cols: 10, dx: COURT_GRID_STEP, dz: COURT_GRID_STEP, prop: 'scroll',
+        uniform: '王公大臣', axisGap: COURT_AXIS_CLEAR,
+        kinds: ['serve', 'guard', 'chat', 'rest'], occ: ['official', 'scholar', 'official', 'sitter'] },
+      // 丹陛广场仪仗卫队：御道东西两厢执戟（spear）侍卫
+      { name: '宫城·丹陛广场仪仗东班·侍卫', x: 300, z: -3220, r: 10, count: 90,
+        rows: 10, cols: 9, dx: COURT_GRID_STEP, dz: COURT_GRID_STEP, prop: 'spear',
+        uniform: '仪仗东班',
+        kinds: ['guard', 'patrol', 'serve'], occ: ['soldier', 'watchman'] },
+      { name: '宫城·丹陛广场仪仗西班·侍卫', x: -300, z: -3220, r: 10, count: 90,
+        rows: 10, cols: 9, dx: COURT_GRID_STEP, dz: COURT_GRID_STEP, prop: 'spear',
+        uniform: '仪仗西班',
+        kinds: ['guard', 'patrol', 'serve'], occ: ['soldier', 'watchman'] },
+      // 御道两侧禁军列阵：佩刀（blade）将军将士
+      { name: '宫城·御道禁军列阵东·将军将士', x: 150, z: -3160, r: 12, count: 96,
+        rows: 12, cols: 8, dx: COURT_GRID_STEP, dz: COURT_GRID_STEP, prop: 'blade',
+        uniform: '禁军东阵',
+        kinds: ['guard', 'patrol'], occ: ['soldier'] },
+      { name: '宫城·御道禁军列阵西·将军将士', x: -150, z: -3160, r: 12, count: 96,
+        rows: 12, cols: 8, dx: COURT_GRID_STEP, dz: COURT_GRID_STEP, prop: 'blade',
+        uniform: '禁军西阵',
+        kinds: ['guard', 'patrol'], occ: ['soldier'] },
+      // 内廷：皇帝 / 皇后 / 妃嫔 / 皇子公主 / 随侍太监（stripe 五身份色条带，不持物靠冠服读身份）
+      { name: '宫城·内廷帝后妃嫔皇子公主·太监随侍', x: 0, z: -3100, r: 10, count: 81,
+        rows: 9, cols: 9, dx: COURT_GRID_STEP, dz: COURT_GRID_STEP, prop: null,
+        uniform: '帝后内廷', axisGap: COURT_AXIS_CLEAR,
+        kinds: ['serve', 'chores', 'sightsee', 'chat'], occ: ['official', 'lady', 'kid', 'lady', 'kid'] },
+      // 御花园 / 廊庑侍从簇：宫女执扇（fan）成群
+      { name: '宫城·御花园廊庑侍从簇·宫女', x: 620, z: -3500, r: 10, count: 81,
+        rows: 9, cols: 9, dx: COURT_GRID_STEP, dz: COURT_GRID_STEP, prop: 'fan',
+        uniform: '宫女侍从',
+        kinds: ['serve', 'chores', 'chat', 'sightsee'], occ: ['lady', 'kid', 'customer'] },
+      // 午门内禁军列阵：执戟侍卫成方阵，中轴留白
+      { name: '宫城·午门内禁军列阵·侍卫', x: 0, z: -2960, r: 10, count: 81,
+        rows: 9, cols: 9, dx: COURT_GRID_STEP, dz: COURT_GRID_STEP, prop: 'spear',
+        uniform: '午门禁军', axisGap: COURT_AXIS_CLEAR,
+        kinds: ['guard', 'patrol'], occ: ['soldier', 'watchman'] },
+    ];
+    for (const d of palaceDense) {
+      plan.push({
+        name: d.name, x: d.x, y: palaceY, z: d.z, r: d.r, count: d.count, sky: false,
+        kinds: d.kinds, occ: d.occ,
+        grid: { rows: d.rows, cols: d.cols, dx: d.dx, dz: d.dz, prop: d.prop,
+          uniform: COURT_UNIFORMS[d.uniform], axisGap: d.axisGap },
+      });
+    }
+
+    // ---- 宫廷具名核心角色：皇帝 / 后妃 / 皇子公主 / 内廷 / 朝臣 / 将领 / 侍卫 ----
+    // occ 全部取自 JOB_MAP（职业键），action 全部取自 ACTIONS（动作键），名片复用 data 既有字段；
+    // 不新增造型资源：身份靠职业冠服（幞头/襦裙/甲胄）+ 宫廷动作（临朝/朝拜/执扇）区分。
+    // 元组：[occ, x, z, action, doing, name, nick, group, desc]
+    type CourtRow = [string, number, number, string, string, string, string, 'guest' | 'job', string];
+    const courtRows: CourtRow[] = [
+      // 御座前列班：皇帝临朝，皇后、贵妃与妃嫔、皇子公主、太监总管与宫女班随侍
+      ['official', 0, -3208, 'holdCourt', '御座临朝', '官家', '当今圣上', 'guest', '太和殿前御座临朝听政'],
+      ['lady', -9, -3206, 'fanSway', '中宫陪朝', '皇后', '中宫皇后', 'guest', '御座西侧陪临朝'],
+      ['lady', 9, -3206, 'sleeveWave', '御前随侍', '贵妃', '贵妃娘娘', 'guest', '御座东侧随侍'],
+      ['lady', -18, -3202, 'fanSway', '列侍', '宸妃', '宸妃', 'guest', '妃嫔列侍丹陛'],
+      ['lady', 18, -3202, 'chat', '叙话', '淑妃', '淑妃', 'guest', '妃嫔丹陛叙话'],
+      ['lady', -27, -3198, 'present', '捧献', '德妃', '德妃', 'guest', '妃嫔御前捧献'],
+      ['kid', -14, -3198, 'stand', '侍立', '皇长子', '大皇子', 'guest', '皇子御前侍立'],
+      ['kid', 14, -3198, 'lookAround', '观朝', '三皇子', '三皇子', 'guest', '幼皇子观朝仪'],
+      ['lady', -22, -3194, 'chat', '相伴', '长公主', '长公主', 'guest', '公主丹陛相伴'],
+      ['kid', 22, -3194, 'lookAround', '张望', '小公主', '小公主', 'guest', '幼公主丹陛张望'],
+      ['official', -5, -3204, 'present', '传旨', '大总管', '内廷总管', 'job', '太监总管御前传旨'],
+      ['official', 5, -3204, 'courtBow', '秉笔', '秉笔太监', '内侍秉笔', 'job', '内侍秉笔立班'],
+      ['lady', -12, -3200, 'present', '掌事', '宫女掌事', '女官掌事', 'job', '宫女班掌事'],
+      ['lady', 12, -3200, 'fanSway', '执扇', '执扇宫女', '宫女执扇', 'job', '宫女执扇随侍'],
+      ['lady', -20, -3196, 'present', '捧皿', '捧皿宫女', '宫女捧皿', 'job', '宫女捧皿侍立'],
+      ['lady', 30, -3192, 'sweep', '洒扫', '洒扫宫女', '宫女洒扫', 'job', '宫女月台洒扫'],
+      // 王公大臣与将军：御前列班
+      ['official', 0, -3184, 'courtBow', '朝拜', '丞相', '当朝丞相', 'guest', '丞相率百官朝拜'],
+      ['official', -40, -3186, 'holdCourt', '奏事', '枢密使', '枢密使', 'guest', '枢密使御前奏事'],
+      ['official', 40, -3186, 'write', '录旨', '参知政事', '参政', 'guest', '参知政事录旨'],
+      ['official', -80, -3180, 'stand', '立班', '户部尚书', '户部尚书', 'guest', '六部尚书列班'],
+      ['official', 80, -3180, 'courtBow', '朝拜', '礼部侍郎', '礼部侍郎', 'guest', '礼部侍郎朝拜'],
+      ['soldier', -60, -3174, 'stand', '镇殿', '镇殿将军', '镇殿将军', 'job', '将军镇殿'],
+      ['soldier', 60, -3174, 'swordForm', '佩剑', '骁骑将军', '骁骑将军', 'job', '骁骑将军佩剑立班'],
+      ['soldier', 0, -3170, 'spearThrust', '执戟', '殿前都指挥', '殿前都指挥', 'job', '殿前都指挥执戟'],
+      // 御前侍卫：分列丹陛广场两厢
+      ['soldier', -100, -3192, 'stand', '立卫', '左班侍卫', '御前侍卫', 'job', '御前侍卫左班'],
+      ['soldier', 100, -3192, 'stand', '立卫', '右班侍卫', '御前侍卫', 'job', '御前侍卫右班'],
+      ['soldier', -140, -3182, 'lookAround', '警视', '执戟侍卫', '御前侍卫', 'job', '御前侍卫执戟警视'],
+      ['soldier', 140, -3182, 'lookAround', '警视', '佩刀侍卫', '御前侍卫', 'job', '御前侍卫佩刀警视'],
+      ['watchman', -180, -3166, 'sneak', '巡廊', '巡廊侍卫', '廊庑戍卫', 'job', '廊庑巡卫'],
+      ['watchman', 180, -3166, 'stand', '守门', '立门侍卫', '宫门戍卫', 'job', '宫门立卫'],
+      // 御花园：游园与宴乐
+      ['kid', 0, -3870, 'lookAround', '游园', '游园皇子', '皇子', 'guest', '皇子御花园游赏'],
+      ['kid', -30, -3870, 'chat', '赏花', '赏花公主', '公主', 'guest', '公主御花园赏花'],
+      ['musician', -60, -3880, 'flute', '品竹', '御园乐伎', '乐伎', 'job', '御花园乐伎品竹'],
+      ['musician', 60, -3880, 'pluck', '拨弦', '御园乐伎', '乐伎', 'job', '御花园乐伎拨弦'],
+      // ---- R20 新增 30 位具名核心角色：34 → 64（≥60）----
+      // 补齐用户点名的每一类并按区域分配不同组合：皇帝/皇后/皇贵妃·妃嫔/皇子/公主/
+      // 太监总管·随侍太监/宫女班/王公大臣/将军·将士/御前侍卫。name 全部唯一、可区分；
+      // occ/action 全取既有枚举；yaw 仍由 Math.atan2(-x, taiheZ - z) 纯坐标计算（确定性，
+      // 不消耗 rng）。追加在 courtRows 末尾 → 既有 34 位具名的 spawnStation 顺序一字不改。
+      // 太和门外候朝 / 朝房 王公大臣（6）
+      ['official', 210, -3050, 'courtBow', '候朝', '魏国公', '国公', 'guest', '国公太和门外候朝'],
+      ['official', 260, -3050, 'stand', '立班', '郑王', '亲王', 'guest', '亲王朝房立班'],
+      ['official', 310, -3050, 'write', '录事', '中书舍人', '中书舍人', 'job', '中书舍人朝房录事'],
+      ['official', -210, -3050, 'present', '捧表', '吏部尚书', '吏部尚书', 'guest', '吏部尚书朝房捧表'],
+      ['official', -260, -3050, 'chat', '议政', '枢密副使', '枢密副使', 'guest', '枢密副使朝房议政'],
+      ['official', -310, -3050, 'stand', '立班', '御史中丞', '御史中丞', 'guest', '御史中丞朝房立班'],
+      // 值房 / 殿内 随侍太监（4）
+      ['official', 130, -3080, 'present', '传膳', '御前掌膳太监', '掌膳太监', 'job', '掌膳太监御前传膳'],
+      ['official', -130, -3080, 'sneak', '巡值', '值房随侍太监', '随侍太监', 'job', '值房太监巡值'],
+      ['official', 160, -3100, 'stand', '侍立', '殿内随侍太监', '随侍太监', 'job', '殿内太监侍立'],
+      ['official', -160, -3100, 'courtBow', '承旨', '司礼监太监', '司礼监', 'job', '司礼监太监承旨'],
+      // 东西六宫 宫女班（4）
+      ['lady', 680, -3600, 'fanSway', '执扇', '东六宫掌事宫女', '东宫女官', 'job', '东六宫女官执扇'],
+      ['lady', 720, -3580, 'present', '捧盏', '东六宫捧盏宫女', '东宫宫女', 'job', '东六宫宫女捧盏'],
+      ['lady', -680, -3600, 'sweep', '洒扫', '西六宫洒扫宫女', '西宫宫女', 'job', '西六宫宫女洒扫'],
+      ['lady', -720, -3580, 'sleeveWave', '引路', '西六宫引路宫女', '西宫宫女', 'job', '西六宫宫女引路'],
+      // 东西六宫 皇贵妃 / 妃嫔 / 皇子公主（6）
+      ['lady', 820, -3720, 'fanSway', '临轩', '皇贵妃', '皇贵妃', 'guest', '皇贵妃东六宫临轩'],
+      ['lady', 850, -3740, 'chat', '叙话', '丽妃', '丽妃', 'guest', '丽妃东六宫叙话'],
+      ['kid', 780, -3700, 'lookAround', '读书', '五皇子', '五皇子', 'guest', '皇子东六宫读书'],
+      ['lady', -820, -3720, 'present', '赏花', '贤妃', '贤妃', 'guest', '贤妃西六宫赏花'],
+      ['kid', -780, -3700, 'chat', '习礼', '四公主', '四公主', 'guest', '公主西六宫习礼'],
+      ['kid', -850, -3740, 'stand', '侍立', '七皇子', '七皇子', 'guest', '幼皇子西六宫侍立'],
+      // 宫墙 / 廊庑 将军·将士（5）
+      ['soldier', 1020, -3400, 'stand', '戍墙', '宫墙东班将领', '戍墙将领', 'job', '宫墙东班将领戍墙'],
+      ['soldier', -1020, -3400, 'spearThrust', '执戟', '宫墙西班将领', '戍墙将领', 'job', '宫墙西班将领执戟'],
+      ['soldier', 620, -3360, 'swordForm', '佩刀', '东廊庑将士', '廊庑将士', 'job', '东廊庑将士佩刀'],
+      ['soldier', -620, -3360, 'stand', '镇庑', '西廊庑将士', '廊庑将士', 'job', '西廊庑将士镇庑'],
+      ['watchman', 640, -3340, 'sneak', '巡廊', '东廊巡卫', '巡廊戍卫', 'job', '东廊庑巡卫'],
+      // 丹陛 / 御道 御前侍卫（3）
+      ['soldier', 210, -3260, 'stand', '立卫', '丹陛东班侍卫', '御前侍卫', 'job', '丹陛东班御前侍卫'],
+      ['soldier', -210, -3260, 'stand', '立卫', '丹陛西班侍卫', '御前侍卫', 'job', '丹陛西班御前侍卫'],
+      ['soldier', 110, -3160, 'spearThrust', '执戟', '御道仪仗侍卫', '御前侍卫', 'job', '御道仪仗侍卫执戟'],
+      // 御花园 乐伎 / 游宴（2）
+      ['musician', 160, -3900, 'flute', '品箫', '御园箫伎', '御园乐伎', 'job', '御花园箫伎品箫'],
+      ['musician', -190, -3880, 'pluck', '拨弦', '御园琵琶伎', '御园乐伎', 'job', '御花园琵琶伎拨弦'],
+    ];
+
     let planned = 0;
     for (const v of plan) planned += v.count;
+    planned += courtRows.length;   // 具名角色同样占人口池，计入预算与台账
     this.venueReport.planned = planned;
     if (this.actors.length + planned > MAX_HUMANS) {
       throw new Error(`[人口池断言] 场所人群：已用 ${this.actors.length} + 计划 ${planned} > MAX_HUMANS ${MAX_HUMANS}`);
     }
     for (const v of plan) {
+      if (v.grid) continue;   // 密集阵列延后到具名角色之后 spawn：既有每个角色的 rng 消耗序列一字不改
       const n = this.spawnVenue(v);
       this.venueReport.spawned += n;
       if (v.name.startsWith('天宫')) this.venueReport.sky += n;
       else if (v.name.startsWith('地府')) this.venueReport.hell += n;
       else if (v.name.startsWith('坊')) this.venueReport.wards += n;
       else if (v.name === '寺观') this.venueReport.temples += n;
-      else if (v.name === '宫城') this.venueReport.palace += n;
+      else if (v.name.startsWith('宫城')) this.venueReport.palace += n;
       else if (v.name === '瓦舍') this.venueReport.washe += n;
+    }
+    // 具名宫廷角色：spawnStation 生成 freeze 定点演员，随机消耗排在场所人群之后（序列末尾），
+    // 既有任何角色的出生结果都不受牵连。逐位带入名片 { name, nick, group, desc }；
+    // yaw 纯坐标计算（朝太和殿中轴），不引入 Math.random / Date.now 等新随机源。
+    let named = 0;
+    for (const [occ, x, z, action, doing, name, nick, group, desc] of courtRows) {
+      const yaw = Math.atan2(-x, PALACE.taiheZ - z);
+      this.spawnStation(occ, x, z, palaceY, action, doing, yaw, { name, nick, group, desc });
+      named++;
+    }
+    this.venueReport.spawned += named;
+    this.venueReport.palace += named;
+    // 宫城俯瞰密集阵列：spawn 排在既有全部随机消耗（场所人群 + 具名角色）之后，
+    // 既有每个角色读到的 rng 值一字不改；网格坐标 / 朝向 / 外观全部确定性，
+    // 本段不新增任何 this.rng() 调用点、不引入 Math.random。
+    for (const v of plan) {
+      if (!v.grid) continue;
+      const n = this.spawnVenue(v);
+      this.venueReport.spawned += n;
+      if (v.name.startsWith('宫城')) this.venueReport.palace += n;
     }
     this.ps.assertCapacity('ensureVenues');
     if (this.wardrobe.fails > 0) {
@@ -1745,6 +2166,38 @@ export class Crowd {
   }
 
   private spawnVenue(v: Venue): number {
+    const g = v.grid;
+    if (g) {
+      // 确定性行列网格：x/z 由整数行列 × 步距算出，不调用 this.rng() 做极坐标撒点；
+      // 朝向统一 COURT_YAW（朝会面朝太和殿），外观 = 整数坐标 hash 编 cardId + 显式制服色。
+      // 服色经 spawnActor 既有 cloth?/pants?/skin?/hat? 入口覆盖 card 哈希灰暗杂色，
+      // 走 InstPool.set → setColorAt 既有实例色机制，不新造材质、不新增 draw call。
+      // 每个阵列统一显式 prop（null / 池名），道具需求可静态精确核算。
+      // 本分支不新增任何 this.rng() 调用点、不引入 Math.random；spawnActor 内部既有路径
+      // 的随机消耗排在整条 rng 序列的最末尾（grid spawn 在具名角色之后），既有画面零漂移。
+      const u = g.uniform;
+      let n = 0;
+      for (let i = 0; i < g.rows; i++) {
+        for (let j = 0; j < g.cols; j++) {
+          let x = v.x + (j - (g.cols - 1) / 2) * g.dx;
+          // 中轴御道留白：|x| < COURT_AXIS_CLEAR 的点整体外推到两侧，班列分列、红毯畅通（人数不变）
+          if (g.axisGap) x += (x >= 0 ? 1 : -1) * g.axisGap;
+          const z = v.z + (i - (g.rows - 1) / 2) * g.dz;
+          const occ = v.occ[j % v.occ.length];                  // 按列分品级，同列同身份
+          const cloth = u.stripe ? u.stripe[j % u.stripe.length] : u.cloth;  // 内廷多身份纵向彩条
+          const ix = Math.round(x * 10), iz = Math.round(-z * 10);
+          const cardId = `PC-${ix}-${iz}-${i}-${j}`;               // 整数坐标 hash → 卡种子
+          const a = this.spawnActor({
+            occ, pos: new THREE.Vector3(x, v.y, z), yaw: COURT_YAW, scale: 1,
+            prop: g.prop, freeze: true, cardId,
+            cloth, pants: u.pants, skin: u.skin, hat: u.hat,
+          });
+          setPost(a, { x, y: v.y, z, r: v.r, kinds: v.kinds, venue: v.name });
+          n++;
+        }
+      }
+      return n;
+    }
     let n = 0;
     for (let i = 0; i < v.count; i++) {
       let x = 0, z = 0, ok = false;
@@ -2016,6 +2469,7 @@ export class Crowd {
       lodBlocked: blocked,
       lodFallbacks: fallbacks,
       spawn: { ...this.spawnReport },
+      collision: this.collisionAudit(),
     };
     return stat;
   }
@@ -2032,6 +2486,11 @@ export class Crowd {
     this.simT = t;
     // 首帧补建场所人群（此时 world 的寺院/瓦舍热点、天宫/地府角色、POIS 地府条目都已就位）
     this.ensureVenues();
+    // R27：所有出生完成 + solids 索引齐备后，做一次全量落位收敛（只跑一次，零常驻开销）。
+    if (!this.settledAll) {
+      this.settledAll = true;
+      this.settleAll();
+    }
     // 局部避让网格每 4 帧重建一次（O(n)）：行人靠它在 1.6m 内找邻居并向空侧让开。
     // 每帧重建没有必要，4 帧 ≈ 66ms，远小于一个人走完半个身位的时间。
     if ((this.frame & 3) === 0) rebuildAvoidGrid(this.actors);
@@ -2058,11 +2517,17 @@ export class Crowd {
       if (!a.freeze && !a.attach && !a.sky && !a.hidden) keepOffRiver(a.pos);
       // 行走面兜底（R27）：移动积分已经挡墙/贴地；这里只救两类漏网——
       // 出生时就在墙里的、被别的系统（击退/载具）塞进墙里的。每 4 帧查一次，避免每帧两次查询。
-      if (!a.freeze && !a.attach && !a.sky && !a.hidden && a.pos.y > -5 && a.pos.y < 12
-        && ((this.frame + a.id) & 3) === 0) {
-        const sy = walkSurfaceY(a.pos.x, a.pos.z, a.pos.y);
-        if (sy === null) pushOutOfBuildings(a.pos);
-        else if (Math.abs(a.pos.y - sy) > 0.02) a.pos.y = sy;
+      // R27 逐帧兜底：主判定走全城 solids（贴地 + 推出），旧 pushOutOfBuildings 作补充。
+      // freeze 角色（不进 tickActor 的仪仗侍卫）每 30 帧低频校验一次（≤1s，含低帧率），
+      // 确保嵌墙的也被推出；行走角色每 4 帧校验。上限放宽到 120（含城墙/高台戍卒）。
+      if (!a.attach && !a.sky && !a.hidden && a.pos.y > -5 && a.pos.y <= 120) {
+        // R27 硬门禁：任何一帧结束都不允许残留嵌墙 / 陷地角色。
+        // 此前按 (frame+id) 每 2/4 帧轮转，实机抓到 id=1490 在 frame=3 时
+        // （(3+1490)%2=1，没轮到）被上一帧的移动积分塞进墙带，blockedOwn=true、
+        // wsOwn=null；下一帧轮到才归零。外部在帧间取样就报「加载时嵌墙 1 人」。
+        // 改为每帧兜底：CPU 侧是空间哈希 O(1) 查询，不新增 draw call / 材质 / 几何，
+        // 软渲染瓶颈在 114M tris 的 GPU 侧，不构成稳态帧时间主因。
+        settleWalkPos(a.pos, 0.34);
       }
 
       // ---- 角色 LOD：四档 + 25% 滞回 ----
@@ -2126,9 +2591,42 @@ export interface CrowdStats {
   changes60s: number; kinds60s: number;
   lodBlocked: number; lodFallbacks: number;
   spawn: { planned: number; spawned: number; rejected: number; skipped: number; axis: number; cross: number };
+  /** R27 碰撞审计（collisionAudit() 真实计算，验收脚本读此项） */
+  collision: { embedded: number; sunken: number; sample: { id: number; x: number; y: number; z: number }[] };
 }
 
 interface Anchor { x: number; y: number; z: number; w: number; dir: number; axis: boolean; bridge: boolean; zone: string }
+
+// ---- 宫城俯瞰方阵统一服色（R20 二轮精修）：把「card 哈希灰暗杂色」换成「按身份鲜明色块」----
+// 根因：grid 人群原本只给 cardId，spawnActor 走 cardLook → CARD_PALETTE 十档灰暗浊色
+//   （0x8a6a3a/0x5a7a8a/0x2e4e5e…），俯瞰由 writeActorFar 用 a.cloth 写 instanceColor，
+//   tier3 剪影档还要 ×0.55 压暗 —— 于是成了一片散落的黑点，读不出朝会班列。
+// 修法：经 spawnActor 既有的 cloth?/pants?/skin?/hat? 入口显式传入服色，覆盖卡色；
+//   InstPool.set → setColorAt 的既有实例色机制不变，不新造材质、不新增 draw call。
+//   色值全部取高亮高饱和通道，抵消 tier3 ×0.55 后仍在俯瞰下可辨。
+interface CourtUniform {
+  cloth: number; pants: number; skin: number; hat: number;
+  /** 可选：按列循环的袍色，方阵内部形成纵向彩色条带（用于内廷多身份） */
+  stripe?: number[];
+}
+const COURT_UNIFORMS: Record<string, CourtUniform> = {
+  '王公大臣': { cloth: 0x6b5bff, pants: 0x2c2570, skin: 0xf0d5b0, hat: 1 },  // 石青紫 · 幞头
+  '仪仗东班': { cloth: 0xff3b2f, pants: 0x7a1a12, skin: 0xdca878, hat: 1 },  // 朱红甲胄
+  '仪仗西班': { cloth: 0xff8a2a, pants: 0x7a2a10, skin: 0xdca878, hat: 1 },  // 橙红（与东班可辨）
+  '禁军东阵': { cloth: 0xfbb81c, pants: 0x7a5410, skin: 0xdca878, hat: 1 },  // 金甲
+  '禁军西阵': { cloth: 0xf7d23a, pants: 0x7a6410, skin: 0xdca878, hat: 1 },  // 明黄金甲
+  // 内廷一条带按列循环覆盖帝后/妃嫔/太监/宫女/皇子公主 5 类身份色
+  '帝后内廷': { cloth: 0xffd23f, pants: 0x8a6a10, skin: 0xf5dcc0, hat: 3,
+    stripe: [0xffd23f, 0xe8487a, 0x6b8fa8, 0xf2eefb, 0xffb03a] },            // 明黄/胭脂/青灰/月白/杏黄
+  '宫女侍从': { cloth: 0xff5fa8, pants: 0x9a3a68, skin: 0xf5dcc0, hat: 3 },  // 胭脂粉 · 发髻
+  '午门禁军': { cloth: 0x3f6ee0, pants: 0xb02118, skin: 0xdca878, hat: 1 },  // 靛青（玄黑提亮免回退黑点）镶红
+};
+/** 方阵行列步距（m）：2.0 → 1.6，收紧成俯瞰密实色块 */
+const COURT_GRID_STEP = 1.6;
+/** 中轴御道留白半宽（m）：|x| 小于此值的点整体外推到两侧，红毯畅通、班列分列 */
+const COURT_AXIS_CLEAR = 9;
+/** 朝会统一朝向（面朝太和殿 −z），整阵一致，不再逐点 atan2 成扇形 */
+const COURT_YAW = Math.PI;
 
 /** R12-C/D 场所驻场点：count 人落在半径 r 内，kinds 为该场所的专属行为 */
 interface Venue {
@@ -2136,6 +2634,11 @@ interface Venue {
   sky: boolean; kinds: BehaviorKind[]; occ: string[];
   /** 环形场所的簇数（十八狱环 = 18） */
   ring?: number;
+  /** 宫城俯瞰密集阵列（R20 补充）：确定性行列网格，count = rows*cols，不走 rng 极坐标撒点 */
+  grid?: {
+    rows: number; cols: number; dx: number; dz: number; prop: string | null;
+    uniform: CourtUniform; axisGap?: number;
+  };
 }
 
 /** 节点属于哪条街：返回沿街方向（yaw 基准）、是否中轴、是否桥面、街道权重 */

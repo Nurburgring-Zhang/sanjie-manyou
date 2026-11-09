@@ -1,0 +1,470 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "at": "2026-11-07T11:29:16.249Z",
+  "built": true,
+  "realmEco": {
+    "plan": {
+      "flora": 5640,
+      "fauna": 332,
+      "species": 38,
+      "byRealm": {
+        "human": {
+          "flora": 3590,
+          "fauna": 154
+        },
+        "heaven": {
+          "flora": 870,
+          "fauna": 96
+        },
+        "underworld": {
+          "flora": 1180,
+          "fauna": 82
+        }
+      },
+      "drawCalls": 4
+    },
+    "flora": [
+      {
+        "realm": "human",
+        "species": "willow",
+        "label": "垂柳",
+        "requested": 260,
+        "placed": 260,
+        "pieces": 1040
+      },
+      {
+        "realm": "human",
+        "species": "elm",
+        "label": "槐榆",
+        "requested": 190,
+        "placed": 190,
+        "pieces": 760
+      },
+      {
+        "realm": "human",
+        "species": "peach",
+        "label": "桃杏",
+        "requested": 170,
+        "placed": 170,
+        "pieces": 850
+      },
+      {
+        "realm": "human",
+        "species": "pine",
+        "label": "松柏",
+        "requested": 130,
+        "placed": 130,
+        "pieces": 520
+      },
+      {
+        "realm": "human",
+        "species": "bamboo",
+        "label": "竹丛",
+        "requested": 320,
+        "placed": 320,
+        "pieces": 960
+      },
+      {
+        "realm": "human",
+        "species": "hedge",
+        "label": "灌木绿篱",
+        "requested": 380,
+        "placed": 380,
+        "pieces": 760
+      },
+      {
+        "realm": "human",
+        "species": "wildflower",
+        "label": "五色花丛",
+        "requested": 900,
+        "placed": 900,
+        "pieces": 1800
+      },
+      {
+        "realm": "human",
+        "species": "meadow",
+        "label": "野草牧草",
+        "requested": 620,
+        "placed": 620,
+        "pieces": 1860
+      },
+      {
+        "realm": "human",
+        "species": "lotus",
+        "label": "荷莲",
+        "requested": 220,
+        "placed": 220,
+        "pieces": 660
+      },
+      {
+        "realm": "human",
+        "species": "reed",
+        "label": "芦苇菖蒲",
+        "requested": 260,
+        "placed": 260,
+        "pieces": 1560
+      },
+      {
+        "realm": "human",
+        "species": "vine",
+        "label": "藤蔓",
+        "requested": 140,
+        "placed": 140,
+        "pieces": 420
+      },
+      {
+        "realm": "heaven",
+        "species": "peachTree",
+        "label": "蟠桃林",
+        "requested": 120,
+        "placed": 120,
+        "pieces": 600
+      },
+      {
+        "realm": "heaven",
+        "species": "osmanthus",
+        "label": "仙桂",
+        "requested": 80,
+        "placed": 80,
+        "pieces": 400
+      },
+      {
+        "realm": "heaven",
+        "species": "celestialPine",
+        "label": "不老松",
+        "requested": 70,
+        "placed": 70,
+        "pieces": 280
+      },
+      {
+        "realm": "heaven",
+        "species": "jadeBamboo",
+        "label": "玉竹",
+        "requested": 110,
+        "placed": 110,
+        "pieces": 330
+      },
+      {
+        "realm": "heaven",
+        "species": "yaocao",
+        "label": "瑶草",
+        "requested": 220,
+        "placed": 220,
+        "pieces": 440
+      },
+      {
+        "realm": "heaven",
+        "species": "lingzhi",
+        "label": "灵芝",
+        "requested": 90,
+        "placed": 90,
+        "pieces": 180
+      },
+      {
+        "realm": "heaven",
+        "species": "celestialLotus",
+        "label": "瑶池青莲",
+        "requested": 110,
+        "placed": 110,
+        "pieces": 330
+      },
+      {
+        "realm": "heaven",
+        "species": "cloudVine",
+        "label": "云藤",
+        "requested": 70,
+        "placed": 70,
+        "pieces": 210
+      },
+      {
+        "realm": "underworld",
+        "species": "deadWood",
+        "label": "冥槐",
+        "requested": 90,
+        "placed": 90,
+        "pieces": 360
+      },
+      {
+        "realm": "underworld",
+        "species": "boneBamboo",
+        "label": "骨竹",
+        "requested": 130,
+        "placed": 130,
+        "pieces": 390
+      },
+      {
+        "realm": "underworld",
+        "species": "spiderLily",
+        "label": "彼岸花",
+        "requested": 360,
+        "placed": 360,
+        "pieces": 720
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostOrchid",
+        "label": "幽兰鬼花",
+        "requested": 150,
+        "placed": 150,
+        "pieces": 300
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostMoss",
+        "label": "幽苔",
+        "requested": 220,
+        "placed": 220,
+        "pieces": 660
+      },
+      {
+        "realm": "underworld",
+        "species": "ghostLotus",
+        "label": "忘川鬼莲",
+        "requested": 120,
+        "placed": 120,
+        "pieces": 360
+      },
+      {
+        "realm": "underworld",
+        "species": "netherVine",
+        "label": "幽冥藤",
+        "requested": 110,
+        "placed": 110,
+        "pieces": 330
+      }
+    ],
+    "fauna": {
+      "drawCalls": 4,
+      "instances": 332,
+      "byMotion": {
+        "fly": 96,
+        "swim": 72,
+        "run": 80,
+        "drift": 84
+      },
+      "meshes": [
+        "eco_fly",
+        "eco_swim",
+        "eco_run",
+        "eco_drift"
+      ]
+    },
+    "placedFlora": 5640,
+    "pieces": 17080
+  },
+  "roomLivingKits": {
+    "rooms": 2908,
+    "items": 26384,
+    "byTier": {
+      "high": 8140,
+      "mid": 13806,
+      "low": 4438
+    }
+  },
+  "ecoKits": [
+    [
+      "eco.heaven.celestialLotus",
+      110
+    ],
+    [
+      "eco.heaven.celestialPine",
+      70
+    ],
+    [
+      "eco.heaven.cloudVine",
+      70
+    ],
+    [
+      "eco.heaven.jadeBamboo",
+      110
+    ],
+    [
+      "eco.heaven.lingzhi",
+      90
+    ],
+    [
+      "eco.heaven.osmanthus",
+      80
+    ],
+    [
+      "eco.heaven.peachTree",
+      120
+    ],
+    [
+      "eco.heaven.yaocao",
+      220
+    ],
+    [
+      "eco.human.bamboo",
+      320
+    ],
+    [
+      "eco.human.elm",
+      190
+    ],
+    [
+      "eco.human.hedge",
+      380
+    ],
+    [
+      "eco.human.lotus",
+      220
+    ],
+    [
+      "eco.human.meadow",
+      620
+    ],
+    [
+      "eco.human.peach",
+      170
+    ],
+    [
+      "eco.human.pine",
+      130
+    ],
+    [
+      "eco.human.reed",
+      260
+    ],
+    [
+      "eco.human.vine",
+      140
+    ],
+    [
+      "eco.human.wildflower",
+      900
+    ],
+    [
+      "eco.human.willow",
+      260
+    ],
+    [
+      "eco.underworld.boneBamboo",
+      130
+    ],
+    [
+      "eco.underworld.deadWood",
+      90
+    ],
+    [
+      "eco.underworld.ghostLotus",
+      120
+    ],
+    [
+      "eco.underworld.ghostMoss",
+      220
+    ],
+    [
+      "eco.underworld.ghostOrchid",
+      150
+    ],
+    [
+      "eco.underworld.netherVine",
+      110
+    ],
+    [
+      "eco.underworld.spiderLily",
+      360
+    ]
+  ],
+  "shopintItems": 89597,
+  "ecoMeshes": [
+    {
+      "name": "eco_fly",
+      "count": 96
+    },
+    {
+      "name": "eco_swim",
+      "count": 72
+    },
+    {
+      "name": "eco_run",
+      "count": 80
+    },
+    {
+      "name": "eco_drift",
+      "count": 84
+    }
+  ],
+  "render": {
+    "calls": 490,
+    "triangles": 47096865,
+    "geometries": 325
+  },
+  "errors": [],
+  "shots": [
+    {
+      "id": "01-human-field",
+      "label": "人间 · 郊野林带花圃",
+      "tp": "countryside",
+      "c": [
+        -240,
+        4,
+        182
+      ],
+      "p": [
+        -240,
+        18,
+        132
+      ],
+      "file": "artifacts\\r18-01-human-field.png",
+      "calls": 386,
+      "tris": 47607133
+    },
+    {
+      "id": "02-human-river",
+      "label": "人间 · 汴河荷莲芦苇",
+      "tp": "bridge",
+      "c": [
+        -350,
+        1.4,
+        27
+      ],
+      "p": [
+        -350,
+        9,
+        6
+      ],
+      "file": "artifacts\\r18-02-human-river.png",
+      "calls": 246,
+      "tris": 27186741
+    },
+    {
+      "id": "03-heaven",
+      "label": "天宫 · 蟠桃园仙植",
+      "tp": "pantao",
+      "c": [
+        -330,
+        2144.31,
+        88
+      ],
+      "p": [
+        -238,
+        2212.31,
+        180
+      ],
+      "file": "artifacts\\r18-03-heaven.png",
+      "calls": 230,
+      "tris": 26819083
+    },
+    {
+      "id": "04-underworld",
+      "label": "地府 · 丰都幽兰冥槐",
+      "tp": "fengdu",
+      "c": [
+        540,
+        -258,
+        85
+      ],
+      "p": [
+        601,
+        -230,
+        146
+      ],
+      "file": "artifacts\\r18-04-underworld.png",
+      "calls": 367,
+      "tris": 45918803
+    }
+  ],
+  "pageErrors": []
+}

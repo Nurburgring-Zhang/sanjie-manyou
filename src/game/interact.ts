@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { Random } from '../actors/behaviors';
 import type { PlayerController } from './player';
 import { bus, RNG } from '../core/rng';
+import { collectPersistedEntities } from '../rt/save';
 
 // ============ 交互系统：提示 / 铜钱经济 / 商铺 / 骰子赌局 / 五子棋 ============
 export interface Interactable {
@@ -27,6 +28,21 @@ export class InteractSystem {
   private promptText: string | null = null;
   /** 注入随机源：骰子赌局用（输赢改铜钱=影响 sim，必须可复现；behaviors/crowd/boss/havoc 同款规矩） */
   rng: Random = (() => { const r = new RNG(0x5e7a1); return () => r.next(); })();
+  /**
+   * 全量审核 2026-11-07（P-01）：付费饮食的生存收益注入点，由 world 接 `survival.eat()`。
+   * 旧实现 `openShop` 购买成功只播放动作、从不回饥饿/血，
+   * 导致 `conditions.ts:35` c-hunger「回 30 饥饿」在这些商品上无法兑现。
+   * 用回调注入而不是 import Survival，保持 InteractSystem 可单测、不引入 Three 场景依赖。
+   */
+  survivalSink: ((hungerGain: number, hpGain: number) => string) | null = null;
+
+  /** 饮食恢复量按价目分档：越贵越顶饱，避免 1 文盐豆 = 80 文席面 */
+  private static foodRestore(price: number): [number, number] {
+    if (price >= 40) return [50, 14];
+    if (price >= 12) return [32, 9];
+    if (price >= 6) return [22, 6];
+    return [12, 3];
+  }
 
   /** P2-1：NaN 才回缺省——`parseInt(...) || 缺省` 会把合法的 0 也吞掉（0 文钱重载变 500） */
   private static loadInt(key: string, dflt: number): number {
@@ -77,32 +93,61 @@ export class InteractSystem {
   refund(n: number): void { this.coins += n; this.save(); bus.emit('coins:change', this.coins); } // 蟠桃不足回退已扣款
   /** 存盘（P1-2 生存循环等系统共用；语义=持久化三币快照） */
   save(): void {
+    // 全量审核 2026-11-07（B-06）：legacy 影子档原先只写 cq_coins，而构造函数与
+    // legacyFromLocalStorage 都读三键；IDB 降级回退时阴德 / 蟠桃会退回旧值。
     localStorage.setItem('cq_coins', String(this.coins));
-    // P0-4/P1-2 全量写档：三币 + survival + voxel → IndexedDB（fire-and-forget，异常静默）
+    localStorage.setItem('cq_yinde', String(this.yinde));
+    localStorage.setItem('cq_peach', String(this.peach));
+    // P0-4/P1-2 全量写档：三币 + survival + voxel + karma + entities + bossDefeated → IndexedDB
     try {
-      // __saveSave 在 window 上（world.ts 注入）；voxelStore 走 __qingming.world（单例语义）
-      const W = (window as unknown as { __saveSave?: (d: unknown) => Promise<void>; __qingming?: { world?: { survival?: { serialize(): unknown }; voxelStore?: { serialize(): number[] }; karma?: { current(): { karma: number } } } } });
+      // __saveSave 在 window 上（world.ts 注入）；world 句柄已提前到 initUI 之前注入（B-02），
+      // 启动期这一次 IDB 写不再被整段跳过（蓝队 §二.1 的 100% 确定时序）。
+      const W = (window as unknown as {
+        __saveSave?: (d: unknown) => Promise<unknown>;
+        __qingming?: { world?: {
+          survival?: { serialize(): unknown };
+          voxelStore?: { serialize(): number[] };
+          karma?: { current(): { karma: number } };
+          boss?: { defeated: boolean };
+        } };
+      });
       const sv = W.__qingming?.world;
       if (W.__saveSave && sv?.survival && sv.voxelStore) {
+        // 全量审核 2026-11-07（C01）：entities 恒 []、collectPersistedEntities 全仓零调用，
+        // 使造物（creation.ts 的 allocate persist:true）永远无法跨会话重演。
+        // 全量审核 2026-11-07（C02）：try/catch 只挡同步抛错，挡不住 Promise rejection，
+        // 必须显式 .catch 才能让写档失败可观测。
         void W.__saveSave({
           schemaVersion: 2,
           economy: { coins: this.coins, yinde: this.yinde, peach: this.peach },
-          entities: [],
+          // 全量审核 2026-11-07（C01 口径收窄）：只收集 creation。
+          // crowd.ts:1366 给每个 NPC 都登记 persist:true（全城 4500+ 实例且 pos 是实时引用），
+          // 全量收集会把它们每帧变化的坐标全写进档、体积暴涨；读档侧也只重演造物。
+          entities: collectPersistedEntities(['creation']),
           voxel: sv.voxelStore.serialize(),
           survival: sv.survival.serialize(),
           karma: sv.karma ? sv.karma.current().karma : 0,
-        });
+          bossDefeated: !!sv.boss?.defeated,
+        }).catch((err: unknown) => { console.warn('[存档] 写档失败', err); });
       }
     } catch { /* 存档失败不阻断游戏 */ }
     bus.emit('coins:change', this.coins);
   }
+
+  /** 同名动作复位定时器（全量审核 2026-11-07 / M-05：旧版每次 act 都新建 timer 不取消，
+   * 同名动作的第一个 timer 会提前把「第二次表演」清回 stand） */
+  private actionTimer: number | null = null;
 
   /** 交互动作：玩家表演某动作若干秒 */
   act(action: string, seconds: number, say: string): void {
     const a = this.player.actor;
     a.action = action;
     this.player.busyUntil = this.player.clock() + seconds * 1000;
-    window.setTimeout(() => { if (this.player.actor.action === action) this.player.actor.action = 'stand'; }, seconds * 1000);
+    if (this.actionTimer !== null) window.clearTimeout(this.actionTimer);
+    this.actionTimer = window.setTimeout(() => {
+      this.actionTimer = null;
+      if (this.player.actor.action === action) this.player.actor.action = 'stand';
+    }, seconds * 1000);
     bus.emit('ui:toast', say);
   }
 
@@ -112,7 +157,9 @@ export class InteractSystem {
     this.closePanel();
     const p = document.createElement('div');
     p.className = 'panel show';
-    p.style.cssText = 'left:50%;bottom:110px;transform:translateX(-50%);max-height:min(70vh,520px);z-index:30;';
+    // 全量审核 2026-11-07（UI-09）：内联 z-index 优先级高于 style.css 的 .panel 规则，
+    // 原先 30 低于 #goalchain 的 62，面板文字被目标链盖住；与 CSS 侧统一为 70。
+    p.style.cssText = 'left:50%;bottom:110px;transform:translateX(-50%);max-height:min(70vh,520px);z-index:70;';
     p.innerHTML = `<div class="panel-head"><h3>${title}</h3><span class="panel-close">✕</span></div><div class="panel-body"></div>`;
     p.querySelector('.panel-close')!.addEventListener('click', () => this.closePanel());
     this.root.appendChild(p);
@@ -131,23 +178,42 @@ export class InteractSystem {
       b.style.cssText = 'min-width:64px;';
       b.textContent = '买';
       b.onclick = () => {
-        if (this.pay(g.price)) {
-          // B9 三币特判：烧纸（铜钱→阴德单向）/ 蟠桃赏赐（蟠桃点→铜钱单向）
-          if (g.act === 'burnpaper') { this.yinde += 1; this.save(); bus.emit('ui:toast', `纸灰化作阴德 💠 ${this.yinde}（三界单向：不可兑回铜钱）`); }
-          else if (g.act === 'yindepeach') {
-            // P1-1 资源轴（H6 修订②）：阴德 sink——冥途牒 10 文：阴德 10 → 蟠桃 +1（跨轴互通）。
-            // 劳动锚定：10 阴德成本 = 烧纸 100 文；蟠桃兑 100 文 → 循环持平不套利，但打通两轴。
-            if (this.yinde < 10) { this.refund(g.price); bus.emit('ui:toast', `阴德不足（需 10，现 ${this.yinde}）——多烧些纸钱积攒功德`); }
-            else { this.yinde -= 10; this.addPeach(1); this.save(); bus.emit('ui:toast', `冥途牒生效：阴德 -10，天庭记功蟠桃 +1（现 🍑${this.peach}）`); }
-          }
-          else if (g.act === 'peachgrant') {
-            // B10 蟠桃宴事件（总纲 §四.5：蟠桃点→铜钱单向）：耗 1 点兑 100 文
-            if (this.peach < 1) { this.refund(g.price); bus.emit('ui:toast', '蟠桃点不足——赴蟠桃宴方可获赐（R5 瑶池青鸾任务线）'); }
-            else { this.peach -= 1; this.earn(100); this.save(); bus.emit('ui:toast', `蟠桃赏赐：蟠桃点 -1，铜钱 +100（单向，不可回兑）`); }
-          }
-          this.act(g.act === 'burnpaper' || g.act === 'peachgrant' ? 'pray' : g.act, 3.5, g.say);
+        let say = g.say;
+        // 全量审核 2026-11-07（P-03 / P-06 / P-01）：
+        // 旧实现所有商品先走通用 pay(g.price) 扣铜钱，三币商品再在后面特判，
+        // 于是 ① 蟠桃赏赐 price=1 被当成「1 文铜钱」扣掉，实结净 +99 而非文案的 100，
+        //      且 coins=0 时 pay(1) 直接失败、有蟠桃也兑不了（P-06）；
+        //    ② 冥途牒满仓时 addPeach 静默丢弃，但 10 阴德 + 10 文已扣且不回滚（P-03）；
+        //    ③ 付费饮食只播动作、从不回饥饿/血，生存循环断裂（P-01）。
+        // 现在把「资源轴商品」提到通用扣款之前独立结算，普通商品才走 pay。
+        if (g.act === 'peachgrant') {
+          // 蟠桃点是独立资源，不占铜钱；price 字段语义为「1 枚蟠桃点」，不再是铜钱价
+          if (this.peach < 1) { bus.emit('ui:toast', '蟠桃点不足——赴蟠桃宴方可获赐（R5 瑶池青鸾任务线）'); return; }
+          this.peach -= 1;
+          this.earn(100);
+          this.save();
+          bus.emit('ui:toast', '蟠桃赏赐：蟠桃点 -1，铜钱 +100（单向，不可回兑）');
+          this.act('pray', 3.5, say);
           this.coinsEl && (this.coinsEl.textContent = `💰 ${this.coins} 文`);
+          return;
         }
+        if (!this.pay(g.price)) return;
+        if (g.act === 'burnpaper') { this.yinde += 1; this.save(); bus.emit('ui:toast', `纸灰化作阴德 💠 ${this.yinde}（三界单向：不可兑回铜钱）`); }
+        else if (g.act === 'yindepeach') {
+          // 10 阴德成本 = 烧纸 100 文；蟠桃兑 100 文 → 循环持平不套利，但打通两轴。
+          // 满仓时必须在扣阴德之前拦住并全额退还铜钱（旧版只回滚「阴德不足」一种失败）。
+          if (this.yinde < 10) { this.refund(g.price); bus.emit('ui:toast', `阴德不足（需 10，现 ${this.yinde}）——多烧些纸钱积攒功德`); }
+          else if (this.peach >= 9) { this.refund(g.price); bus.emit('ui:toast', '蟠桃点已满（上限 9）——冥途牒暂不生效，铜钱已退还'); }
+          else { this.yinde -= 10; this.addPeach(1); this.save(); bus.emit('ui:toast', `冥途牒生效：阴德 -10，天庭记功蟠桃 +1（现 🍑${this.peach}）`); }
+        }
+        else if (g.act === 'eat' || g.act === 'drink') {
+          const [hg, hp] = InteractSystem.foodRestore(g.price);
+          const msg = this.survivalSink ? this.survivalSink(hg, hp) : '';
+          // 合并进动作文案：act() 自己会发一次 toast，分两条发后者会立刻覆盖前者
+          if (msg) say = `${g.say}（${msg}）`;
+        }
+        this.act(g.act === 'burnpaper' ? 'pray' : g.act, 3.5, say);
+        this.coinsEl && (this.coinsEl.textContent = `💰 ${this.coins} 文`);
       };
       row.appendChild(b);
       body.appendChild(row);
@@ -271,6 +337,9 @@ export class InteractSystem {
         cand.push([i, j, score]);
       }
       cand.sort((a, b) => b[2] - a[2]);
+      // 全量审核 2026-11-07（P-11）：9 路 81 格填满且未五连时 cand 为空，
+      // 旧版直接解构 cand[0] 抛 TypeError（由落子后的 260ms setTimeout 触发）。
+      if (!cand.length) { over = true; info.textContent = '满盘和棋——棋逢对手，入场费已记'; draw(); return; }
       const [bi, bj] = cand[0];
       bd[bi][bj] = 2;
       if (winAt(bi, bj, 2)) { over = true; info.textContent = '白棋胜了——胜负乃兵家常事。'; return; }

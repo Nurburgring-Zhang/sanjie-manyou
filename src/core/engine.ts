@@ -11,6 +11,8 @@ import { Tweener, easeInOut } from './tween';
 import { bus } from './rng';
 import { LAYER_NO_REFLECT } from './layers';
 import { setLodSink, type LodGroupSpec, type LodTierName } from '../city/infill';
+import { getPerfBudget, getChunkGate, attachPerfExtras, perfBudgetSnapshot, getPoolStats } from './perfBudget';
+import { getOcclusion } from './occlusion';
 
 export interface Updatable { update(t: number, dt: number): void }
 
@@ -553,6 +555,12 @@ export class Engine {
   yaw = Math.PI; pitch = -0.12;
   readonly spawnPoint = new THREE.Vector3(0, 30, 130);
 
+  /** 全量审核 2026-11-07（UI-04）：只对这些「移动类」键做面板/输入框门控 */
+  private static readonly MOVE_CODES = new Set([
+    'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE', 'KeyQ', 'KeyC',
+    'Space', 'ShiftLeft', 'ShiftRight', 'ControlLeft', 'ControlRight',
+    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+  ]);
   keys = new Set<string>();
   touchMove = { x: 0, y: 0 };        // 虚拟摇杆
   private dragOn = false; private px = 0; private py = 0;
@@ -571,6 +579,21 @@ export class Engine {
   private canvas: HTMLCanvasElement;
   fps = 60; drawCalls = 0; tris = 0;
   isTouch = false;
+  // ===== 降低渲染负载（全部只对远景 / 更新频率生效，中近景零画质损失）=====
+  /** 帧预算调度 + 统一运行期统计单例 */
+  private readonly perf = getPerfBudget();
+  /** 分区视锥剔除门控（同步路径；Worker 版见 core/culling.worker.ts，未接线） */
+  private readonly gate = getChunkGate();
+  /** WebGL2 遮挡查询能力检测 + PVS 粗判 */
+  private readonly occlusion = getOcclusion();
+  private readonly frustum = new THREE.Frustum();
+  private readonly projScreenMatrix = new THREE.Matrix4();
+  private readonly prevCamPos = new THREE.Vector3();
+  private readonly prevCamQuat = new THREE.Quaternion();
+  private shadowCamInit = false;
+  /** 阴影重绘的相机位移平方阈值（1.5m）² / 旋转四元数点积阈值 */
+  private static readonly SHADOW_MOVE_EPS2 = 2.25;
+  private static readonly SHADOW_ROT_EPS = 4e-4;
   /** 分距离 LOD 四档管理器；`window.__lod` 暴露它的 view 给探针 */
   readonly lod: LodManager;
   /** 同一 canvas 的单击唯一入口：出拳 / 英雄聚焦 / 指针锁定都注册到这里 */
@@ -631,6 +654,20 @@ export class Engine {
     this.lod = new LodManager(this.scene);
     setLodSink(this.lod);
     (window as unknown as Record<string, unknown>)['__lod'] = this.lod.view;
+
+    // 真实检测 WebGL2 遮挡查询能力（结果仅用于如实标注，实际剔除走 PVS 粗判，见 core/occlusion.ts）
+    this.occlusion.detect(this.renderer.getContext());
+    // 统一运行期统计：挂到 window（不与 main.ts 的 __perf / __qingming、engine 的 __lod 冲突）。
+    // 主线程也可 import { perfBudgetSnapshot } from './core/perfBudget' 自行挂载。
+    attachPerfExtras(() => ({
+      occlusion: this.occlusion.snapshot(),
+      pools: getPoolStats(),
+      vrs: { implemented: false, reason: 'WebGL2 无公开扩展 / WebGPU 核心无 shading-rate 特性；等效替代=帧预算调度远景更新频率' },
+      dvs: { implemented: false, reason: 'Arm Mali 硬件术语，应用层不可调用；等效替代=分区视锥剔除 + 空间分块索引' },
+      worker: { implemented: true, wired: false, reason: 'culling.worker.ts 已实现纯函数；接线需改 main.ts 构建配置（禁止），如实标注未启用' },
+      halfResPost: { implemented: false, reason: '降分辨率会波及中近景，违反硬约束；改为帧预算只调更新频率' },
+    }));
+    (window as unknown as Record<string, unknown>)['__perfBudget'] = perfBudgetSnapshot;
   }
 
   private initComposer(): void {
@@ -671,6 +708,8 @@ export class Engine {
       }
     }
     this.onResize();
+    // 画质切换重建了 sun.shadow.map / mapSize：静态几何状态变了，强制下一帧刷新阴影
+    this.perf.markStaticDirty();
     if (!silent) bus.emit('quality:change', q.name);
   }
 
@@ -728,7 +767,8 @@ export class Engine {
     if (m === this.camMode) return;
     if (m === 'walk') {
       const p = this.camera.position;
-      p.y = 1.7;
+      // 全量审核 2026-11-07（M-09）：异界切 walk 以当前界域地面为基准，避免被钉回人间 1.7m
+      p.y = Number.isFinite(this.realmFloor) ? this.realmFloor : 1.7;
       this.spawnPoint.copy(p);
     }
     if (m === 'fly') {
@@ -751,10 +791,15 @@ export class Engine {
     to.y = pos.y + radius * 0.45;
     const fromP = this.camera.position.clone();
     const fromL = this.lookTarget.clone();
+    // 全量审核 2026-11-07（C09）：补间开始前先把 focusPos 设为当前视点，
+    // 否则 focus 分支每帧把 lookTarget lerp 向初值（世界原点），聚焦全程视线被拉回原点。
+    this.focusPos.copy(fromL);
     this.tweener.to([fromP.x, fromP.y, fromP.z, fromL.x, fromL.y, fromL.z],
       [to.x, to.y, to.z, pos.x, pos.y, pos.z], 1.4, (v) => {
         this.camera.position.set(v[0], v[1], v[2]);
         this.lookTarget.set(v[3], v[4], v[5]);
+        // 全量审核 2026-11-07（C09）：逐帧把 focusPos 同步为补间中的目标视点（v[3..5] = fromL→pos 插值）
+        this.focusPos.set(v[3], v[4], v[5]);
       }, () => { this.focusUntil = this.t + hold; this.focusPos.copy(pos); }, easeInOut);
   }
 
@@ -773,11 +818,20 @@ export class Engine {
 
   private bindInput(): void {
     window.addEventListener('keydown', (e) => {
-      this.keys.add(e.code);
+      // 全量审核 2026-11-07（UI-04）：面板/许愿条打开时移动键不得进入相机输入集合。
+      // 只门控「移动类」键，快捷键（F1/M/T/B/Esc/H/J…）仍由各自监听器处理，
+      // 否则会连带把「Esc 关面板、Enter 提交、Space 停开场」一起吞掉。
+      const t = e.target as HTMLElement | null;
+      const typing = !!t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+      const modal = !!document.querySelector('.panel.show')
+        || document.getElementById('wishbar')?.style.display === 'flex';
+      const moveKey = Engine.MOVE_CODES.has(e.code);
+      if (!(moveKey && (typing || modal))) this.keys.add(e.code);
+      // 全量审核 2026-11-07（UI-06）：移动键落在 .dock-btn 上时阻止浏览器默认滚动/按钮点击（typing/modal 时不吞）
+      if (moveKey && !typing && !modal) e.preventDefault();
       if (this.camMode === 'cinema' && (e.code === 'Space' || e.code === 'Escape' || e.code === 'Enter')) this.stopCinema();
       // L：切换指针锁定（连续鼠标视角，不用按住左键）。Esc 由浏览器解除，pointerlockchange 里同步状态。
-      if (e.code === 'KeyL' && !e.repeat
-        && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) this.togglePointerLock();
+      if (e.code === 'KeyL' && !e.repeat && !typing) this.togglePointerLock();
     });
     window.addEventListener('keyup', (e) => this.keys.delete(e.code));
     // 左键 / 右键拖拽：**所有模式**都从这里进入（cinema/focus 一拖即接管，fly/walk 直接转，avatar 交玩家控制器）。
@@ -806,9 +860,18 @@ export class Engine {
       this.px = e.clientX; this.py = e.clientY;
     });
     const endDrag = (): void => { this.dragOn = false; };
+    // 全量审核 2026-11-07（UI-03）：窗口失焦时浏览器不会向原窗口派发 keyup，
+    // 按住的 W/Space 会永远留在 keys 里 → 切标签回来相机自行前进/上升（卡键）。
+    // visibilitychange(hidden) 同样清空，并归零虚拟摇杆。
+    const clearKeys = (): void => {
+      this.keys.clear();
+      this.touchMove.x = 0; this.touchMove.y = 0;
+    };
+    const onBlur = (): void => { endDrag(); clearKeys(); };
     window.addEventListener('pointerup', endDrag);
     window.addEventListener('pointercancel', endDrag);
-    window.addEventListener('blur', endDrag);
+    window.addEventListener('blur', onBlur);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) onBlur(); });
     // 指针锁定下的连续视角：movementX/Y 是相对位移，直接进同一条 dragLook 通道。
     // 锁定生效后的第一个事件丢弃：浏览器可能在锁定时把光标回中，首个 movement 是一次假位移。
     window.addEventListener('mousemove', (e) => {
@@ -914,16 +977,51 @@ export class Engine {
     // 相机在本帧已定型（updateCamera + 附身控制器 + 世界更新都跑完）才判档：
     // 用上一帧的机位判档会在快速推拉时慢一帧，近处那一档就赶不上加载
     this.lod.update(this.camera.position);
+
+    // ===== 降低渲染负载（全部只对远景 / 更新频率生效，中近景零画质损失）=====
+    this.perf.beginFrame(dt * 1000);
+    // 相机矩阵在 render 之前定型，供视锥与剔除使用（composer.render 内部还会再更新一次，无冲突）
+    this.camera.updateMatrixWorld();
+    this.camera.matrixWorldInverse.copy(this.camera.matrixWorld).invert();
+    this.projScreenMatrix.multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse);
+    this.frustum.setFromProjectionMatrix(this.projScreenMatrix);
+    // ① 分区视锥剔除：增量收集空间分块 InstancedMesh（稳态，不每帧遍历），PVS 粗判，ChunkGate 临时门控
+    this.gate.refresh(this.scene);
+    const recompute = this.perf.farGateInterval <= 1 || (this.perf.frame % this.perf.farGateInterval) === 0;
+    const visibleChunks = this.occlusion.beginFrame(
+      this.frustum, this.camera.position, this.gate.entriesView(), this.camera.far, recompute);
+    // apply 每帧执行（剔除稳定无闪烁）；中近景由 apply 内 PERF_NEAR_GUARD 直接跳过、连 visible 都不碰
+    this.gate.apply(visibleChunks, this.frustum, this.camera.position,
+                    this.perf.frame, this.perf.farGateInterval);
+    this.occlusion.endFrame();
+
     this.gradePass.uniforms.uTime.value = this.t;
     this.bloomPass.strength = this.time.bloom * this.bloomScale * (this.quality.bloom ? 1 : 0);
     this.renderer.info.reset();
-    // 阴影预算：46M 静态三角面每帧重绘一遍 shadow map 是 p95 的第一大项。
-    // 世界是静态的（太阳随相机走但方向固定），因此把阴影更新降到隔帧，
-    // 高光/阴影的可见差异在 60fps 下读不出来，成本直接减半。
+
+    // ② 静态阴影缓存：autoUpdate=false + needsUpdate 门控（替代原「隔帧」）。
+    // 静态城市 + 固定方向光 ⇒ 相机静止且几何未变时阴影贴图逐像素不变，整遍 shadow pass 不重绘；
+    // 相机位移/旋转超阈值、静态几何真变化、画质切换才刷新，且受帧预算频率上限约束。
+    // 【中近景保护】不改 shadow.mapSize / shadow.camera / bias / type，只改「多久重绘」。
     this.renderer.shadowMap.autoUpdate = false;
-    if ((Engine.shadowTick++ & 1) === 0) this.renderer.shadowMap.needsUpdate = true;
+    const camMoved = !this.shadowCamInit
+      || this.camera.position.distanceToSquared(this.prevCamPos) > Engine.SHADOW_MOVE_EPS2
+      || (1 - Math.abs(this.camera.quaternion.dot(this.prevCamQuat))) > Engine.SHADOW_ROT_EPS;
+    const staticDirty = this.perf.staticDirty;
+    if (this.perf.shadowDue(camMoved, staticDirty)) {
+      this.renderer.shadowMap.needsUpdate = true;
+      this.perf.noteShadowRefresh(camMoved, staticDirty);
+      this.prevCamPos.copy(this.camera.position);
+      this.prevCamQuat.copy(this.camera.quaternion);
+      this.shadowCamInit = true;
+    }
+    Engine.shadowTick++; // 兼容计数保留（原隔帧用），现阴影门控由 PerfBudget 负责
+
     const _t0 = performance.now();
     this.composer.render();
+    // 渲染后恢复：ChunkGate 只在「提交那一瞬」临时设 visible=false，绝不留跨帧副作用，
+    // 不与 LodManager.applyVisibility / 反射闸门 / 各生态 update 的 visible 语义冲突。
+    this.gate.restore();
     this.frameRenderMs.push(performance.now() - _t0);
     if (this.frameRenderMs.length > 600) this.frameRenderMs.shift();
     this.fps = this.fps * 0.95 + (1 / Math.max(dt, 1e-4)) * 0.05;
@@ -969,10 +1067,15 @@ export class Engine {
       }
     } else {
       mv.set(0, 0, 0);
-      fwd.set(-Math.sin(this.yaw), 0, -Math.cos(this.yaw));
-      // 右向量 = fwd × up：fwd=(-sin,0,-cos) 时右应为 (cos,0,-sin)。
-      // 旧写法 (fwd.z,0,-fwd.x) = (-cos,0,sin) 正好是左 —— A/D 全程反向。
-      right.set(-fwd.z, 0, fwd.x);
+      const cy = Math.cos(this.pitch), sy = Math.sin(this.pitch);
+      // R19（用户「要能自由的向着镜头的方向移动」）：旧 fwd 只含 yaw、y 恒 0，
+      // 抬头/俯视时 W/S 仍沿水平面推进，视线与行进方向脱节（抬头看天却在平飞）。
+      // fly 改用与 lookTarget 完全同一套含 pitch 的视线方向；walk 维持贴地水平行走。
+      if (this.camMode === 'fly') fwd.set(-Math.sin(this.yaw) * cy, sy, -Math.cos(this.yaw) * cy);
+      else fwd.set(-Math.sin(this.yaw), 0, -Math.cos(this.yaw));
+      // 右向量 = fwd × up：fwd 含 y 后水平分量长度变成 cos(pitch)，必须归一化，
+      // 否则 A/D 会随俯仰角变慢；旧写法 (fwd.z,0,-fwd.x) 正好是左，A/D 全程反向。
+      right.set(-fwd.z, 0, fwd.x).normalize();
       let sp = this.camMode === 'walk' ? 5.2 : 34;
       if (k.has('ShiftLeft') || k.has('ShiftRight')) sp *= 3.2;
       if (k.has('KeyW') || this.touchMove.y < -0.1) mv.addScaledVector(fwd, (k.has('KeyW') ? 1 : -this.touchMove.y));
@@ -996,7 +1099,6 @@ export class Engine {
         this.camera.position.z = THREE.MathUtils.clamp(this.camera.position.z, -WB, WB);
         if (this.camMode === 'fly') this.camera.position.y = THREE.MathUtils.clamp(this.camera.position.y, Math.min(this.realmFloor, -320), 4000);
       }
-      const cy = Math.cos(this.pitch), sy = Math.sin(this.pitch);
       dir.set(-Math.sin(this.yaw) * cy, sy, -Math.cos(this.yaw) * cy);
       this.lookTarget.copy(this.camera.position).addScaledVector(dir, 30);
     }

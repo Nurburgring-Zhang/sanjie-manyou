@@ -150,8 +150,10 @@ export class BuildMode {
     if (!aim) return;
     if (aim.gy <= 0) return;
     if (voxelStore.get(aim.gx, aim.gy, aim.gz) === 0) return;
-    this.materialStock++;                        // P1-3 建造产出：拆除得 1 材料（库存优先语义）
-    if (this.earn) this.earn(2);                 // 残料回收 2 文（保留既有经济口径）
+    // 全量审核 2026-11-07（P-04）：旧版拆除同时「回 1 库存 + 返 2 文」，而放置优先耗库存（0 文）。
+    // 首轮 −10 文后，「放置(耗库存) → 拆除(+2 文、+1 库存)」库存恒为 1、每轮净 +2 文，可无限刷钱。
+    // 现在拆除只回材料库存、不返铜钱：放置/拆除闭环零和，库存不再成为货币 faucet。
+    this.materialStock++;                        // P1-3 拆除得 1 材料（库存优先语义）
     voxelStore.set(aim.gx, aim.gy, aim.gz, 0);
     onVoxelChanged(aim.gx, aim.gz);   // P1-2 chunk 增量重建
   }

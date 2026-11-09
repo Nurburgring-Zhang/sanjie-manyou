@@ -52,10 +52,13 @@ body { font-family: var(--font-ui); color: var(--txt); -webkit-user-select: none
 .dock-btn .ico { font-size: 19px; display: block; margin-bottom: 1px; filter: drop-shadow(0 0 6px rgba(0,229,255,.6)); }
 .dock-btn:hover, .dock-btn.on { border-color: var(--line); background: rgba(0,229,255,.08); color: #fff; }
 .dock-btn.on .ico { filter: drop-shadow(0 0 8px var(--magenta)); }
+/* 全量审核 2026-11-07（UI-06）：焦点落 dock 按钮后可见，消除按 Space 双触发时的焦点混乱（不在 CSS 里禁用 Space） */
+.dock-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 
 /* ---- 面板通用 ---- */
+/* 全量审核 2026-11-07（UI-09）：z-index:70 高于 #goalchain 的 62（同在 #ui 堆叠上下文），面板文字不被目标链盖住 */
 .panel { position: absolute; bottom: 78px; left: 14px; width: min(330px, calc(100vw - 28px)); max-height: min(62vh, 560px);
-  background: var(--ink2); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  background: var(--ink2); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; z-index: 70;
   display: none; flex-direction: column; box-shadow: 0 8px 40px rgba(0,0,0,.5); }
 .panel.show { display: flex; }
 .panel.right { left: auto; right: 14px; }
@@ -130,7 +133,8 @@ body { font-family: var(--font-ui); color: var(--txt); -webkit-user-select: none
 #skip.show { display: block; }
 
 /* ---- 交互提示 / 铜钱 / 传送渐隐 ---- */
-#interact-prompt { position: absolute; left: 50%; bottom: 88px; transform: translateX(-50%);
+/* 全量审核 2026-11-07（UI-08）：bottom 88px → 132px，与 #infocard 的 bottom:92px 拉开 40px，避免撞车 */
+#interact-prompt { position: absolute; left: 50%; bottom: 132px; transform: translateX(-50%);
   padding: 8px 22px; background: var(--ink2); border: 1px solid rgba(255,179,0,.5); border-radius: 10px;
   color: var(--gold); font-size: 14px; letter-spacing: .15em; opacity: 0; transition: opacity .2s;
   text-shadow: 0 0 10px rgba(255,179,0,.5); pointer-events: none !important; }
@@ -156,4 +160,130 @@ body.touch #minimap { transform: scale(.72); transform-origin: top right; }
   .dock-btn { min-width: 44px; font-size: 11px; padding: 5px 6px; }
   .dock-btn .ico { font-size: 16px; }
   #ticker { display: none; }
+}
+
+/* ===== 三界造物 · 许愿台（融合终版垂直切片）===== */
+#wish-panel { position: absolute; right: 14px; bottom: 96px; width: 340px; max-height: 70vh;
+  display: flex; flex-direction: column; background: rgba(8,12,20,.94);
+  border: 1px solid rgba(212,175,55,.55); border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.6), 0 0 18px rgba(212,175,55,.15);
+  z-index: 88; pointer-events: auto; color: #ffe9b8; font-size: 13px; overflow: hidden; }
+#wish-panel.collapsed .wish-body { display: none; }
+.wish-head { display: flex; align-items: center; gap: 8px; padding: 8px 10px; cursor: pointer;
+  background: linear-gradient(90deg, rgba(212,175,55,.18), rgba(0,229,255,.08));
+  border-bottom: 1px solid rgba(212,175,55,.35); }
+.wish-head b { flex: 1; letter-spacing: .12em; color: #ffd25e; }
+.wish-body { padding: 8px 10px; overflow: auto; }
+#wish-status { min-height: 18px; margin-bottom: 6px; padding: 4px 8px; border-radius: 6px;
+  font-size: 12px; line-height: 1.5; background: rgba(0,0,0,.35); color: #cfe6f2; }
+#wish-status.ok { color: #9dffc4; }
+#wish-status.warn { color: #ffd25e; }
+#wish-status.err { color: #ff9c9c; }
+#wish-status.busy { color: #8fd8ff; }
+.wish-input-row { display: flex; gap: 6px; margin-bottom: 6px; }
+#wish-panel-input { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid rgba(212,175,55,.5);
+  border-radius: 18px; background: rgba(4,8,14,.9); color: #ffe9b8; font-size: 13px;
+  outline: none; pointer-events: auto; }
+#wish-panel-input:focus { border-color: #ffd25e; box-shadow: 0 0 8px rgba(255,210,94,.4); }
+.wish-send { border: 1px solid rgba(212,175,55,.7); background: rgba(212,175,55,.16);
+  color: #ffd25e; border-radius: 18px; padding: 6px 14px; font-size: 13px;
+  cursor: pointer; pointer-events: auto; white-space: nowrap; }
+.wish-send:hover { background: rgba(212,175,55,.3); }
+#wish-tabs { display: flex; gap: 4px; margin-bottom: 6px; flex-wrap: wrap; }
+.wish-tab { border: 1px solid rgba(0,229,255,.3); background: rgba(10,20,30,.8);
+  color: #cfe6f2; border-radius: 6px; padding: 3px 9px; font-size: 12px;
+  cursor: pointer; pointer-events: auto; }
+.wish-tab.on { background: rgba(255,210,94,.25); color: #ffd25e; border-color: #ffd25e; }
+#wish-list { max-height: 210px; overflow: auto; }
+.wish-empty { color: #8aa0b2; font-size: 12px; padding: 8px; text-align: center; }
+.wish-row { border: 1px solid rgba(120,150,180,.22); border-radius: 8px; margin-bottom: 5px;
+  padding: 5px 6px; background: rgba(255,255,255,.02); }
+.wish-row.on { border-color: #ffd25e; box-shadow: 0 0 8px rgba(255,210,94,.25); }
+.wish-info { cursor: pointer; }
+.wish-info b { color: #ffe9b8; }
+.wish-info small { display: block; color: #9ab4c4; font-size: 11px; }
+.wish-ops { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.wish-btn { border: 1px solid rgba(0,229,255,.35); background: rgba(10,20,30,.8);
+  color: #cfe6f2; border-radius: 6px; padding: 2px 7px; font-size: 11px;
+  cursor: pointer; pointer-events: auto; }
+.wish-btn:hover { border-color: #ffd25e; color: #ffd25e; }
+.wish-hint { color: #8aa0b2; font-size: 11px; margin-top: 6px; line-height: 1.5; }
+#wish-settings { position: absolute; right: 14px; bottom: 96px; width: 340px; display: none;
+  z-index: 92; background: rgba(8,12,20,.97); border: 1px solid rgba(0,229,255,.5);
+  border-radius: 12px; padding: 10px; box-shadow: 0 8px 32px rgba(0,0,0,.7);
+  color: #cfe6f2; pointer-events: auto; }
+#wish-settings.show { display: block; }
+#wish-settings h4 { margin: 0 0 8px; color: #8fd8ff; letter-spacing: .1em; font-size: 14px; }
+.wish-set-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.wish-set-row label { width: 96px; font-size: 12px; color: #ffe9b8; flex-shrink: 0; }
+.wish-set-row input[type=text], .wish-set-row input[type=password] { flex: 1; min-width: 0;
+  padding: 6px 8px; border: 1px solid rgba(120,150,180,.4); border-radius: 6px;
+  background: rgba(4,8,14,.9); color: #e8f4ff; font-size: 12px; }
+.wish-set-row input[type=checkbox] { width: 16px; height: 16px; }
+.wish-set-btns { display: flex; gap: 6px; margin-top: 8px; }
+/* ===== R25 · Agent 设定卡 / 建造工具条 ===== */
+#wish-lore { display: none; max-height: 210px; overflow: auto; margin: 6px 0; padding: 8px;
+  border: 1px solid rgba(212,175,55,.35); border-radius: 8px; background: rgba(4,8,14,.72); }
+#wish-lore.show { display: block; }
+.bp-card { color: #e8e0c8; font-size: 12px; line-height: 1.65; }
+.bp-title { color: #ffd25e; font-size: 14px; letter-spacing: .08em; margin-bottom: 4px; }
+.bp-row { margin: 3px 0; color: #c9d6df; }
+.bp-row b { color: #8fd8ff; font-weight: 600; }
+.bp-tag { display: inline-block; margin: 2px 3px 0 0; padding: 1px 6px;
+  border: 1px solid rgba(212,175,55,.45); border-radius: 10px; color: #ffe9b8; font-size: 11px; }
+.bp-steps { margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(212,175,55,.3); color: #9ab4c4; }
+.bp-steps div { margin: 2px 0; }
+#wish-buildbar { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 6px; }
+#wish-buildbar.on { padding: 4px; border: 1px solid rgba(255,210,94,.45);
+  border-radius: 8px; background: rgba(212,175,55,.08); }
+#wish-buildbar .wish-btn { font-size: 11px; padding: 3px 6px; }
+#wish-labels { position: absolute; inset: 0; z-index: 80; pointer-events: none; }
+.wish-label { position: absolute; transform: translate(-50%, -100%); pointer-events: auto;
+  cursor: pointer; background: rgba(8,12,20,.85); border: 1px solid rgba(255,210,94,.6);
+  border-radius: 10px; padding: 2px 8px; font-size: 12px; color: #ffe9b8;
+  white-space: nowrap; text-shadow: 0 0 6px rgba(0,0,0,.9); }
+.wish-label:hover { border-color: #ffd25e; color: #ffd25e; }
+/* ===== R26 · 8 机位离屏截图验证 ===== */
+#wish-verify { display: none; max-height: 220px; overflow: auto; margin: 6px 0; padding: 6px;
+  border: 1px solid rgba(143,216,255,.35); border-radius: 8px; background: rgba(4,8,14,.72); }
+#wish-verify:not(:empty) { display: block; }
+.verify-note { color: #9ab4c4; font-size: 11px; line-height: 1.55; }
+.verify-head { color: #8fd8ff; font-size: 11px; margin-bottom: 5px; line-height: 1.5; }
+.verify-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.verify-cell { border: 1px solid rgba(143,216,255,.25); border-radius: 5px; overflow: hidden;
+  background: #0b1018; text-align: center; }
+.verify-cell.ok { border-color: rgba(120,220,160,.5); }
+.verify-cell.bad { border-color: rgba(230,120,110,.55); }
+.verify-cell img { display: block; width: 100%; height: auto; }
+.verify-cell small { display: block; color: #c9d6df; font-size: 9px; line-height: 1.35; padding: 1px 2px; }
+/* ===== R26 · Agent 能力流水线 / WorkBuddy 能力库 ===== */
+#wish-pipeline { display: none; max-height: 190px; overflow: auto; margin: 6px 0; padding: 6px 8px;
+  border: 1px solid rgba(212,175,55,.35); border-radius: 8px; background: rgba(4,8,14,.75); }
+#wish-pipeline:not(:empty) { display: block; }
+.pipe-head { color: #ffd25e; font-size: 11px; font-weight: 600; line-height: 1.5; margin-bottom: 3px; }
+.pipe-step { color: #9ab4c4; font-size: 10px; line-height: 1.5; }
+.pipe-step.done { color: #8ce0a8; }
+.pipe-step.running { color: #ffe9a8; }
+.pipe-step.skipped { color: #6f8492; }
+.pipe-research { margin-top: 5px; padding-top: 5px; border-top: 1px dashed rgba(212,175,55,.3); }
+.pipe-row { color: #c9d6df; font-size: 10px; line-height: 1.55; margin: 2px 0; }
+.pipe-row b { color: #8fd8ff; font-weight: 600; }
+.pipe-caps { color: #ffe9b8; font-size: 10px; line-height: 1.5; margin-top: 4px; }
+#wish-caps { display: none; max-height: 260px; overflow: auto; margin: 6px 0; padding: 7px 8px;
+  border: 1px solid rgba(143,216,255,.4); border-radius: 8px; background: rgba(4,8,14,.82); }
+#wish-caps.show { display: block; }
+.caps-head { color: #ffd25e; font-size: 12px; font-weight: 600; line-height: 1.5; }
+.caps-note { color: #9ab4c4; font-size: 10px; line-height: 1.55; margin: 4px 0 6px; }
+#wish-caps details { margin: 3px 0; border-bottom: 1px solid rgba(143,216,255,.12); }
+#wish-caps summary { color: #8fd8ff; font-size: 11px; cursor: pointer; padding: 2px 0; }
+.cap-row { display: flex; gap: 4px; align-items: baseline; flex-wrap: wrap; padding: 2px 0 2px 6px; }
+.cap-row b { color: #e8e0c8; font-size: 10px; font-weight: 600; }
+.cap-row small { display: block; flex-basis: 100%; color: #9ab4c4; font-size: 9px; line-height: 1.45; }
+.cap-bridge { flex: none; padding: 0 4px; border-radius: 6px; font-size: 8px; line-height: 1.5; }
+.cap-row.in-browser .cap-bridge { background: rgba(120,220,160,.2); color: #8ce0a8; }
+.cap-row.api .cap-bridge { background: rgba(255,210,94,.2); color: #ffe9a8; }
+.cap-row.offline .cap-bridge { background: rgba(143,216,255,.16); color: #8fd8ff; }
+.caps-plan { color: #c9d6df; font-size: 10px; line-height: 1.5; margin-top: 6px; }
+@media (max-width: 720px) {
+  #wish-panel, #wish-settings { width: min(92vw, 340px); right: 4px; bottom: 84px; }
 }

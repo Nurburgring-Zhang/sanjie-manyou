@@ -44,8 +44,10 @@ export class ArenaBoss {
   private timer = 0;
   private cd = 0;
   private respawnT = 0;
-  /** 连续脱离战斗的时长（脱战回血的闸门） */
+  /** 连续脱离战斗的时长（脱战回血与状态收口共用的闸门） */
   private outT = 0;
+  /** 击败后战果条保留时长（秒，sim-time） */
+  private defeatFade = 3;
   private bar: HTMLDivElement | null = null;
   private fill: HTMLDivElement | null = null;
   private label: HTMLDivElement | null = null;
@@ -128,6 +130,8 @@ export class ArenaBoss {
     if (this.hp === 0) {
       this.state = 'dead';
       this.defeated = true;
+      this.defeatFade = 3;
+      this.syncHud();   // 让「已伏誅 0/320」先显示出来，再由 update 计时淡出
       bus.emit('ui:toast', `${this.spec.name} 伏誅 —— 图鉴已收录`);
       bus.emit('sfx:buddha');
       this.vfx.burst(this.pos().clone().add(new THREE.Vector3(0, 4, 0)), 120, 0xffe6a8, 18, 1.4, 2.2);
@@ -152,7 +156,15 @@ export class ArenaBoss {
 
   update(dt: number): void {
     if (this.cd > 0) this.cd -= dt;
-    if (this.defeated) return;
+    if (this.defeated) {
+      // P-05 / UI-02：击败后旧版直接 return，syncHud 再不被调用 → 「已伏誅 0/320」血条锁死常驻。
+      // 战果保留 3s 供玩家看到，然后淡出（用 sim-time dt，不用墙钟定时器）。
+      if (this.defeatFade > 0) {
+        this.defeatFade -= dt;
+        if (this.defeatFade <= 0 && this.bar) this.bar.style.opacity = '0';
+      }
+      return;
+    }
     if (this.state === 'respawning') {
       this.respawnT -= dt;
       if (this.respawnT <= 0) this.state = 'engage';
@@ -162,6 +174,17 @@ export class ArenaBoss {
     // 脱战回血：玩家被击退/离开 34m 之外，Boss 每秒回 15% —— 离开是有代价的，但不会被一次失误清零
     // 脱战 2.5s 后才开始回血（4%/s）：闪避 1.2s 不算脱战，否则「撤一步回血」会让仗永远打不完
     if (!this.defeated && d > this.spec.engageRange) this.outT += dt; else this.outT = 0;
+    // 全量审核 2026-11-07（P-05 / UI-02）：数值层早已把「离开 34m 超过 2.5s」当脱战，
+    // 但状态层原本**没有任何回 idle 的分支** —— 一旦 engage 就永久停在
+    // engage→telegraph→active→engage 环里：血条整会话常驻、玩家回人间后天宫 Boss 仍空转放招发音效。
+    // 这里复用同一 outT 闸门做状态收口，与回血语义一致（幂等）。
+    if (!this.defeated && this.outT > 2.5 && this.state !== 'idle') {
+      this.state = 'idle';
+      this.timer = 0;
+      this.outT = 0;
+      this.syncHud();
+      return;
+    }
     if (this.outT > 2.5 && this.hp < this.spec.maxHp) {
       this.hp = Math.min(this.spec.maxHp, this.hp + this.spec.maxHp * 0.04 * dt);
       this.syncHud();
@@ -220,8 +243,10 @@ export class ArenaBoss {
     if (typeof document === 'undefined' || document.getElementById('bossbar')) return;
     const wrap = document.createElement('div');
     wrap.id = 'bossbar';
-    wrap.style.cssText = 'position:fixed;left:50%;top:66px;transform:translateX(-50%);width:min(520px,52vw);'
-      + 'pointer-events:none;opacity:0;transition:opacity .3s;z-index:30;font:12px/1.4 system-ui,sans-serif;color:#f2e6cf;';
+    // 全量审核 2026-11-07（UI-01）：旧版挂 document.body、z-index:30，脱离 #ui 管控 ——
+    // H 键隐藏全部 UI 后红条仍在，且盖住顶栏/toast。改挂 #ui 内并把 z 收进 20–29 带。
+    wrap.style.cssText = 'position:absolute;left:50%;top:66px;transform:translateX(-50%);width:min(420px,52vw);'
+      + 'pointer-events:none;opacity:0;transition:opacity .3s;z-index:24;font:12px/1.4 system-ui,sans-serif;color:#f2e6cf;';
     const name = document.createElement('div');
     name.style.cssText = 'display:flex;justify-content:space-between;margin-bottom:3px;text-shadow:0 1px 3px #000;';
     const label = document.createElement('div');
@@ -232,7 +257,7 @@ export class ArenaBoss {
     this.label = name;
     track.appendChild(fill);
     wrap.appendChild(name); wrap.appendChild(track);
-    document.body.appendChild(wrap);
+    (document.getElementById('ui') ?? document.body).appendChild(wrap);
     this.bar = wrap; this.fill = fill;
     this.hudName = label;
     void label;

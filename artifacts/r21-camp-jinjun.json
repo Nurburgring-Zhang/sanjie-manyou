@@ -1,0 +1,26 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "cams": [
+    {
+      "tag": "warmup",
+      "teleported": true,
+      "file": "artifacts\\_r21-camp-warmup.png",
+      "bytes": 1325588,
+      "kept": false
+    },
+    {
+      "tag": "final",
+      "teleported": true,
+      "file": "artifacts\\r21-camp-jinjun.png",
+      "bytes": 1401560,
+      "kept": true
+    }
+  ],
+  "pageErrors": [],
+  "shots": 1,
+  "bundle": [
+    "index-C6gsUjVT.js"
+  ],
+  "ok": true,
+  "browserClosed": true
+}

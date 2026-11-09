@@ -2,11 +2,12 @@ import * as THREE from 'three';
 import { RNG } from '../core/rng';
 import { Baker, SignMesher, SignAtlas, shade, roofProfile } from './bake';
 import { Plot, WALL_X, GATE_Z, H_STREETS, streetPlots, inLandmarkKeepout } from './layout';
-import { buildLandmarkInteriors } from './interiors';
+import { buildLandmarkInteriors, buildTradeInterior, pickTrade } from './interiors';
 import { buildDetailedEave, buildDetailedFacade } from './detailKit';
 import { buildGatePalaceFittings, buildDevotionalWorks } from './architecture';
 // 只读取坊心与路廊判据（imperial → buildings 已是既有单向环，本文件只在函数体内调用，不参与模块初始化）
 import { wardCells, roadBlocked, wardReserved } from './imperial';
+import { buildInstitutions } from './institutions';
 
 // ============ 配色 ============
 /** 三界调色板——对齐 docs/assets/44-材质色彩总谱.md（CJ 人间本体/NH 霓虹/DF 地府） */
@@ -1082,7 +1083,61 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
   };
 
   if (frontOpen) {
-    // 前店后宅：铺面敞开，立面不放板壁 / 灰泥 / 格窗 / 门扇——檐柱、柜台与挑檐由 3b 的 shop 段承担
+    // 前店后宅：铺面敞开。旧实现只有一条 noteFacade 台账、几何上一无所有；檐柱 / 柜台 /
+    // 挑檐又都在 3b 更外侧，从街上看就是「一整面黑洞」——用户「面对大街的面没有门窗」的主因。
+    // R19 补齐门框、横披窗、上层格窗、墙垛窄窗四类可辨识构件：不堵敞口、不落在檐柱线上、
+    // 一层窗整体抬到挑檐下沿（y=3.27）之上，墙垛窗抬到柜台顶（1.7m）之上，杜绝新遮挡。
+    const pierW = Math.min(1.0, w * 0.14);
+    const openHalf = w / 2 - pierW;
+    // ① 整间敞口门框：两侧抱柱 + 通长门楣 + 门簪，把敞口读成「一间门面」而不是墙被挖掉
+    for (const s2 of [-1, 1] as const) {
+      boxAt('wood', 0.22, openH + 0.36, 0.28, s2 * (openHalf - 0.11), 0.6 + (openH + 0.36) / 2, faceZ + 0.12, shade(C.woodDark, 0.92));
+      boxAt('wood', 0.34, 0.2, 0.36, s2 * (openHalf - 0.11), doorHead + 0.32, faceZ + 0.16, shade(C.woodRed, 0.95));
+    }
+    boxAt('wood', openHalf * 2 + 0.44, 0.28, 0.34, 0, doorHead + 0.14, faceZ + 0.14, shade(C.woodDark, 0.95));
+    b.kit('facade.shopfrontFrame', 1, doorHead + 0.14);
+    // ② 一层横披格窗：挑檐下沿 3.27，窗必须整体落在其上方；顶不过墙头 yTop
+    {
+      const wallHead = 0.6 + bodyH + 0.12;
+      const wh = Math.min(0.42, Math.max(0, wallHead - 3.52));
+      if (wh > 0.2) {
+        const wy = 3.47 + wh / 2;
+        const nW = Math.max(2, Math.min(4, Math.round((openHalf * 2) / 1.6)));
+        const ww = Math.min(1.1, (openHalf * 2) / nW - 0.2);
+        for (let i = 0; i < nW; i++) {
+          const lx = -openHalf + (openHalf * 2 * (i + 0.5)) / nW;
+          boxAt('wood', ww + 0.12, wh + 0.1, 0.1, lx, wy, faceZ + 0.13, shade(C.woodDark, 0.9));
+          boxAt('glow', ww - 0.08, wh - 0.06, 0.05, lx, wy, faceZ + 0.19, C.winGlow);
+          for (let k = 1; k < 3; k++) boxAt('wood', 0.04, wh - 0.04, 0.04, lx - ww / 2 + (ww * k) / 3, wy, faceZ + 0.22, shade(C.woodDark, 0.7));
+          const [wx, wz] = lat(lx, faceZ + 0.22);
+          noteFacade('window', wx, wy, wz, ww, wh, true, 'shopfront-lintel');
+        }
+        b.kit('facade.shopfrontLintel', nW, wy);
+      }
+    }
+    // ③ 二层及以上临街格窗：frontOpen 的二层墙是实心的，旧版完全不布置任何窗，
+    //    从街上看二层就是一整块素墙。这里按 baysOf 铺开并避开抱柱 / 檐柱线。
+    for (let f = 1; f < floors; f++) {
+      const wy = 0.6 + f * floorH + floorH * 0.52;
+      for (const [i, lx] of baysOf(f).entries()) {
+        if (Math.abs(lx) > openHalf - 0.6) continue;
+        const [wx, wz] = lat(lx, faceZ + 0.16);
+        zhilingWindow(b, wx, wy, wz, 1.05, 1.2, ry, litOf(i, f));
+        noteFacade('window', wx, wy, wz, 1.05, 1.2, litOf(i, f), 'shopfront-upper');
+      }
+    }
+    // ④ 两端墙垛窄直棂窗：pierW 仅约 1m，用 0.58m 窄窗补「有窗」的读感
+    if (pierW >= 0.72) {
+      const lw = Math.min(0.58, pierW - 0.24), ly = 2.12;
+      for (const s2 of [-1, 1] as const) {
+        const lx = s2 * (w / 2 - pierW / 2);
+        boxAt('wood', lw + 0.1, 0.84, 0.1, lx, ly, faceZ + 0.12, shade(C.woodDark, 0.9));
+        boxAt('glow', lw - 0.06, 0.68, 0.05, lx, ly, faceZ + 0.18, C.winGlow);
+        const [wx, wz] = lat(lx, faceZ + 0.18);
+        noteFacade('window', wx, ly, wz, lw, 0.68, true, 'shopfront-pier');
+      }
+      b.kit('facade.shopfrontPierWindow', 2, ly);
+    }
     const [dx2, dz2] = lat(0, faceZ);
     noteFacade('door', dx2, 1.6, dz2, openW, openH, false, 'shopfront');
   } else if (facadeType === 4) {
@@ -1195,6 +1250,123 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
       }
     }
   }
+  // C) 漏网形制补临街门窗（R20）：楼阁 pavilion / 五脊殿 hall 的临街面常被腰檐、
+  // 通柱、平座压住，而既有 facadeType 1~4 铺的窗又多落在通柱线上（白机位因此读作一整片素墙）。
+  // 上一轮 C) 只补了 floors>1 的「上层」格窗，一层（尤其单层厅堂）仍是整片素墙：pavilion 恒为多层、
+  // 单层漏网的全是 hall。这次把条件扩到所有 pavilion / hall，一层按固定局部坐标 ±0.2w 补直棂格窗 +
+  // 门框线脚，落在通柱（0、±0.4w）之间的空隙、避开 x=0 门洞中线与檐廊柱线；上层格窗保留且不重复发同一位置。
+  // 不动 frontOpen 分支、不动 facadeType 1~4 的既有循环。
+  if (form === 'pavilion' || form === 'hall') {
+    // C1) 一层临街门窗（新 kit 键，便于台账统计单层覆盖量；确定性、不耗 RNG、不用 Math.random）
+    {
+      const ww = 1.05, hh = 1.2;
+      const winY = 0.6 + floorH * 0.58;   // 与既有 facadeType 一层窗齐整，窗顶压在腰檐(0.6+floorH)之下
+      const winZ = faceZ + 0.40;          // 凸出装饰柱前皮(faceZ+0.32)，保证通柱之间肉眼可见
+      const baseX = Math.max(0.2 * w, openW / 2 + ww / 2 + 0.22); // 窄 hall 也压不进门洞/门楣
+      const slots: number[] = [-baseX, baseX];
+      if (w >= 14) slots.push(-0.31 * w, 0.31 * w);  // 宽厅堂每侧再补一樘，仍落在通柱空隙
+      let winCount = 0;
+      for (const lx of slots) {
+        if (Math.abs(lx) + ww / 2 > w / 2 - 0.3) continue;  // 不切穿山墙角
+        const lit = (idx + winCount) % 2 === 0;
+        const [wx, wz] = lat(lx, winZ);
+        zhilingWindow(b, wx, winY, wz, ww, hh, ry, lit);
+        boxAt('ash', ww + 0.24, 0.10, 0.20, lx, winY - hh / 2 - 0.06, winZ + 0.02, 0x9a9282); // 石窗台
+        noteFacade('window', wx, winY, wz, ww, hh, lit, 'pavilion-street');
+        winCount++;
+      }
+      // 中央门位门框线脚 / 门楣：只加细竖线与横枋，不新增整扇门、不盖住既有 facadeType 的门
+      const jx = openW / 2 + 0.06;
+      for (const s2 of [-1, 1] as const) {
+        boxAt('wood', 0.12, doorHead - 0.55, 0.10, s2 * jx, 0.6 + (doorHead - 0.55) / 2, faceZ + 0.20, shade(C.woodRed, 0.9));
+        boxAt('wood', 0.16, 0.10, 0.12, s2 * jx, doorHead + 0.02, faceZ + 0.22, C.woodDark);
+      }
+      boxAt('wood', openW + 0.40, 0.18, 0.14, 0, doorHead + 0.14, faceZ + 0.20, shade(C.woodDark, 0.95));
+      // 门簪一对：门楣上方两枚短木，远处也能把中央门位读成「门」而不是墙缝
+      for (const s2 of [-1, 1] as const) {
+        boxAt('wood', 0.20, 0.16, 0.18, s2 * (openW / 2 - 0.30), doorHead + 0.30, faceZ + 0.22, shade(C.woodRed, 0.95));
+      }
+      b.kit('facade.pavilionStreetWindow', winCount, winY);
+      b.kit('facade.pavilionDoorTrim', 1, doorHead + 0.14);
+    }
+    // C2) 上层格窗（保留上一轮成果，仅 floors>1；y 在 0.6+f*floorH 之上，不与一层新窗重复发同一位置）
+    if (floors > 1) {
+      let n = 0;
+      for (let f = 1; f < floors; f++) {
+        const wy = 0.6 + f * floorH + floorH * 0.52;
+        for (const s2 of [-1, 1] as const) {
+          const lx = s2 * 0.2 * w;
+          const [wx, wz] = lat(lx, faceZ + 0.16);
+          const lit = litOf(f + (s2 > 0 ? 1 : 0), f);
+          zhilingWindow(b, wx, wy, wz, 1.05, 1.2, ry, lit);
+          noteFacade('window', wx, wy, wz, 1.05, 1.2, lit, 'upper-infill');
+          n++;
+        }
+      }
+      b.kit('facade.upperInfillWindow', n, 0.6 + floorH * 1.52);
+    }
+    // C3) 临街正面（朝 +z 一侧）补真正看得见的门与格窗（R20 第三轮）
+    // 台账 + Raycaster 取证：这批 pavilion / hall 多数 ry=π，既有门、facadeType 1~4 的窗、
+    // C1/C2 的补窗全部落在局部 +z 面（faceZ）= 世界 -z；而主街在 +z 侧，e/b 机位看到的
+    // 局部 -z 面（世界 z≈69.2、法线 +z）是一整片素后墙，0 门 0 窗。用户投诉的正是这一面。
+    // 这里在 -faceZ 一侧按面阔分配补门洞/门框/门簪 + 直棂槛窗 + 槛墙线脚 + 上层格窗；
+    // 装饰朝 +z 凸出，坐标 hash / 固定序列，不耗 RNG、不用 Math.random。
+    if (Math.cos(ry) < -0.5) {
+      const backZ = -faceZ;                     // 局部 -z 面（ry=π 时世界 +z，正对机位）
+      const rBack = ry + Math.PI;               // 门窗贴片与棂条朝 +z 凸出
+      const ww = Math.min(1.30, Math.max(0.95, w * 0.09));  // 窗宽按面阔分配
+      const hh = Math.min(1.40, floorH * 0.42);
+      const sillY = 0.6 + floorH * 0.30;        // 槛墙顶 / 窗台
+      const winY = sillY + hh / 2 + 0.06;       // 窗心：下沿高过柜台，上沿压在腰檐之下
+      const winZ = backZ - 0.34;                // 凸出后墙皮，越过收分块与腰檐
+      // 窗位落在柱间空隙（柱在 -w/2+0.4+(w-0.8)i/nCols），按门洞净宽与山墙角过滤；
+      // 窄 hall 自动只留外侧两樘，宽厅堂四樘。
+      let winCount = 0;
+      for (const lx of [-0.36 * w, -0.18 * w, 0.18 * w, 0.36 * w]) {
+        if (Math.abs(lx) - ww / 2 < openW / 2 + 0.18) continue;
+        if (Math.abs(lx) + ww / 2 > w / 2 - 0.45) continue;
+        const lit = (idx + winCount) % 2 === 0;
+        const [wx, wz] = lat(lx, winZ);
+        zhilingWindow(b, wx, winY, wz, ww, hh, rBack, lit);
+        boxAt('ash', ww + 0.26, 0.12, 0.22, lx, sillY - 0.06, winZ - 0.02, 0x9a9282, Math.PI); // 石窗台
+        noteFacade('window', wx, winY, wz, ww, hh, lit, 'hall-street-front');
+        winCount++;
+      }
+      // 槛墙线脚：窗下一道通长横枋（中央门洞处断开），把一排窗读成槛窗而非悬空方洞
+      for (const s2 of [-1, 1] as const) {
+        const segW = w / 2 - openW / 2 - 0.10;
+        boxAt('wood', segW, 0.10, 0.10, s2 * (openW / 2 + 0.05 + segW / 2), sillY - 0.18, backZ - 0.12, shade(C.woodDark, 0.92), Math.PI);
+      }
+      // 门洞：暗底 + 两扇板门（留中缝）+ 门框竖线 + 门楣 + 门簪一对 + 门槛石
+      boxAt('wood', openW + 0.06, openH + 0.06, 0.08, 0, 0.6 + openH / 2, backZ - 0.04, 0x1c130c, Math.PI);
+      for (const s2 of [-1, 1] as const) {
+        boxAt('wood', openW / 2 - 0.05, openH - 0.08, 0.10, s2 * (openW / 4 + 0.02), 0.6 + openH / 2, backZ - 0.16, shade(C.woodDark, 0.9), Math.PI);
+        boxAt('wood', 0.14, openH + 0.20, 0.14, s2 * (openW / 2 + 0.07), 0.6 + (openH + 0.20) / 2, backZ - 0.20, shade(C.woodRed, 0.95), Math.PI);
+        boxAt('wood', 0.22, 0.18, 0.20, s2 * (openW / 2 - 0.34), doorHead + 0.26, backZ - 0.22, shade(C.woodRed, 0.98), Math.PI);
+      }
+      boxAt('wood', openW + 0.44, 0.20, 0.16, 0, doorHead + 0.12, backZ - 0.20, shade(C.woodDark, 0.95), Math.PI);
+      boxAt('ash', openW + 0.30, 0.14, 0.34, 0, 0.62, backZ - 0.24, 0x9a9282, Math.PI);
+      b.kit('facade.hallStreetWindow', winCount, winY);
+      b.kit('facade.hallStreetDoor', 1, doorHead + 0.12);
+      // 二层及以上：腰檐之上再补一排窗，避免上半截仍是素墙
+      if (floors > 1) {
+        let up = 0;
+        for (let f = 1; f < floors; f++) {
+          const uy = 0.6 + f * floorH + floorH * 0.52;
+          for (const s2 of [-1, 1] as const) {
+            const lx = s2 * 0.24 * w;
+            if (Math.abs(lx) + ww / 2 > w / 2 - 0.45) continue;
+            const [ux, uz] = lat(lx, winZ);
+            const lit = (idx + up) % 2 === 0;
+            zhilingWindow(b, ux, uy, uz, ww, hh, rBack, lit);
+            noteFacade('window', ux, uy, uz, ww, hh, lit, 'hall-street-upper');
+            up++;
+          }
+        }
+        b.kit('facade.hallStreetUpperWindow', up, 0.6 + floorH * 1.52);
+      }
+    }
+  }
   // 装饰柱（木色档，凸出正面 0.12m）
   const nCols = Math.max(2, Math.round(w / 4));
   for (let i = 0; i <= nCols; i++) {
@@ -1237,6 +1409,59 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
     boxAt('wall', gateW * 0.8, 0.22, 0.6, 0, 0.11, wallZ + 0.36, C.stone);
     // 店面构件（共用一套）：板门 / 槛窗 / 檐廊柱 / 门灯
     streetFrontOn(wallZ, w + 1.2, gateW, 2.2, 2.5);
+    // B) 院墙街面补构件（R20）：左右两段 segW 素墙加直棂漏窗 / 砖雕腰线 / 墙帽压顶 /
+    // 门框线脚。全部落在既有板门、槛窗、檐廊柱之间的空隙，不堵中央 gateW 门洞。
+    {
+      const wallFace = wallZ + 0.21;   // 院墙外皮
+      const winY = 1.72;              // 与 streetFrontOn 槛窗同高，街面读起来齐整
+      let winCount = 0;
+      /** 一樘直棂漏窗：木框 + 竖棂 + 石窗台；夜里约一半带 glow（确定性，不耗 RNG、不全局点亮） */
+      const latticeAt = (lx: number, ww: number, hh: number): void => {
+        const lit = (winCount + idx) % 2 === 0;
+        boxAt('wood', ww + 0.12, hh + 0.12, 0.09, lx, winY, wallFace + 0.04, shade(C.woodDark, 0.92));
+        if (lit) boxAt('glow', ww - 0.08, hh - 0.08, 0.05, lx, winY, wallFace + 0.10, C.winGlow);
+        for (let k = 1; k < 4; k++) {
+          boxAt('wood', 0.045, hh - 0.1, 0.05, lx - ww / 2 + (ww * k) / 4, winY, wallFace + 0.13, shade(C.woodDark, 0.7));
+        }
+        boxAt('ash', ww + 0.2, 0.1, 0.2, lx, winY - hh / 2 - 0.07, wallFace + 0.06, 0x9a9282);
+        const [wx, wz] = lat(lx, wallFace + 0.13);
+        noteFacade('window', wx, winY, wz, ww, hh, lit, 'courtyard-lattice');
+        winCount++;
+      };
+      for (const s2 of [-1, 1] as const) {
+        // ① 门洞边与既有槛窗之间的窄空隙：一樘直棂漏窗（避开 gateW 与檐廊柱线）
+        latticeAt(s2 * (gateW / 2 + 0.33), 0.36, 1.0);
+        // ② 宽宅：既有槛窗外缘到檐廊柱内缘还有空带，再补一樘（每段 1~2 樘）
+        const bandB = segW - 2.40;
+        if (bandB >= 0.9) {
+          const lxB = s2 * (gateW / 2 + 1.90 + bandB / 2);
+          latticeAt(lxB, Math.min(0.9, bandB - 0.14), 1.0);
+        }
+        const segCx = s2 * (gateW / 2 + segW / 2);
+        // ③ 砖雕腰线横带：窗台之下、墙裙之上，每段通长 + 等距砖雕凸块
+        boxAt('ash', segW - 0.1, 0.13, 0.1, segCx, 0.98, wallFace + 0.02, shade(C.plaster2, 0.7));
+        const nb = Math.max(3, Math.min(5, Math.round(segW / 1.1)));
+        for (let k = 0; k < nb; k++) {
+          const bx = segCx - s2 * (segW - 0.1) / 2 + s2 * (segW - 0.1) * (k + 0.5) / nb;
+          boxAt('ash', 0.22, 0.16, 0.14, bx, 0.98, wallFace + 0.05, shade(C.plaster2, 0.55));
+        }
+        // ④ 墙帽压顶：披檐之上的一道压顶脊 + 沿线瓦头，白天俯视可读
+        boxAt('roof', segW + 0.1, 0.1, 0.3, segCx, 2.72, wallZ + 0.1, shade(C.tile, 1.12));
+        for (let k = 0; k < 3; k++) {
+          const bx = segCx + s2 * (segW * (k - 1)) / 3;
+          boxAt('ceramic', 0.16, 0.14, 0.16, bx, 2.8, wallZ + 0.1, shade(C.tile2, 0.9));
+        }
+      }
+      // ⑤ 门洞两侧门框线脚：贴在既有门框正面的细竖线 + 顶收头，只加线脚、不新增整扇门
+      for (const s2 of [-1, 1] as const) {
+        boxAt('wood', 0.06, 2.4, 0.06, s2 * (gateW / 2 + 0.04), 1.25, wallZ + 0.36, shade(C.woodRed, 0.85));
+        boxAt('wood', 0.14, 0.1, 0.1, s2 * (gateW / 2 + 0.04), 2.5, wallZ + 0.37, C.woodDark);
+      }
+      b.kit('facade.courtyardWindow', winCount, winY);
+      b.kit('facade.courtyardBand', 2);
+      b.kit('facade.courtyardCoping', 2);
+      b.kit('facade.courtyardJamb', 4);
+    }
     // 山墙侧窗：搬到本文件自己发（detailKit 的整幅立面在院墙后看不见，见文件末的调用处说明）
     for (const s2 of [-1, 1] as const) {
       const [wx, wz] = lat(s2 * (w / 2 + 0.16), 0.8);
@@ -1390,8 +1615,34 @@ export function buildBuilding(b: Baker, sg: SignMesher, atlas: SignAtlas, o: Bui
       }), 1.15, 4.1, gx + Math.cos(ry) * lx + sin * 1.6, 4.2, gz - Math.sin(ry) * lx + cos * 1.6, ry);
     }
   }
-  // 7) 通用室内衬：门洞看进去不再是纯黑空腔（9 座手工室内壳由 o.hasInterior 跳过）
-  if (!hasInterior) genericInteriorOn(b, o, wallC, woodC, kind);
+  // 7) 室内：9 座手工室内壳（o.hasInterior）跳过；其余按业态分流。
+  //    · 商业铺面（shop/tavern/teahouse）：R24 用 buildTradeInterior 提供「行业经营用品 +
+  //      家具/摆设/装饰/饰品/日常用品」全套陈设，取代旧 genericInteriorOn 的一桌一凳空壳。
+  //      外壳（后墙/山墙/前墙门洞/闷顶板）已在 2b 段拼装，这里只补地坪与陈设，不重复建墙；
+  //      若两套并跑，两层地坪/两道内壁会互相 z-fight（见 hasBespokeInterior 处注释）。
+  //      门在 local +z（face(+d/2)），+v 由门指向店内 = 世界 (-sin, -cos)，+u 面阔 = (cos, -sin)；
+  //      该映射与 2b 的 lat(u, -v) 逐项一致，陈设与房间同轴。
+  //      业态/形态只走 pickTrade 坐标 hash，零共享 RNG；全部走 Baker 合批。
+  //    · 民居/宅院：保留 genericInteriorOn（夯土地坪 + 一桌二凳 + 灯）。
+  if (!hasInterior) {
+    const commercial = kind === 'shop' || kind === 'tavern' || kind === 'teahouse';
+    if (commercial) {
+      const pick = pickTrade(x, z);
+      const gy = 0.66; // 台基顶 0.6 + 地坪面层，与 2b 墙根（yBot=0.6）对齐
+      // R24 台账：生成侧「全部店铺数」，与 buildTradeInterior 落位侧的 .stocked 一一对应
+      b.kit('shopint.src.autoPlot.all', 1, gy);
+      buildTradeInterior(b, {
+        cx: x, cz: z,
+        w: Math.max(2.4, w - 0.6), d: Math.max(2.4, d - 0.6),
+        y0: gy, h: Math.min(3.2, bodyH) - 0.12,
+        trade: pick.trade, variant: pick.variant,
+        ux: cos, uz: -sin, vx: -sin, vz: -cos,
+        ceiling: false, compact: true, src: 'autoPlot',
+      });
+    } else {
+      genericInteriorOn(b, o, wallC, woodC, kind);
+    }
+  }
 
   // 院墙民居的整幅立面（门扇 / 门槛 / 窗楣 / 抱框 / 柱列）全部落在 2.5m 院墙后面，街面看不见；
   // 真正露在外面的只有两道山墙侧窗——侧窗已在 3b 的 house 段按同一尺寸/位置自己发了一遍。
@@ -2033,6 +2284,72 @@ export function buildYamen(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   b.box('glow', 0.7, 0.7, 0.7, 548, 6.4, YZ, C.neonCyan, 0, 0, 0.78);
   b.box('glow', 0.7, 0.7, 0.7, 572, 6.4, YZ, C.neonCyan, 0, 0, 0.78);
   sg.quad(atlas.text('yabanner', '肅靜迴避', 64, 260, { color: '#ffec9e', vertical: true, fontPx: 44, bg: 'rgba(20,8,8,0.7)' }), 1.1, 4.4, 548, 3.6, YZ + 0.3, 0);
+
+  // R19（用户「全城各衙门定位 / 规模不足」）：旧实现衙前只有一道照壁 + 两根 6.2m 柱子，
+  // 22×12m 大堂孤零零立着，完全读不出「一座府衙」。补齐仪门、两庑六房、石狮旗杆、
+  // 甬道，并在城内东西两厢立分司牌坊明确标位。全部走 Baker 合批，不消耗共享 rng。
+  const GZ = -67.5;
+  // ① 仪门（三门制）：门柱 + 两侧门墙 + 门额 + 瓦脊 + 朱漆门扇与门钉
+  for (const s of [-1, 1]) {
+    b.box('ash', 1.1, 0.4, 1.1, 560 + s * 6.4, 0.2, GZ, 0x8f8b7d);
+    b.box('wood', 0.62, 4.6, 0.62, 560 + s * 6.4, 2.3, GZ, shade(C.woodRed, 0.8));
+    b.box('wall', 5.0, 3.4, 0.5, 560 + s * 8.9, 1.7, GZ, shade(C.plaster, 0.94));
+  }
+  b.box('wood', 14.2, 0.42, 0.7, 560, 4.72, GZ, C.woodDark);
+  b.box('roof', 15.6, 0.34, 2.6, 560, 5.05, GZ, shade(C.tile, 1.06));
+  b.box('roof', 15.6, 0.22, 0.5, 560, 5.28, GZ, C.ridge);
+  for (const s of [-1, 1]) {
+    b.box('lacquer', 2.0, 3.6, 0.18, 560 + s * 1.05, 1.8, GZ + 0.16, shade(C.woodRed, 0.72));
+    for (let r2 = 0; r2 < 3; r2++) for (let c2 = 0; c2 < 4; c2++) {
+      b.box('metal', 0.08, 0.08, 0.05, 560 + s * 1.05 - 0.7 + c2 * 0.46, 1.0 + r2 * 0.72, GZ + 0.28, shade(C.neonGold, 0.6));
+    }
+    b.box('ash', 1.0, 1.1, 0.7, 560 + s * 3.1, 0.55, GZ + 0.5, 0x9a9282);
+  }
+  sg.quad(atlas.text('yamenGate', '開封府', 512, 144, {
+    color: '#ffe9c8', glow: undefined, bg: 'rgba(20,10,8,0.9)', border: 'rgba(255,179,0,0.8)', fontPx: 104,
+  }), 4.2, 1.18, 560, 4.65, GZ + 0.42, 0);
+  b.kit('yamen.ritualGate', 1, 2.3);
+  // ② 两庑六房：大堂两侧各 3 间，临院一面开门与直棂窗（不朝街，避免与街屋立面混淆）
+  for (const s of [-1, 1]) {
+    const wx = 560 + s * 19;
+    for (let k = 0; k < 3; k++) {
+      const wz = -71 - k * 7;
+      b.box('wall', 8, 3.4, 6, wx, 1.7, wz, shade(C.plaster, 0.92));
+      b.box('roof', 9.2, 0.5, 7.2, wx, 3.62, wz, shade(C.tile, 1.02));
+      b.box('wood', 0.14, 2.4, 1.8, wx - s * 4.05, 1.2, wz, C.woodDark);
+      for (const ws of [-1, 1]) {
+        b.box('wood', 0.12, 1.1, 1.25, wx - s * 4.05, 2.1, wz + ws * 2.1, shade(C.woodDark, 0.9));
+        b.box('glow', 0.06, 0.9, 1.05, wx - s * 4.12, 2.1, wz + ws * 2.1, C.winGlow);
+      }
+      b.kit('yamen.sixRooms', 1, 1.7);
+    }
+  }
+  // ③ 石狮 / 旗杆 / 甬道：把照壁到仪门这段空坪读成「衙前广场」
+  b.box('ground', 6, 0.12, 22, 560, 0.06, -69, 0x9a9282);
+  for (const s of [-1, 1]) {
+    b.box('ash', 1.4, 0.5, 1.4, 560 + s * 4.0, 0.25, GZ + 3.2, 0x9a9282);
+    b.cyl('ash', 0.5, 0.62, 1.3, 6, 560 + s * 4.0, 1.15, GZ + 3.2, 0xa39a88);
+    b.sphere('ash', 0.5, 6, 560 + s * 4.0, 1.95, GZ + 3.2, 0xa39a88);
+    b.cyl('wood', 0.16, 0.2, 9, 6, 560 + s * 13.5, 4.5, GZ + 2.0, C.woodDark);
+    b.box('fabric', 1.6, 2.6, 0.06, 560 + s * 13.5 + 0.9, 7.2, GZ + 2.0, 0x9d2933);
+  }
+  b.kit('yamen.lionPole', 4, 1.15);
+  // ④ 城内分司牌坊：只立窄牌坊 + 匾额（不铺建筑体量），明确「各衙门在哪」
+  const OFFICES: [number, number, string][] = [
+    [-760, 116, '大理寺'], [-420, -120, '樞密院'], [220, 132, '太常寺'], [760, -128, '御史臺'],
+  ];
+  for (const [ox, oz, nm] of OFFICES) {
+    for (const s of [-1, 1]) {
+      b.box('ash', 0.9, 0.4, 0.9, ox + s * 3.2, 0.2, oz, 0x8f8b7d);
+      b.box('wood', 0.42, 5.2, 0.42, ox + s * 3.2, 2.6, oz, shade(C.woodRed, 0.86));
+    }
+    b.box('wood', 7.6, 0.42, 0.5, ox, 5.0, oz, C.woodDark);
+    b.box('roof', 8.4, 0.3, 1.4, ox, 5.4, oz, shade(C.tile, 1.06));
+    sg.quad(atlas.text('office' + nm, nm, 512, 144, {
+      color: '#ffe9c8', bg: 'rgba(20,10,8,0.88)', border: 'rgba(255,179,0,0.8)', fontPx: 104,
+    }), 3.6, 1.0, ox, 4.35, oz + 0.32, 0);
+    b.kit('yamen.officeGate', 1, 2.6);
+  }
 }
 
 export function buildGoulan(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
@@ -2044,28 +2361,90 @@ export function buildGoulan(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
   }
   // 棚架
   for (const px of [-16, 16]) for (const pz of [-11, 11]) b.box('wood', 0.6, 8.5, 0.6, x + px, 4.25, z + pz, C.woodDark);
-  // ---- 攒尖席棚（45 卷：直径 30m 圆锥攒尖、苇席 #D4B76A 搭接 0.3m、布幔压边、麻绳扎结）----
-  // 旧版是两块 38×27 / 26×17 的平板箱体叠起来，从棚下看是一整块黑板，从空中看是一块灰色地砖。
-  // 改成八棱攒尖：下檐椭圆(长轴 19m × 短轴 13.7m) → 顶部收尖，苇席面用 fabric 组（有经纬光泽，不像屋面瓦）。
+  // ---- 攒尖席棚（R20 复核：8 个纯色大平面 → 有编织质感的苇席顶）----
+  // 旧版主锥只有一句 b.cyl(...MAT...)：八棱锥 8 个大平面全是同一个 0xd4b76a，近景 34–40m
+  // 读成「一个米黄光滑大土包」。本轮拆成 5 道席片搭接环 + 竹箍 + 径向压条 + 旧席补丁 +
+  // 竖向褶分段布幔：全部走 Baker 合批、只用既有材质组、全确定性（固定序列 / 坐标，不耗 RNG）。
   const MAT = 0xd4b76a;   // 新苇席
-  const MAT2 = 0x8a5a2b;  // 旧席（补丁/搭接缝）
-  // 檐口檩条：一圈方形木框承托席顶，棚下抬头能看到结构而不是空白
+  const MAT2 = 0x8a5a2b;  // 旧席 / 补丁 / 搭接缝
+  const SH = 0.72;        // 椭圆压扁（与原锥一致）
+  const C8 = Math.cos(Math.PI / 8), S8 = Math.sin(Math.PI / 8);
+  const RB = 19, RT = 1.1, CONE_H = 5.6, Y0 = 8.6;   // 檐半径 / 脊半径 / 锥高 / 檐口标高
+  const RINGS = 5;
+  const RING_COLORS = [MAT, shade(MAT, 1.08), shade(MAT, 0.88), MAT2, shade(MAT, 1.06)];
+  /** 锥面局部 (方位 a, 半径 r, 标高 y) → 世界坐标（含椭圆压扁 + 整体 π/8 旋转，与 b.cyl 同源） */
+  const coneAt = (a: number, r: number, y: number): [number, number, number] => {
+    const lx = r * Math.cos(a), lz = SH * r * Math.sin(a);
+    return [x + C8 * lx + S8 * lz, y, z - S8 * lx + C8 * lz];
+  };
+  /** 沿锥面从 (a,r0,y0) 到 (a,r1,y1) 铺一条薄板：长轴对齐斜线（ry=-ψ / rz=α，Euler XYZ 下二者解耦） */
+  const coneStrip = (a: number, r0: number, y0: number, r1: number, y1: number, thick: number, wide: number, hex: number): void => {
+    const [x0, , z0] = coneAt(a, r0, y0), [x1, , z1] = coneAt(a, r1, y1);
+    const dx = x1 - x0, dy = y1 - y0, dz = z1 - z0;
+    const flat = Math.hypot(dx, dz);
+    const psi = Math.atan2(dz, dx), alpha = Math.atan2(dy, flat);
+    b.box('fabric', Math.hypot(flat, dy), thick, wide, (x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2, hex, -psi, 0, alpha);
+  };
+  // 檐口檩条：一圈方形木框承托席顶，棚下抬头能看到结构而不是空白（保留）
   for (const s of [-1, 1]) {
     b.box('wood', 34, 0.34, 0.34, x, 8.5, z + s * 11.6, C.woodDark);
     b.box('wood', 0.34, 0.34, 23.2, x + s * 17, 8.5, z, C.woodDark);
   }
-  // 主锥面（八棱）
-  b.cyl('fabric', 1.1, 19, 5.6, 8, x, 11.4, z, MAT, Math.PI / 8, 0, 0, false, 1, 1, 0.72);
-  // 檐口下垂的布幔（压边）：开口圆柱，一截 1.0m 高的裙边
-  b.cyl('fabric', 19.05, 19.35, 1.0, 8, x, 8.0, z, 0x9d2933, Math.PI / 8, 0, 0, true, 1, 1, 0.72);
-  // 顶饰（宝顶）
+  // ① 主锥面：5 道席片搭接环，明暗交替 + 一道旧席补丁带，不再是一整片纯色
+  for (let j = 0; j < RINGS; j++) {
+    const t0 = j / RINGS, t1 = (j + 1) / RINGS;
+    const rb = RB + (RT - RB) * t0, rt = RB + (RT - RB) * t1;
+    b.cyl('fabric', rt + 0.02, rb + 0.02, CONE_H / RINGS, 8,
+      x, Y0 + ((t0 + t1) / 2) * CONE_H, z, RING_COLORS[j], Math.PI / 8, 0, 0, false, 1, 1, SH);
+  }
+  b.kit('goulan.matRoof', RINGS, Y0 + CONE_H / 2);
+  // ② 竹箍 / 麻绳扎结环：3 道细深色环带，压住环与环之间的搭接缝
+  for (const t of [0.22, 0.5, 0.78]) {
+    const r = (RB + (RT - RB) * t) * 1.004 + 0.06;
+    b.cyl('fabric', r, r, 0.14, 8, x, Y0 + t * CONE_H, z, shade(MAT2, 0.62), Math.PI / 8, 0, 0, true, 1, 1, SH);
+  }
+  b.kit('goulan.matHoop', 3, Y0 + CONE_H * 0.5);
+  // ③ 径向搭接缝 / 压条：8 条沿棱 + 8 条沿面中（内缩 cos(π/8) 才贴在八棱平面上），共 16 条
+  const CMID = Math.cos(Math.PI / 8);
+  for (let k = 0; k < 8; k++) {
+    const aEdge = k * Math.PI / 4, aFace = (k + 0.5) * Math.PI / 4;
+    coneStrip(aEdge, RB + 0.05, Y0 + 0.03, RT + 0.05, Y0 + CONE_H - 0.03, 0.09, 0.16, shade(MAT2, 0.8));
+    coneStrip(aFace, (RB + 0.05) * CMID, Y0 + 0.03, (RT + 0.05) * CMID, Y0 + CONE_H - 0.03, 0.07, 0.10, shade(MAT, 0.66));
+  }
+  b.kit('goulan.matSeam', 16, Y0 + CONE_H / 2);
+  // ④ 旧席补丁：固定 3 处，贴在面中线上的短席片（分面色差，MAT2 / shade(MAT2,1.28)）
+  const PATCHES: [number, number, number][] = [
+    [Math.PI / 8, 0.10, 0.34], [5 * Math.PI / 8, 0.42, 0.63], [9 * Math.PI / 8, 0.66, 0.90],
+  ];
+  for (const [pa, t0, t1] of PATCHES) {
+    const r0 = (RB + (RT - RB) * t0) * CMID + 0.09, r1 = (RB + (RT - RB) * t1) * CMID + 0.09;
+    coneStrip(pa, r0, Y0 + t0 * CONE_H, r1, Y0 + t1 * CONE_H, 0.05, 1.5, pa > Math.PI ? MAT2 : shade(MAT2, 1.28));
+  }
+  b.kit('goulan.matPatch', PATCHES.length, Y0 + CONE_H * 0.5);
+  // ⑤ 檐口下垂布幔：28 段交替朱红 / 深红 + 每段一道竖向褶缝，替代一整圈纯色开口圆筒
+  const DRAPE_N = 28, DRAPE_R = 19.22, DRAPE_Y = 8.0;
+  for (let i = 0; i < DRAPE_N; i++) {
+    const a0 = (i / DRAPE_N) * Math.PI * 2, a1 = ((i + 1) / DRAPE_N) * Math.PI * 2, a = (a0 + a1) / 2;
+    const [px, , pz] = coneAt(a, DRAPE_R, DRAPE_Y);
+    const [qx, , qz] = coneAt(a0, DRAPE_R, DRAPE_Y), [rx2, , rz2] = coneAt(a1, DRAPE_R, DRAPE_Y);
+    const segW = Math.hypot(rx2 - qx, rz2 - qz) + 0.05;
+    const [dx0, , dz0] = coneAt(a, 1, DRAPE_Y);          // 单位径向（椭圆后未归一）
+    const nx = dx0 - x, nz = dz0 - z, nl = Math.hypot(nx, nz) || 1;
+    const psi = Math.atan2(nz, nx);
+    const col = i % 2 === 0 ? 0x9d2933 : shade(0x9d2933, 0.6);
+    // 薄片宽沿切线：ry = -(ψ+π/2)
+    b.box('fabric', segW, 1.0, 0.08, px, DRAPE_Y, pz, col, -(psi + Math.PI / 2));
+    // 竖向褶缝：窄深条沿径向略外推，避免与主片共面闪烁
+    b.box('fabric', 0.07, 0.94, 0.10, px + (nx / nl) * 0.05, DRAPE_Y, pz + (nz / nl) * 0.05, shade(col, 0.55), -(psi + Math.PI / 2));
+  }
+  b.kit('goulan.matDrape', DRAPE_N * 2, DRAPE_Y);
+  // 顶饰（宝顶）保留
   b.cyl('wood', 0.16, 0.5, 1.2, 8, x, 14.7, z, C.woodDark);
   b.box('glow', 0.5, 0.5, 0.5, x, 15.4, z, C.neonMag, 0, 0, Math.PI / 4);
-  // 檐口霓虹灯管（赛博层）：旧版是两根 30m 不断的品红横杆（跨 8 个开间的连续亮条）。
-  // 改成分段灯管，品牌色仍是桃红，但读成「一串灯」而不是「一根光带」。
+  // 檐口霓虹灯管（赛博层）保留：分段灯管，读成「一串灯」而不是「一根光带」
   lampRun(b, 30, (lx) => [x + lx, z + 13.2], 8.35, C.neonMag, 0, 'x', 2.2, 5.4);
   lampRun(b, 30, (lx) => [x + lx, z - 13.2], 8.35, C.neonMag, 0, 'x', 2.2, 5.4);
-  // 戏台
+  // 戏台 + 招牌保留
   b.box('wood', 12, 1.6, 9, x - 8, 0.8, z, C.wood);
   b.box('wood', 13, 0.3, 10, x - 8, 1.7, z, C.woodDark);
   sg.quad(atlas.text('goulan', '勾欄瓦舍', 320, 84, { color: '#ffd7ec', glow: '#ff2d95', bg: 'rgba(16,6,18,0.9)', border: 'rgba(255,45,149,.8)', fontPx: 56 }), 9, 2.4, x - 8, 8.0, z + 8, 0);
@@ -2723,6 +3102,7 @@ export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: Sig
   buildBuilding(b, sg, atlas, { x: -36, z: 62, ry: 0, w: 11, d: 9, floors: 2, signText: '茶坊', signGlow: '#ffb300', neon: C.neonGold, hasInterior: true }, 67);
   buildBuilding(b, sg, atlas, { x: 540, z: 118, ry: 0, w: 16, d: 10, floors: 1, signText: '上清觀', signGlow: '#00e5ff', neon: C.neonCyan, wallC: 0xc4b598, hasInterior: true }, 68);
   buildYamen(b, sg, atlas);
+  buildInstitutions(b, sg, atlas);
   buildGoulan(b, sg, atlas);
   buildCityWall(b, sg, atlas);
   buildPagoda(b);

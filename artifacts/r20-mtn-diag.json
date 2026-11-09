@@ -1,0 +1,1565 @@
+{
+  "cam": [
+    14000,
+    850,
+    -6000
+  ],
+  "look": [
+    10500,
+    700,
+    -3900
+  ],
+  "errors": [],
+  "url": "http://127.0.0.1:4173/",
+  "ts": "2026-11-07T16:42:01.365Z",
+  "terrainFound": true,
+  "mesh": {
+    "uuid": "8dfbe3e2-8e6c-4cd3-aa72-3779f9d6055d",
+    "name": "terrain",
+    "visible": true,
+    "posCount": 361201,
+    "hasColor": true,
+    "colorCount": 361201,
+    "colorItemSize": 3,
+    "colorNormalized": false,
+    "colorArrayType": "Float32Array",
+    "indexCount": 2149065
+  },
+  "material": {
+    "type": "MeshStandardMaterial",
+    "uuid": "36124bf2-ee49-4a61-8972-714a735e68d0",
+    "vertexColors": true,
+    "fog": true,
+    "transparent": false,
+    "opacity": 1,
+    "roughness": 0.95,
+    "metalness": 0,
+    "envMapIntensity": 0.22,
+    "hasMap": true,
+    "mapColorSpace": "srgb",
+    "mapRepeat": [
+      968.75,
+      968.75
+    ],
+    "hasOnBeforeCompile": true,
+    "onBeforeCompileHasHaze": true,
+    "cacheKey": "terrain-far-haze-v1"
+  },
+  "render": {
+    "fog": {
+      "ctor": "p5",
+      "density": 0.00009,
+      "color": "a8927e"
+    },
+    "toneMapping": 4,
+    "toneMappingExposure": 0.8695999999999999,
+    "outputColorSpace": "srgb",
+    "hasEnvironment": true,
+    "camera": {
+      "pos": [
+        14000,
+        850,
+        -6000
+      ],
+      "fov": 55,
+      "near": 0.5,
+      "far": 52000
+    },
+    "lights": {
+      "n": 61,
+      "dir": 2,
+      "amb": 1
+    }
+  },
+  "bigMeshes": [
+    {
+      "name": "",
+      "uuid": "319ce373-431d-4175-ab65-7ddae1ec0907",
+      "r": 46000,
+      "visible": true,
+      "mat": "ShaderMaterial",
+      "vcol": false,
+      "fog": false
+    },
+    {
+      "name": "terrain",
+      "uuid": "8dfbe3e2-8e6c-4cd3-aa72-3779f9d6055d",
+      "r": 43891,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "",
+      "uuid": "46adf840-1a45-46eb-b6df-a14c54c960ee",
+      "r": 33000,
+      "visible": true,
+      "mat": "MeshBasicMaterial",
+      "vcol": false,
+      "fog": false
+    },
+    {
+      "name": "city_trunk",
+      "uuid": "96f983bb-23f5-4771-889a-b20ae1664a0a",
+      "r": 28288,
+      "visible": true,
+      "mat": "MeshLambertMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_leaf_1",
+      "uuid": "0f1583db-b2b6-4ae1-910e-6d2e5a95e2ad",
+      "r": 28266,
+      "visible": true,
+      "mat": "MeshLambertMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_ash",
+      "uuid": "4ecbb3cf-d60c-48f8-8fc7-728f0256ed0b",
+      "r": 26267,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_water",
+      "uuid": "1490f965-01cd-4779-9c34-301d0dc74824",
+      "r": 25780,
+      "visible": true,
+      "mat": "MeshBasicMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_fabric_3",
+      "uuid": "a5bb0722-0a92-47cb-91f5-4a580c4c9f97",
+      "r": 25770,
+      "visible": true,
+      "mat": "MeshPhysicalMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_ground",
+      "uuid": "c402eaa3-627e-4a19-932f-efe4bf334292",
+      "r": 25684,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_roof",
+      "uuid": "17e813dd-a598-424a-a7cb-2781f17936e2",
+      "r": 25462,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_glow_3",
+      "uuid": "b37b452c-e65b-4d3e-a7d8-9bb849667e0d",
+      "r": 24549,
+      "visible": true,
+      "mat": "MeshBasicMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "sky_windFlora",
+      "uuid": "1362067e-f9f9-417b-85e2-03f75b39bb70",
+      "r": 24061,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_wood_1",
+      "uuid": "0f9ba983-bc7a-4e8e-b603-9c8390ed7797",
+      "r": 23692,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_ash_3",
+      "uuid": "3627e116-bf0b-4ba7-b2df-2dfc4e5d9e74",
+      "r": 22673,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_wood_5",
+      "uuid": "e45dcd29-56f7-4c94-bd29-f15c89c61c73",
+      "r": 22452,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_roof_5",
+      "uuid": "bbdcf419-a52f-4231-9686-0e62264307df",
+      "r": 22451,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_wall_3",
+      "uuid": "535a5f36-3e0f-4356-809f-3952b1c4779c",
+      "r": 22439,
+      "visible": true,
+      "mat": "MeshLambertMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_metal_3",
+      "uuid": "c584ec82-6d87-40e1-ad07-4db989fcfc91",
+      "r": 22413,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_signs",
+      "uuid": "6338bcf1-785e-4c24-8f61-5b40f2c2f15f",
+      "r": 21658,
+      "visible": true,
+      "mat": "MeshBasicMaterial",
+      "vcol": false,
+      "fog": true
+    },
+    {
+      "name": "city_lacquer",
+      "uuid": "91297f59-3e97-4a78-b6d4-5e47f8f974ae",
+      "r": 21405,
+      "visible": true,
+      "mat": "MeshPhysicalMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "",
+      "uuid": "947cea0c-857e-463b-9d4e-8e59bdf54251",
+      "r": 21000,
+      "visible": true,
+      "mat": "MeshBasicMaterial",
+      "vcol": false,
+      "fog": false
+    },
+    {
+      "name": "terrain_bed",
+      "uuid": "7e611b75-9a49-481e-8236-9f69bbeffe82",
+      "r": 18501,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "water_rivers",
+      "uuid": "a7901c2a-35de-45b9-ac05-21bb09d2d7d4",
+      "r": 18151,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_earth",
+      "uuid": "34475dbc-c4ed-41a2-b6b8-3b01f792067c",
+      "r": 17622,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_leaf_3",
+      "uuid": "cd9a25dc-c41a-46ff-a634-eebcb57e83da",
+      "r": 16807,
+      "visible": true,
+      "mat": "MeshLambertMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_earth_1",
+      "uuid": "72779dc5-4c8b-4918-b61c-14e951fe2538",
+      "r": 16387,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "water_lakes",
+      "uuid": "2278ffba-b668-4c53-abb9-a5a50d9bc9b6",
+      "r": 16126,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_fabric",
+      "uuid": "b1a604b4-d5f7-4072-9b6f-57652febe1cd",
+      "r": 16118,
+      "visible": true,
+      "mat": "MeshPhysicalMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_wood_17",
+      "uuid": "7f755b12-0a56-4a9a-8a0b-7cc7df74be27",
+      "r": 16093,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    },
+    {
+      "name": "city_roof_17",
+      "uuid": "9d7bd4e1-11a2-48c5-a6dd-40119a9d7823",
+      "r": 16093,
+      "visible": true,
+      "mat": "MeshStandardMaterial",
+      "vcol": true,
+      "fog": true
+    }
+  ],
+  "colorAll": {
+    "n": 361201,
+    "mean": [
+      0.1689,
+      0.2207,
+      0.1217
+    ],
+    "min": [
+      0.0467,
+      0.1002,
+      0.034
+    ],
+    "max": [
+      0.6712,
+      0.5156,
+      0.3895
+    ],
+    "histL16": [
+      0,
+      67707,
+      159709,
+      118184,
+      11924,
+      6,
+      1750,
+      1921,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "greenPct": 73.04,
+    "greyPct": 36.52,
+    "darkPct": 59.18,
+    "rockPct": 4.11
+  },
+  "colorRoi": {
+    "n": 2805,
+    "mean": [
+      0.1428,
+      0.1736,
+      0.1137
+    ],
+    "min": [
+      0.0774,
+      0.1028,
+      0.0468
+    ],
+    "max": [
+      0.2957,
+      0.2274,
+      0.1955
+    ],
+    "histL16": [
+      0,
+      126,
+      2548,
+      131,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "greenPct": 60.39,
+    "greyPct": 74.58,
+    "darkPct": 90.8,
+    "rockPct": 9.06
+  },
+  "colorRoiByHeight": [
+    {
+      "band": 0,
+      "hRange": [
+        0,
+        194
+      ],
+      "n": 192,
+      "mean": [
+        0.1536,
+        0.1684,
+        0.0913
+      ],
+      "min": [
+        0.0774,
+        0.1297,
+        0.0468
+      ],
+      "max": [
+        0.2957,
+        0.2255,
+        0.1955
+      ],
+      "histL16": [
+        0,
+        82,
+        100,
+        10,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 48.44,
+      "greyPct": 48.44,
+      "darkPct": 87.5,
+      "rockPct": 10.42
+    },
+    {
+      "band": 1,
+      "hRange": [
+        194,
+        388
+      ],
+      "n": 106,
+      "mean": [
+        0.1977,
+        0.1716,
+        0.133
+      ],
+      "min": [
+        0.1403,
+        0.1229,
+        0.0927
+      ],
+      "max": [
+        0.2605,
+        0.2183,
+        0.1681
+      ],
+      "histL16": [
+        0,
+        1,
+        87,
+        18,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 0,
+      "greyPct": 100,
+      "darkPct": 66.04,
+      "rockPct": 33.96
+    },
+    {
+      "band": 2,
+      "hRange": [
+        388,
+        581
+      ],
+      "n": 147,
+      "mean": [
+        0.1974,
+        0.1707,
+        0.1314
+      ],
+      "min": [
+        0.1376,
+        0.1252,
+        0.0969
+      ],
+      "max": [
+        0.2675,
+        0.2239,
+        0.1769
+      ],
+      "histL16": [
+        0,
+        1,
+        125,
+        21,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 0,
+      "greyPct": 100,
+      "darkPct": 70.75,
+      "rockPct": 29.25
+    },
+    {
+      "band": 3,
+      "hRange": [
+        581,
+        775
+      ],
+      "n": 165,
+      "mean": [
+        0.1972,
+        0.1705,
+        0.1313
+      ],
+      "min": [
+        0.1405,
+        0.1219,
+        0.0943
+      ],
+      "max": [
+        0.2648,
+        0.2252,
+        0.1742
+      ],
+      "histL16": [
+        0,
+        1,
+        149,
+        15,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 0,
+      "greyPct": 100,
+      "darkPct": 72.73,
+      "rockPct": 27.27
+    },
+    {
+      "band": 4,
+      "hRange": [
+        775,
+        969
+      ],
+      "n": 202,
+      "mean": [
+        0.1941,
+        0.1678,
+        0.1296
+      ],
+      "min": [
+        0.1198,
+        0.1117,
+        0.0889
+      ],
+      "max": [
+        0.2674,
+        0.2274,
+        0.1716
+      ],
+      "histL16": [
+        0,
+        8,
+        169,
+        25,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 0,
+      "greyPct": 100,
+      "darkPct": 77.23,
+      "rockPct": 22.77
+    },
+    {
+      "band": 5,
+      "hRange": [
+        969,
+        1163
+      ],
+      "n": 189,
+      "mean": [
+        0.1923,
+        0.166,
+        0.1274
+      ],
+      "min": [
+        0.1189,
+        0.1028,
+        0.0775
+      ],
+      "max": [
+        0.2662,
+        0.2259,
+        0.1699
+      ],
+      "histL16": [
+        0,
+        11,
+        152,
+        26,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 0,
+      "greyPct": 100,
+      "darkPct": 80.95,
+      "rockPct": 19.05
+    },
+    {
+      "band": 6,
+      "hRange": [
+        1163,
+        1356
+      ],
+      "n": 687,
+      "mean": [
+        0.1272,
+        0.1751,
+        0.1113
+      ],
+      "min": [
+        0.1042,
+        0.1188,
+        0.0864
+      ],
+      "max": [
+        0.2431,
+        0.2065,
+        0.1602
+      ],
+      "histL16": [
+        0,
+        13,
+        660,
+        14,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 78.46,
+      "greyPct": 72.93,
+      "darkPct": 96.65,
+      "rockPct": 3.35
+    },
+    {
+      "band": 7,
+      "hRange": [
+        1356,
+        1550
+      ],
+      "n": 1117,
+      "mean": [
+        0.1125,
+        0.177,
+        0.1072
+      ],
+      "min": [
+        0.1042,
+        0.1094,
+        0.0813
+      ],
+      "max": [
+        0.2366,
+        0.1969,
+        0.153
+      ],
+      "histL16": [
+        0,
+        9,
+        1106,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 95.08,
+      "greyPct": 61.68,
+      "darkPct": 99.55,
+      "rockPct": 0.45
+    }
+  ],
+  "ab": {
+    "cameraPos": [
+      10500,
+      700,
+      -3900
+    ],
+    "lookTarget": [
+      14000,
+      850,
+      -6000
+    ],
+    "uiHidden": true,
+    "errors": [
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')",
+      "PAGE:TypeError: Cannot read properties of null (reading 'color')"
+    ],
+    "cases": [
+      {
+        "name": "00-baseline",
+        "mode": null,
+        "file": "artifacts/r20-mtn-diag-00-baseline.png"
+      },
+      {
+        "name": "01-nofog",
+        "mode": "nofog",
+        "file": "artifacts/r20-mtn-diag-01-nofog.png"
+      },
+      {
+        "name": "02-flatrock",
+        "mode": "flatrock",
+        "file": "artifacts/r20-mtn-diag-02-flatrock.png"
+      },
+      {
+        "name": "03-basic",
+        "mode": "basic",
+        "file": "artifacts/r20-mtn-diag-03-basic.png"
+      },
+      {
+        "name": "04-binary",
+        "mode": "binary",
+        "file": "artifacts/r20-mtn-diag-04-binary.png"
+      },
+      {
+        "name": "05-nomap",
+        "mode": "nomap",
+        "file": "artifacts/r20-mtn-diag-05-nomap.png"
+      }
+    ],
+    "restoreCheck": {
+      "materialType": "MeshStandardMaterial",
+      "materialUuid": "2851bd6f-e198-4ec4-b188-36b93debe365",
+      "vertexColors": true,
+      "fog": true,
+      "hasMap": true,
+      "sceneFog": "p5",
+      "cacheKey": "terrain-far-haze-v1",
+      "visibleObjectsUnchanged": "no visible flag written by this probe",
+      "colorChecksumSample": 186.789
+    },
+    "discipline": "每个分支记录 uuid+原始状态并精确还原；未触碰任何 3D 对象 visible；未把隐藏 LOD 设为 true"
+  },
+  "diagLog": [
+    {
+      "mode": "nofog",
+      "changes": [
+        {
+          "uuid": "2851bd6f-e198-4ec4-b188-36b93debe365",
+          "prop": "fog",
+          "from": true,
+          "to": false
+        },
+        {
+          "uuid": "scene",
+          "prop": "fog",
+          "from": "FogExp2",
+          "to": null
+        }
+      ],
+      "visibilityTouched": false,
+      "hiddenObjectsRestored": [],
+      "note": "未改任何 3D 对象 visible；仅 DOM #ui 隐藏（验收脚本同款）"
+    },
+    {
+      "mode": "flatrock",
+      "changes": [
+        {
+          "uuid": "4f1db665-d971-4023-a255-9255dbbc3821",
+          "prop": "geometry.color",
+          "from": "orig",
+          "to": "flat linear(0x6f6a5e)"
+        }
+      ],
+      "visibilityTouched": false,
+      "hiddenObjectsRestored": [],
+      "note": "未改任何 3D 对象 visible；仅 DOM #ui 隐藏（验收脚本同款）"
+    },
+    {
+      "mode": "basic",
+      "changes": [
+        {
+          "uuid": "4f1db665-d971-4023-a255-9255dbbc3821",
+          "prop": "material",
+          "from": "2851bd6f-e198-4ec4-b188-36b93debe365",
+          "to": "a46dfc9a-76a1-4284-8414-37ff2bb897be"
+        }
+      ],
+      "visibilityTouched": false,
+      "hiddenObjectsRestored": [],
+      "note": "未改任何 3D 对象 visible；仅 DOM #ui 隐藏（验收脚本同款）"
+    },
+    {
+      "mode": "binary",
+      "changes": [
+        {
+          "uuid": "4f1db665-d971-4023-a255-9255dbbc3821",
+          "prop": "geometry.color(ROI only)",
+          "from": "orig",
+          "to": "6-band ochre/green"
+        }
+      ],
+      "visibilityTouched": false,
+      "hiddenObjectsRestored": [],
+      "note": "未改任何 3D 对象 visible；仅 DOM #ui 隐藏（验收脚本同款）"
+    },
+    {
+      "mode": "nomap",
+      "changes": [
+        {
+          "uuid": "2851bd6f-e198-4ec4-b188-36b93debe365",
+          "prop": "map",
+          "from": "groundTex",
+          "to": null
+        }
+      ],
+      "visibilityTouched": false,
+      "hiddenObjectsRestored": [],
+      "note": "未改任何 3D 对象 visible；仅 DOM #ui 隐藏（验收脚本同款）"
+    }
+  ],
+  "slope": {
+    "roiCount": 2805,
+    "meanSlope": 0.918,
+    "meanSlopeRock": 0.422,
+    "slowLt0_45Pct": 46.67,
+    "midPct": 16.47,
+    "steepGt1_10Pct": 36.86,
+    "histSlope_0_25step": [
+      770,
+      624,
+      240,
+      98,
+      119,
+      142,
+      203,
+      189,
+      173,
+      132,
+      60,
+      55
+    ],
+    "histSlopeRock_0_1step": [
+      1486,
+      55,
+      51,
+      35,
+      19,
+      17,
+      15,
+      24,
+      14,
+      1089
+    ],
+    "note": "slopeRock 未含 rockBias 扰动；按渲染网格 103m/格中心差分实测"
+  },
+  "after": {
+    "url": "http://127.0.0.1:5173/",
+    "bundle": [
+      "client",
+      "main.ts"
+    ],
+    "material": {
+      "type": "MeshStandardMaterial",
+      "vertexColors": true,
+      "fog": true,
+      "cacheKey": "terrain-far-haze-v1"
+    },
+    "colorAll": {
+      "n": 361201,
+      "mean": [
+        0.17,
+        0.2254,
+        0.1211
+      ],
+      "min": [
+        0.0578,
+        0.117,
+        0.0343
+      ],
+      "max": [
+        0.6712,
+        0.5156,
+        0.3895
+      ],
+      "histL16": [
+        0,
+        66322,
+        153993,
+        124015,
+        13167,
+        33,
+        1750,
+        1921,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 74.84,
+      "greyPct": 34.15,
+      "darkPct": 57.39,
+      "rockPct": 5.24
+    },
+    "colorRoi": {
+      "n": 2805,
+      "mean": [
+        0.17,
+        0.2735,
+        0.1076
+      ],
+      "min": [
+        0.0779,
+        0.1346,
+        0.047
+      ],
+      "max": [
+        0.4246,
+        0.3477,
+        0.2473
+      ],
+      "histL16": [
+        0,
+        74,
+        1759,
+        561,
+        393,
+        18,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 60.43,
+      "greyPct": 37.72,
+      "darkPct": 63.89,
+      "rockPct": 35.69
+    },
+    "file": "artifacts/r20-mtn-diag-06-fixed.png",
+    "cameraPos": [
+      10500,
+      700,
+      -3900
+    ],
+    "lookTarget": [
+      14000,
+      850,
+      -6000
+    ],
+    "errors": [],
+    "note": "vite dev 直接编译修复后的 src/；4173 生产 dist 未改动，等 team-lead 统一 build 复拍"
+  },
+  "recheck": {
+    "url": "http://127.0.0.1:4173/",
+    "note": "连当前新包 index-BOJo8Z96.js（pool_spear 已修、世界完整初始化）；单实例/单 page 复核，不覆盖旧包/半初始化证据",
+    "cameraPos": [
+      10500,
+      700,
+      -3900
+    ],
+    "lookTarget": [
+      14000,
+      850,
+      -6000
+    ],
+    "launchCount": 1,
+    "pageCount": 1,
+    "errors": [],
+    "errorsContainPoolSpear": false,
+    "baseline": "artifacts/r20-mtn-diag-rc-00-baseline.png",
+    "worldInit": {
+      "meshCount": 651,
+      "groupCount": 6,
+      "lightCount": 61,
+      "namedCount": 628,
+      "scenicNamedCount": 1,
+      "scenicSample": [
+        "pool_plank"
+      ],
+      "worldKeys": [
+        "engine",
+        "crowd",
+        "units",
+        "heroStage",
+        "deities",
+        "havoc",
+        "boss",
+        "codexLog",
+        "objectiveDone",
+        "objT",
+        "river",
+        "vfx",
+        "audio",
+        "atlas",
+        "centers",
+        "deitySpots",
+        "deityHold",
+        "player",
+        "interact",
+        "interactPending",
+        "pendingKarmaVerb",
+        "onRebuildCreations",
+        "pendingEntities",
+        "pendingBossDefeated",
+        "bossRewardPaid",
+        "guideVisited",
+        "delayed",
+        "sweepAcc",
+        "impacts",
+        "mounts",
+        "heightAt",
+        "interactProps",
+        "stalls",
+        "heroIndex",
+        "sun",
+        "hemi",
+        "ambientLight",
+        "fill",
+        "mirror",
+        "mirrorHot"
+      ],
+      "loadingGone": true
+    },
+    "mesh": {
+      "uuid": "b3cdbde0-7103-42ec-b190-31324987d6ff",
+      "name": "terrain",
+      "visible": true,
+      "posCount": 361201,
+      "hasColor": true,
+      "colorCount": 361201,
+      "colorItemSize": 3,
+      "colorArrayType": "Float32Array",
+      "indexCount": 2149065
+    },
+    "material": {
+      "type": "MeshStandardMaterial",
+      "uuid": "576ecef1-e3e0-4801-b1b2-bcdf1eb53c67",
+      "vertexColors": true,
+      "fog": true,
+      "transparent": false,
+      "opacity": 1,
+      "hasMap": true,
+      "mapColorSpace": "srgb",
+      "hasOnBeforeCompile": true,
+      "onBeforeCompileHasHaze": true,
+      "cacheKey": "terrain-far-haze-v1"
+    },
+    "render": {
+      "sceneFog": {
+        "ctor": "p5",
+        "density": 0.00009
+      },
+      "toneMapping": 4,
+      "toneMappingExposure": 0.8695999999999999,
+      "outputColorSpace": "srgb"
+    },
+    "colorAll": {
+      "n": 361201,
+      "mean": [
+        0.1689,
+        0.2207,
+        0.1217
+      ],
+      "min": [
+        0.0467,
+        0.1002,
+        0.034
+      ],
+      "max": [
+        0.6712,
+        0.5156,
+        0.3895
+      ],
+      "histL16": [
+        0,
+        67707,
+        159709,
+        118184,
+        11924,
+        6,
+        1750,
+        1921,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 73.04,
+      "greyPct": 36.52,
+      "darkPct": 59.18,
+      "rockPct": 4.11
+    },
+    "colorRoi": {
+      "n": 2805,
+      "mean": [
+        0.1428,
+        0.1736,
+        0.1137
+      ],
+      "min": [
+        0.0774,
+        0.1028,
+        0.0468
+      ],
+      "max": [
+        0.2957,
+        0.2274,
+        0.1955
+      ],
+      "histL16": [
+        0,
+        126,
+        2548,
+        131,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "greenPct": 60.39,
+      "greyPct": 74.58,
+      "darkPct": 90.8,
+      "rockPct": 9.06
+    },
+    "abFiles": [
+      {
+        "name": "rc-01-flatrock",
+        "mode": "flatrock",
+        "file": "artifacts/r20-mtn-diag-rc-01-flatrock.png"
+      },
+      {
+        "name": "rc-02-basic",
+        "mode": "basic",
+        "file": "artifacts/r20-mtn-diag-rc-02-basic.png"
+      },
+      {
+        "name": "rc-03-binary",
+        "mode": "binary",
+        "file": "artifacts/r20-mtn-diag-rc-03-binary.png"
+      },
+      {
+        "name": "rc-04-nomap",
+        "mode": "nomap",
+        "file": "artifacts/r20-mtn-diag-rc-04-nomap.png"
+      }
+    ],
+    "restoreCheck": {
+      "materialType": "MeshStandardMaterial",
+      "materialUuid": "576ecef1-e3e0-4801-b1b2-bcdf1eb53c67",
+      "vertexColors": true,
+      "fog": true,
+      "hasMap": true,
+      "cacheKey": "terrain-far-haze-v1",
+      "sceneFog": "p5",
+      "visibleObjectsUnchanged": "no visible flag written by this probe",
+      "colorChecksumSample": 186.789
+    },
+    "diagLog": [
+      {
+        "mode": "flatrock",
+        "changes": [
+          {
+            "uuid": "b3cdbde0-7103-42ec-b190-31324987d6ff",
+            "prop": "geometry.color",
+            "from": "orig",
+            "to": "flat linear(0x6f6a5e)"
+          }
+        ],
+        "visibilityTouched": false,
+        "hiddenObjectsRestored": []
+      },
+      {
+        "mode": "basic",
+        "changes": [
+          {
+            "uuid": "b3cdbde0-7103-42ec-b190-31324987d6ff",
+            "prop": "material",
+            "from": "576ecef1-e3e0-4801-b1b2-bcdf1eb53c67",
+            "to": "74b7aefa-4157-4a87-a8b5-ecc7d34df1e0"
+          }
+        ],
+        "visibilityTouched": false,
+        "hiddenObjectsRestored": []
+      },
+      {
+        "mode": "binary",
+        "changes": [
+          {
+            "uuid": "b3cdbde0-7103-42ec-b190-31324987d6ff",
+            "prop": "geometry.color(ROI only)",
+            "from": "orig",
+            "to": "6-band ochre/green"
+          }
+        ],
+        "visibilityTouched": false,
+        "hiddenObjectsRestored": []
+      },
+      {
+        "mode": "nomap",
+        "changes": [
+          {
+            "uuid": "576ecef1-e3e0-4801-b1b2-bcdf1eb53c67",
+            "prop": "map",
+            "from": "groundTex",
+            "to": null
+          }
+        ],
+        "visibilityTouched": false,
+        "hiddenObjectsRestored": []
+      }
+    ],
+    "discipline": "仅 DOM #ui 隐藏；未触碰任何 3D 对象 visible；每分支记录 uuid+原状态并精确还原；未把隐藏 LOD 设 true"
+  }
+}

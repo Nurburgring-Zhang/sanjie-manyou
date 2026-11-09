@@ -1,0 +1,244 @@
+{
+  "at": "2026-11-08T16:17:23.181Z",
+  "url": "http://127.0.0.1:4173/",
+  "heavenY": 4112.4,
+  "shots": [
+    {
+      "id": "01-wumen-tunnel",
+      "label": "午门城台内部（原「两片灰板」机位）",
+      "cam": [
+        0,
+        5.2,
+        -2952,
+        0,
+        5,
+        -3100
+      ],
+      "file": "artifacts\\r24-01-wumen-tunnel.png"
+    },
+    {
+      "id": "02-wumen-south",
+      "label": "午门南侧 · 三门洞与敞开朱扉",
+      "cam": [
+        0,
+        5.2,
+        -2890,
+        0,
+        5,
+        -2950
+      ],
+      "file": "artifacts\\r24-02-wumen-south.png"
+    },
+    {
+      "id": "03-hall-frame",
+      "label": "五凤楼殿内 · 金柱列 / 梁架 / 藻井",
+      "cam": [
+        0,
+        17.4,
+        -2938,
+        0,
+        17,
+        -2962
+      ],
+      "file": "artifacts\\r24-03-hall-frame.png"
+    },
+    {
+      "id": "04-city-topdown",
+      "label": "全城正俯瞰 · 绿地是否还是方格",
+      "cam": [
+        0,
+        2600,
+        200,
+        0,
+        0,
+        0
+      ],
+      "file": "artifacts\\r24-04-city-topdown.png"
+    },
+    {
+      "id": "05-city-oblique",
+      "label": "全城斜俯瞰 · 巨型屋顶面与街坊",
+      "cam": [
+        0,
+        1500,
+        4200,
+        0,
+        0,
+        -3200
+      ],
+      "file": "artifacts\\r24-05-city-oblique.png"
+    },
+    {
+      "id": "06-green-close",
+      "label": "坊间近景 · 有机草斑与真草叶",
+      "cam": [
+        330,
+        2.2,
+        195,
+        345,
+        1.4,
+        225
+      ],
+      "file": "artifacts\\r24-06-green-close.png"
+    },
+    {
+      "id": "07-heaven-overview",
+      "label": "天宫全岛俯瞰 · 三环殿阁周边花木",
+      "cam": [
+        0,
+        5462.4,
+        2400,
+        0,
+        4112.4,
+        0
+      ],
+      "file": "artifacts\\r24-07-heaven-overview.png"
+    },
+    {
+      "id": "08-heaven-ring",
+      "label": "天宫外环近景 · 岛面仙花仙草",
+      "cam": [
+        657.9839999999999,
+        4372.4,
+        900,
+        0,
+        4112.4,
+        0
+      ],
+      "file": "artifacts\\r24-08-heaven-ring.png"
+    },
+    {
+      "id": "09-mountain-scale",
+      "label": "放大后的泰山全景 · 长宽高 ×2",
+      "cam": [
+        14000,
+        4800,
+        9000,
+        14000,
+        1500,
+        -6000
+      ],
+      "file": "artifacts\\r24-09-mountain-scale.png"
+    },
+    {
+      "id": "10-green-shape",
+      "label": "坊间草斑轮廓 · 中距俯瞰（自由形状 vs 圆盘/方格）",
+      "cam": [
+        345,
+        120,
+        225,
+        345,
+        0,
+        225
+      ],
+      "file": "artifacts\\r24-10-green-shape.png"
+    },
+    {
+      "id": "11-palace-green-shape",
+      "label": "宫苑绿毯轮廓 · 中距俯瞰（不再是一格格圆盘）",
+      "cam": [
+        0,
+        320,
+        -3500,
+        0,
+        0,
+        -3500
+      ],
+      "file": "artifacts\\r24-11-palace-green-shape.png"
+    },
+    {
+      "id": "12-mountain-slope",
+      "label": "山体南坡 · 树 / 草 / 花 / 风景建筑",
+      "cam": [
+        14000,
+        2600,
+        2600,
+        14000,
+        1400,
+        -5200
+      ],
+      "file": "artifacts\\r24-12-mountain-slope.png"
+    }
+  ],
+  "pageErrors": [],
+  "runtime": {
+    "bundle": [
+      "index-CCMAv1-X.js"
+    ],
+    "errors": [],
+    "kits": {
+      "wumenPassage": 3,
+      "wumenFrame": 1,
+      "freeBlob": 130279,
+      "spotBlob": 30805,
+      "palaceFreeBlob": 5900,
+      "organicDisc": 0,
+      "islandGarden": 1001,
+      "palaceGreenCells": 1180,
+      "ecoPlaced": 50347,
+      "mountainTrees": 45224
+    },
+    "heavenIslands": 76,
+    "heavenWorldY": {
+      "min": 4081.68,
+      "max": 4147.28
+    },
+    "render": {
+      "calls": 199,
+      "triangles": 26961337
+    }
+  },
+  "tunnelRays": {
+    "up": [
+      {
+        "name": "city_ash_9",
+        "y": 11.5,
+        "dist": 6.3
+      },
+      {
+        "name": "city_earth",
+        "y": 12,
+        "dist": 6.8
+      },
+      {
+        "name": "city_ash_9",
+        "y": 12.6,
+        "dist": 7.4
+      }
+    ],
+    "down": [
+      {
+        "name": "city_ash_9",
+        "y": 0.24,
+        "dist": 4.96
+      },
+      {
+        "name": "city_ground",
+        "y": 0.16,
+        "dist": 5.04
+      },
+      {
+        "name": "city_ground",
+        "y": 0.14,
+        "dist": 5.06
+      }
+    ],
+    "north": [
+      {
+        "name": "city_wood_9",
+        "y": 5.2,
+        "dist": 267.92
+      },
+      {
+        "name": "city_wood_9",
+        "y": 5.2,
+        "dist": 267.92
+      },
+      {
+        "name": "city_fabric",
+        "y": 5.2,
+        "dist": 325.61
+      }
+    ]
+  }
+}

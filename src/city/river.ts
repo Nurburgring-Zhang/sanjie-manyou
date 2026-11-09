@@ -248,13 +248,21 @@ export class River {
     const ripGeo = riverRibbon(280, 6);
     const ripTex = makeWaterRipple();
     ripTex.wrapS = ripTex.wrapT = THREE.RepeatWrapping;
-    // 33×5 时每个 tile 40m×12m，正弦叠加的周期在近岸读成规则斜格；加密到 96×16 后成为细碎水光
-    ripTex.repeat.set(96, 16);
+    // 视觉审核 2026-11-07（V-02）：旧 96×16 与主层 13×2 在 v 向正好 16:2 = 整数比 8，
+    // 两层 tile 边界逐格对齐；再叠加旧版那组纯正弦谐波，实拍 `city__bridge__side.png` /
+    // `det_water__iso.png` 读成一整片规则的细密竖条纹（条纹布/百叶窗），而不是水光。
+    // 修复分两步（每步都做了运行时 A/B 归因，见 scripts/_va_water_ab.mjs / _va_rip_combo.mjs）：
+    //   ① 两层贴图都从纯正弦换成可平铺值噪声，打破 tile 内严格周期；
+    //   ② 重复数从 94×15 降到 11×3 —— 94×15 在长河掠射角下会把值噪声的规则格点
+    //      压成摩尔细条纹（仅开高频层的隔离图证实），降低重复数后读作柔和碎光。
+    // 11/13≈0.85、3/2=1.5 皆非整数，两层 tile 边界也不会同步。
+    ripTex.repeat.set(11, 3);
     const rippleMat = new THREE.MeshBasicMaterial({
       color: 0x4a7f88,
       map: ripTex,
       transparent: true,
-      opacity: 0.34,
+      // 0.34 → 0.26：高频层是叠加发光，降一档后细碎波光仍在，但不再把噪声格点推成可见条纹
+      opacity: 0.26,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
       toneMapped: true,
@@ -477,7 +485,32 @@ export class River {
   }
 }
 
-/** 程序化水波法线：多向正弦叠加后转成法线贴图 */
+/**
+ * 可平铺值噪声（V-02 视觉审核修复 2026-11-07，两层水面贴图共用）。
+ * 格点 hash 按 nx/ny 取模，因此 u 或 v 从 0 到 1 时首尾精确接边，repeat 不会出现 tile 缝；
+ * nx < ny 时噪声沿 u 方向被拉长，用来表达「顺流」的方向感，但不引入任何周期亮线。
+ * 不用 RNG，纯坐标 hash，保持 determinism。
+ */
+const tileHash = (ix: number, iy: number, nx: number, ny: number): number => {
+  const wx = ((ix % nx) + nx) % nx, wy = ((iy % ny) + ny) % ny;
+  const s = Math.sin(wx * 127.1 + wy * 311.7 + nx * 0.717 + ny * 0.113) * 43758.5453;
+  return s - Math.floor(s);
+};
+const tileNoise = (u: number, v: number, nx: number, ny: number = nx): number => {
+  const fx = u * nx, fy = v * ny;
+  const ix = Math.floor(fx), iy = Math.floor(fy);
+  const tx = fx - ix, ty = fy - iy;
+  const sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty);
+  const a = tileHash(ix, iy, nx, ny), b = tileHash(ix + 1, iy, nx, ny);
+  const c = tileHash(ix, iy + 1, nx, ny), d = tileHash(ix + 1, iy + 1, nx, ny);
+  return (a + (b - a) * sx) * (1 - sy) + (c + (d - c) * sx) * sy;
+};
+
+/**
+ * 主层水色底（V-02）：旧版是 4/9/12 三个纯正弦，repeat(13,2) 后 `cos(v*12+u*3)`
+ * 在河宽方向给出 24 条等距带，实拍 `only_main.png` 读成整片规则宽波纹。
+ * 换成两级可平铺值噪声，只保留大尺度明暗与细碎颗粒，无周期性。
+ */
 function makeWaterNormal(): THREE.CanvasTexture {
   const S = 256;
   const c = document.createElement('canvas');
@@ -486,15 +519,13 @@ function makeWaterNormal(): THREE.CanvasTexture {
   const img = ctx.createImageData(S, S);
   for (let y = 0; y < S; y++) {
     for (let x = 0; x < S; x++) {
-      const u = (x / S) * Math.PI * 2;
-      const v = (y / S) * Math.PI * 2;
-      const h =
-        Math.sin(u * 4 + v * 2) * 0.5 +
-        Math.sin(u * 9 - v * 5) * 0.3 +
-        Math.sin(v * 12 + u * 3) * 0.2;
+      const u = x / S, v = y / S;
+      const broad = tileNoise(u, v, 4, 8);
+      const mid = tileNoise(u, v, 12, 16);
+      const h = (broad - 0.5) * 0.9 + (mid - 0.5) * 0.45;
       const i = (y * S + x) * 4;
-      img.data[i] = 168 + Math.cos(u * 4 + v * 2) * 14;
-      img.data[i + 1] = 176 + Math.cos(v * 12 + u * 3) * 12;
+      img.data[i] = 168 + h * 16;
+      img.data[i + 1] = 176 + h * 13;
       img.data[i + 2] = 232;
       img.data[i + 3] = 255 - Math.abs(h) * 20;
     }
@@ -505,7 +536,13 @@ function makeWaterNormal(): THREE.CanvasTexture {
   return tex;
 }
 
-/** 高频波纹层：谐波与主层不成整数比，避免两张图同步成"整片同亮" */
+/**
+ * 高频波纹层（V-02）：旧版是 11/19/29 三个纯正弦谐波，tile 内严格周期、tile 间完全同相，
+ * repeat 90+ 次后必然读成规则条纹布（同文件 makeShallowTex 已记录过同一个坑）。
+ * 第一版修复里还留了一条 `sin(u*6π+…)` 的"流向波"，分层 A/B（`only_ripple.png`）
+ * 证明它又把细密条纹请了回来。现在改为**完全无正弦**的三级可平铺值噪声，
+ * 靠 nx<ny 的拉长格点表达顺流方向。
+ */
 function makeWaterRipple(): THREE.CanvasTexture {
   const S = 128;
   const c = document.createElement('canvas');
@@ -514,13 +551,11 @@ function makeWaterRipple(): THREE.CanvasTexture {
   const img = ctx.createImageData(S, S);
   for (let y = 0; y < S; y++) {
     for (let x = 0; x < S; x++) {
-      const u = (x / S) * Math.PI * 2;
-      const v = (y / S) * Math.PI * 2;
-      const h =
-        Math.sin(u * 11 + v * 7) * 0.42 +
-        Math.sin(u * 19 - v * 13) * 0.33 +
-        Math.sin(v * 29 + u * 5) * 0.25;
-      const k = (h + 1) * 0.5;
+      const u = x / S, v = y / S;
+      const broad = tileNoise(u, v, 5, 10);
+      const mid = tileNoise(u, v, 14, 22);
+      const fine = tileNoise(u, v, 32, 32);
+      const k = Math.max(0, Math.min(1, 0.10 + broad * 0.34 + mid * 0.30 + fine * 0.22));
       const i = (y * S + x) * 4;
       img.data[i] = 120 + k * 110;
       img.data[i + 1] = 150 + k * 95;
@@ -531,7 +566,8 @@ function makeWaterRipple(): THREE.CanvasTexture {
   ctx.putImageData(img, 0, 0);
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.NoColorSpace;
-  tex.anisotropy = 4;
+  // 掠射角长河带上把各向异性从 4 提到 8，减少高频层在远处被 mipmap 压成的方向性条带
+  tex.anisotropy = 8;
   return tex;
 }
 

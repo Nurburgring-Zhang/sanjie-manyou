@@ -51,6 +51,8 @@ export interface SaveDataV2 {
   survival?: { hp: number; hunger: number; faints: number; bossesDown: number };
   /** P1-5 业力快照 */
   karma?: number;
+  /** 全量审核 2026-11-07：巨灵神战绩（跨会话防重复领奖；v2 可选字段，旧档缺省 false） */
+  bossDefeated?: boolean;
 }
 export type SaveData = SaveDataV2;
 
@@ -64,7 +66,18 @@ export function migrate(d: SaveDataV1 | SaveDataV2): SaveDataV2 | null {
       entities: [],
     };
   }
-  if (d.schemaVersion === 2) return d;
+  if (d.schemaVersion === 2) {
+    // 全量审核 2026-11-07（C07）：旧实现 `return d` 对 v2 零校验，半写/损坏档
+    // （如 `{\"schemaVersion\":2}`）会在 world.ts 读 `saved.economy.coins` 时抛 TypeError，
+    // 被上层 catch 吞成「走新档」。这里只做字段有效性校验 + 最小补齐：
+    // 合法档原样返回，保证 save.test.ts 的 `expect(migrate(v2())).toEqual(v2())` 不变。
+    const e = d.economy;
+    if (!e || !Number.isFinite(e.coins) || !Number.isFinite(e.yinde) || !Number.isFinite(e.peach)) return null;
+    if (d.survival && !Number.isFinite(d.survival.hp)) return null;
+    if (typeof d.karma === 'number' && !Number.isFinite(d.karma)) return null;
+    if (d.voxel && !Array.isArray(d.voxel)) return null;
+    return Array.isArray(d.entities) ? d : { ...d, entities: [] };
+  }
   return null;                                   // 比当前更新的版本：上层拒载（降版本兼容不做）
 }
 
@@ -82,9 +95,17 @@ export function legacyFromLocalStorage(storage: Storage): SaveDataV1 {
  * P0-1 步 2（只读接入）：从实体表遍历 persist 实体生成存档数组——不维护自己的数组
  * （spec §6：存档是表的读方）。顺序 = allocate 顺序（单调 id 序，A8 确定性口径）。
  */
-export function collectPersistedEntities(): SaveDataV2['entities'] {
+/**
+ * 全量审核 2026-11-07（C01 口径收窄）：新增可选品类参数，默认仍为全量（向后兼容）。
+ * 写档侧只传 `['creation']`：`crowd.ts:1366` 给**每个 NPC** 都登记了 persist:true，
+ * 全城 4500+ 实例的实时坐标若每次经济操作都 JSON.stringify 进 IDB，会让档体积暴涨，
+ * 且读档侧本就只重演 creation（npc/beast 由生成器每会话重建），写了也读不回。
+ */
+export function collectPersistedEntities(
+  kinds: readonly ('npc' | 'beast' | 'creation')[] = ['npc', 'beast', 'creation'],
+): SaveDataV2['entities'] {
   const out: SaveDataV2['entities'] = [];
-  for (const kind of ['npc', 'beast', 'creation'] as const) {
+  for (const kind of kinds) {
     forEach(kind, (rec) => {
       if (!rec.persist) return;
       out.push({ eid: rec.id, kind: rec.kind, x: rec.pos.x, y: rec.pos.y, z: rec.pos.z, provenance: rec.provenance });

@@ -1,0 +1,10384 @@
+{
+  "meshCount": 385,
+  "meshes": [
+    {
+      "name": "(unnamed)",
+      "verts": 561,
+      "hasColor": false,
+      "mat": {
+        "type": "ShaderMaterial",
+        "name": "",
+        "color": null,
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -46000,
+          -46000,
+          -46000
+        ],
+        "max": [
+          46000,
+          46000,
+          46000
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 98,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "hazeMat",
+        "color": "#bb9274",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -21000,
+          -21000,
+          0
+        ],
+        "max": [
+          21000,
+          21000,
+          0
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 98,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "hazeMat",
+        "color": "#bb9274",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -33000,
+          -33000,
+          0
+        ],
+        "max": [
+          33000,
+          33000,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_hem",
+      "verts": 44,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.2,
+          -1.1,
+          -1.3
+        ],
+        "max": [
+          1.2,
+          0,
+          1.3
+        ]
+      }
+    },
+    {
+      "name": "pool_band",
+      "verts": 18,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1,
+          -1,
+          -1
+        ],
+        "max": [
+          1,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "pool_sash",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pool_cloak",
+      "verts": 22,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.6,
+          -1,
+          -0.6
+        ],
+        "max": [
+          0.6,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_umbrella",
+      "verts": 142,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.6,
+          0,
+          -0.6
+        ],
+        "max": [
+          0.6,
+          1.1,
+          0.6
+        ]
+      }
+    },
+    {
+      "name": "pool_bookBox",
+      "verts": 96,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.3,
+          -0.2
+        ],
+        "max": [
+          0.2,
+          0.3,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_horn",
+      "verts": 27,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.4,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pool_muzzle",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.3,
+          0
+        ],
+        "max": [
+          0.3,
+          0.3,
+          1
+        ]
+      }
+    },
+    {
+      "name": "terrain",
+      "verts": 361201,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -31000,
+          -14,
+          -31000
+        ],
+        "max": [
+          31000,
+          4177,
+          31000
+        ]
+      }
+    },
+    {
+      "name": "terrain_bed",
+      "verts": 38904,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -22383.4,
+          -14.1,
+          -11889
+        ],
+        "max": [
+          13411.7,
+          2745.6,
+          12227.5
+        ]
+      }
+    },
+    {
+      "name": "water_lakes",
+      "verts": 2853,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "water",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -10026.7,
+          -3.2,
+          -13151.2
+        ],
+        "max": [
+          14161.1,
+          -3.2,
+          10213
+        ]
+      }
+    },
+    {
+      "name": "water_rivers",
+      "verts": 1794,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "water",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -22012.7,
+          -3.3,
+          -11550.1
+        ],
+        "max": [
+          13198.8,
+          1,
+          11847.6
+        ]
+      }
+    },
+    {
+      "name": "city_wood_1",
+      "verts": 2379528,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -28933.5,
+          -2.7,
+          -16015.8
+        ],
+        "max": [
+          12035.9,
+          4184.2,
+          16935.9
+        ]
+      }
+    },
+    {
+      "name": "city_earth_1",
+      "verts": 1595448,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -20569.7,
+          -7.6,
+          -16013
+        ],
+        "max": [
+          5925.3,
+          3905.3,
+          2880
+        ]
+      }
+    },
+    {
+      "name": "city_leaf_1",
+      "verts": 2307294,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -29982.3,
+          -1,
+          -22195.3
+        ],
+        "max": [
+          16904.2,
+          1768.4,
+          19906.9
+        ]
+      }
+    },
+    {
+      "name": "pool_treeTrunk",
+      "verts": 72,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.4,
+          -2.2,
+          -0.3
+        ],
+        "max": [
+          1.4,
+          2.2,
+          0.4
+        ]
+      }
+    },
+    {
+      "name": "pool_treeCanopy",
+      "verts": 89,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.7,
+          1.8,
+          -1.5
+        ],
+        "max": [
+          1.7,
+          6.9,
+          1.7
+        ]
+      }
+    },
+    {
+      "name": "city_wood_5",
+      "verts": 2135340,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -27006.3,
+          -1.9,
+          -16196.9
+        ],
+        "max": [
+          14016.4,
+          3646.3,
+          16510
+        ]
+      }
+    },
+    {
+      "name": "city_roof_5",
+      "verts": 2429448,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -27006.3,
+          0.6,
+          -16196.9
+        ],
+        "max": [
+          14016.4,
+          3648.6,
+          16510
+        ]
+      }
+    },
+    {
+      "name": "pool_head",
+      "verts": 192,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.2,
+          -0.1
+        ],
+        "max": [
+          0.2,
+          0.1,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_torso",
+      "verts": 70,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.5,
+          -0.3
+        ],
+        "max": [
+          0.3,
+          0.3,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_armU",
+      "verts": 40,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          0,
+          -0.4,
+          -0.1
+        ],
+        "max": [
+          0,
+          0,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_armL",
+      "verts": 40,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          0,
+          -0.3,
+          0
+        ],
+        "max": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_legU",
+      "verts": 40,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.4,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_legL",
+      "verts": 40,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          0,
+          -0.4,
+          -0.1
+        ],
+        "max": [
+          0,
+          0,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_foot",
+      "verts": 48,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.1,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0.1,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_belt",
+      "verts": 42,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          0,
+          -0.2
+        ],
+        "max": [
+          0.2,
+          0,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_collar",
+      "verts": 72,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.2,
+          -0.2
+        ],
+        "max": [
+          0.2,
+          0,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_wrist",
+      "verts": 42,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          0,
+          0,
+          0
+        ],
+        "max": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_sleeve",
+      "verts": 14,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.3,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_hatFujin",
+      "verts": 129,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.3,
+          -0.2
+        ],
+        "max": [
+          0.2,
+          0.2,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_carryPole",
+      "verts": 244,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1,
+          -0.6,
+          -0.1
+        ],
+        "max": [
+          1,
+          0,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_footStraw",
+      "verts": 144,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.1,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0.1,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_hatDongpo",
+      "verts": 100,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.2,
+          -0.2
+        ],
+        "max": [
+          0.2,
+          0.3,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_plank",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.6,
+          0,
+          -0.1
+        ],
+        "max": [
+          0.6,
+          0,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_fan",
+      "verts": 48,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.2,
+          0
+        ],
+        "max": [
+          0.2,
+          0.2,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_apron",
+      "verts": 168,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.4,
+          0.2
+        ],
+        "max": [
+          0.2,
+          0.3,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_basket",
+      "verts": 106,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.2,
+          -0.2
+        ],
+        "max": [
+          0.2,
+          0.4,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_bannerPole",
+      "verts": 82,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          0,
+          0,
+          0
+        ],
+        "max": [
+          0.4,
+          3.4,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_jar",
+      "verts": 169,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.2,
+          -0.2
+        ],
+        "max": [
+          0.2,
+          0.2,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_hatFlat",
+      "verts": 120,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.1,
+          -0.2
+        ],
+        "max": [
+          0.3,
+          0.1,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_scroll",
+      "verts": 120,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          0,
+          -0.1
+        ],
+        "max": [
+          0.3,
+          0,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_spear",
+      "verts": 88,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.1,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          2.4,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_armor",
+      "verts": 208,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.3,
+          -0.3
+        ],
+        "max": [
+          0.3,
+          0.3,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "city_wood_9",
+      "verts": 3364344,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -5017.2,
+          0,
+          -5051.2
+        ],
+        "max": [
+          5017.2,
+          43.8,
+          5017.2
+        ]
+      }
+    },
+    {
+      "name": "city_roof_9",
+      "verts": 5491470,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -5017.5,
+          2.1,
+          -5051.2
+        ],
+        "max": [
+          5017.5,
+          47.5,
+          5017.5
+        ]
+      }
+    },
+    {
+      "name": "city_ash_9",
+      "verts": 1251804,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -5017.6,
+          -2.2,
+          -5048.4
+        ],
+        "max": [
+          5017.6,
+          39.5,
+          5017.6
+        ]
+      }
+    },
+    {
+      "name": "city_metal_9",
+      "verts": 1157112,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -5017,
+          0.1,
+          -5050.8
+        ],
+        "max": [
+          5017,
+          47.7,
+          5017
+        ]
+      }
+    },
+    {
+      "name": "infill_body_1:-1_-1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_gable_1:-1_-1",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_body_1:-1_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_gable_1:-1_0",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_body_0:-1_-1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_roof_0:-1_-1",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_gable_0:-1_-1",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_body_0:-1_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_roof_0:-1_0",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_gable_0:-1_0",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_body_1:0_-1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_gable_1:0_-1",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_body_0:0_-1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_roof_0:0_-1",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_gable_0:0_-1",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_body_0:0_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_roof_0:0_0",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_gable_0:0_0",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_body_1:0_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "infill_gable_1:0_0",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "lod_impostor",
+      "verts": 4,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          0
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "name": "court_body_0:court-1_-1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_roof_0:court-1_-1",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_gable_0:court-1_-1",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_body_0:court0_-1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_roof_0:court0_-1",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_gable_0:court0_-1",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_wall_0:court0_-1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_road_0:court0_-1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_leaf_0:court0_-1",
+      "verts": 40,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_furn_0:court0_-1",
+      "verts": 4,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          0
+        ],
+        "max": [
+          0.5,
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "court_body_0:court-1_-2",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_roof_0:court-1_-2",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_gable_0:court-1_-2",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_body_0:court-1_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_roof_0:court-1_0",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_gable_0:court-1_0",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_wall_0:court-1_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_road_0:court-1_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_leaf_0:court-1_0",
+      "verts": 40,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_furn_0:court-1_0",
+      "verts": 4,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          0
+        ],
+        "max": [
+          0.5,
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "court_body_0:court0_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_roof_0:court0_0",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_gable_0:court0_0",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_wall_0:court0_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_road_0:court0_0",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_leaf_0:court0_0",
+      "verts": 40,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_furn_0:court0_0",
+      "verts": 4,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          0
+        ],
+        "max": [
+          0.5,
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "court_body_0:court-1_1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_roof_0:court-1_1",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_gable_0:court-1_1",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_body_0:court0_1",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_roof_0:court0_1",
+      "verts": 258,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "court_gable_0:court0_1",
+      "verts": 126,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.2,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "ward_all_thatch",
+      "verts": 264,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1.1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "ward_all_shed",
+      "verts": 30,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "ward_all_gwall",
+      "verts": 48,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "ward_all_trunk",
+      "verts": 12,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1,
+          0,
+          -0.8
+        ],
+        "max": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "name": "ward_all_glow",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#c99a58",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.6,
+          -0.6,
+          -0.1
+        ],
+        "max": [
+          0.6,
+          0.6,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pave_slab",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pave_patch",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "city_wood_11",
+      "verts": 4625688,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -4799.7,
+          -1.5,
+          -2900
+        ],
+        "max": [
+          4799.7,
+          12.6,
+          3000
+        ]
+      }
+    },
+    {
+      "name": "city_roof_11",
+      "verts": 2305116,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -4800.5,
+          1.6,
+          -2900.5
+        ],
+        "max": [
+          4800.5,
+          14,
+          3000.5
+        ]
+      }
+    },
+    {
+      "name": "city_ash_11",
+      "verts": 1038456,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -4800.4,
+          0,
+          -2900.4
+        ],
+        "max": [
+          4800.4,
+          4.1,
+          3000.4
+        ]
+      }
+    },
+    {
+      "name": "city_leaf_11",
+      "verts": 1903734,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -4794.5,
+          -0.4,
+          -2895.9
+        ],
+        "max": [
+          4798.5,
+          13,
+          2998.6
+        ]
+      }
+    },
+    {
+      "name": "sky_windFlora",
+      "verts": 197010,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -31719.6,
+          -260.8,
+          -16230.4
+        ],
+        "max": [
+          15447.7,
+          3777.2,
+          17185.5
+        ]
+      }
+    },
+    {
+      "name": "city_wood_17",
+      "verts": 3693948,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -10535.2,
+          483.8,
+          -8420.9
+        ],
+        "max": [
+          11435.2,
+          2493.2,
+          15020.9
+        ]
+      }
+    },
+    {
+      "name": "city_roof_17",
+      "verts": 2196948,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -10534.7,
+          484.4,
+          -8420.8
+        ],
+        "max": [
+          11434.7,
+          2494.3,
+          15020.8
+        ]
+      }
+    },
+    {
+      "name": "city_ash_17",
+      "verts": 1979220,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1907.8,
+          2030.8,
+          -1916.8
+        ],
+        "max": [
+          1790.9,
+          2390.9,
+          1905.7
+        ]
+      }
+    },
+    {
+      "name": "eco_fly",
+      "verts": 96,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          -0.1,
+          -0.3
+        ],
+        "max": [
+          0.4,
+          0.1,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "eco_swim",
+      "verts": 91,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.2,
+          -0.4
+        ],
+        "max": [
+          0.3,
+          0.2,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "eco_run",
+      "verts": 144,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          0,
+          -0.1
+        ],
+        "max": [
+          0.4,
+          0.5,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "eco_drift",
+      "verts": 72,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          0,
+          -0.1
+        ],
+        "max": [
+          0.2,
+          0,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c0_0",
+      "verts": 576,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2776,
+          0,
+          -824
+        ],
+        "max": [
+          2784,
+          1,
+          -816
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c0_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c0_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c1_0",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2784,
+          0,
+          -824
+        ],
+        "max": [
+          2792,
+          1,
+          -816
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c1_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c1_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c2_0",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2792,
+          0,
+          -824
+        ],
+        "max": [
+          2800,
+          1,
+          -816
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c2_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c2_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c3_0",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2800,
+          0,
+          -824
+        ],
+        "max": [
+          2808,
+          1,
+          -816
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c3_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c3_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c4_0",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2808,
+          0,
+          -824
+        ],
+        "max": [
+          2816,
+          1,
+          -816
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c4_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c4_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c5_0",
+      "verts": 576,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2816,
+          0,
+          -824
+        ],
+        "max": [
+          2824,
+          1,
+          -816
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c5_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c5_0",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c0_1",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2776,
+          0,
+          -816
+        ],
+        "max": [
+          2784,
+          1,
+          -808
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c0_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c0_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c1_1",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2784,
+          0,
+          -816
+        ],
+        "max": [
+          2792,
+          1,
+          -808
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c1_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c1_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c2_1",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2792,
+          0,
+          -816
+        ],
+        "max": [
+          2800,
+          1,
+          -808
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c2_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c2_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c3_1",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2800,
+          0,
+          -816
+        ],
+        "max": [
+          2808,
+          1,
+          -808
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c3_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c3_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c4_1",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2808,
+          0,
+          -816
+        ],
+        "max": [
+          2816,
+          1,
+          -808
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c4_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c4_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c5_1",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2816,
+          0,
+          -816
+        ],
+        "max": [
+          2824,
+          1,
+          -808
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c5_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c5_1",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c0_2",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2776,
+          0,
+          -808
+        ],
+        "max": [
+          2784,
+          1,
+          -800
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c0_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c0_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c1_2",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2784,
+          0,
+          -808
+        ],
+        "max": [
+          2792,
+          1,
+          -800
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c1_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c1_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c2_2",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2792,
+          0,
+          -808
+        ],
+        "max": [
+          2800,
+          1,
+          -800
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c2_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c2_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c3_2",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2800,
+          0,
+          -808
+        ],
+        "max": [
+          2808,
+          1,
+          -800
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c3_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c3_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c4_2",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2808,
+          0,
+          -808
+        ],
+        "max": [
+          2816,
+          1,
+          -800
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c4_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c4_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c5_2",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2816,
+          0,
+          -808
+        ],
+        "max": [
+          2824,
+          1,
+          -800
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c5_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c5_2",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c0_3",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2776,
+          0,
+          -800
+        ],
+        "max": [
+          2784,
+          1,
+          -792
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c0_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c0_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c1_3",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2784,
+          0,
+          -800
+        ],
+        "max": [
+          2792,
+          1,
+          -792
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c1_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c1_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c2_3",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2792,
+          0,
+          -800
+        ],
+        "max": [
+          2800,
+          1,
+          -792
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c2_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c2_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c3_3",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2800,
+          0,
+          -800
+        ],
+        "max": [
+          2808,
+          1,
+          -792
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c3_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c3_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c4_3",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2808,
+          0,
+          -800
+        ],
+        "max": [
+          2816,
+          1,
+          -792
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c4_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c4_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c5_3",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2816,
+          0,
+          -800
+        ],
+        "max": [
+          2824,
+          1,
+          -792
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c5_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c5_3",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c0_4",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2776,
+          0,
+          -792
+        ],
+        "max": [
+          2784,
+          1,
+          -784
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c0_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c0_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c1_4",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2784,
+          0,
+          -792
+        ],
+        "max": [
+          2792,
+          1,
+          -784
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c1_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c1_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c2_4",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2792,
+          0,
+          -792
+        ],
+        "max": [
+          2800,
+          1,
+          -784
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c2_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c2_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c3_4",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2800,
+          0,
+          -792
+        ],
+        "max": [
+          2808,
+          1,
+          -784
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c3_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c3_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c4_4",
+      "verts": 512,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2808,
+          0,
+          -792
+        ],
+        "max": [
+          2816,
+          1,
+          -784
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c4_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c4_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c5_4",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2816,
+          0,
+          -792
+        ],
+        "max": [
+          2824,
+          1,
+          -784
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c5_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c5_4",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c0_5",
+      "verts": 576,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2776,
+          0,
+          -784
+        ],
+        "max": [
+          2784,
+          1,
+          -776
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c0_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c0_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c1_5",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2784,
+          0,
+          -784
+        ],
+        "max": [
+          2792,
+          1,
+          -776
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c1_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c1_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c2_5",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2792,
+          0,
+          -784
+        ],
+        "max": [
+          2800,
+          1,
+          -776
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c2_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c2_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c3_5",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2800,
+          0,
+          -784
+        ],
+        "max": [
+          2808,
+          1,
+          -776
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c3_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c3_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c4_5",
+      "verts": 544,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2808,
+          0,
+          -784
+        ],
+        "max": [
+          2816,
+          1,
+          -776
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c4_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c4_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-main-c5_5",
+      "verts": 576,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          2816,
+          0,
+          -784
+        ],
+        "max": [
+          2824,
+          1,
+          -776
+        ]
+      }
+    },
+    {
+      "name": "voxel-glow-c5_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "voxel-glass-c5_5",
+      "verts": 0,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          null,
+          null,
+          null
+        ],
+        "max": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "city_signs",
+      "verts": 14796,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -28920.2,
+          -259.6,
+          -15992.4
+        ],
+        "max": [
+          12022.6,
+          4186.6,
+          16936
+        ]
+      }
+    },
+    {
+      "name": "bian_river",
+      "verts": 1967,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#52626b",
+        "vertexColors": false,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -5012,
+          1,
+          -31.7
+        ],
+        "max": [
+          5012,
+          1,
+          31.7
+        ]
+      }
+    },
+    {
+      "name": "bian_river_ripple",
+      "verts": 1967,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#a6c4cb",
+        "vertexColors": false,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -5012,
+          1,
+          -31.7
+        ],
+        "max": [
+          5012,
+          1,
+          31.7
+        ]
+      }
+    },
+    {
+      "name": "bian_shoal_n",
+      "verts": 843,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#e8dac0",
+        "vertexColors": false,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -5012,
+          1,
+          14.6
+        ],
+        "max": [
+          5012,
+          1,
+          30.9
+        ]
+      }
+    },
+    {
+      "name": "bian_shoal_s",
+      "verts": 843,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#e8dac0",
+        "vertexColors": false,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -5012,
+          1,
+          -30.9
+        ],
+        "max": [
+          5012,
+          1,
+          -14.6
+        ]
+      }
+    },
+    {
+      "name": "bian_wake",
+      "verts": 4,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          0,
+          0,
+          -0.5
+        ],
+        "max": [
+          1,
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "veh_boat_fleet",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "veh_boat_fleet_glow",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "veh_boat_fleet_wake",
+      "verts": 4,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          0,
+          0,
+          -0.5
+        ],
+        "max": [
+          1,
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 4,
+      "hasColor": false,
+      "mat": {
+        "type": "ShaderMaterial",
+        "name": "ReflectorShader",
+        "color": null,
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -60,
+          -20,
+          0
+        ],
+        "max": [
+          60,
+          20,
+          0
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 343,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -1,
+          -1,
+          0
+        ],
+        "max": [
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffd25e",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -13,
+          -2.5,
+          -15
+        ],
+        "max": [
+          13,
+          2.5,
+          15
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffd25e",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -2.3,
+          -1.7,
+          -4.5
+        ],
+        "max": [
+          2.3,
+          1.7,
+          4.5
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffd25e",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -2.3,
+          -1.7,
+          -4.5
+        ],
+        "max": [
+          2.3,
+          1.7,
+          4.5
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffd25e",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -2.3,
+          -1.7,
+          -4.5
+        ],
+        "max": [
+          2.3,
+          1.7,
+          4.5
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffd25e",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -2.3,
+          -1.7,
+          -4.5
+        ],
+        "max": [
+          2.3,
+          1.7,
+          4.5
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffd25e",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -2.3,
+          -1.7,
+          -4.5
+        ],
+        "max": [
+          2.3,
+          1.7,
+          4.5
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 76,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffd25e",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -12,
+          -13,
+          -12
+        ],
+        "max": [
+          12,
+          13,
+          12
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 52,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#8a5a1a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -7,
+          -2.1,
+          -7
+        ],
+        "max": [
+          7,
+          2.1,
+          7
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 52,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffc94a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -9.6,
+          -0.6,
+          -9.6
+        ],
+        "max": [
+          9.6,
+          0.6,
+          9.6
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 52,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#8a5a1a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -6,
+          -2.1,
+          -6
+        ],
+        "max": [
+          6,
+          2.1,
+          6
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 52,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffc94a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -8.6,
+          -0.6,
+          -8.6
+        ],
+        "max": [
+          8.6,
+          0.6,
+          8.6
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 52,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#8a5a1a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -5.2,
+          -2.1,
+          -5.2
+        ],
+        "max": [
+          5.2,
+          2.1,
+          5.2
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 52,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffc94a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -7.8,
+          -0.6,
+          -7.8
+        ],
+        "max": [
+          7.8,
+          0.6,
+          7.8
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 52,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#8a5a1a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -4.5,
+          -2.1,
+          -4.5
+        ],
+        "max": [
+          4.5,
+          2.1,
+          4.5
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 52,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffc94a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -7.1,
+          -0.6,
+          -7.1
+        ],
+        "max": [
+          7.1,
+          0.6,
+          7.1
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 63,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffc94a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -1.1,
+          -1.1,
+          -1.1
+        ],
+        "max": [
+          1.1,
+          1.1,
+          1.1
+        ]
+      }
+    },
+    {
+      "name": "pool_blade",
+      "verts": 100,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          0,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0.9,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_hairKid",
+      "verts": 143,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          0,
+          -0.1
+        ],
+        "max": [
+          0.2,
+          0.2,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_hatCone",
+      "verts": 115,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.3,
+          -0.3
+        ],
+        "max": [
+          0.3,
+          0.1,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_bun",
+      "verts": 196,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          0,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0.1,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_hatMonk",
+      "verts": 83,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          0,
+          -0.2
+        ],
+        "max": [
+          0.2,
+          0.2,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_staff",
+      "verts": 89,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.9,
+          0
+        ],
+        "max": [
+          0.1,
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_hammer",
+      "verts": 48,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          0,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          1,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_hatDao",
+      "verts": 116,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.2,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0.3,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_rod",
+      "verts": 144,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.2,
+          0
+        ],
+        "max": [
+          0.3,
+          2.5,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "pool_abacus",
+      "verts": 330,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.1,
+          0
+        ],
+        "max": [
+          0.2,
+          0.1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_axe",
+      "verts": 48,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.1,
+          0
+        ],
+        "max": [
+          0.3,
+          1.2,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_bow",
+      "verts": 55,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          0
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_bucket",
+      "verts": 46,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.2,
+          -0.2
+        ],
+        "max": [
+          0.2,
+          0.2,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 40,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#4a3520",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          -2.3,
+          -0.5
+        ],
+        "max": [
+          0.4,
+          2.3,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 14,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#2e6a3a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.4,
+          -1.4,
+          -1.6
+        ],
+        "max": [
+          1.4,
+          1.4,
+          1.6
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 14,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#2e6a3a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.4,
+          -1.4,
+          -1.6
+        ],
+        "max": [
+          1.4,
+          1.4,
+          1.6
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 14,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#2e6a3a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.4,
+          -1.4,
+          -1.6
+        ],
+        "max": [
+          1.4,
+          1.4,
+          1.6
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 14,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#2e6a3a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.4,
+          -1.4,
+          -1.6
+        ],
+        "max": [
+          1.4,
+          1.4,
+          1.6
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 14,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#2e6a3a",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.4,
+          -1.4,
+          -1.6
+        ],
+        "max": [
+          1.4,
+          1.4,
+          1.6
+        ]
+      }
+    },
+    {
+      "name": "veh_oar",
+      "verts": 174,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.1,
+          -0.1
+        ],
+        "max": [
+          2.5,
+          0.1,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "veh_lamp",
+      "verts": 288,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.2,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0.2,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "veh_wheel",
+      "verts": 1428,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.1,
+          -1.1,
+          -0.2
+        ],
+        "max": [
+          1.1,
+          1.1,
+          0.2
+        ]
+      }
+    },
+    {
+      "name": "veh_leg",
+      "verts": 144,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "veh_legBird",
+      "verts": 168,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -1,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "veh_camel",
+      "verts": 840,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          0.9,
+          -1.3
+        ],
+        "max": [
+          0.3,
+          2.5,
+          1.7
+        ]
+      }
+    },
+    {
+      "name": "veh_horse",
+      "verts": 948,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          0.6,
+          -1
+        ],
+        "max": [
+          0.3,
+          2.2,
+          1.6
+        ]
+      }
+    },
+    {
+      "name": "veh_donkey",
+      "verts": 828,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          0.5,
+          -0.9
+        ],
+        "max": [
+          0.2,
+          1.8,
+          1.3
+        ]
+      }
+    },
+    {
+      "name": "veh_ox",
+      "verts": 744,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          0.4,
+          -1.1
+        ],
+        "max": [
+          0.3,
+          1.6,
+          1.5
+        ]
+      }
+    },
+    {
+      "name": "veh_goose",
+      "verts": 720,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          0.2,
+          -0.5
+        ],
+        "max": [
+          0.1,
+          0.8,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "veh_pig",
+      "verts": 564,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          0.2,
+          -0.7
+        ],
+        "max": [
+          0.2,
+          0.8,
+          0.8
+        ]
+      }
+    },
+    {
+      "name": "veh_dog",
+      "verts": 528,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          0.3,
+          -0.7
+        ],
+        "max": [
+          0.1,
+          1,
+          0.7
+        ]
+      }
+    },
+    {
+      "name": "veh_sedan0",
+      "verts": 1404,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.7,
+          -0.1,
+          -1.5
+        ],
+        "max": [
+          0.7,
+          1.8,
+          1.5
+        ]
+      }
+    },
+    {
+      "name": "veh_sedanCloth0",
+      "verts": 60,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.6,
+          0.5,
+          -0.6
+        ],
+        "max": [
+          0.6,
+          1.1,
+          0.7
+        ]
+      }
+    },
+    {
+      "name": "veh_sedan1",
+      "verts": 612,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.1,
+          -1.3
+        ],
+        "max": [
+          0.5,
+          1.1,
+          1.3
+        ]
+      }
+    },
+    {
+      "name": "veh_sedanCloth1",
+      "verts": 24,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          0.4,
+          -0.5
+        ],
+        "max": [
+          0.4,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "veh_cart0",
+      "verts": 2292,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -2.1,
+          0.6,
+          -0.9
+        ],
+        "max": [
+          3.7,
+          2.3,
+          0.9
+        ]
+      }
+    },
+    {
+      "name": "veh_cartCloth0",
+      "verts": 30,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.3,
+          1.7,
+          -0.9
+        ],
+        "max": [
+          1,
+          2.3,
+          0.9
+        ]
+      }
+    },
+    {
+      "name": "veh_cart1",
+      "verts": 840,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.6,
+          0.2,
+          -0.7
+        ],
+        "max": [
+          0.8,
+          1,
+          0.7
+        ]
+      }
+    },
+    {
+      "name": "veh_cart2",
+      "verts": 1620,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.6,
+          0.6,
+          -0.8
+        ],
+        "max": [
+          3.3,
+          2.6,
+          0.8
+        ]
+      }
+    },
+    {
+      "name": "veh_cartCloth2",
+      "verts": 30,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.5,
+          2.1,
+          -0.8
+        ],
+        "max": [
+          0.8,
+          2.5,
+          0.8
+        ]
+      }
+    },
+    {
+      "name": "veh_cart3",
+      "verts": 804,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -2.5,
+          0.4,
+          -0.6
+        ],
+        "max": [
+          2.6,
+          1.2,
+          0.6
+        ]
+      }
+    },
+    {
+      "name": "veh_boat1:1",
+      "verts": 6396,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -9.5,
+          -0.8,
+          -2.4
+        ],
+        "max": [
+          9,
+          2.8,
+          2.4
+        ]
+      }
+    },
+    {
+      "name": "veh_boatRig1:1",
+      "verts": 612,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -9,
+          0,
+          -2
+        ],
+        "max": [
+          4.6,
+          6.6,
+          2
+        ]
+      }
+    },
+    {
+      "name": "veh_boatSail1:1",
+      "verts": 450,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.7,
+          0.6,
+          -2.2
+        ],
+        "max": [
+          0,
+          4.7,
+          2.2
+        ]
+      }
+    },
+    {
+      "name": "veh_boat2:0",
+      "verts": 2586,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -7,
+          -0.7,
+          -1.8
+        ],
+        "max": [
+          7,
+          2,
+          1.8
+        ]
+      }
+    },
+    {
+      "name": "veh_boatCloth2:0",
+      "verts": 42,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.2,
+          0.7,
+          -1.5
+        ],
+        "max": [
+          5.3,
+          2.5,
+          1.5
+        ]
+      }
+    },
+    {
+      "name": "veh_boatRig2:0",
+      "verts": 288,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -9.1,
+          0,
+          -1.5
+        ],
+        "max": [
+          3.9,
+          5.1,
+          1.5
+        ]
+      }
+    },
+    {
+      "name": "veh_boatSail2:0",
+      "verts": 288,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0.8,
+          -1.8
+        ],
+        "max": [
+          0.1,
+          4.5,
+          1.8
+        ]
+      }
+    },
+    {
+      "name": "veh_boat0:0",
+      "verts": 3252,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -5,
+          -0.4,
+          -1.9
+        ],
+        "max": [
+          5,
+          1.1,
+          1.9
+        ]
+      }
+    },
+    {
+      "name": "veh_boat3:1",
+      "verts": 3840,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -7.4,
+          -0.7,
+          -2.2
+        ],
+        "max": [
+          6.6,
+          4.7,
+          2.2
+        ]
+      }
+    },
+    {
+      "name": "veh_boatCloth3:1",
+      "verts": 78,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -4,
+          1.2,
+          -1.7
+        ],
+        "max": [
+          3.4,
+          4.6,
+          1.7
+        ]
+      }
+    },
+    {
+      "name": "veh_boat4:0",
+      "verts": 2052,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -3.5,
+          -0.4,
+          -1
+        ],
+        "max": [
+          3.6,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "name": "veh_boatCloth4:0",
+      "verts": 72,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.9,
+          1,
+          -0.6
+        ],
+        "max": [
+          0.2,
+          1.1,
+          0.6
+        ]
+      }
+    },
+    {
+      "name": "veh_boat5:1",
+      "verts": 1080,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.8,
+          -0.3,
+          -0.6
+        ],
+        "max": [
+          1.8,
+          0.6,
+          0.6
+        ]
+      }
+    },
+    {
+      "name": "pool_halo",
+      "verts": 161,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          0
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_aura",
+      "verts": 135,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.8,
+          -0.8,
+          0
+        ],
+        "max": [
+          0.8,
+          0.8,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_lotus",
+      "verts": 425,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.6,
+          0,
+          -0.6
+        ],
+        "max": [
+          0.6,
+          0.2,
+          0.6
+        ]
+      }
+    },
+    {
+      "name": "pool_mandorla",
+      "verts": 22,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.6,
+          -0.6,
+          0
+        ],
+        "max": [
+          0.6,
+          0.6,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_goldRing",
+      "verts": 171,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          -0.4,
+          -0.1
+        ],
+        "max": [
+          0.4,
+          0.4,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "sky_pantheon",
+      "verts": 131028,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -342.8,
+          2142.3,
+          -105.2
+        ],
+        "max": [
+          340.9,
+          2174.6,
+          327.6
+        ]
+      }
+    },
+    {
+      "name": "sky_halo",
+      "verts": 76,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1,
+          -1,
+          0
+        ],
+        "max": [
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_beast_body",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pool_beast_head",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pool_beast_leg",
+      "verts": 34,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -1,
+          -0.4
+        ],
+        "max": [
+          0.5,
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pool_beast_tail",
+      "verts": 23,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -1
+        ],
+        "max": [
+          0.5,
+          0.4,
+          0
+        ]
+      }
+    },
+    {
+      "name": "pool_beast_horn",
+      "verts": 27,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.4,
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pool_beast_wing",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          0,
+          0,
+          -0.5
+        ],
+        "max": [
+          1,
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pool_beast_mane",
+      "verts": 133,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1,
+          -0.2,
+          -1
+        ],
+        "max": [
+          1,
+          0.2,
+          1
+        ]
+      }
+    },
+    {
+      "name": "pool_beast_spine",
+      "verts": 95,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          0,
+          -0.6
+        ],
+        "max": [
+          0.2,
+          0.8,
+          0.6
+        ]
+      }
+    },
+    {
+      "name": "pool_beast_eye",
+      "verts": 63,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "beast_qilin",
+      "verts": 2712,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          0,
+          -2.4
+        ],
+        "max": [
+          0.4,
+          2.5,
+          2.4
+        ]
+      }
+    },
+    {
+      "name": "beast_long",
+      "verts": 2856,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          0,
+          -3.4
+        ],
+        "max": [
+          0.5,
+          2.4,
+          3.9
+        ]
+      }
+    },
+    {
+      "name": "beast_feng",
+      "verts": 2190,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1.4,
+          0,
+          -2.9
+        ],
+        "max": [
+          1.4,
+          2.2,
+          1.4
+        ]
+      }
+    },
+    {
+      "name": "beast_kun",
+      "verts": 756,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1,
+          -0.5,
+          -2.8
+        ],
+        "max": [
+          1,
+          0.6,
+          2
+        ]
+      }
+    },
+    {
+      "name": "beast_yaksha",
+      "verts": 1608,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.8,
+          0,
+          -0.4
+        ],
+        "max": [
+          0.8,
+          2.1,
+          0.4
+        ]
+      }
+    },
+    {
+      "name": "beast_luocha",
+      "verts": 2124,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.8,
+          0,
+          -0.3
+        ],
+        "max": [
+          0.8,
+          2.4,
+          0.4
+        ]
+      }
+    },
+    {
+      "name": "beast_baize",
+      "verts": 2460,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          0,
+          -2
+        ],
+        "max": [
+          0.4,
+          2.2,
+          1.6
+        ]
+      }
+    },
+    {
+      "name": "beast_crane",
+      "verts": 2010,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.6,
+          0,
+          -1.1
+        ],
+        "max": [
+          0.6,
+          2.3,
+          0.8
+        ]
+      }
+    },
+    {
+      "name": "pool_horseBody",
+      "verts": 71,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.3,
+          -1
+        ],
+        "max": [
+          0.3,
+          0.7,
+          0.8
+        ]
+      }
+    },
+    {
+      "name": "pool_horseHeadN",
+      "verts": 62,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.2,
+          -0.2,
+          -0.3
+        ],
+        "max": [
+          0.2,
+          0.3,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_horseLeg",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.7,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_craneBody",
+      "verts": 48,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.3,
+          -0.9
+        ],
+        "max": [
+          0.3,
+          0.3,
+          0.6
+        ]
+      }
+    },
+    {
+      "name": "pool_craneWing",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.8,
+          -0.1,
+          -0.3
+        ],
+        "max": [
+          0.8,
+          0.1,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_craneNeck",
+      "verts": 196,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.7,
+          0.3,
+          -0.7
+        ],
+        "max": [
+          0.7,
+          0.4,
+          0.7
+        ]
+      }
+    },
+    {
+      "name": "pool_craneHead",
+      "verts": 73,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.1,
+          -0.3
+        ],
+        "max": [
+          0.1,
+          0.2,
+          0.4
+        ]
+      }
+    },
+    {
+      "name": "pool_dragonHead",
+      "verts": 118,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          -0.3,
+          -0.5
+        ],
+        "max": [
+          0.4,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pool_dragonSeg",
+      "verts": 43,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          -0.4,
+          -0.4
+        ],
+        "max": [
+          0.4,
+          0.6,
+          0.4
+        ]
+      }
+    },
+    {
+      "name": "pool_dragonFin",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.3,
+          -0.3
+        ],
+        "max": [
+          0.1,
+          0.3,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_dragonLeg",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.3,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0.3,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_dragonHorn",
+      "verts": 63,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "name": "pool_qilinBody",
+      "verts": 81,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.3,
+          -0.8
+        ],
+        "max": [
+          0.3,
+          0.5,
+          0.8
+        ]
+      }
+    },
+    {
+      "name": "pool_qilinHead",
+      "verts": 95,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          -0.3,
+          -0.3
+        ],
+        "max": [
+          0.3,
+          0.6,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_qilinLeg",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.8,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "pool_qilinMane",
+      "verts": 24,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.2,
+          -0.3
+        ],
+        "max": [
+          0.1,
+          0.2,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_qilinTail",
+      "verts": 54,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.1,
+          -0.5,
+          -0.1
+        ],
+        "max": [
+          0.1,
+          0.3,
+          0.1
+        ]
+      }
+    },
+    {
+      "name": "(unnamed)",
+      "verts": 4,
+      "hasColor": false,
+      "mat": {
+        "type": "ShaderMaterial",
+        "name": "",
+        "color": null,
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -0.9,
+          -0.3,
+          0
+        ],
+        "max": [
+          0.9,
+          0.3,
+          0
+        ]
+      }
+    },
+    {
+      "name": "city_wood",
+      "verts": 1517400,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -636.8,
+          -262.9,
+          -283.1
+        ],
+        "max": [
+          890,
+          2347.4,
+          312.2
+        ]
+      }
+    },
+    {
+      "name": "city_wood_3",
+      "verts": 347568,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -16060.5,
+          -262.4,
+          -14520.3
+        ],
+        "max": [
+          5191.6,
+          2202.5,
+          5359.6
+        ]
+      }
+    },
+    {
+      "name": "city_wall",
+      "verts": 1366812,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -4822.3,
+          0,
+          -4898.4
+        ],
+        "max": [
+          4802.9,
+          24.3,
+          4812.6
+        ]
+      }
+    },
+    {
+      "name": "city_wall_3",
+      "verts": 573780,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -28932.6,
+          -261.3,
+          -16011.5
+        ],
+        "max": [
+          14015.1,
+          4183.9,
+          16940.8
+        ]
+      }
+    },
+    {
+      "name": "city_roof",
+      "verts": 1478778,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -28933.7,
+          -260.1,
+          -20812
+        ],
+        "max": [
+          16989.2,
+          4188.2,
+          19771.6
+        ]
+      }
+    },
+    {
+      "name": "city_roof_3",
+      "verts": 882408,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -16037.1,
+          -258.6,
+          -14495.5
+        ],
+        "max": [
+          4990.9,
+          2397,
+          299.6
+        ]
+      }
+    },
+    {
+      "name": "city_ash",
+      "verts": 1549848,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -28925.4,
+          -269.4,
+          -20801.5
+        ],
+        "max": [
+          16986.1,
+          4183.5,
+          19766
+        ]
+      }
+    },
+    {
+      "name": "city_ash_3",
+      "verts": 217998,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -25608.4,
+          -261,
+          -18598.3
+        ],
+        "max": [
+          11028,
+          2220.1,
+          11822.6
+        ]
+      }
+    },
+    {
+      "name": "city_earth",
+      "verts": 679086,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -22036.5,
+          -263,
+          -14495.5
+        ],
+        "max": [
+          11068.4,
+          2151.8,
+          11872.3
+        ]
+      }
+    },
+    {
+      "name": "city_ground",
+      "verts": 776520,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -28949.6,
+          -262,
+          -20889
+        ],
+        "max": [
+          16979.3,
+          4177.9,
+          19812.9
+        ]
+      }
+    },
+    {
+      "name": "city_glow",
+      "verts": 1944462,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -27005.6,
+          -259.7,
+          -16196.2
+        ],
+        "max": [
+          14015.7,
+          3646.6,
+          16513.8
+        ]
+      }
+    },
+    {
+      "name": "city_glow_3",
+      "verts": 566916,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -28925.9,
+          -269.1,
+          -20768.3
+        ],
+        "max": [
+          13944,
+          4184.9,
+          19768.8
+        ]
+      }
+    },
+    {
+      "name": "city_leaf",
+      "verts": 2095986,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -1295.7,
+          -260.1,
+          -3978.7
+        ],
+        "max": [
+          1260.8,
+          2227.6,
+          1255.2
+        ]
+      }
+    },
+    {
+      "name": "city_leaf_3",
+      "verts": 414288,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -25608.2,
+          -260.1,
+          -18598
+        ],
+        "max": [
+          959.3,
+          2236.5,
+          3480.7
+        ]
+      }
+    },
+    {
+      "name": "city_trunk",
+      "verts": 1061826,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshLambertMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -29918.8,
+          -260,
+          -22191.6
+        ],
+        "max": [
+          16901.2,
+          2225.8,
+          19904.3
+        ]
+      }
+    },
+    {
+      "name": "city_water",
+      "verts": 153324,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -27845.6,
+          -262.6,
+          -20428.9
+        ],
+        "max": [
+          16783.9,
+          3641,
+          17362
+        ]
+      }
+    },
+    {
+      "name": "city_ceramic",
+      "verts": 1360668,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshPhysicalMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -15982.4,
+          -261.3,
+          -14495.4
+        ],
+        "max": [
+          5737.4,
+          2222.9,
+          2999.3
+        ]
+      }
+    },
+    {
+      "name": "city_metal",
+      "verts": 1306176,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -10534.2,
+          -261.6,
+          -8420.4
+        ],
+        "max": [
+          11434.2,
+          2365.2,
+          15020.4
+        ]
+      }
+    },
+    {
+      "name": "city_metal_3",
+      "verts": 736722,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -28933.2,
+          -260.2,
+          -16196.4
+        ],
+        "max": [
+          14015.9,
+          4184.9,
+          16935.4
+        ]
+      }
+    },
+    {
+      "name": "city_lacquer",
+      "verts": 593100,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshPhysicalMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -27000.5,
+          -260,
+          -16194.2
+        ],
+        "max": [
+          14000.5,
+          3645.2,
+          16505.8
+        ]
+      }
+    },
+    {
+      "name": "sky_cloudSheets_0",
+      "verts": 16020,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#b3b3b3",
+        "vertexColors": true,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -1324.7,
+          2096.8,
+          -1305.1
+        ],
+        "max": [
+          24.9,
+          2178.2,
+          28.2
+        ]
+      }
+    },
+    {
+      "name": "sky_cloudSheets_1",
+      "verts": 15060,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#b3b3b3",
+        "vertexColors": true,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -29.4,
+          2098.6,
+          -1220.3
+        ],
+        "max": [
+          1218.3,
+          2173.9,
+          30
+        ]
+      }
+    },
+    {
+      "name": "sky_cloudSheets_2",
+      "verts": 15780,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#b3b3b3",
+        "vertexColors": true,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -1264.7,
+          2083.4,
+          -22.9
+        ],
+        "max": [
+          40.7,
+          2178.2,
+          1281.2
+        ]
+      }
+    },
+    {
+      "name": "sky_cloudSheets_3",
+      "verts": 17940,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#b3b3b3",
+        "vertexColors": true,
+        "map": true,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -49.5,
+          2076,
+          -33
+        ],
+        "max": [
+          1299.3,
+          2188.3,
+          1219.9
+        ]
+      }
+    },
+    {
+      "name": "pool_cloud",
+      "verts": 88,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#f8dacb",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -1,
+          -1,
+          -0.9
+        ],
+        "max": [
+          1,
+          1,
+          0.9
+        ]
+      }
+    },
+    {
+      "name": "pool_lodLow",
+      "verts": 39,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.3,
+          0,
+          -0.3
+        ],
+        "max": [
+          0.3,
+          1.8,
+          0.3
+        ]
+      }
+    },
+    {
+      "name": "pool_lodSil",
+      "verts": 8,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshBasicMaterial",
+        "name": "",
+        "color": "#ffffff",
+        "vertexColors": false,
+        "map": false,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -0.4,
+          0,
+          -0.4
+        ],
+        "max": [
+          0.4,
+          1.8,
+          0.4
+        ]
+      }
+    },
+    {
+      "name": "city_fabric",
+      "verts": 1317684,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshPhysicalMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -10572,
+          0.3,
+          -8471.9
+        ],
+        "max": [
+          11469.5,
+          2529.6,
+          15074
+        ]
+      }
+    },
+    {
+      "name": "city_fabric_3",
+      "verts": 395085,
+      "hasColor": true,
+      "mat": {
+        "type": "MeshPhysicalMaterial",
+        "name": "",
+        "color": "#ededed",
+        "vertexColors": true,
+        "map": true,
+        "transparent": false
+      },
+      "bbox": {
+        "min": [
+          -27000.6,
+          -261.5,
+          -20435
+        ],
+        "max": [
+          16780.8,
+          3907.7,
+          16506.6
+        ]
+      }
+    },
+    {
+      "name": "heavenMist",
+      "verts": 540,
+      "hasColor": false,
+      "mat": {
+        "type": "MeshStandardMaterial",
+        "name": "",
+        "color": "#b8bfcc",
+        "vertexColors": false,
+        "map": false,
+        "transparent": true
+      },
+      "bbox": {
+        "min": [
+          -1,
+          -1,
+          -1
+        ],
+        "max": [
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "rays": [
+    {
+      "ndc": [
+        -0.35,
+        -0.67
+      ],
+      "hits": [
+        {
+          "name": "pave_slab",
+          "dist": 64.7,
+          "point": [
+            280.7,
+            0.2,
+            98
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": null
+        },
+        {
+          "name": "city_ground",
+          "dist": 64.8,
+          "point": [
+            280.6,
+            0.1,
+            98
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.254,
+              0.212,
+              0.144
+            ],
+            [
+              0.254,
+              0.212,
+              0.144
+            ],
+            [
+              0.254,
+              0.212,
+              0.144
+            ]
+          ]
+        },
+        {
+          "name": "pave_slab",
+          "dist": 64.9,
+          "point": [
+            280.6,
+            0.1,
+            98
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": null
+        },
+        {
+          "name": "city_ground",
+          "dist": 65,
+          "point": [
+            280.5,
+            0,
+            98
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.227,
+              0.191,
+              0.13
+            ],
+            [
+              0.227,
+              0.191,
+              0.13
+            ],
+            [
+              0.227,
+              0.191,
+              0.13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ndc": [
+        -0.3,
+        -0.55
+      ],
+      "hits": [
+        {
+          "name": "city_wall",
+          "dist": 70.3,
+          "point": [
+            274.2,
+            1.2,
+            95.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.658,
+              0.571,
+              0.381
+            ],
+            [
+              0.54,
+              0.468,
+              0.313
+            ],
+            [
+              0.658,
+              0.571,
+              0.381
+            ]
+          ]
+        },
+        {
+          "name": "city_ground",
+          "dist": 72.8,
+          "point": [
+            271.9,
+            0.3,
+            95.2
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.144,
+              0.13,
+              0.159
+            ],
+            [
+              0.144,
+              0.13,
+              0.159
+            ],
+            [
+              0.144,
+              0.13,
+              0.159
+            ]
+          ]
+        },
+        {
+          "name": "pave_slab",
+          "dist": 73.2,
+          "point": [
+            271.6,
+            0.2,
+            95.2
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": null
+        },
+        {
+          "name": "city_ground",
+          "dist": 73.3,
+          "point": [
+            271.4,
+            0.1,
+            95.2
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.254,
+              0.212,
+              0.144
+            ],
+            [
+              0.254,
+              0.212,
+              0.144
+            ],
+            [
+              0.254,
+              0.212,
+              0.144
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ndc": [
+        -0.2,
+        -0.75
+      ],
+      "hits": [
+        {
+          "name": "city_ground",
+          "dist": 57.9,
+          "point": [
+            288.4,
+            0.3,
+            90.8
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.144,
+              0.13,
+              0.156
+            ],
+            [
+              0.144,
+              0.13,
+              0.156
+            ],
+            [
+              0.144,
+              0.13,
+              0.156
+            ]
+          ]
+        },
+        {
+          "name": "city_ground",
+          "dist": 58.2,
+          "point": [
+            288.1,
+            0.1,
+            90.8
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.279,
+              0.235,
+              0.159
+            ],
+            [
+              0.279,
+              0.235,
+              0.159
+            ],
+            [
+              0.279,
+              0.235,
+              0.159
+            ]
+          ]
+        },
+        {
+          "name": "city_ground",
+          "dist": 58.4,
+          "point": [
+            287.9,
+            0,
+            90.7
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.227,
+              0.191,
+              0.13
+            ],
+            [
+              0.227,
+              0.191,
+              0.13
+            ],
+            [
+              0.227,
+              0.191,
+              0.13
+            ]
+          ]
+        },
+        {
+          "name": "city_ground",
+          "dist": 58.5,
+          "point": [
+            287.8,
+            0,
+            90.7
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.242,
+              0.191,
+              0.1
+            ],
+            [
+              0.242,
+              0.191,
+              0.1
+            ],
+            [
+              0.242,
+              0.191,
+              0.1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ndc": [
+        -0.45,
+        -0.6
+      ],
+      "hits": [
+        {
+          "name": "city_wood_5",
+          "dist": 64,
+          "point": [
+            280.7,
+            2.9,
+            102.9
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.068,
+              0.032,
+              0.014
+            ],
+            [
+              0.056,
+              0.026,
+              0.012
+            ],
+            [
+              0.068,
+              0.032,
+              0.014
+            ]
+          ]
+        },
+        {
+          "name": "city_roof_5",
+          "dist": 64.7,
+          "point": [
+            280.1,
+            2.7,
+            103
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.033,
+              0.042,
+              0.06
+            ],
+            [
+              0.033,
+              0.042,
+              0.06
+            ],
+            [
+              0.033,
+              0.042,
+              0.06
+            ]
+          ]
+        },
+        {
+          "name": "city_roof_5",
+          "dist": 65.3,
+          "point": [
+            279.5,
+            2.5,
+            103
+          ],
+          "normal": [
+            0,
+            -1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.027,
+              0.035,
+              0.049
+            ],
+            [
+              0.027,
+              0.035,
+              0.049
+            ],
+            [
+              0.027,
+              0.035,
+              0.049
+            ]
+          ]
+        },
+        {
+          "name": "city_wall",
+          "dist": 71,
+          "point": [
+            274.2,
+            0.4,
+            103.6
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.54,
+              0.468,
+              0.317
+            ],
+            [
+              0.54,
+              0.468,
+              0.317
+            ],
+            [
+              0.658,
+              0.571,
+              0.386
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ndc": [
+        -0.1,
+        -0.65
+      ],
+      "hits": [
+        {
+          "name": "city_fabric_3",
+          "dist": 40,
+          "point": [
+            304.2,
+            9.7,
+            88.9
+          ],
+          "normal": [
+            0.04,
+            0.91,
+            0.41
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.658,
+              0.474,
+              0.144
+            ]
+          ]
+        },
+        {
+          "name": "city_ground",
+          "dist": 63.1,
+          "point": [
+            283.5,
+            0.3,
+            84.8
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.156,
+              0.141,
+              0.175
+            ],
+            [
+              0.156,
+              0.141,
+              0.175
+            ],
+            [
+              0.156,
+              0.141,
+              0.175
+            ]
+          ]
+        },
+        {
+          "name": "pave_slab",
+          "dist": 63.4,
+          "point": [
+            283.3,
+            0.2,
+            84.8
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ffffff",
+          "vertexColors": null
+        },
+        {
+          "name": "city_ground",
+          "dist": 63.5,
+          "point": [
+            283.2,
+            0.1,
+            84.7
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.279,
+              0.235,
+              0.159
+            ],
+            [
+              0.279,
+              0.235,
+              0.159
+            ],
+            [
+              0.279,
+              0.235,
+              0.159
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ndc": [
+        0,
+        -0.8
+      ],
+      "hits": [
+        {
+          "name": "city_fabric_3",
+          "dist": 34.3,
+          "point": [
+            311,
+            9.8,
+            87.3
+          ],
+          "normal": [
+            0.26,
+            0.91,
+            0.32
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.54,
+              0.388,
+              0.118
+            ],
+            [
+              0.658,
+              0.474,
+              0.144
+            ]
+          ]
+        },
+        {
+          "name": "city_wood_5",
+          "dist": 51.3,
+          "point": [
+            296.6,
+            1.9,
+            83
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.068,
+              0.032,
+              0.014
+            ],
+            [
+              0.068,
+              0.032,
+              0.014
+            ],
+            [
+              0.068,
+              0.032,
+              0.014
+            ]
+          ]
+        },
+        {
+          "name": "city_wood_5",
+          "dist": 53.2,
+          "point": [
+            295,
+            0.9,
+            82.5
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.147,
+              0.068,
+              0.024
+            ],
+            [
+              0.121,
+              0.056,
+              0.02
+            ],
+            [
+              0.147,
+              0.068,
+              0.024
+            ]
+          ]
+        },
+        {
+          "name": "city_ground",
+          "dist": 54.6,
+          "point": [
+            293.8,
+            0.3,
+            82.1
+          ],
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "matColor": "#ededed",
+          "vertexColors": [
+            [
+              0.153,
+              0.136,
+              0.168
+            ],
+            [
+              0.153,
+              0.136,
+              0.168
+            ],
+            [
+              0.153,
+              0.136,
+              0.168
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

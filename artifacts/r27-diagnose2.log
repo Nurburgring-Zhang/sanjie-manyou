@@ -1,0 +1,50 @@
+{
+  "url": "http://127.0.0.1:4186/",
+  "detail": {
+    "audit": {
+      "embedded": 0,
+      "sunken": 0,
+      "sample": []
+    },
+    "rows": [],
+    "settle": {
+      "done": true,
+      "checked": 4510,
+      "fixed": 163,
+      "failed": 0
+    }
+  },
+  "afterSettle": {
+    "r": {
+      "checked": 4510,
+      "fixed": 2,
+      "failed": 0,
+      "before": {
+        "embedded": 1,
+        "sunken": 0
+      },
+      "after": {
+        "embedded": 0,
+        "sunken": 0
+      }
+    },
+    "auditNow": {
+      "embedded": 0,
+      "sunken": 0,
+      "sample": []
+    }
+  },
+  "afterFrames": {
+    "audit": {
+      "embedded": 0,
+      "sunken": 0,
+      "sample": []
+    },
+    "settle": {
+      "done": true,
+      "checked": 4510,
+      "fixed": 2,
+      "failed": 0
+    }
+  }
+}

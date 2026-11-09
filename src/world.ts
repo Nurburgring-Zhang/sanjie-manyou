@@ -25,11 +25,13 @@ import { POINTS, PEACH_GRANT } from './data/interactPoints';
 import { LEVEL_ORDER, LEVEL_TOTAL, levelOf, firstOpenIndex, countLevelDone } from './data/levelPlan';
 import { CreatureSystem, spawnZhaoGongming } from './sky/creatures';
 import { buildGhostFlora, buildCelestialFlora } from './sky/flora';
+import { buildRealmFlora, buildRealmFauna, realmEcoSummary, type EcoFauna, type FloraReport } from './sky/ecoExpansion';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { PoiGuide } from './game/poiGuide';
 import { Survival } from './game/survival';
 import { Karma } from './game/karma';
 import { SaveManager, loadOrMigrateLegacy, type SaveData } from './rt/save';
+import { allocate } from './rt/entity';
 import { ensureWorkshopBase, voxelStore, VOX } from './rt/voxelStore';
 import { buildVoxelMesh } from './game/voxelMesh';
 import { buildSkyRealm, SkyCenters } from './sky/realm';
@@ -45,8 +47,12 @@ import { GLOW_MAT, CLOUD_MAT } from './actors/pools';
 import { PlayerController, PLATFORMS } from './game/player';
 import { InteractSystem } from './game/interact';
 import { ImpactSystem } from './game/physics';
+import { DestructionSystem, setDestructionSystem } from './game/destruction';
+import { solidDamage } from './rt/solids';
 import { MountSystem } from './city/mounts';
-import { buildUnderworld, spawnUnderworldCast, UNDER, spawnGhostSprawl, duckweed } from './sky/underworld';
+import { buildUnderworld, spawnUnderworldCast, UNDER, spawnGhostSprawl, duckweed,
+  UNDER_FOG_LIT, UNDER_SKY_TOP, UNDER_SKY_MID, UNDER_SKY_BOT,
+  UNDER_POINT_COLD, UNDER_POINT_INT_GAIN, UNDER_POINT_DIST_GAIN } from './sky/underworld';
 import { buildYanluoInterior, buildMengpoZhuang, buildNaiheSystem, buildSansheng, buildWangxiang, spawnHellKeepers, spawnNaiheGuards, HELL_LIGHTS } from './sky/hells';
 import { buildLingxiaoInterior, buildDoushuaiInterior, buildGuanghanInterior, buildYaochi, buildTianfuAnnex, SKY_LIGHTS } from './sky/palace';
 import { buildUnderworldExpansion, buildCloudSeaView, CloudSeaHandle } from './sky/expansion';
@@ -189,13 +195,30 @@ const _skyFogC = new THREE.Color(0xa8b6c6);   // 雾：云白偏冷（0xc9d4de �
 const _skySunC = new THREE.Color(0xffd7a0);   // 日照：夕照暖金
 const _skyFillC = new THREE.Color(0x8fb0dc);  // 补光：冷蓝灰（参考图背光面色）
 const _skyHemiC = new THREE.Color(0xbcd0e4);  // 半球天光：冷蓝
-const _underFog = new THREE.Color(0x1a0508);
+// 视觉审核 2026-11-07（V-03）：地府上半幅纯黑的根因**不是天幕色**——运行时 A/B 已证明，
+// 把穹顶片元着色器强制刷成纯绿、或干脆隐藏穹顶，上半幅依然全黑（只有一条岩缝透绿）。
+// 黑色来自 buildUnderCavern() 那四块近黑岩顶板：板底法线朝下只吃 hemi.groundColor，
+// 而太阳强度在这里被压掉 92%，再被近黑的雾色吞掉。故三处一起抬：
+// ① 雾色给远处岩层一层冷紫"幽暗雾光"而非黑洞；② groundColor 照亮所有朝下的面；
+// ③ 天幕只做岩缝/穹外视角的暗底，保持分级但不刺眼。岩顶本体颜色在 underworld.ts 改。
+// 地府雾/天幕提亮一档：权威色值定义在 underworld.ts（UNDER_FOG_LIT / UNDER_SKY_*），
+// 保留冷紫灰主雾与「暗紫→紫红→暗红」的红雾/灰雾层次，不纯白；仅在下方 uf 分支被消费。
+const _underFog = UNDER_FOG_LIT;
 const _underSun = new THREE.Color(0x661a14);
 const _underHemi = new THREE.Color(0x2a5a42);
-const _underGnd = new THREE.Color(0x101820);
-const _underTop = new THREE.Color(0x0d0308);
-const _underMid = new THREE.Color(0x1b0709);
-const _underBot = new THREE.Color(0x3a0a10);
+const _underGnd = new THREE.Color(0x36404e);
+const _underTop = UNDER_SKY_TOP;
+const _underMid = UNDER_SKY_MID;
+const _underBot = UNDER_SKY_BOT;
+// ---- 地府夜景提亮（用户诉求）：以下目标值仅在 if(uf>0.001) 分支内使用，人间/天宫零影响 ----
+const UNDER_AMBIENT_LIT = 0.62;   // 环境光下限（原沿用 time.ambient，storm 末端仅 0.22）
+const UNDER_HEMI_LIT    = 1.15;   // 半球光（原 0.72）——照亮朝下的岩顶板板底
+const UNDER_FILL_LIT    = 1.0;    // 背光补光（原沿用 time.fillI / 天宫 0.85）
+const UNDER_SUN_DIM     = 0.82;   // 日光熄灭系数（原 0.92 → 保留 18% 冷轮廓光）
+const _underFillC = new THREE.Color(0xBAFFEF);  // 一束克制的冷青绿补光（青白系，光色纪律）
+const _humanFillC = new THREE.Color(0x8aa0c8);  // 人间 fill 基准：copy 打断颜色累积、严格隔离
+const _humanHemiC = new THREE.Color(0x5a6fa8);  // 人间 hemi 基准（buildLights 初值）
+const _humanGndC  = new THREE.Color(0x3a2c28);  // 人间 groundColor 基准
 
 export interface HeroEntry { code: string; name: string; nick: string; group: string; doing: string; weapon: string; desc: string; x: number; z: number; sky: boolean }
 
@@ -251,7 +274,24 @@ export class World {
   pendingKarmaVerb: { pos: THREE.Vector3; r: number; label: string; realm: 'underworld' } | null = null;
   /** S10 造物重演回调（main 注入 creation.rebuildAll） */
   onRebuildCreations: (() => void) | null = null;
+  /** 三界造物·许愿台：每帧 tick 回调（main 注入 wishPanel.tick，做漂浮/游动动画） */
+  onWishTick: ((dt: number) => void) | null = null;
+  // ---- 全量审核 2026-11-07：存档闭环 / sim-time 结算 / 目标链唯一位置源 ----
+  /** C01 / B-01：读档阶段恢复的 persist 实体（object3d 由 creation.rebuildAll 补） */
+  private pendingEntities: SaveData['entities'] = [];
+  /** C01：跨会话 Boss 战绩，待「神佛就位」构造 ArenaBoss 后应用 */
+  private pendingBossDefeated = false;
+  /** C01 / play §4.2：奖励一次性闸门（含读档恢复的已击败态） */
+  private bossRewardPaid = false;
+  /** B-05：非 LEVEL_ORDER 导引点的「已提示」集合，不写进度账 / 图鉴账 */
+  private guideVisited = new Set<string>();
+  /** B-04 / P-07：挂到 sim-time 的延迟结算（后台 rAF 暂停时自动冻结） */
+  private delayed: { left: number; guard: () => boolean; run: () => void }[] = [];
+  /** M-10：npcSweep 由按帧节流改为按 sim-time 累加（20 次 / 秒，帧率无关） */
+  private sweepAcc = 0;
   impacts!: ImpactSystem;
+  /** R27 破坏系统：建筑坍缩 / 植物倒伏 / 角色碎裂 / 碎块重力堆叠（无头验收读此句柄） */
+  destruction!: DestructionSystem;
   mounts!: MountSystem;
   heightAt: ((x: number, z: number) => number) | null = null;
   private interactProps!: ReturnType<typeof buildInteractProps>;
@@ -293,6 +333,12 @@ export class World {
   playerWeapon = { mult: 1, label: '双拳' };
   scrolling = false;
   creatures: CreatureSystem | null = null;
+  /** R18：三界鸟飞鱼游 / 走兽跑动的逐帧驱动（4 个 InstancedMesh） */
+  private eco: EcoFauna | null = null;
+  /** R18：静态草木实落台账，交付报告与运行期探针共用 */
+  ecoFloraReport: FloraReport[] = [];
+  /** R19：三界演员贴地校正只跑一次（必须等 ensureVenues 生成完驻场人群） */
+  private realmSnapDone = false;
   /** P1-2 玩法实体：生存循环（血量/饥饿/晕倒迁地府）——probe-economy 同代探针验收 */
   readonly survival = new Survival();
   /** P1-5 六道阶位：业力轴（三界动词产出）——HUD 阶位行共用 */
@@ -322,9 +368,39 @@ export class World {
         this.interactPending = saved.economy;
         if (saved.voxel?.length) voxelStore.deserialize(saved.voxel);
         if (saved.survival) this.survival.deserialize(saved.survival);
-        console.log(`[存档] 已恢复：coins=${saved.economy.coins} voxel=${saved.voxel?.length ?? 0} 项`);
+        // 全量审核 2026-11-07（C01）：karma 是 SaveDataV2 正式字段、写档写了、
+        // Karma.deserialize 齐备却全仓零调用 → 读档后业力归零、六道阶位退回「人道」，
+        // 直接废掉 HEAD「P1-5 六道阶位收口」的核心玩法轴。
+        if (typeof saved.karma === 'number') this.karma.deserialize({ karma: saved.karma });
+        // 全量审核 2026-11-07（C01 / B-01）：entities 恒 []、collectPersistedEntities
+        // 全仓零调用，造物重演拿到的一直是空表。这里恢复到实体表；object3d 由
+        // main.ts 装配完成后的 creation.rebuildAll() 补 mesh。
+        // 只恢复 creation：npc/beast 的 persist 记录由世界生成器每会话重建，
+        // 再恢复一份会与生成器重复；creation 是唯一需要 provenance 重演的品类。
+        this.pendingEntities = Array.isArray(saved.entities) ? saved.entities : [];
+        for (const e of this.pendingEntities) {
+          if (e.kind !== 'creation') continue;
+          if (!Number.isFinite(e.x) || !Number.isFinite(e.y) || !Number.isFinite(e.z)) continue;
+          // 全量审核 2026-11-07（core 交叉复核隐患 C）：provenance 无效时
+          // creation.rebuildAll() 会静默 return，但实体已永久留在表里 → 出现
+          // 「计数/存档里有、场景里没有」的幽灵造物。宁可在读档阶段丢弃无法重演的记录。
+          const prov = e.provenance as { seed?: unknown; moduleHash?: unknown } | undefined;
+          if (!prov || typeof prov.seed !== 'number' || !Number.isFinite(prov.seed)
+            || typeof prov.moduleHash !== 'string' || !prov.moduleHash) continue;
+          allocate('creation', {
+            pos: { x: e.x, y: e.y, z: e.z },
+            persist: true,
+            provenance: prov as { seed: number; moduleHash: string; apiVersion: string },
+          });
+        }
+        this.pendingBossDefeated = saved.bossDefeated === true;
+        if (this.pendingBossDefeated && !this.codexLog.some((e) => e.code === JULING.code)) {
+          this.codexLog.push({ code: JULING.code, name: JULING.name, note: '天宫擂台 · 已伏誅' });
+        }
+        console.log(`[存档] 已恢复：coins=${saved.economy.coins} voxel=${saved.voxel?.length ?? 0} 项`
+          + ` karma=${saved.karma ?? 0} entities=${this.pendingEntities.length} bossDefeated=${this.pendingBossDefeated}`);
       }
-      void mgr;
+      mgr.close();   // C11：读档用的 SaveManager 原先只 `void mgr` 从不 close
     } catch (err) { console.warn('[存档] 读档失败，走新档', err); }
     const rng = new RNG(20260905);
     const baker = new Baker();
@@ -572,6 +648,18 @@ export class World {
         buildGhostFlora(baker, rng);
         buildCelestialFlora(baker, rng);
       }],
+      ['三界生态·草木禽鱼', () => {
+        // R18（2026-11-07）：三界成片草木 + 鸟飞鱼游走兽跑动。
+        // 静态草木走 Baker：天宫用**缩放前**坐标，等 loadingDone 后 scaleHeavenGeometry
+        // 统一 ×2.2 + HEAVEN_LIFT；动态动物是 eco_* 自建网格、不参与缩放，
+        // 其天宫坐标已在 buildCritterPlan() 里用 heavenPoint() 换算成世界系。
+        // 全量随机只走整数 hash，不消耗共享 rng，街廓/树位/摊点不会漂移。
+        this.ecoFloraReport = buildRealmFlora(baker);
+        this.eco = buildRealmFauna(scene);
+        const summary = realmEcoSummary(this.ecoFloraReport, this.eco.report);
+        (window as unknown as { __realmEco?: unknown }).__realmEco = summary;
+        console.log(`[三界生态] 草木 ${summary.placedFlora} 株 / ${summary.pieces} 片，动态 ${this.eco.report.instances} 只 / ${this.eco.report.drawCalls} draw call`);
+      }],
       ['云海·天府附院', () => {
         buildTianfuAnnex(baker, sg, this.atlas); // B6 余项：御膳房/天库/武库/巡天将台
       }],
@@ -622,10 +710,10 @@ export class World {
         ensureWorkshopBase(voxelStore);
         this.voxelMesh = buildVoxelMesh(scene);
       }],
-      ['造物重演', () => {
-        // S10 读档重演：persist 的造物实体由 provenance 重建 mesh（幂等——main 侧 creation.rebuildAll）
-        if (this.onRebuildCreations) this.onRebuildCreations();
-      }],
+      // 全量审核 2026-11-07（B-01）：删去「造物重演」载入任务——所有 task 都在
+      // World.init() 返回前串行执行完，而回调由 main.ts 在 `await world.init()` 之后才注入，
+      // 于是回调恒为 null、造物从未重演过一次（花 100 文造的龙刷新即消失且钱不退）。
+      // 现改由 main.ts 在装配完成后显式 `world.onRebuildCreations()` 触发一次。
       ['幽冥·奈何桥', () => buildNaiheSystem(baker, sg, this.atlas)],
       ['幽冥·三生石', () => buildSansheng(baker, sg, this.atlas)],
       ['幽冥·望乡台', () => buildWangxiang(baker, sg, this.atlas)],
@@ -667,10 +755,16 @@ export class World {
           this.dynamicLights.push({ l: pl, base: L.int });
         }
         for (const L of HELL_LIGHTS) {
-          const pl = new THREE.PointLight(L.color, L.int, L.dist, 1.8);
+          // 地府局部点光提亮（用户诉求「地府夜景偏暗」）：只放大冷色白名单（磷绿/幽蓝/青白），
+          // 暖色檐灯/灶火保持原值，不引入金光；HELL_LIGHTS 是地府专属数组，SKY_LIGHTS/INTERIOR_LIGHTS 不受影响。
+          // 每帧动态光会以 d.base * li 覆盖强度，故增益必须写进 base 才能持续生效。
+          const cold = UNDER_POINT_COLD.has(L.color);
+          const int = cold ? Math.round(L.int * UNDER_POINT_INT_GAIN) : L.int;
+          const dist = cold ? Math.round(L.dist * UNDER_POINT_DIST_GAIN) : L.dist;
+          const pl = new THREE.PointLight(L.color, int, dist, 1.8);
           pl.position.set(L.x, L.y, L.z);
           scene.add(pl);
-          this.dynamicLights.push({ l: pl, base: L.int });
+          this.dynamicLights.push({ l: pl, base: int });
         }
         for (const L of INTERIOR_LIGHTS) {
           const pl = new THREE.PointLight(L.color, L.int, L.dist, 1.8);
@@ -679,6 +773,10 @@ export class World {
           this.dynamicLights.push({ l: pl, base: L.int });
         }
         this.vfx = new Vfx(scene);
+        // R27：破坏系统在 vfx 之后构造（复用冲击环），并注册到模块级单例供 physics.ts 命中时取用。
+        // 几何变形是运行期且只在战斗命中后发生，不改 Baker/compactStatic/mergeExact 的构建期输出。
+        this.destruction = new DestructionSystem(scene, this.vfx, { damageSolids: solidDamage });
+        setDestructionSystem(this.destruction);
         // 丹炉口（furnace.x + 3.4, 炉身 +2.4, furnace.z）也是缩放前口径：与演员同一套 heavenPoint
         this.vfx.addEmberSource(new THREE.Vector3(...heavenPoint(this.centers.furnace.x + 3.4, SKY_STAND_Y.furnace + 2.4, this.centers.furnace.z)));
         for (const w of islandsCache) this.vfx.addWaterfall(w);
@@ -761,11 +859,13 @@ export class World {
           this.karma.gain(8, 'heaven');   // P1-5：天宫动词业力产出
         };
 
-        // P0-4 全量写档入口：interact.save() 经 window 桥调 SaveManager.save（fire-and-forget）
+        // P0-4 全量写档入口：interact.save() 经 window 桥调 SaveManager.save
         const saveMgr = new SaveManager();
+        // 全量审核 2026-11-07（C02）：旧版 `void open().then(...)` 对 IDB 打开失败完全静默，
+        // __saveSave 永不注入，玩家全程只写 localStorage 且无任何提示。
         void saveMgr.open().then(() => {
           (window as unknown as Record<string, unknown>)['__saveSave'] = (d: unknown) => saveMgr.save(d as Parameters<SaveManager['save']>[0]);
-        });
+        }).catch((err: unknown) => { console.warn('[存档] IndexedDB 打开失败，本次会话仅写 localStorage', err); });
 
         // P1-2 玩法实体：Boss 伏誅利品——蟠桃 +1（战斗→资源轴联动，闭环由 survival 计数）
         // 首个遭遇：擂台上的巨灵神。用已有个体做化身，不新增角色池消耗。
@@ -776,6 +876,11 @@ export class World {
           this.vfx,
           () => this.player,
           () => {
+            // 全量审核 2026-11-07（C01 / play §4.2）：旧版防重 if 只包住 codexLog.push，
+            // 奖励段（+2 蟠桃 / +300 文 / 伏魔锏）全在 if 之外；codexLog 未入档又使
+            // 跨会话防重失效 → 读档后 Boss 复活，再杀可无限刷钱。整段纳入一次性闸门。
+            if (this.bossRewardPaid) return;
+            this.bossRewardPaid = true;
             // 奖励必须改变状态：写回图鉴数据（只发事件不写数据 = 假奖励）
             if (!this.codexLog.some((e) => e.code === JULING.code)) {
               this.codexLog.push({ code: JULING.code, name: JULING.name, note: '天宫擂台 · 已伏誅' });
@@ -793,6 +898,14 @@ export class World {
           },
           () => { this.respawnPlayerAt(JULING.recoverPoi); },
         );
+        // 全量审核 2026-11-07（C01）：跨会话每次 `new ArenaBoss` 都重置 defeated=false。
+        // 用入档的 bossDefeated 恢复战绩并占住奖励闸门，堵死「读档 → 再杀 → 再领」。
+        if (this.pendingBossDefeated) {
+          this.boss.defeated = true;
+          this.boss.hp = 0;
+          this.bossRewardPaid = true;
+          this.pendingBossDefeated = false;
+        }
         spawnUnderworldCast(this.crowd, rng, this.vfx);
         spawnGhostSprawl(this.crowd, rng);
         spawnHellKeepers(this.crowd); // B2：六重狱狱卒头目
@@ -817,11 +930,22 @@ export class World {
         document.getElementById('ui')!.appendChild(fade);
         this.player.setFadeEl(fade);
         this.interact = new InteractSystem(document.getElementById('ui')!, this.player);
+        // 全量审核 2026-11-07（P-01）：付费饮食真正回饥饿/血，生存循环「吃」链路闭环。
+        this.interact.survivalSink = (hg, hp) => this.survival.eat(hg, hp);
+        // 全量审核 2026-11-07（B-02）：initUI() 首刷早于 interact 创建，新档路径原本
+        // 不发 coins:change，顶栏恒显 '-- 文' 与空白三币；这里主动刷一次 HUD。
+        bus.emit('coins:change', this.interact.coins);
         if (this.pendingKarmaVerb) {
           const kv = this.pendingKarmaVerb;
           this.interact.add(kv.pos, kv.r, kv.label, () => {
             this.interact.act('pray', 6, '你沿狱环缓缓而行，阅尽刑罚……');
-            window.setTimeout(() => { this.karma.gain(5, 'underworld'); bus.emit('ui:toast', '狱环巡行毕——业力 +5'); }, 6200);
+            // 全量审核 2026-11-07（B-04 / P-07）：wall-clock setTimeout 在后台标签页
+            // 仍会到账，而同段时间的 havoc（sim-time / rAF）冻结 → 三界业力流向
+            // 随标签可见性翻转。改挂 sim-time，晕倒 / 离场后 guard 失败即取消。
+            this.settleLater(6.2, () => this.survival.state().hp > 0, () => {
+              this.karma.gain(5, 'underworld');
+              bus.emit('ui:toast', '狱环巡行毕——业力 +5');
+            });
           });
           this.pendingKarmaVerb = null;
         }
@@ -837,16 +961,21 @@ export class World {
           const I = this.interact;
           this.karma.penalty();               // P1-5：晕倒业力 -100
           const penalty = Math.floor(I.coins * this.survival.coinPenaltyRatio);
-          if (penalty > 0) { I.coins -= penalty; I.save(); }
+          if (penalty > 0) I.coins -= penalty;
           bus.emit('ui:toast', penalty > 0
             ? `晕倒于荒野——铜钱 -${penalty} 文，孟婆庄一碗汤垫底`
             : '晕倒于荒野——孟婆庄一碗汤垫底（身无长物，无从罚起）');
           this.respawnPlayerAt('mengpo');
           this.survival.revive();
+          // 全量审核 2026-11-07（C14）：旧版把 I.save() 排在 revive() 之前，
+          // 该刻 hp=0 → 档里写 hp:0 → 读档 survival.deserialize 预置 fainted=true
+          // → 晕倒链 hp<=0 && !fainted 永久失效。必须在复活之后落档。
+          I.save();
         };
         this.stalls = stallsCache;
         this.poiGuide = new PoiGuide(document.getElementById('ui')!, () => []); // 精修3：POI 方位导引
-        this.poiGuide.setDoneQuery((k) => !!this.objectiveDone[k]);
+        // 全量审核 2026-11-07（B-05）：导引点也可显示 ✓，但不写进度账 / 图鉴账。
+        this.poiGuide.setDoneQuery((k) => !!this.objectiveDone[k] || this.guideVisited.has(k));
         this.registerInteractions();
         // 物理碰撞反馈：冲撞判定 + 攻击入口（KeyF/点击由 PlayerController 触发 attackHook）
         this.impacts = new ImpactSystem(this.crowd, this.vfx);
@@ -1209,17 +1338,26 @@ export class World {
       // 60m 让 u_hero（相机 −195）落到 uf=1，背景不再残留 21% 人间暮色暖雾。
       const uf = THREE.MathUtils.clamp((-depthY - 100) / 60, 0, 1);
       if (uf > 0.001) {
+        // 地府雾提亮一档（_underFog → UNDER_FOG_LIT 冷紫灰，见常量区）：保留红雾/灰雾层次与幽冥感，不纯白。
         fog.color.lerp(_underFog, uf);
         // 地府雾比人间浓一档：岩顶板在 −46…−104，从台面（−260）仰视有 120–210m，
         // 0.0042 的密度只吃 50%，岩板被半球光点亮后是一片灰紫平色（实测 RGB 113/94/111、p95=108）。
         // 0.0068 下 200m 只剩 16% 透射，岩顶才读成"洞顶"，而 60m 内的殿宇仍能看清结构。
         fog.density = THREE.MathUtils.lerp(fog.density, 0.0046, uf);
-        this.sun.intensity *= 1 - uf * 0.92;
+        // ---- 地府夜景提亮（用户诉求「地府夜景偏暗」）：全部落在每帧光照赋值之后，按 uf 严格隔离 ----
+        // 旧 uf 分支只把 hemi 抬到 0.72 且几乎灭掉日光，ambient/fill 仍沿用人间/storm 末端的低值 → 整体偏暗。
+        // 本次把「环境 / 半球 / 补光」三路一起抬亮，并留一束冷青绿补光；人间与天宫的数值一字未动。
+        // 雾/天幕提亮经本节首行 fog.color.lerp(_underFog,uf) 与下方 domeMat 三段 lerp 生效（色值见常量区 UNDER_FOG_LIT / UNDER_SKY_*）。
+        this.sun.intensity *= 1 - uf * UNDER_SUN_DIM;
         this.sun.color.lerp(_underSun, uf);
-        // 地府底光 0.58 → 0.72：naihe/wangxiang/fengdu 三处机位亮度只有 63/65/47，殿内与街面读不出结构
-        this.hemi.intensity = THREE.MathUtils.lerp(this.hemi.intensity, 0.72, uf);
-        this.hemi.color.lerp(_underHemi, uf);
-        this.hemi.groundColor.lerp(_underGnd, uf);
+        this.ambientLight.intensity = THREE.MathUtils.lerp(this.ambientLight.intensity, UNDER_AMBIENT_LIT, uf);
+        this.hemi.intensity = THREE.MathUtils.lerp(this.hemi.intensity, UNDER_HEMI_LIT, uf);
+        // copy 人间基准再 lerp：打断颜色累积，离开地府时把颜色恢复成人间值，人间/天宫零污染。
+        this.hemi.color.copy(_humanHemiC).lerp(_underHemi, uf);
+        this.hemi.groundColor.copy(_humanGndC).lerp(_underGnd, uf);
+        // 一束克制的冷青绿补光：复用背光侧 fill 方向光，提亮并染成青白 #BAFFEF，不新增光源/Mesh。
+        this.fill.intensity = THREE.MathUtils.lerp(this.fill.intensity, UNDER_FILL_LIT, uf);
+        this.fill.color.copy(_humanFillC).lerp(_underFillC, uf);
         this.domeMat.uniforms.uTop.value.lerp(_underTop, uf);
         this.domeMat.uniforms.uMid.value.lerp(_underMid, uf);
         this.domeMat.uniforms.uBot.value.lerp(_underBot, uf);
@@ -1425,12 +1563,88 @@ export class World {
     else if (px < 7) this.mirrorHot = false;
   }
 
+  /**
+   * R19：三界演员脚底一次性校正（幂等、O(n)、不 raycast）。
+   * 根因链：① 驻场人群由 Crowd.update() 首帧的 ensureVenues() 生成，而旧「三界演员贴地校正」
+   *   是加载期 task，必然早于它——对天宫/地府这批人从未生效过；② 旧 task 只处理 freeze 演员，
+   *   sky / 非 freeze 驻场者被整体排除；③ walkSurfaceAt 对非人间平台几乎恒返回 0，天宫云台
+   *   与地府铺装都判不出地面。于是截图里大量人物埋进台面、只露头甚至全埋。
+   * 这里用解析地面校正：天宫取 PLATFORMS 圆盘（该表已由 heavenPoint 换算成世界系）与最近
+   * 天宫 POI 铺装顶；地府取 UNDER.y 铺装顶与抬高的望乡台；人间仍走 walkSurfaceAt。
+   * 只修「陷」（脚底低于地面 0.35m 以上），不修「浮」——浮台阶 / 桥梁是合法语义。
+   */
+  private snapRealmActors(): number {
+    let fixed = 0, checked = 0;
+    for (const a of this.crowd.actors) {
+      if (a.attach || a.hidden) continue;
+      const p = a.pos;
+      let floor: number | null = null;
+      if (p.y > 2085) {
+        checked++;
+        // 圆盘内：只考虑「不低于脚底 0.35m」的台面，取其中最贴近脚底的一层，
+        // 陷地者能找到头顶上方那块真台面，合法悬空的浮台阶不会被误拉下来。
+        let best: number | null = null, bd = Infinity;
+        for (const pl of PLATFORMS) {
+          const dx = p.x - pl.x, dz = p.z - pl.z;
+          if (dx * dx + dz * dz > pl.r * pl.r) continue;
+          const f = pl.y + 0.12;
+          const d = f - p.y;
+          if (d < -0.35 || d >= bd) continue;
+          bd = d; best = f;
+        }
+        if (best !== null) floor = best;
+        else {
+          // 圆盘外（瑶池 / 南天门 / 星宿九府 / 蟠桃园）：POI 是传送落点，
+          // 比铺装顶高约 1.5–2m，减 1.6 与 crowd.skyGround 同一口径。
+          let pd = Infinity, py: number | null = null;
+          for (const key in POIS) {
+            const q = POIS[key];
+            if (q.pos.y < 2085) continue;
+            const dx = q.pos.x - p.x, dz = q.pos.z - p.z;
+            const d = dx * dx + dz * dz;
+            if (d < pd) { pd = d; py = q.pos.y - 1.6; }
+          }
+          if (py !== null && pd < 200 * 200) floor = py;
+        }
+      } else if (p.y < -200) {
+        checked++;
+        const w = POIS.wangxiang;
+        if (w) {
+          const dx = p.x - w.pos.x, dz = p.z - w.pos.z;
+          if (dx * dx + dz * dz < 30 * 30) floor = w.pos.y - 1.6;
+        }
+        if (floor === null) floor = UNDER.y + 0.12;
+      } else {
+        floor = this.crowd.walkSurfaceAt(p.x, p.z, p.y);
+      }
+      if (floor !== null && Number.isFinite(floor) && p.y < floor - 0.35) {
+        p.y = floor + 0.02;
+        fixed++;
+      }
+    }
+    // 交付验收探针：让生产包能自证「校正确实跑过、修了多少人」，而不是只靠肉眼看截图
+    (window as unknown as Record<string, unknown>)['__realmSnap'] = { checked, fixed, actors: this.crowd.actors.length };
+    if (fixed > 0) console.log(`[三界贴地·R19] 核查三界 ${checked} 位，${fixed} 位已从台面下校正到铺装顶`);
+    return fixed;
+  }
+
   update(t: number, dt: number): void {
     // P1-2 生存循环：饥饿/回血/晕倒沿（附身模式才推进——灵魂观景不饿）
     if (this.player.mode === 'avatar') this.survival.tick(dt);
 
     this._lastT = t;
     this._frame++;
+    // 全量审核 2026-11-07（B-04 / P-07）：sim-time 延迟结算推进。
+    // dt 来自 engine 主循环（钳到 ≤0.1s）；后台标签页 rAF 暂停时本段不执行 →
+    // 扛包 / 狱环结算与 havoc 一起冻结，不再出现「后台照发人间 / 地府业力、
+    // 天宫业力却不产」的方向性不对称。
+    for (let i = this.delayed.length - 1; i >= 0; i--) {
+      const d = this.delayed[i];
+      d.left -= dt;
+      if (d.left > 0) continue;
+      this.delayed.splice(i, 1);
+      if (d.guard()) d.run();
+    }
     this.updateMirrorGate();
     this.updateIndoorBloom();
     this.applyLighting(t);
@@ -1470,7 +1684,9 @@ export class World {
     this.havoc.update(t, dt);
     this.phaseName = this.havoc.currentPhase();
     this.creatures?.update(dt); // B9 巡游推进
-    this.poiGuide?.update(this.engine.camera, this.engine.camera.position, POIS as unknown as Record<string, { name: string; pos: THREE.Vector3 }>);
+    this.eco?.update(dt);       // R18 三界鸟飞鱼游 / 走兽跑动（sim-time，后台标签页自动冻结）
+    // 全量审核 2026-11-07（B-03）：导引与目标判定统一取 objectivePos()。
+    this.poiGuide?.update(this.engine.camera, this.objectivePos(), POIS as unknown as Record<string, { name: string; pos: THREE.Vector3 }>);
     this.tickObjectives(dt);
     // 上河长卷运镜：北岸街 2.5m/s 东移，视线轻俯街市（960m 后停在瓦子口）
     if (this.scrolling) {
@@ -1491,7 +1707,11 @@ export class World {
       this.impacts.update(dt);
       if (this.player.state === 'foot') {
         this.impacts.vehicleSweep(this.player.actor, this.units.traffic());
-        if (this._frame % 3 === 0) {
+        // 全量审核 2026-11-07（M-10）：原按 `_frame % 3` 节流，60fps = 20 次/秒、
+        // 10fps ≈ 3.3 次/秒，帧率相关；改按 sim-time 累加，恒定 20 次/秒。
+        this.sweepAcc += dt;
+        if (this.sweepAcc >= 0.05) {
+          this.sweepAcc = 0;
           // E1（审计 P1-3）：复用预分配数组原地压实，替代每 3 帧 new 一个 ~2000 元素 filter 数组
           // （基线实测 ≈13 数组/秒）；npcSweep 内部仍会复查 hidden，缓存不过期也安全。
           const w = this._npcWalkers;
@@ -1504,8 +1724,33 @@ export class World {
       }
     }
     this.vfx.update(dt);
+    // R27 碎块固定步物理 + 植物倒伏维持（排在 eco_/creatures 刷新之后，倒伏矩阵能盖回去）。
+    this.destruction?.update(dt);
     this.audio.update(dt, this.engine.time.neon); // 精修8：声景时段化;
     this.crowd.update(t, dt, this.engine.camera.position);
+    // R19：三界驻场人群由 Crowd.update() 首帧的 ensureVenues() 生成。放在其后做一次性
+    // 贴地校正，等前 3 帧让 venues / post 全部落位；加载期那个 task 只能覆盖更早的 freeze 演员。
+    if (!this.realmSnapDone && this._frame >= 3) {
+      this.realmSnapDone = true;
+      this.snapRealmActors();
+    }
+    // 三界造物 · 许愿台：每帧驱动造物漂浮/游动与名字浮标（main 注入 onWishTick）
+    this.onWishTick?.(dt);
+  }
+
+  /** 三界造物 · 许愿台：玩家附近地面落点（暴露给 wishPanel；载入期用相机兜底） */
+  wishDropPoint(forward = 12, side = 0): { x: number; y: number; z: number } {
+    const pl = this.player;
+    if (!pl || !pl.actor || !pl.actor.pos) {
+      const c = this.engine.camera.position;
+      return { x: c.x + forward, y: Math.max(0, c.y - 2), z: c.z + side };
+    }
+    const yaw = this.engine.yaw;
+    const fx = Math.sin(yaw), fz = Math.cos(yaw);
+    const x = pl.actor.pos.x - fx * forward + fz * side;
+    const z = pl.actor.pos.z - fz * forward - fx * side;
+    const gy = typeof pl.groundHeight === 'function' ? pl.groundHeight(x, z, pl.actor.pos.y) : pl.actor.pos.y;
+    return { x, y: Number.isFinite(gy) ? gy : pl.actor.pos.y, z };
   }
 
   /** 全城交互点登记 */
@@ -1542,7 +1787,9 @@ export class World {
     const foods = stallsCache.filter((s) => s.kind === 'food');
     for (const s of foods) {
       I.add(new THREE.Vector3(s.x, 0.1, s.z), 3.6, '在小吃摊买点吃的', () => {
-        this.survival.eat(30, 10);   // P1-2 生存循环：进食回饥饿+少量血
+        // 全量审核 2026-11-07（P-02）：旧版在「打开面板时」无条件 eat(30,10)，
+        // 不花钱、反复按 E 开关面板即可刷满饥饿/血，绕过生存压力。
+        // 收益已移到 openShop 的购买成功分支（按价目分档），此处只开面板。
         I.openShop('小吃摊', [
           { name: '煎鱼整套', price: 12, act: 'eat', say: '外焦里嫩，趁热吃完了' },
           { name: '灌肺炒肺', price: 8, act: 'eat', say: '街边风味，唇齿留香' },
@@ -1611,11 +1858,15 @@ export class World {
     for (const [x, z] of [[-238, 38], [-252, 36], [-222, 36]] as const) {
       I.add(new THREE.Vector3(x, 0.95, z), 3.2, '帮码头扛包赚钱（+20 文）', () => {
         I.act('carryPole', 8, '你扛起货包往返奔走……');
-        window.setTimeout(() => {
+        const here = new THREE.Vector3(x, 0.95, z);
+        // 全量审核 2026-11-07（B-04 / P-07）：改 wall-clock setTimeout 为 sim-time
+        // 延迟结算。离场 / 传送 / 晕倒后 guard 失败，不再发钱发业力；切后台时 rAF
+        // 暂停，与 havoc 一起冻结，三界业力流向不再随标签可见性翻转。
+        this.settleLater(8.2, () => this.player.actor.pos.distanceTo(here) < 12 && this.survival.state().hp > 0, () => {
           I.earn(20);
           this.karma.gain(2, 'human');   // P1-5：人间动词业力产出
           bus.emit('ui:toast', '工头丢给你 20 文工钱（业力 +2）');
-        }, 8200);
+        });
       });
     }
     // 铁匠铺：买钢刀（攻击力提升，视觉佩刀）
@@ -1760,14 +2011,32 @@ export class World {
     };
   }
 
+  /**
+   * 全量审核 2026-11-07（B-03）：目标链位置的唯一真源。
+   * 灵魂 / 飞行模式下玩家控制的是相机（化身停在出生点或最后传送点），
+   * 附身模式下控制化身。poiGuide 与 objectiveReached 必须取同一个源，
+   * 否则会出现「传送能点亮、WASD 飞过去永远点不亮」的口径不自洽。
+   */
+  private objectivePos(): THREE.Vector3 {
+    const p = this.player;
+    return p && p.mode === 'avatar' ? p.actor.pos : this.engine.camera.position;
+  }
+
+  /**
+   * 全量审核 2026-11-07（B-04 / P-07）：把长延时经济 / 业力结算挂到 sim-time。
+   * update() 用主循环 dt 推进；guard 在结算时刻复查「玩家仍在场且未晕倒」。
+   */
+  private settleLater(seconds: number, guard: () => boolean, run: () => void): void {
+    this.delayed.push({ left: seconds, guard, run });
+  }
+
   /** 目标判定：Boss 节点看战绩，其余节点看「是否走遍」（距离进入节点半径） */
   private objectiveReached(key: string): boolean {
     if (key === 'jiangtai') return !!this.boss?.defeated;
     const poi = POIS[key];
     if (!poi) return false;
-    // 必须按**化身**距离判定：相机是第三人称偏移 45m，用相机距离会出现「人没走到就判达成」
-    const a = this.player?.actor?.pos;
-    if (!a) return false;
+    // 全量审核 2026-11-07（B-03）：统一取 objectivePos()，不再单用化身位置。
+    const a = this.objectivePos();
     const d = Math.hypot(a.x - poi.pos.x, a.z - poi.pos.z);
     // 半径系数压到 0.2：将台与星宿九府中心只差 10m，宽半径会让「传送到将台」顺手点亮星宿九府
     return d <= Math.max(6, (poi.radius ?? 14) * 0.2);
@@ -1778,15 +2047,23 @@ export class World {
     if (this.objT > 0) return;
     this.objT = 0.4;
     const n = this.poiGuide?.current();
-    if (!n || this.objectiveDone[n.key]) return;
+    // 全量审核 2026-11-07（B-05）：guideVisited 只作「已提示」去重，不写进度账。
+    if (!n || this.objectiveDone[n.key] || this.guideVisited.has(n.key)) return;
     if (!this.objectiveReached(n.key)) return;
-    this.objectiveDone[n.key] = true;
-    if (!this.codexLog.some((e) => e.code === 'node:' + n.key)) {
-      this.codexLog.push({ code: 'node:' + n.key, name: n.name, note: '已达成 · ' + n.objective });
+    // 全量审核 2026-11-07（B-05）：inChain 原先在写账之后才计算，只用于 toast / 事件，
+    // 导引点（bridge / sunyang / yamen 等非 LEVEL_ORDER 键）也被写成「已达成」图鉴条目，
+    // 且 objectiveDone 被塞进非关卡键。现在把进度账与图鉴账整体收进 inChain 守卫。
+    const inChain = LEVEL_ORDER.includes(n.key);
+    if (inChain) {
+      this.objectiveDone[n.key] = true;
+      if (!this.codexLog.some((e) => e.code === 'node:' + n.key)) {
+        this.codexLog.push({ code: 'node:' + n.key, name: n.name, note: '已达成 · ' + n.objective });
+      }
+    } else {
+      this.guideVisited.add(n.key);
     }
     // 只有目标链节点才计进度：桥/府衙等导引点也会被 tickObjectives 标记 done，
     // 但它们不在 LEVEL_ORDER 里，若照发事件会让 HUD 闪出「目标 0/17 达成」。
-    const inChain = LEVEL_ORDER.includes(n.key);
     const prog = this.objectiveProgress();
     bus.emit('ui:toast', inChain ? `目标达成：${n.name}（${prog.done}/${prog.total}）` : `目标达成：${n.name}`);
     bus.emit('sfx:pick');

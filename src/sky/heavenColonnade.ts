@@ -68,8 +68,14 @@ const FLOOR = 0x17191f;
 const FLOOR_D = 0x101216;
 const FLOOR_HI = 0x2b3340;
 const JOINT = 0x6e6c62;
-const SOFFIT = 0x2a1d14;
-const TILE = 0x2b333a;
+const SOFFIT = 0x2a1d14;    // 天花深色木顶：保留作檐下阴影，压住金瓦使屋顶不读成平板
+// R20：原 TILE 0x2b333a 是墨蓝黑平板 box 瓦顶（实拍 city_roof_17 顶点色 [0.021,0.028,0.036]），
+//   不走 skyRoofOn/roofC，R19 三套金瓦色板未覆盖。改用与 palace GOLD_ROOF / expansion H_TILE /
+//   realm W18_TILE 协调的中调金：平板不吃 0.86 压暗，天宫强光下取 0x9a7526 防过曝。
+const TILE = 0x9a7526;               // 金瓦主色（= expansion H_TILE / realm W18_TILE）
+const TILE_HI = shade(TILE, 1.18);    // 正脊亮金
+const TILE_MID = shade(TILE, 1.08);   // 端头/山花封板中金
+const TILE_EAVE = shade(TILE, 0.58);  // 檐口阴影带：暗金棕（唯一更暗一档，暖色非墨黑）
 
 // ============ 地面：深色抛光石 + 石缝 + 反光条 ============
 function buildFloor(b: Baker): void {
@@ -219,13 +225,13 @@ function dougong(b: Baker, cx: number, cz: number): void {
 // ============ 天花 + 低坡瓦顶 ============
 function canopy(b: Baker, sgn: number): void {
   const x = sgn * COL_X;
-  // 檐口封板（内外两道）
+  // 檐口封板（内外两道）：朱红封板 + 暖金线脚 + 一条更暗的檐口阴影带
   for (const e of [WALK_IN - 0.06, WALK_OUT + 0.06]) {
     b.box('wood', 0.22, 0.42, LEN, sgn * e, Y_DG + 2.36, 0, RED_D);
     b.box('wood', 0.26, 0.06, LEN, sgn * e, Y_DG + 2.55, 0, GOLD);
-    b.box('wood', 0.28, 0.05, LEN, sgn * e, Y_DG + 2.14, 0, GOLD_D);
+    b.box('wood', 0.28, 0.05, LEN, sgn * e, Y_DG + 2.14, 0, TILE_EAVE); // 檐口阴影带（唯一更暗一档，暖金棕非墨黑）
   }
-  // 天花（深色木顶 + 金线井口）
+  // 天花（深色木顶 + 金线井口）：保留作檐下阴影，压住金瓦使屋顶不读成平板
   b.box('wood', WALK_OUT - WALK_IN, 0.30, LEN - 0.2, x, Y_DG + 2.68, 0, SOFFIT);
   for (const off of [-1.9, 1.9]) {
     b.box('wood', 0.12, 0.08, LEN - 0.4, x + off, Y_DG + 2.55, 0, GOLD);
@@ -233,32 +239,32 @@ function canopy(b: Baker, sgn: number): void {
   for (let i = 0; i < 32; i++) {
     b.box('wood', WALK_OUT - WALK_IN - 0.4, 0.08, 0.12, x, Y_DG + 2.55, Z0 + 1 + i * 2, GOLD);
   }
-  // 低坡瓦顶：脊在柱列上方，内外各一坡
+  // 低坡金瓦顶：脊在柱列上方，内外各一坡（TILE 已改金瓦）
   const ridgeY = Y_DG + 3.62;
   const eaveY = Y_DG + 2.72;
   const half = (WALK_OUT - WALK_IN) / 2;
   const ang = Math.atan2(ridgeY - eaveY, half);
   b.box('roof', half + 0.35, 0.22, LEN, x - sgn * half / 2, (ridgeY + eaveY) / 2, 0, TILE, 0, 0, sgn * ang);
   b.box('roof', half + 0.35, 0.22, LEN, x + sgn * half / 2, (ridgeY + eaveY) / 2, 0, TILE, 0, 0, -sgn * ang);
-  // 正脊 + 脊头金饰
-  b.box('roof', 0.44, 0.28, LEN, x, ridgeY + 0.14, 0, shade(TILE, 1.18));
+  // 正脊亮金 + 脊头金饰
+  b.box('roof', 0.44, 0.28, LEN, x, ridgeY + 0.14, 0, TILE_HI);
   // P1-8 报障修复：两端山墙三角封板（旧版 ±32.4 端头从檐口到屋脊是敞口——侧看穿进空腔）
   for (const s of [-1, 1]) {
     const ez = (LEN / 2) * s;
     // 三级阶梯封板：从檐口线 (half, eaveY) 升到屋脊 (0, ridgeY)，宽 0.3
     for (const [f, wStep, hStep] of [[0.34, half * 0.62, (eaveY + (ridgeY - eaveY) * 0.34)], [0.67, half * 0.32, (eaveY + (ridgeY - eaveY) * 0.67)]] as const) {
-      b.box('wall', wStep, (ridgeY - eaveY) * 0.34, 0.3, x, eaveY + (ridgeY - eaveY) * f, ez + s * 0.14, shade(TILE, 1.08));
+      b.box('wall', wStep, (ridgeY - eaveY) * 0.34, 0.3, x, eaveY + (ridgeY - eaveY) * f, ez + s * 0.14, TILE_MID);
     }
-    b.box('wall', 0.3, ridgeY - eaveY + 0.1, 0.3, x, eaveY + (ridgeY - eaveY) / 2, ez + s * 0.14, shade(TILE, 1.08));
+    b.box('wall', 0.3, ridgeY - eaveY + 0.1, 0.3, x, eaveY + (ridgeY - eaveY) / 2, ez + s * 0.14, TILE_MID);
   }
-  b.box('wood', 0.50, 0.06, LEN, x, ridgeY + 0.30, 0, GOLD_D);
+  b.box('wood', 0.50, 0.06, LEN, x, ridgeY + 0.30, 0, GOLD); // 正脊暖金线脚
   for (const z of [Z0 - 0.2, Z1 + 0.2]) {
     b.box('wood', 0.40, 0.34, 0.22, x, ridgeY + 0.30, z, GOLD);
   }
-  // 两端山花封板
+  // 两端山花封板：朱红板 + 暖金线脚
   for (const z of [Z0 - 0.28, Z1 + 0.28]) {
-    b.box('wood', WALK_OUT - WALK_IN, 1.0, 0.20, x, Y_DG + 2.95, z, SOFFIT);
-    b.box('wood', WALK_OUT - WALK_IN, 0.07, 0.24, x, Y_DG + 3.46, z, GOLD_D);
+    b.box('wood', WALK_OUT - WALK_IN, 1.0, 0.20, x, Y_DG + 2.95, z, RED);
+    b.box('wood', WALK_OUT - WALK_IN, 0.07, 0.24, x, Y_DG + 3.46, z, GOLD); // 山花暖金线脚
   }
 }
 

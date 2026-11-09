@@ -4,6 +4,7 @@ import type { Crowd } from '../actors/crowd';
 import type { Rideable } from './player';
 import { Vfx } from '../fx/vfx';
 import { bus } from '../core/rng';
+import { getDestructionSystem, type DestructionHit } from './destruction';
 
 // ============ 物理碰撞反馈：力分级判定（趔趄→击倒→击飞→碎裂） ============
 // 力 F 与目标韧性 T 比较：
@@ -14,6 +15,11 @@ import { bus } from '../core/rng';
 //   F ≥ 6T             碎裂 shatter（仅脆弱目标：亡魂消散/器物碎裂；生者封顶为击飞+昏迷）
 
 export type ImpactTier = 'none' | 'stagger' | 'knockdown' | 'launch' | 'shatter';
+
+/** R27：力分级 → 破坏半径（命中点球形筛顶点 + 碎块生成范围）。none 为 0（不触发）。 */
+const TIER_RADIUS: Record<ImpactTier, number> = {
+  none: 0, stagger: 1.6, knockdown: 2.0, launch: 2.6, shatter: 3.2,
+};
 
 /** 注入时钟（毫秒）。联机 / 回放 / 无头测试必须显式传入固定步时钟。 */
 export type Clock = () => number;
@@ -89,18 +95,32 @@ export class ImpactSystem {
     });
   }
 
+  /** R27：把命中转给破坏系统；physics 不持有 world 引用，走模块级单点注册。 */
+  private fireDestruction(point: THREE.Vector3, power: number, radius: number,
+    source: DestructionHit['source'], kind: DestructionHit['kind'] = 'actor'): void {
+    getDestructionSystem()?.hit({ point: point.clone(), power, radius, source, kind });
+  }
+
   /** 判定并施加冲击 */
-  resolve(attacker: PhysProfile, attackerSpeed: number, target: Actor, dir: THREE.Vector3, extra = 0): ImpactTier {
+  resolve(attacker: PhysProfile, attackerSpeed: number, target: Actor, dir: THREE.Vector3, extra = 0,
+    source: DestructionHit['source'] = 'player'): ImpactTier {
     const tp = profileOf(target);
     const F = attacker.power * attackerSpeed + extra;
     const tier = tierOf(F, tp);
-    this.apply(tier, target, dir, F);
+    this.apply(tier, target, dir, F, source);
     return tier;
   }
 
-  apply(tier: ImpactTier, target: Actor, dir: THREE.Vector3, force: number): void {
+  apply(tier: ImpactTier, target: Actor, dir: THREE.Vector3, force: number,
+    source: DestructionHit['source'] = 'player'): void {
     if (tier === 'none') return;
     dir = dir.clone().setY(0).normalize();
+    // R27：apply() 是所有力分级反馈的唯一汇聚点（resolve / vehicleSweep / npcSweep /
+    // cannonBlast / ArenaBoss.playerAttack 全部经此），角色破坏挂点只在这里挂一次：
+    // 用 target.pos 作命中点、force 作 power、TIER_RADIUS 作半径；绝不在各调用点重复挂，
+    // 否则一次挥刀会触发 2~3 次破坏、碎块翻倍。先于 tier 分支触发，让 shatter() 能读到
+    // 刚生成的 lastReport.chunks 做 vfx.burst 数量联动。
+    this.fireDestruction(target.pos, force, TIER_RADIUS[tier], source, 'actor');
     target.impactUntil = this.clock() + 3600;
     if (tier === 'stagger') {
       target.action = 'staggerHit';
@@ -131,8 +151,12 @@ export class ImpactSystem {
   shatter(target: Actor, dir: THREE.Vector3): void {
     const tp = profileOf(target);
     if (!tp.fragile && tp.toughness > 20) { this.launch(target, dir, 24); return; }
+    // R27：碎裂不再单独触发破坏（挂点已统一收敛到 apply()，避免重复）；这里只把
+    // vfx.burst 数量与 apply() 刚产生的 lastReport.chunks 联动。hidden/respawn 语义不变。
+    const ds = getDestructionSystem();
+    const boost = ds ? Math.min(120, (ds.stats().lastReport?.chunks ?? 0) * 2) : 0;
     const col = (target.data?.code ?? '').startsWith('ghost') ? 0x3dff9c : 0xffb300;
-    this.vfx.burst(target.pos.clone().add(new THREE.Vector3(0, 1, 0)), 90, col, 10, 1.4, 1.6, 3);
+    this.vfx.burst(target.pos.clone().add(new THREE.Vector3(0, 1, 0)), 90 + boost, col, 10, 1.4, 1.6, 3);
     this.vfx.ring(target.pos.clone().add(new THREE.Vector3(0, 0.5, 0)), col, 8, 0.7);
     if (!tp.fragile) { this.launch(target, dir, 20); bus.emit('ui:toast', tp.label + '被轰得昏死过去！'); return; }
     target.hidden = true;
@@ -155,7 +179,9 @@ export class ImpactSystem {
     }
     if (!best) { bus.emit('ui:toast', '挥了个空……'); return; }
     const dir = best.pos.clone().sub(player.pos).setY(0).normalize();
-    const tier = this.resolve({ mass: 1, power: 10 * weaponMult, toughness: 9, fragile: false, label: '你' }, 1, best, dir);
+    // R27：玩家挥刀的破坏统一由 resolve→apply() 的唯一挂点触发（此处不再重复挂），
+    // 既有趔趄/击倒/击飞/碎裂语义不变。
+    const tier = this.resolve({ mass: 1, power: 10 * weaponMult, toughness: 9, fragile: false, label: '你' }, 1, best, dir, 0, 'player');
     this.vfx.burst(best.pos.clone().add(new THREE.Vector3(0, 1.4, 0)), 12, 0xffe2b0, 4, 0.4, 0.9);
     const say: Record<string, string> = {
       none: `${best.data?.name ?? '那人'}纹丝不动——法力护体，凡人之力奈何不得`,
@@ -181,7 +207,7 @@ export class ImpactSystem {
       if (v.speed > 0.3 && fwd.dot(toP.clone().normalize()) > 0.3) {
         const tp = profileOf(player);
         const tier = tierOf(F, tp);
-        this.apply(tier, player, fwd, F);
+        this.apply(tier, player, fwd, F, 'vehicle');
         if (tier !== 'none') { this.bumpCd = this.clock() + 1200; bus.emit('ui:toast', `被疾驰的车辆撞了个${tier === 'launch' ? '飞起' : tier === 'knockdown' ? '正着' : '趔趄'}！`); return; }
       }
       // 人撞上车（静止/慢速）：趔趄 + 推出
@@ -218,7 +244,7 @@ export class ImpactSystem {
         if (d > 2.2 || d < 0.01) continue;
         if (fwd.dot(to.clone().normalize()) > 0.4) {
           const F = v.mass * v.speed;
-          this.apply(tierOf(F, profileOf(a)), a, fwd, F);
+          this.apply(tierOf(F, profileOf(a)), a, fwd, F, 'vehicle');
           this.bumpCd = now + 800;
           return;
         }
@@ -228,6 +254,11 @@ export class ImpactSystem {
 
   /** 炮击 AOE */
   cannonBlast(point: THREE.Vector3, power: number, actors: Actor[]): void {
+    // R27：炮击中心触发「建筑/场景」破坏（kind='auto' → 城市几何坍缩 + 植物倒伏 + 碎块）。
+    // 这是建筑真几何变形在游戏内的唯一自动触发点（A+B 硬需求、默认开启）；与 apply() 的
+    // 角色 actor 挂点语义分离、每次炮击仅此一次、不在挥刀路径上，不会造成挥刀碎块翻倍。
+    // 循环里每个被炸 NPC 仍经 apply() 各触发一次角色破坏。
+    this.fireDestruction(point, power, 6, 'cannon', 'auto');
     this.vfx.burst(point, 140, 0xff7a2d, 18, 1.3, 2, 6);
     this.vfx.burst(point, 60, 0xffd25e, 12, 1, 1.6, 5);
     this.vfx.ring(point.clone(), 0xff7a2d, 22, 0.9);
@@ -237,7 +268,7 @@ export class ImpactSystem {
       if (d > 6) continue;
       const dir = a.pos.clone().sub(point).setY(0).normalize();
       const falloff = 1 - d / 8;
-      this.apply(tierOf(power * falloff, profileOf(a)), a, dir, power * falloff);
+      this.apply(tierOf(power * falloff, profileOf(a)), a, dir, power * falloff, 'cannon');
     }
     bus.emit('sfx:boom');
   }

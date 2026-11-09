@@ -20,3 +20,19 @@ export const LAYER_NO_REFLECT = 1;
 export function noReflect(obj: THREE.Object3D): void {
   obj.layers.set(LAYER_NO_REFLECT);
 }
+
+/**
+ * 静态合批网格的「空间分块索引」标记（perfBudget.ChunkGate 只统计、不剔除）。
+ *
+ * Baker.flush 产出的 city_* 网格是【跨全城大网格】，包围盒/包围球覆盖全城，
+ * frustumCulled 基本失效——因此【不能】简单粗暴打开 frustumCulled 就宣称优化。
+ * 这里只把「该 batch 覆盖了多少空间区块 / 包围球」记进 userData，作为可断言的
+ * 分块索引事实（window.__perfBudget().chunkGate.staticChunks / staticIndexedMeshes）。
+ * 真正的对象级剔除只作用于带精确包围球的空间分块 InstancedMesh（见 perfBudget.ts）。
+ *
+ * 该标记不改 mesh 命名、不改渲染层、不新增 draw call、不改 Baker 公共接口。
+ */
+export function tagStaticChunk(obj: THREE.Object3D, chunks: number,
+                               center: THREE.Vector3, radius: number): void {
+  (obj.userData as Record<string, unknown>).perfStaticChunk = { chunks, center, radius };
+}

@@ -1,0 +1,93 @@
+{
+  "at": "2026-11-08T19:23:49.854Z",
+  "url": "http://127.0.0.1:4186/",
+  "t0": {
+    "audit": {
+      "embedded": 1,
+      "sunken": 0,
+      "sample": [
+        {
+          "id": 1490,
+          "x": -238.14,
+          "y": 0,
+          "z": 35.2
+        }
+      ]
+    },
+    "rows": [
+      {
+        "id": 1490,
+        "x": -238.14,
+        "y": 0,
+        "z": 35.2,
+        "freeze": false,
+        "attach": false,
+        "sky": false,
+        "hidden": false,
+        "action": "stand",
+        "occ": "customer",
+        "wsOwn": null,
+        "wsAny": 0.2321546126062014,
+        "blockedOwn": true,
+        "blocked0": true
+      }
+    ],
+    "frame": 3,
+    "settle": {
+      "done": true,
+      "checked": 4510,
+      "fixed": 163,
+      "failed": 0
+    }
+  },
+  "forced": {
+    "r": {
+      "checked": 4510,
+      "fixed": 1,
+      "failed": 0,
+      "before": {
+        "embedded": 0,
+        "sunken": 0
+      },
+      "after": {
+        "embedded": 0,
+        "sunken": 0
+      }
+    },
+    "auditNow": {
+      "embedded": 0,
+      "sunken": 0,
+      "sample": []
+    }
+  },
+  "t1": {
+    "audit": {
+      "embedded": 0,
+      "sunken": 0,
+      "sample": []
+    },
+    "rows": [],
+    "frame": 8,
+    "settle": {
+      "done": true,
+      "checked": 4510,
+      "fixed": 1,
+      "failed": 0
+    }
+  },
+  "t2": {
+    "audit": {
+      "embedded": 0,
+      "sunken": 0,
+      "sample": []
+    },
+    "rows": [],
+    "frame": 18,
+    "settle": {
+      "done": true,
+      "checked": 4510,
+      "fixed": 1,
+      "failed": 0
+    }
+  }
+}

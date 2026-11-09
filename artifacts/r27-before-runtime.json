@@ -1,0 +1,106 @@
+{
+  "at": "2026-11-08T17:35:43.017Z",
+  "tag": "before",
+  "url": "http://127.0.0.1:4184/",
+  "cams": [
+    {
+      "id": "01-wumen-axis",
+      "c": [
+        0,
+        12,
+        -3300
+      ],
+      "p": [
+        0,
+        11,
+        -2860
+      ]
+    },
+    {
+      "id": "02-wumen-axis-wide",
+      "c": [
+        0,
+        16,
+        -3300
+      ],
+      "p": [
+        0,
+        26,
+        -2820
+      ]
+    },
+    {
+      "id": "03-wumen-gate-inside",
+      "c": [
+        0,
+        12,
+        -3260
+      ],
+      "p": [
+        0,
+        7,
+        -2955
+      ]
+    },
+    {
+      "id": "04-court-guard-east",
+      "c": [
+        300,
+        2,
+        -3220
+      ],
+      "p": [
+        372,
+        12,
+        -3150
+      ]
+    },
+    {
+      "id": "05-court-guard-west",
+      "c": [
+        -300,
+        2,
+        -3220
+      ],
+      "p": [
+        -372,
+        12,
+        -3150
+      ]
+    },
+    {
+      "id": "06-street-house",
+      "c": [
+        200,
+        4,
+        42
+      ],
+      "p": [
+        200,
+        9,
+        98
+      ]
+    }
+  ],
+  "shots": [
+    "artifacts/r27-before-01-wumen-axis.png",
+    "artifacts/r27-before-02-wumen-axis-wide.png",
+    "artifacts/r27-before-03-wumen-gate-inside.png",
+    "artifacts/r27-before-04-court-guard-east.png",
+    "artifacts/r27-before-05-court-guard-west.png",
+    "artifacts/r27-before-06-street-house.png"
+  ],
+  "pageErrors": [],
+  "runtime": {
+    "solids": null,
+    "destruction": null,
+    "collisionAudit": null,
+    "perf": {
+      "calls": 260,
+      "tris": 80109978
+    },
+    "bundle": [
+      "./assets/index-CZHpRNBn.js"
+    ]
+  }
+}

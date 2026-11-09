@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Baker, SignMesher, SignAtlas, shade, type BGroup } from '../city/bake';
-import { roofOn, C } from '../city/buildings';
+import { roofOn } from '../city/buildings';
 import { PoolSet, MAX_CLOUDS } from '../actors/pools';
 import { buildWindFlora } from './flora';
 import { RNG } from '../core/rng';
@@ -104,7 +104,7 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
   b.box('wood', 37, 0.75, 4.4, gate.x, gate.y + 28.4, gate.z, shade(0x8a6a2e, 1.05));
   skyDougongRing(b, gate.x, gate.y + 29.5, gate.z, 36.8, 4.4, 0, 1.2, GOLD_TRIM);
   skyCaihuaBand(b, gate.x, gate.y + 28.4, gate.z, 37, 4.4, 0);
-  b.box('wall', 36, 10, 2.4, gate.x, gate.y + 12, gate.z + 2.8, shade(0x6e4a24, 1.05));
+  b.box('wall', 36, 10, 2.4, gate.x, gate.y + 12, gate.z + 2.8, shade(0x93372a, 1.05)); // R20 南天门门楼墙身：深紫褐 0x6e4a24 → 暖朱红，并入金瓦朱柱体系
   // W23：单檐 → 重檐叠顶（下檐 46×12.5 / 上檐 34×9；顶层 34 ≥ 12 仍走庑殿，脊上另悬九色光轮）
   skyStackedRoof(b, gate.x, gate.y + 29.5, gate.z, 46, 12.5, 2, 3.05, 0, 'wudian', shade(0x9a7a32, 1.15), GOLD_TRIM);
   sg.quad(atlas.text('skygate', '南天門', 420, 110, { color: '#fff', glow: '#00e5ff', bg: 'rgba(6,10,22,0.9)', border: 'rgba(0,229,255,.9)', fontPx: 78 }), 10, 2.6, gate.x, gate.y + 25, gate.z + 4.6, 0);
@@ -665,7 +665,7 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
     skyDougongRing(b, GX, GB + 3.78, GZ, 8.4, 7.2, 0, 1.2, GOLD_TRIM);           // 26 攒
     skyCaihuaBand(b, GX, GB + 3.35, GZ, 8.6, 7.4, 0);
     // 叠顶：下檐 11.4×9.6（檐口 5.26/4.43，斗栱昂嘴 5.05/4.45 都在檐内）→ 上檐 8.44×6.91 攒尖 + 宝顶
-    skyStackedRoof(b, GX, GB + 3.78, GZ, 11.4, 9.6, 2, 2, 0, 'zanjian', shade(0x5c6878, 1.08), GOLD_TRIM);
+    skyStackedRoof(b, GX, GB + 3.78, GZ, 11.4, 9.6, 2, 2, 0, 'zanjian', shade(GOLD_ROOF, 0.80), GOLD_TRIM);
   }
 
   // ---- W18：钟楼 / 鼓楼（T-GZ-013 钟楼 (28,207,88) / T-GZ-014 鼓楼 (-28,207,88)，10 卷 §三）----
@@ -708,7 +708,7 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
   b.box('wood', 7.2, 0.62, 3.8, 0, 214 + 9.5, 20, shade(GOLD_TRIM, 0.95));
   skyCaihuaBand(b, 0, 214 + 9.5, 20, 7.2, 3.8, 0);
   skyDougongRing(b, 0, 214 + 9.8, 20, 7.2, 3.8, 0, 1.2, GOLD_TRIM);
-  skyStackedRoof(b, 0, 214 + 9.8, 20, 10, 6, 2, 1.9, 0, 'zanjian', shade(0x3a6b8c, 1.05), GOLD_TRIM);
+  skyStackedRoof(b, 0, 214 + 9.8, 20, 10, 6, 2, 1.9, 0, 'zanjian', shade(0x9a7526, 1.05), GOLD_TRIM); // R20 将台亭青蓝攒尖瓦 0x3a6b8c → 金瓦
   sg.quad(atlas.text('jiangtai', '將臺', 180, 56, { color: '#ffe9b8', glow: '#ff2e88', bg: 'rgba(12,8,10,0.85)', border: 'rgba(255,46,136,.8)', fontPx: 44 }), 3.4, 1.05, 0, 214 + 11.2, 23.2, 0);
   // 将台陈设：四角旗门、战鼓、兵器架、帅案令旗（台面原本空无一物）
   // W48：凌霄前庭的陈设已迁到「世界坐标」段（wBanner/wDrum/wCenser/wHalberdRack），
@@ -812,7 +812,7 @@ export function buildSkyRealm(b: Baker, sg: SignMesher, atlas: SignAtlas, ps: Po
   platform(0, 214, 130, 9);
   b.box('wall', 8.5, 4.4, 6.2, 0, 214 + 2.2, 130, shade(0x5a6472, 1.04));
   b.box('wood', 9, 0.35, 6.7, 0, 214 + 4.6, 130, shade(0x6b4a2b, 1));
-  roofOn(b, 10.5, 7.6, 214 + 4.9, 0, 130, 0, shade(C.tile, 1.08), 0x00e5ff);
+  roofOn(b, 10.5, 7.6, 214 + 4.9, 0, 130, 0, shade(0x9a7526, 1.08), 0x00e5ff); // R20 星官公廨瓦：人间灰黑 C.tile 0x333a45 → 金瓦
   sg.quad(atlas.text('stargs', '星官公廨', 260, 60, { color: '#d8f2ff', glow: '#00e5ff', bg: 'rgba(8,10,16,0.86)', border: 'rgba(0,229,255,.75)', fontPx: 44 }), 4.4, 1.1, 0, 214 + 8.2, 133.8, 0);
   // 东西朝房已按 10 卷迁回 (40,206,50)/(-40,206,50) 并由 buildCourtRoom 重建，此处不再重复落位
 
@@ -1833,14 +1833,17 @@ function itmNineColorWheel(b: Baker, x: number, y: number, z: number): void {
 //  ④ 屋顶一律 palace.skyRoofOn（垂脊/戗脊/瓦垄/瓦当/脊兽齐备），形制在三档里分配：
 //     朝房歇山、御膳房歇山（灶间单坡 + 烟囱）、天库庑殿、武库庑殿、钟鼓楼攒尖、星宿府歇山。
 const W18_STONE = 0x7e7a8c;
-const W18_DECK = 0x86828f;
-const W18_JOINT = 0x4a4760;
-const W18_BRICK = 0x5a6472;
-const W18_TILE = 0x5c6878;
-const W18_WOOD = 0x6b4a2b;
-const W18_WOOD_D = 0x4a3220;
-const W18_RED = 0xa02818;
-const W18_WHITE = 0xd8d4c8;
+// R19（用户「天宫配色灰土，必须与凌霄宝殿一致、金碧辉煌」）：
+// 旧的 0x5c6878 青灰瓦 + 木褐柱铺满凌霄殿周边的朝房/门庑/值房，实拍把天宫读成灰土色。
+// 与 expansion.ts 的 R19 色板、palace.ts 的 GOLD_* 统一为「金瓦 + 朱柱 + 暖白玉」。
+const W18_DECK = 0x8c8374;
+const W18_JOINT = 0x443e34;
+const W18_BRICK = 0x95794c;
+const W18_TILE = 0x9a7526;
+const W18_WOOD = 0x8a3322;
+const W18_WOOD_D = 0x5d2118;
+const W18_RED = 0xb43824;
+const W18_WHITE = 0xded2b8;
 
 /** 台面石作：浅灰石墁地 + 两圈同心石缝（切向细条，只做环不做网格） */
 function w18Deck(b: Baker, x: number, y: number, z: number, r: number): void {
@@ -2131,7 +2134,7 @@ function buildArmoryCourt(b: Baker, sg: SignMesher, atlas: SignAtlas): void {
  */
 function buildBellDrumTower(b: Baker, sg: SignMesher, atlas: SignAtlas, x: number, z: number, isBell: boolean): void {
   const y0 = 214.12;
-  const tileC = isBell ? 0x3f6f6a : 0x6a4a3a;    // 钟楼青绿瓦 / 鼓楼赭瓦（同制不同色，航拍可分辨）
+  const tileC = isBell ? 0xbd9a2c : 0x70521c;    // R20 钟楼亮金瓦 / 鼓楼深金瓦（同制不同明度，航拍可分辨；统一金色系）
   const tileD = shade(tileC, 0.78);
   b.box('ash', 8.2, 1.6, 8.2, x, y0 + 0.8, z, shade(W18_STONE, 0.98));
   b.box('ash', 7.6, 0.12, 7.6, x, y0 + 1.66, z, W18_DECK);
@@ -2277,7 +2280,7 @@ function starHall(b: Baker, sg: SignMesher, atlas: SignAtlas, x: number, y: numb
   const ca = Math.cos(ry), sa = Math.sin(ry);
   const at = (u: number, v: number): [number, number] => [x + u * ca + v * sa, z - u * sa + v * ca];
   const W = sig === 3 ? 19 : 12, D = 8, H = 4.4;
-  const tileC = sig === 1 ? 0x6a5a2a : sig === 6 ? 0x333a45 : W18_TILE;   // 亢金龍金瓦 / 畢月烏墨瓦 / 余青瓦
+  const tileC = sig === 1 ? 0x6a5a2a : sig === 6 ? 0x70521c : W18_TILE;   // 亢金龍金瓦 / 畢月烏深金瓦 / 余金瓦（R19 统一金色系）
   // 逐府木构色（10 卷各府「建材与色彩」）：苍 / 金铜 / 黄褐 / 青黄 / 丹顶红 / 紫檀 / 墨 / 灰砖
   const wallC = [0x3f5a52, 0x6a5626, 0x6a5a3e, 0x4a5a52, 0x9e2a18, 0x4a2a3c, 0x2a2a32, 0x5a6472][sig];
   // 台基 + 台面
@@ -2347,7 +2350,7 @@ function starHall(b: Baker, sg: SignMesher, atlas: SignAtlas, x: number, y: numb
     const [ax, az] = at(W / 2 + 3.0, -D / 2 - 1.4);
     b.box('ash', 3.4, 5.0, 3.4, ax, y + 2.5, az, shade(W18_STONE, 1.02), ry);
     b.box('ash', 3.9, 0.3, 3.9, ax, y + 5.1, az, W18_DECK, ry);
-    b.box('wood', 1.1, 0.8, 0.5, ax, y + 5.6, az, shade(0x3a6b8c, 1.2), ry, 0.32);
+    b.box('wood', 1.1, 0.8, 0.5, ax, y + 5.6, az, shade(0xbd9a2c, 1.2), ry, 0.32); // R20 星宿标识件青蓝 0x3a6b8c → 亮金
     b.box('roof', 0.8, 1.0, 0.6, x, fy + H + 3.3, z, shade(tileC, 0.7), ry, 0, 0.4);
   } else if (sig === 1) {
     // 亢金龍：龙庭（15m 圆庭，置于堂前）+ 龙珠双灯

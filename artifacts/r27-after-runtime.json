@@ -1,0 +1,133 @@
+{
+  "at": "2026-11-08T19:29:30.448Z",
+  "tag": "after",
+  "url": "http://127.0.0.1:4186/",
+  "cams": [
+    {
+      "id": "01-wumen-axis",
+      "c": [
+        0,
+        12,
+        -3300
+      ],
+      "p": [
+        0,
+        11,
+        -2860
+      ]
+    },
+    {
+      "id": "02-wumen-axis-wide",
+      "c": [
+        0,
+        16,
+        -3300
+      ],
+      "p": [
+        0,
+        26,
+        -2820
+      ]
+    },
+    {
+      "id": "03-wumen-gate-inside",
+      "c": [
+        0,
+        12,
+        -3260
+      ],
+      "p": [
+        0,
+        7,
+        -2955
+      ]
+    },
+    {
+      "id": "04-court-guard-east",
+      "c": [
+        300,
+        2,
+        -3220
+      ],
+      "p": [
+        372,
+        12,
+        -3150
+      ]
+    },
+    {
+      "id": "05-court-guard-west",
+      "c": [
+        -300,
+        2,
+        -3220
+      ],
+      "p": [
+        -372,
+        12,
+        -3150
+      ]
+    },
+    {
+      "id": "06-street-house",
+      "c": [
+        200,
+        4,
+        42
+      ],
+      "p": [
+        200,
+        9,
+        98
+      ]
+    }
+  ],
+  "shots": [
+    "artifacts/r27-after-01-wumen-axis.png",
+    "artifacts/r27-after-02-wumen-axis-wide.png",
+    "artifacts/r27-after-03-wumen-gate-inside.png",
+    "artifacts/r27-after-04-court-guard-east.png",
+    "artifacts/r27-after-05-court-guard-west.png",
+    "artifacts/r27-after-06-street-house.png"
+  ],
+  "pageErrors": [],
+  "runtime": {
+    "solids": {
+      "total": 399000,
+      "walls": 185343,
+      "floors": 61806,
+      "plants": 58322,
+      "broken": 0,
+      "skipped": 779144,
+      "cells": 126475,
+      "buildMs": 11.8
+    },
+    "destruction": {
+      "events": 0,
+      "chunks": 0,
+      "aliveChunks": 0,
+      "vertsDeformed": 0,
+      "solidsBroken": 0,
+      "plantsFelled": 0,
+      "actorsHit": 0,
+      "meshEdits": 0,
+      "drawCallsWhenIdle": 0,
+      "lastReport": null,
+      "physicsTrace": [],
+      "physicsDistinct": 0,
+      "physicsTrackedId": -1
+    },
+    "collisionAudit": {
+      "embedded": 0,
+      "sunken": 0,
+      "sample": []
+    },
+    "perf": {
+      "calls": 261,
+      "tris": 80572736
+    },
+    "bundle": [
+      "./assets/index-Co4KIqUG.js"
+    ]
+  }
+}

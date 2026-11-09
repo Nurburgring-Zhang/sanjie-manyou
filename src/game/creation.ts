@@ -64,7 +64,15 @@ export class CreationSystem {
     });
     btn.onclick = () => void this.submit();
     input.addEventListener('keydown', (e) => {
+      // 全量审核 2026-11-07（UI-05 / 主线程运行时 A1 实证）：
+      // 这里的 stopPropagation 在**目标阶段**阻断冒泡，会连 window 上本类自己的
+      // `Escape → close()`（第 63 行）一起吞掉；实测按 Y 后 Esc 关不掉、焦点永久锁在
+      // #wish-input，之后 G/J/B/T/F1/WASD 全部被 ui.ts 的 INPUT 过滤静默丢弃（交互死锁）。
+      // 因此 Escape 必须在此就地处理，并显式 blur 交还焦点（close 只改 display 不够）。
+      // 全量审核 2026-11-07（B-08）：KeyH 不吞，让 H 冒泡到 ui.ts 拍照模式 handler（修愿望条焦点吞 H）
+      if (e.code === 'KeyH') return;
       e.stopPropagation();
+      if (e.code === 'Escape') { e.preventDefault(); this.close(); return; }
       if (e.code === 'Enter') void this.submit();
     });
   }
@@ -73,7 +81,11 @@ export class CreationSystem {
 
   isOpen(): boolean { return this.bar !== null && this.bar.style.display !== 'none'; }
   open(): void { if (this.bar) { this.bar.style.display = 'flex'; this.input?.focus(); } }
-  close(): void { if (this.bar) this.bar.style.display = 'none'; if (this.input) this.input.value = ''; }
+  /** 关闭时必须 blur：否则隐藏的 input 仍是 activeElement，全局快捷键会一直被吃掉 */
+  close(): void {
+    if (this.bar) this.bar.style.display = 'none';
+    if (this.input) { this.input.value = ''; this.input.blur(); }
+  }
 
   /** 提交愿望全链（public：探针直接调用验证） */
   async submit(text?: string): Promise<WishResult> {
@@ -141,7 +153,6 @@ export class CreationSystem {
   /** 读档重演：persist 造物由 provenance 重建 mesh（world 载入链末步调用；幂等） */
   rebuildAll(): number {
     if (!this.scene) return 0;
-    let rebuilt = 0;
     forEach('creation', (rec) => {
       if (this.meshes.has(rec.id)) return;
       const prov = rec.provenance as { seed: number; moduleHash: string } | undefined;
@@ -155,9 +166,20 @@ export class CreationSystem {
       mesh.position.set(rec.pos.x, rec.pos.y, rec.pos.z);
       this.scene!.add(mesh);
       this.meshes.set(rec.id, mesh);
-      rebuilt++;
+      // 全量审核 2026-11-07（core 交叉复核隐患 A）：读档恢复的实体记录没有 object3d / onDispose，
+      // 重演出来的 mesh 会变成孤儿 —— destroy(eid) 走 dispose() 时无人把它从场景摘除。
+      // 这里把 submit() 同款的两项接回去，保证「重演造物」与「当场造物」生命周期一致。
+      rec.object3d = mesh;
+      rec.onDispose.push(() => {
+        this.scene?.remove(mesh);
+        mesh.geometry.dispose();
+        this.meshes.delete(rec.id);
+      });
     });
-    return rebuilt;
+    // 全量审核 2026-11-07（core 交叉复核隐患 B）：main.ts 用本返回值赋 world.creationCount，
+    // 而 HUD 条件节点 / conditions.ts 都读它。旧实现返回「本次新建数」，二次调用（HMR、
+    // 重复触发）会返回 0 把计数清零。改为返回重演后的总数，使调用幂等。
+    return this.meshes.size;
   }
 
   /** 销毁造物（测试/管理） */

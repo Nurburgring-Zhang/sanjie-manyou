@@ -1,0 +1,136 @@
+{
+  "at": "2026-11-08T14:15:50.952Z",
+  "url": "http://127.0.0.1:4173/",
+  "shots": [
+    {
+      "id": "A-tunnel-inside",
+      "label": "城台内部（复现用户截图）",
+      "cam": [
+        0,
+        5.2,
+        -2952,
+        0,
+        5,
+        -3100
+      ],
+      "file": "artifacts\\r24-wumen-A-tunnel-inside.png"
+    },
+    {
+      "id": "B-south-approach",
+      "label": "午门南侧正视",
+      "cam": [
+        0,
+        5.2,
+        -2890,
+        0,
+        5,
+        -2950
+      ],
+      "file": "artifacts\\r24-wumen-B-south-approach.png"
+    },
+    {
+      "id": "C-hall-inside",
+      "label": "五凤楼殿内",
+      "cam": [
+        0,
+        17.4,
+        -2938,
+        0,
+        17,
+        -2962
+      ],
+      "file": "artifacts\\r24-wumen-C-hall-inside.png"
+    }
+  ],
+  "pageErrors": [],
+  "rays": {
+    "up": [
+      {
+        "name": "city_ash_9",
+        "dist": 2.55,
+        "y": 7.75
+      },
+      {
+        "name": "city_ash_9",
+        "dist": 5.95,
+        "y": 11.15
+      },
+      {
+        "name": "city_ash_9",
+        "dist": 7.4,
+        "y": 12.6
+      },
+      {
+        "name": "city_ash_9",
+        "dist": 7.8,
+        "y": 13
+      },
+      {
+        "name": "city_ash_9",
+        "dist": 8.1,
+        "y": 13.3
+      }
+    ],
+    "down": [
+      {
+        "name": "city_ash_9",
+        "dist": 0.75,
+        "y": 4.45
+      },
+      {
+        "name": "city_ash_9",
+        "dist": 3.8,
+        "y": 1.4
+      },
+      {
+        "name": "city_ash_9",
+        "dist": 4.96,
+        "y": 0.24
+      },
+      {
+        "name": "city_ground",
+        "dist": 5.04,
+        "y": 0.16
+      },
+      {
+        "name": "city_ground",
+        "dist": 5.06,
+        "y": 0.14
+      }
+    ],
+    "north": [
+      {
+        "name": "city_wood_9",
+        "dist": 267.92,
+        "y": 5.2
+      },
+      {
+        "name": "city_wood_9",
+        "dist": 267.92,
+        "y": 5.2
+      },
+      {
+        "name": "city_fabric",
+        "dist": 325.61,
+        "y": 5.2
+      },
+      {
+        "name": "city_ash_9",
+        "dist": 325.66,
+        "y": 5.2
+      },
+      {
+        "name": "city_fabric",
+        "dist": 325.7,
+        "y": 5.2
+      }
+    ],
+    "south": [
+      {
+        "name": "city_lacquer",
+        "dist": 19.6,
+        "y": 5.2
+      }
+    ]
+  }
+}

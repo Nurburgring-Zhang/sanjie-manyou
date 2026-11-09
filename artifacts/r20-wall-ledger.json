@@ -1,0 +1,2341 @@
+{
+  "bundle": [
+    "./assets/index-BOJo8Z96.js"
+  ],
+  "globals": [
+    {
+      "key": "__errs",
+      "type": "array",
+      "len": 0,
+      "sampleKeys": null
+    },
+    {
+      "key": "__THREE__",
+      "type": "string",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__lod",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "groups",
+        "switches",
+        "switchEvents",
+        "lastFrameMissingNear",
+        "nearVisibleMeshes",
+        "tierHits",
+        "frame",
+        "blocked",
+        "lastSwitch",
+        "thresholds",
+        "reset",
+        "setReady"
+      ]
+    },
+    {
+      "key": "__qingming",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "engine",
+        "world",
+        "THREE",
+        "scene"
+      ]
+    },
+    {
+      "key": "__ariaQuerySelector",
+      "type": "function",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__ariaQuerySelectorAll",
+      "type": "function",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__loadStartAt",
+      "type": "number",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__phase",
+      "type": "string",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__texMs",
+      "type": "number",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__flushMs",
+      "type": "number",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__terrMs",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "__t0",
+        "vertexLoop",
+        "riverHoles",
+        "normals",
+        "groundCanvas",
+        "mesh",
+        "riverBed",
+        "water",
+        "mtnTemple",
+        "mtnBands",
+        "mtnLandmarks",
+        "mtnLife",
+        "countryside",
+        "postStation"
+      ]
+    },
+    {
+      "key": "__bedStats",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "removedTris",
+        "bedVerts",
+        "bedTris",
+        "reach",
+        "ms",
+        "terrainTris"
+      ]
+    },
+    {
+      "key": "__mtnLifeStats",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "trees",
+        "shrubs",
+        "flowers",
+        "flowerColors",
+        "streams",
+        "waterfalls",
+        "fauna",
+        "faunaTotal",
+        "groves",
+        "tris"
+      ]
+    },
+    {
+      "key": "__groundTrace",
+      "type": "array",
+      "len": 2000,
+      "sampleKeys": [
+        "hex",
+        "x",
+        "y",
+        "z",
+        "span",
+        "c"
+      ]
+    },
+    {
+      "key": "__mtnHeight",
+      "type": "function",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__mtnSurface",
+      "type": "function",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__mtnStats",
+      "type": "function",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__mtnSummit",
+      "type": "function",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__w2Street",
+      "type": "array",
+      "len": 1956,
+      "sampleKeys": [
+        "kind",
+        "x",
+        "y",
+        "z",
+        "s",
+        "src"
+      ]
+    },
+    {
+      "key": "__w2Buildings",
+      "type": "array",
+      "len": 270,
+      "sampleKeys": [
+        "x",
+        "z",
+        "ry",
+        "w",
+        "d",
+        "floors",
+        "kind",
+        "form",
+        "facade"
+      ]
+    },
+    {
+      "key": "__w2Facade",
+      "type": "array",
+      "len": 2155,
+      "sampleKeys": [
+        "cls",
+        "x",
+        "y",
+        "z",
+        "w",
+        "h",
+        "lit",
+        "src"
+      ]
+    },
+    {
+      "key": "__bridges",
+      "type": "array",
+      "len": 8,
+      "sampleKeys": [
+        "name",
+        "form",
+        "x",
+        "cz",
+        "halfSpan",
+        "span",
+        "wide",
+        "deckCrownY",
+        "crownClearance",
+        "channelClearance"
+      ]
+    },
+    {
+      "key": "__w2PalaceFront",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "court",
+        "items"
+      ]
+    },
+    {
+      "key": "__palaceAudit",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "rects",
+        "buildRects",
+        "bare",
+        "walls",
+        "build",
+        "side"
+      ]
+    },
+    {
+      "key": "__infillDrop",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "buckets",
+        "obstacles",
+        "kept",
+        "full",
+        "pre",
+        "post",
+        "preShopShop",
+        "postShopShop",
+        "candidates",
+        "shopsBefore",
+        "shops",
+        "shopParts",
+        "shopPartsAfter",
+        "shopPartsByKey",
+        "shopPartsByKeyAfter",
+        "drops",
+        "kindBefore",
+        "kindAfter",
+        "dropBy",
+        "kits",
+        "byTier",
+        "shopSamples",
+        "wards",
+        "ms"
+      ]
+    },
+    {
+      "key": "__windFloraReport",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "tris",
+        "plants",
+        "drawCalls",
+        "species",
+        "fauna"
+      ]
+    },
+    {
+      "key": "__skyGateBuild",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "round",
+        "cloud"
+      ]
+    },
+    {
+      "key": "__skyIslands",
+      "type": "array",
+      "len": 76,
+      "sampleKeys": [
+        "x",
+        "y",
+        "z",
+        "r",
+        "worldY",
+        "rockRings"
+      ]
+    },
+    {
+      "key": "__gateCut",
+      "type": "number",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__realmEco",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "plan",
+        "flora",
+        "fauna",
+        "placedFlora",
+        "pieces"
+      ]
+    },
+    {
+      "key": "__tiangong",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "scaleFrame",
+        "deckY",
+        "courtTopY",
+        "tiers",
+        "tierH",
+        "columns",
+        "columnDia",
+        "columnH",
+        "columnTotalH",
+        "columnPitch",
+        "columnDiaByRank",
+        "dougong",
+        "dougongPitch",
+        "tilePitch",
+        "tileRibs",
+        "props",
+        "peoplePoi",
+        "courts",
+        "roi"
+      ]
+    },
+    {
+      "key": "__beastPool",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "requested",
+        "accepted",
+        "dropped",
+        "droppedIds",
+        "droppedBySpecies",
+        "droppedByPool",
+        "pools",
+        "report"
+      ]
+    },
+    {
+      "key": "__saveSave",
+      "type": "function",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__heapAuditOn",
+      "type": "boolean",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__heapPre",
+      "type": "number",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__heapPost",
+      "type": "number",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__loadEndAt",
+      "type": "number",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__loadTimings",
+      "type": "array",
+      "len": 38,
+      "sampleKeys": [
+        "0",
+        "1"
+      ]
+    },
+    {
+      "key": "__build",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "scene",
+        "camera",
+        "active",
+        "selected",
+        "spend",
+        "earn",
+        "materialStock",
+        "mesh",
+        "hotbar",
+        "crosshair",
+        "stockBadge",
+        "raycaster",
+        "maxDist"
+      ]
+    },
+    {
+      "key": "__creation",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "bar",
+        "input",
+        "busy",
+        "scene",
+        "meshes",
+        "placement",
+        "spend",
+        "submit"
+      ]
+    },
+    {
+      "key": "__STATION_PROBE",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "宋江",
+        "卢俊义",
+        "吴用",
+        "公孙胜",
+        "关胜",
+        "林冲",
+        "秦明",
+        "呼延灼",
+        "花荣",
+        "柴进",
+        "李应",
+        "朱仝",
+        "鲁智深",
+        "武松",
+        "董平",
+        "张清",
+        "杨志",
+        "徐宁",
+        "索超",
+        "戴宗",
+        "刘唐",
+        "李逵",
+        "史进",
+        "穆弘"
+      ]
+    },
+    {
+      "key": "__perf",
+      "type": "function",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__crowd",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "live",
+        "total",
+        "walkers",
+        "lods",
+        "lodsWalkers",
+        "actions",
+        "kinds",
+        "kindsMinPerCell",
+        "kindsThinCells",
+        "kindsCells",
+        "places",
+        "venues",
+        "sky",
+        "hell",
+        "skyKinds",
+        "hellKinds",
+        "gridEntropy",
+        "gridCells",
+        "axisShare",
+        "crossShare",
+        "crossShareAll",
+        "walkersSpawned",
+        "yawStdMin",
+        "yawStdMinAll"
+      ]
+    },
+    {
+      "key": "__lxScaled",
+      "type": "number",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__gatePlaqueTris",
+      "type": "number",
+      "len": null,
+      "sampleKeys": null
+    },
+    {
+      "key": "__realmSnap",
+      "type": "object",
+      "len": null,
+      "sampleKeys": [
+        "checked",
+        "fixed",
+        "actors"
+      ]
+    }
+  ],
+  "nearByLedger": {
+    "__groundTrace": {
+      "total": 2000,
+      "nearTotal": 113,
+      "near": [
+        {
+          "hex": "0x887d68",
+          "x": 190,
+          "y": 0,
+          "z": 74,
+          "span": 22,
+          "c": [
+            63,
+            52,
+            35
+          ]
+        },
+        {
+          "hex": "0x746b59",
+          "x": 187,
+          "y": 0,
+          "z": 74,
+          "span": 22,
+          "c": [
+            45,
+            37,
+            25
+          ]
+        },
+        {
+          "hex": "0x746b59",
+          "x": 193,
+          "y": 0,
+          "z": 74,
+          "span": 22,
+          "c": [
+            45,
+            37,
+            25
+          ]
+        },
+        {
+          "hex": "0x69656e",
+          "x": 187,
+          "y": 0,
+          "z": 41,
+          "span": 3,
+          "c": [
+            36,
+            33,
+            40
+          ]
+        },
+        {
+          "hex": "0x6e6973",
+          "x": 187,
+          "y": 0,
+          "z": 47,
+          "span": 3,
+          "c": [
+            40,
+            36,
+            44
+          ]
+        },
+        {
+          "hex": "0x6c6771",
+          "x": 187,
+          "y": 0,
+          "z": 53,
+          "span": 3,
+          "c": [
+            38,
+            35,
+            42
+          ]
+        },
+        {
+          "hex": "0x69646e",
+          "x": 187,
+          "y": 0,
+          "z": 59,
+          "span": 3,
+          "c": [
+            36,
+            32,
+            40
+          ]
+        },
+        {
+          "hex": "0x6c6771",
+          "x": 187,
+          "y": 0,
+          "z": 65,
+          "span": 3,
+          "c": [
+            38,
+            35,
+            42
+          ]
+        },
+        {
+          "hex": "0x6c6771",
+          "x": 187,
+          "y": 0,
+          "z": 71,
+          "span": 3,
+          "c": [
+            38,
+            35,
+            42
+          ]
+        },
+        {
+          "hex": "0x6a656f",
+          "x": 187,
+          "y": 0,
+          "z": 77,
+          "span": 3,
+          "c": [
+            37,
+            33,
+            41
+          ]
+        },
+        {
+          "hex": "0x6b6670",
+          "x": 187,
+          "y": 0,
+          "z": 83,
+          "span": 3,
+          "c": [
+            37,
+            34,
+            41
+          ]
+        },
+        {
+          "hex": "0x68636c",
+          "x": 187,
+          "y": 0,
+          "z": 89,
+          "span": 3,
+          "c": [
+            35,
+            32,
+            38
+          ]
+        },
+        {
+          "hex": "0x69646e",
+          "x": 187,
+          "y": 0,
+          "z": 95,
+          "span": 3,
+          "c": [
+            36,
+            32,
+            40
+          ]
+        },
+        {
+          "hex": "0x68646d",
+          "x": 187,
+          "y": 0,
+          "z": 101,
+          "span": 3,
+          "c": [
+            35,
+            32,
+            39
+          ]
+        },
+        {
+          "hex": "0x67626c",
+          "x": 193,
+          "y": 0,
+          "z": 41,
+          "span": 3,
+          "c": [
+            35,
+            31,
+            38
+          ]
+        },
+        {
+          "hex": "0x6c6771",
+          "x": 193,
+          "y": 0,
+          "z": 47,
+          "span": 3,
+          "c": [
+            38,
+            35,
+            42
+          ]
+        },
+        {
+          "hex": "0x6b6670",
+          "x": 193,
+          "y": 0,
+          "z": 53,
+          "span": 3,
+          "c": [
+            37,
+            34,
+            41
+          ]
+        },
+        {
+          "hex": "0x6e6973",
+          "x": 193,
+          "y": 0,
+          "z": 59,
+          "span": 3,
+          "c": [
+            40,
+            36,
+            44
+          ]
+        },
+        {
+          "hex": "0x6b6670",
+          "x": 193,
+          "y": 0,
+          "z": 65,
+          "span": 3,
+          "c": [
+            37,
+            34,
+            41
+          ]
+        },
+        {
+          "hex": "0x6c6771",
+          "x": 193,
+          "y": 0,
+          "z": 71,
+          "span": 3,
+          "c": [
+            38,
+            35,
+            42
+          ]
+        },
+        {
+          "hex": "0x67626c",
+          "x": 193,
+          "y": 0,
+          "z": 77,
+          "span": 3,
+          "c": [
+            35,
+            31,
+            38
+          ]
+        },
+        {
+          "hex": "0x6b6670",
+          "x": 193,
+          "y": 0,
+          "z": 83,
+          "span": 3,
+          "c": [
+            37,
+            34,
+            41
+          ]
+        },
+        {
+          "hex": "0x6c6671",
+          "x": 193,
+          "y": 0,
+          "z": 89,
+          "span": 3,
+          "c": [
+            38,
+            34,
+            42
+          ]
+        },
+        {
+          "hex": "0x68646d",
+          "x": 193,
+          "y": 0,
+          "z": 95,
+          "span": 3,
+          "c": [
+            35,
+            32,
+            39
+          ]
+        },
+        {
+          "hex": "0x6c6771",
+          "x": 193,
+          "y": 0,
+          "z": 101,
+          "span": 3,
+          "c": [
+            38,
+            35,
+            42
+          ]
+        },
+        {
+          "hex": "0x68636d",
+          "x": 199,
+          "y": 0,
+          "z": 41,
+          "span": 3,
+          "c": [
+            35,
+            32,
+            39
+          ]
+        },
+        {
+          "hex": "0x6c6771",
+          "x": 199,
+          "y": 0,
+          "z": 47,
+          "span": 3,
+          "c": [
+            38,
+            35,
+            42
+          ]
+        },
+        {
+          "hex": "0x68636d",
+          "x": 199,
+          "y": 0,
+          "z": 53,
+          "span": 3,
+          "c": [
+            35,
+            32,
+            39
+          ]
+        },
+        {
+          "hex": "0x6e6973",
+          "x": 199,
+          "y": 0,
+          "z": 59,
+          "span": 3,
+          "c": [
+            40,
+            36,
+            44
+          ]
+        },
+        {
+          "hex": "0x68636d",
+          "x": 199,
+          "y": 0,
+          "z": 65,
+          "span": 3,
+          "c": [
+            35,
+            32,
+            39
+          ]
+        },
+        {
+          "hex": "0x6b6670",
+          "x": 199,
+          "y": 0,
+          "z": 71,
+          "span": 3,
+          "c": [
+            37,
+            34,
+            41
+          ]
+        },
+        {
+          "hex": "0x6e6873",
+          "x": 199,
+          "y": 0,
+          "z": 77,
+          "span": 3,
+          "c": [
+            40,
+            35,
+            44
+          ]
+        },
+        {
+          "hex": "0x69646e",
+          "x": 199,
+          "y": 0,
+          "z": 83,
+          "span": 3,
+          "c": [
+            36,
+            32,
+            40
+          ]
+        },
+        {
+          "hex": "0x69646e",
+          "x": 199,
+          "y": 0,
+          "z": 89,
+          "span": 3,
+          "c": [
+            36,
+            32,
+            40
+          ]
+        },
+        {
+          "hex": "0x6c6771",
+          "x": 199,
+          "y": 0,
+          "z": 95,
+          "span": 3,
+          "c": [
+            38,
+            35,
+            42
+          ]
+        },
+        {
+          "hex": "0x69656e",
+          "x": 199,
+          "y": 0,
+          "z": 101,
+          "span": 3,
+          "c": [
+            36,
+            33,
+            40
+          ]
+        },
+        {
+          "hex": "0x69646e",
+          "x": 205,
+          "y": 0,
+          "z": 41,
+          "span": 3,
+          "c": [
+            36,
+            32,
+            40
+          ]
+        },
+        {
+          "hex": "0x6b6670",
+          "x": 205,
+          "y": 0,
+          "z": 47,
+          "span": 3,
+          "c": [
+            37,
+            34,
+            41
+          ]
+        },
+        {
+          "hex": "0x6b6670",
+          "x": 205,
+          "y": 0,
+          "z": 53,
+          "span": 3,
+          "c": [
+            37,
+            34,
+            41
+          ]
+        },
+        {
+          "hex": "0x6f6974",
+          "x": 205,
+          "y": 0,
+          "z": 59,
+          "span": 3,
+          "c": [
+            41,
+            36,
+            45
+          ]
+        },
+        {
+          "hex": "0x6b6671",
+          "x": 205,
+          "y": 0,
+          "z": 65,
+          "span": 3,
+          "c": [
+            37,
+            34,
+            42
+          ]
+        },
+        {
+          "hex": "0x6a656e",
+          "x": 205,
+          "y": 0,
+          "z": 71,
+          "span": 3,
+          "c": [
+            37,
+            33,
+            40
+          ]
+        },
+        {
+          "hex": "0x69646e",
+          "x": 205,
+          "y": 0,
+          "z": 77,
+          "span": 3,
+          "c": [
+            36,
+            32,
+            40
+          ]
+        },
+        {
+          "hex": "0x67626c",
+          "x": 205,
+          "y": 0,
+          "z": 83,
+          "span": 3,
+          "c": [
+            35,
+            31,
+            38
+          ]
+        },
+        {
+          "hex": "0x6a656f",
+          "x": 205,
+          "y": 0,
+          "z": 89,
+          "span": 3,
+          "c": [
+            37,
+            33,
+            41
+          ]
+        },
+        {
+          "hex": "0x6b6670",
+          "x": 205,
+          "y": 0,
+          "z": 95,
+          "span": 3,
+          "c": [
+            37,
+            34,
+            41
+          ]
+        },
+        {
+          "hex": "0x68636d",
+          "x": 205,
+          "y": 0,
+          "z": 101,
+          "span": 3,
+          "c": [
+            35,
+            32,
+            39
+          ]
+        },
+        {
+          "hex": "0x68636d",
+          "x": 211,
+          "y": 0,
+          "z": 41,
+          "span": 3,
+          "c": [
+            35,
+            32,
+            39
+          ]
+        },
+        {
+          "hex": "0x6a656f",
+          "x": 211,
+          "y": 0,
+          "z": 47,
+          "span": 3,
+          "c": [
+            37,
+            33,
+            41
+          ]
+        },
+        {
+          "hex": "0x68646d",
+          "x": 211,
+          "y": 0,
+          "z": 53,
+          "span": 3,
+          "c": [
+            35,
+            32,
+            39
+          ]
+        }
+      ]
+    },
+    "__w2Street": {
+      "total": 1956,
+      "nearTotal": 60,
+      "near": [
+        {
+          "kind": "lantern",
+          "x": 204.67,
+          "y": 2.36,
+          "z": 65.5,
+          "s": 0.44,
+          "src": "flank"
+        },
+        {
+          "kind": "banner",
+          "x": 202.69,
+          "y": 5.1,
+          "z": 60.69,
+          "s": 3.5,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 201.69,
+          "y": 7,
+          "z": 60.69,
+          "s": 0.68,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 192.15,
+          "y": 3.55,
+          "z": 60.99,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 200.77,
+          "y": 3.55,
+          "z": 60.99,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 217.54,
+          "y": 2.36,
+          "z": 65.5,
+          "s": 0.44,
+          "src": "flank"
+        },
+        {
+          "kind": "banner",
+          "x": 226.72,
+          "y": 5.1,
+          "z": 60.88,
+          "s": 3.5,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 225.72,
+          "y": 7,
+          "z": 60.88,
+          "s": 0.68,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 220.06,
+          "y": 3.55,
+          "z": 61.18,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 225.18,
+          "y": 3.55,
+          "z": 61.18,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "banner",
+          "x": 243.6,
+          "y": 5.1,
+          "z": 58.58,
+          "s": 3.5,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 242.6,
+          "y": 7,
+          "z": 58.58,
+          "s": 0.68,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 232.76,
+          "y": 3.55,
+          "z": 58.88,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 241.65,
+          "y": 3.55,
+          "z": 58.88,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 186.39,
+          "y": 7.4,
+          "z": 59.55,
+          "s": 0.45,
+          "src": "ornate"
+        },
+        {
+          "kind": "lantern",
+          "x": 196.46,
+          "y": 2.98,
+          "z": 59.37,
+          "s": 0.55,
+          "src": "door"
+        },
+        {
+          "kind": "lantern",
+          "x": 198.53,
+          "y": 2.55,
+          "z": 59.37,
+          "s": 0.49,
+          "src": "door"
+        },
+        {
+          "kind": "lantern",
+          "x": 194.39,
+          "y": 2.55,
+          "z": 59.37,
+          "s": 0.49,
+          "src": "door"
+        },
+        {
+          "kind": "banner",
+          "x": 200.72,
+          "y": 5.1,
+          "z": 43.04,
+          "s": 3.5,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 199.72,
+          "y": 7,
+          "z": 43.04,
+          "s": 0.68,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 192.74,
+          "y": 3.55,
+          "z": 42.74,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 199.04,
+          "y": 3.55,
+          "z": 42.74,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "banner",
+          "x": 216.79,
+          "y": 5.1,
+          "z": 42.74,
+          "s": 3.5,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 215.79,
+          "y": 7,
+          "z": 42.74,
+          "s": 0.68,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 209.66,
+          "y": 3.55,
+          "z": 42.44,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 215.2,
+          "y": 3.55,
+          "z": 42.44,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "banner",
+          "x": 229.53,
+          "y": 5.1,
+          "z": 43.25,
+          "s": 3.5,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 228.53,
+          "y": 7,
+          "z": 43.25,
+          "s": 0.68,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 222.73,
+          "y": 3.55,
+          "z": 42.95,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 227.96,
+          "y": 3.55,
+          "z": 42.95,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "banner",
+          "x": 242.29,
+          "y": 5.1,
+          "z": 43.35,
+          "s": 3.5,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 241.29,
+          "y": 7,
+          "z": 43.35,
+          "s": 0.68,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 235.36,
+          "y": 3.55,
+          "z": 43.05,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "lantern",
+          "x": 240.71,
+          "y": 3.55,
+          "z": 43.05,
+          "s": 0.46,
+          "src": "riverside"
+        },
+        {
+          "kind": "banner",
+          "x": 200.94,
+          "y": 4.97,
+          "z": 43.91,
+          "s": 3,
+          "src": "tavern"
+        },
+        {
+          "kind": "lantern",
+          "x": 199.37,
+          "y": 6.03,
+          "z": 43.2,
+          "s": 0.65,
+          "src": "tavern"
+        },
+        {
+          "kind": "lantern",
+          "x": 202.27,
+          "y": 6.03,
+          "z": 43.2,
+          "s": 0.65,
+          "src": "tavern"
+        },
+        {
+          "kind": "lantern",
+          "x": 209.83,
+          "y": 2.62,
+          "z": 42.64,
+          "s": 0.57,
+          "src": "shop"
+        },
+        {
+          "kind": "lantern",
+          "x": 215.03,
+          "y": 2.62,
+          "z": 42.64,
+          "s": 0.57,
+          "src": "shop"
+        },
+        {
+          "kind": "banner",
+          "x": 207.84,
+          "y": 1.74,
+          "z": 43.71,
+          "s": 2.4,
+          "src": "shop"
+        },
+        {
+          "kind": "banner",
+          "x": 229.44,
+          "y": 2.37,
+          "z": 44.12,
+          "s": 1.8,
+          "src": "tavern"
+        },
+        {
+          "kind": "lantern",
+          "x": 227.87,
+          "y": 2.83,
+          "z": 43.41,
+          "s": 0.65,
+          "src": "tavern"
+        },
+        {
+          "kind": "lantern",
+          "x": 230.77,
+          "y": 2.83,
+          "z": 43.41,
+          "s": 0.65,
+          "src": "tavern"
+        },
+        {
+          "kind": "lantern",
+          "x": 235.43,
+          "y": 2.62,
+          "z": 43.25,
+          "s": 0.57,
+          "src": "shop"
+        },
+        {
+          "kind": "lantern",
+          "x": 240.63,
+          "y": 2.62,
+          "z": 43.25,
+          "s": 0.57,
+          "src": "shop"
+        },
+        {
+          "kind": "banner",
+          "x": 233.6,
+          "y": 1.74,
+          "z": 44.32,
+          "s": 2.4,
+          "src": "shop"
+        },
+        {
+          "kind": "lantern",
+          "x": 186.58,
+          "y": 2.98,
+          "z": 102.82,
+          "s": 0.55,
+          "src": "door"
+        },
+        {
+          "kind": "lantern",
+          "x": 188.65,
+          "y": 2.55,
+          "z": 102.82,
+          "s": 0.49,
+          "src": "door"
+        },
+        {
+          "kind": "lantern",
+          "x": 201.74,
+          "y": 2.98,
+          "z": 102.81,
+          "s": 0.55,
+          "src": "door"
+        },
+        {
+          "kind": "lantern",
+          "x": 203.81,
+          "y": 2.55,
+          "z": 102.81,
+          "s": 0.49,
+          "src": "door"
+        }
+      ]
+    },
+    "__w2Buildings": {
+      "total": 270,
+      "nearTotal": 5,
+      "near": [
+        {
+          "x": 196.46,
+          "z": 65.5,
+          "ry": 3.142,
+          "w": 15.38,
+          "d": 7.47,
+          "floors": 2,
+          "kind": "house",
+          "form": "pavilion",
+          "facade": "f1"
+        },
+        {
+          "x": 195.89,
+          "z": 38.5,
+          "ry": 0,
+          "w": 11.26,
+          "d": 6.91,
+          "floors": 2,
+          "kind": "teahouse",
+          "form": "pavilion",
+          "facade": "f1"
+        },
+        {
+          "x": 212.43,
+          "z": 38.5,
+          "ry": 0,
+          "w": 9.88,
+          "d": 6.32,
+          "floors": 2,
+          "kind": "shop",
+          "form": "hip",
+          "facade": "f2"
+        },
+        {
+          "x": 225.35,
+          "z": 38.5,
+          "ry": 0,
+          "w": 9.34,
+          "d": 7.34,
+          "floors": 1,
+          "kind": "tavern",
+          "form": "hip",
+          "facade": "f3"
+        },
+        {
+          "x": 238.03,
+          "z": 38.5,
+          "ry": 0,
+          "w": 9.57,
+          "d": 7.55,
+          "floors": 2,
+          "kind": "shop",
+          "form": "hip",
+          "facade": "f4"
+        }
+      ]
+    },
+    "__w2Facade": {
+      "total": 2155,
+      "nearTotal": 74,
+      "near": [
+        {
+          "cls": "door",
+          "x": 196.46,
+          "y": 1.8,
+          "z": 61.67,
+          "w": 2,
+          "h": 2.4,
+          "lit": false,
+          "src": "facade"
+        },
+        {
+          "cls": "window",
+          "x": 202.65,
+          "y": 2.36,
+          "z": 61.53,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": true,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 190.27,
+          "y": 2.36,
+          "z": 61.53,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": false,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 202.65,
+          "y": 5.56,
+          "z": 61.53,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": false,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 196.46,
+          "y": 5.56,
+          "z": 61.53,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": true,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 190.27,
+          "y": 5.56,
+          "z": 61.53,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": true,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 199.54,
+          "y": 2.46,
+          "z": 61.27,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": true,
+          "src": "pavilion-street"
+        },
+        {
+          "cls": "window",
+          "x": 193.39,
+          "y": 2.46,
+          "z": 61.27,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": false,
+          "src": "pavilion-street"
+        },
+        {
+          "cls": "window",
+          "x": 201.23,
+          "y": 2.46,
+          "z": 61.27,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": true,
+          "src": "pavilion-street"
+        },
+        {
+          "cls": "window",
+          "x": 191.69,
+          "y": 2.46,
+          "z": 61.27,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": false,
+          "src": "pavilion-street"
+        },
+        {
+          "cls": "window",
+          "x": 199.54,
+          "y": 5.46,
+          "z": 61.51,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": true,
+          "src": "upper-infill"
+        },
+        {
+          "cls": "window",
+          "x": 193.39,
+          "y": 5.46,
+          "z": 61.51,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": true,
+          "src": "upper-infill"
+        },
+        {
+          "cls": "door",
+          "x": 197.2,
+          "y": 1.1,
+          "z": 59.57,
+          "w": 1.4,
+          "h": 2.2,
+          "lit": false,
+          "src": "house"
+        },
+        {
+          "cls": "door",
+          "x": 195.72,
+          "y": 1.1,
+          "z": 59.57,
+          "w": 1.4,
+          "h": 2.2,
+          "lit": false,
+          "src": "house"
+        },
+        {
+          "cls": "window",
+          "x": 199.12,
+          "y": 1.72,
+          "z": 59.51,
+          "w": 1.25,
+          "h": 1.15,
+          "lit": true,
+          "src": "house"
+        },
+        {
+          "cls": "window",
+          "x": 193.81,
+          "y": 1.72,
+          "z": 59.51,
+          "w": 1.25,
+          "h": 1.15,
+          "lit": true,
+          "src": "house"
+        },
+        {
+          "cls": "window",
+          "x": 198.24,
+          "y": 1.72,
+          "z": 59.53,
+          "w": 0.36,
+          "h": 1,
+          "lit": true,
+          "src": "courtyard-lattice"
+        },
+        {
+          "cls": "window",
+          "x": 202.03,
+          "y": 1.72,
+          "z": 59.53,
+          "w": 0.9,
+          "h": 1,
+          "lit": false,
+          "src": "courtyard-lattice"
+        },
+        {
+          "cls": "window",
+          "x": 194.68,
+          "y": 1.72,
+          "z": 59.53,
+          "w": 0.36,
+          "h": 1,
+          "lit": true,
+          "src": "courtyard-lattice"
+        },
+        {
+          "cls": "window",
+          "x": 190.89,
+          "y": 1.72,
+          "z": 59.53,
+          "w": 0.9,
+          "h": 1,
+          "lit": false,
+          "src": "courtyard-lattice"
+        },
+        {
+          "cls": "door",
+          "x": 195.89,
+          "y": 1.8,
+          "z": 42.06,
+          "w": 2,
+          "h": 2.4,
+          "lit": false,
+          "src": "facade"
+        },
+        {
+          "cls": "window",
+          "x": 191.76,
+          "y": 2.36,
+          "z": 42.2,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": true,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 200.02,
+          "y": 2.36,
+          "z": 42.2,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": true,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 191.76,
+          "y": 5.56,
+          "z": 42.2,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": true,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 195.89,
+          "y": 5.56,
+          "z": 42.2,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": false,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 200.02,
+          "y": 5.56,
+          "z": 42.2,
+          "w": 1.05,
+          "h": 1.25,
+          "lit": true,
+          "src": "facade1"
+        },
+        {
+          "cls": "window",
+          "x": 193.64,
+          "y": 2.46,
+          "z": 42.46,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": true,
+          "src": "pavilion-street"
+        },
+        {
+          "cls": "window",
+          "x": 198.14,
+          "y": 2.46,
+          "z": 42.46,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": false,
+          "src": "pavilion-street"
+        },
+        {
+          "cls": "window",
+          "x": 193.64,
+          "y": 5.46,
+          "z": 42.22,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": false,
+          "src": "upper-infill"
+        },
+        {
+          "cls": "window",
+          "x": 198.14,
+          "y": 5.46,
+          "z": 42.22,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": true,
+          "src": "upper-infill"
+        },
+        {
+          "cls": "door",
+          "x": 212.43,
+          "y": 1.8,
+          "z": 41.76,
+          "w": 2,
+          "h": 2.4,
+          "lit": false,
+          "src": "facade"
+        },
+        {
+          "cls": "window",
+          "x": 208.99,
+          "y": 1.78,
+          "z": 41.91,
+          "w": 1.15,
+          "h": 0.9,
+          "lit": true,
+          "src": "facade2"
+        },
+        {
+          "cls": "window",
+          "x": 215.87,
+          "y": 1.78,
+          "z": 41.91,
+          "w": 1.15,
+          "h": 0.9,
+          "lit": false,
+          "src": "facade2"
+        },
+        {
+          "cls": "window",
+          "x": 208.99,
+          "y": 4.98,
+          "z": 41.91,
+          "w": 1.15,
+          "h": 0.9,
+          "lit": false,
+          "src": "facade2"
+        },
+        {
+          "cls": "window",
+          "x": 212.43,
+          "y": 4.98,
+          "z": 41.91,
+          "w": 1.15,
+          "h": 0.9,
+          "lit": true,
+          "src": "facade2"
+        },
+        {
+          "cls": "window",
+          "x": 215.87,
+          "y": 4.98,
+          "z": 41.91,
+          "w": 1.15,
+          "h": 0.9,
+          "lit": true,
+          "src": "facade2"
+        },
+        {
+          "cls": "door",
+          "x": 225.35,
+          "y": 1.8,
+          "z": 42.27,
+          "w": 2,
+          "h": 2.4,
+          "lit": false,
+          "src": "facade"
+        },
+        {
+          "cls": "window",
+          "x": 222.18,
+          "y": 2.7,
+          "z": 42.42,
+          "w": 1.25,
+          "h": 0.95,
+          "lit": false,
+          "src": "facade3"
+        },
+        {
+          "cls": "window",
+          "x": 228.52,
+          "y": 2.7,
+          "z": 42.42,
+          "w": 1.25,
+          "h": 0.95,
+          "lit": true,
+          "src": "facade3"
+        },
+        {
+          "cls": "door",
+          "x": 238.03,
+          "y": 1.95,
+          "z": 42.47,
+          "w": 2.8,
+          "h": 2.7,
+          "lit": false,
+          "src": "facade4"
+        },
+        {
+          "cls": "window",
+          "x": 234.75,
+          "y": 5.4,
+          "z": 42.51,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": true,
+          "src": "facade4"
+        },
+        {
+          "cls": "window",
+          "x": 238.03,
+          "y": 5.4,
+          "z": 42.51,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": false,
+          "src": "facade4"
+        },
+        {
+          "cls": "window",
+          "x": 241.32,
+          "y": 5.4,
+          "z": 42.51,
+          "w": 1.05,
+          "h": 1.2,
+          "lit": true,
+          "src": "facade4"
+        },
+        {
+          "cls": "window",
+          "x": 188.66,
+          "y": 2.7,
+          "z": 104.97,
+          "w": 1.25,
+          "h": 0.95,
+          "lit": true,
+          "src": "facade3"
+        },
+        {
+          "cls": "door",
+          "x": 187.32,
+          "y": 1.1,
+          "z": 103.02,
+          "w": 1.4,
+          "h": 2.2,
+          "lit": false,
+          "src": "house"
+        },
+        {
+          "cls": "window",
+          "x": 189.23,
+          "y": 1.72,
+          "z": 102.96,
+          "w": 1.25,
+          "h": 1.15,
+          "lit": true,
+          "src": "house"
+        },
+        {
+          "cls": "window",
+          "x": 188.36,
+          "y": 1.72,
+          "z": 102.98,
+          "w": 0.36,
+          "h": 1,
+          "lit": true,
+          "src": "courtyard-lattice"
+        },
+        {
+          "cls": "door",
+          "x": 202.48,
+          "y": 1.1,
+          "z": 103.01,
+          "w": 1.4,
+          "h": 2.2,
+          "lit": false,
+          "src": "house"
+        },
+        {
+          "cls": "door",
+          "x": 201,
+          "y": 1.1,
+          "z": 103.01,
+          "w": 1.4,
+          "h": 2.2,
+          "lit": false,
+          "src": "house"
+        },
+        {
+          "cls": "window",
+          "x": 204.4,
+          "y": 1.72,
+          "z": 102.95,
+          "w": 1.25,
+          "h": 1.15,
+          "lit": true,
+          "src": "house"
+        }
+      ]
+    }
+  },
+  "wallMeshes": [
+    {
+      "name": "infill_wall_2:-2_-1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:-2_0",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:-2_-2",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:-2_-1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:-2_0",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:-2_1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:-1_-2",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:-1_-1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:-1_0",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:-1_1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:-1_-2",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_0:-1_-1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_0:-1_0",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:-1_1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:0_-2",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:0_-1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_0:0_-1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_0:0_0",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:0_0",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:0_1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:1_-2",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:1_-1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:1_-1",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_1:1_0",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:1_0",
+      "verts": 24
+    },
+    {
+      "name": "infill_wall_2:1_1",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_0:court-1_-1",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_0:court0_-1",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_0:court-1_-2",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_0:court0_-2",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_1:court-1_-2",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_1:court0_-2",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_1:court-1_-3",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_1:court0_-3",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_0:court-1_0",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_0:court0_0",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_0:court-1_1",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_0:court0_1",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_1:court-1_1",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_1:court0_1",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_1:court-1_2",
+      "verts": 24
+    },
+    {
+      "name": "court_wall_1:court0_2",
+      "verts": 24
+    },
+    {
+      "name": "ward_all_gwall",
+      "verts": 48
+    },
+    {
+      "name": "city_wall",
+      "verts": 1523376
+    },
+    {
+      "name": "city_wall_3",
+      "verts": 573780
+    }
+  ],
+  "wall3": {
+    "name": "city_wall_3",
+    "vertsInBand": 442,
+    "yMin": 0,
+    "yMax": 10.25,
+    "zMin": -74.95,
+    "zMax": 104.51,
+    "yBands": {
+      "2.5": 27,
+      "0.0": 45,
+      "7.0": 72,
+      "0.5": 104,
+      "1.0": 14,
+      "3.0": 9,
+      "4.5": 54,
+      "7.5": 27,
+      "10.0": 27,
+      "8.0": 18,
+      "10.5": 9,
+      "4.0": 36
+    },
+    "zBands": {
+      "60": 81,
+      "62": 9,
+      "66": 18,
+      "72": 108,
+      "102": 36,
+      "104": 36,
+      "-62": 82,
+      "-60": 9,
+      "-74": 9,
+      "-68": 54
+    }
+  }
+}

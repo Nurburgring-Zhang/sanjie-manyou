@@ -8,6 +8,7 @@ import { terrainHeight, waterAt } from '../world/terrain';
 import { bus } from '../core/rng';
 import { legacyClock, type Clock } from '../actors/behaviors';
 import { HEAVEN_LIFT, HEAVEN_SCALE, heavenPoint } from '../sky/heavenFrame';
+import { solidBlocked, solidPushOut, solidFloorY } from '../rt/solids';
 
 // ============ 玩家化身：GTA 式第三人称控制（附身模式） ============
 export type PlayerMode = 'soul' | 'avatar';       // 灵魂相机 / 附身
@@ -69,6 +70,8 @@ export class PlayerController {
   /** 移动端跳跃键置位、下一帧 update 消费；与键盘 Space 走同一条地面判定 */
   private jumpQueued = false;
   private fadeEl: HTMLElement | null = null;
+  /** 全量审核 2026-11-07（M-02 / P-14A）：portal 淡入期重入锁，避免叠加 setTimeout */
+  private portalPending = false;
   /**
    * 上一次 update 看到的化身位置。
    * `world.teleport` / `respawnPlayerAt` / 交互点 / Boss 击退都会直接改 `actor.pos`，
@@ -170,7 +173,9 @@ export class PlayerController {
       // 旧值 `actor.yaw + Math.PI` 让相机与朝向差 180°，而移动方向是由 camYaw 推出来的，
       // 于是「附身态按 W 会倒退」——正是用户报的「附身/灵魂时按键是反的」。
       this.camYaw = this.actor.yaw;
-      bus.emit('cam:mode', 'avatar');
+      // 全量审核 2026-11-07（B-07）：删掉越枚举的 cam:mode='avatar' emit；
+      // engine.CamMode 仅 cinema/fly/walk/focus，ui camNames 不认 'avatar' 会显示空后缀「视角·」；
+      // 附身态本就不改 engine.camMode，保留下方 player:mode emit 即可。
     } else {
       bus.emit('cam:mode', 'fly');
       this.engine.setCamMode('fly');
@@ -260,6 +265,10 @@ export class PlayerController {
       // P1-2 体素站立：营造司（及未来全部 block/creation）柱顶纳入地面（一格跳跃可达语义）
       const vt = voxelColumnTop(x, z, refY);
       if (vt !== null) return vt;
+      // R27：叠加全城实体顶面（台基/石板）。优先级排在桥面/码头/体素之后（它们已在上方 return），
+      // 不破坏天宫/地府/城外分层的既有 return 链。solidFloorY 墙带内返回 null → 退回街面 0。
+      const sf = solidFloorY(x, z, refY);
+      if (sf !== null && sf > 0) return sf;
       return 0;
     }
     // 城外大地
@@ -395,12 +404,23 @@ export class PlayerController {
       if (ix !== 0 || iz !== 0) {
         const mx = -Math.sin(this.camYaw) * -iz + Math.cos(this.camYaw) * ix;
         const mz = -Math.cos(this.camYaw) * -iz - Math.sin(this.camYaw) * ix;
-        p.x += mx * sp * dt;
-        p.z += mz * sp * dt;
+        // R27：全城实体墙试探 + 单轴滑动（只在人间层；不碰天宫/地府 realmY 分层）。
+        const step = sp * dt;
+        let nx = p.x + mx * step, nz = p.z + mz * step;
+        if (p.y > -60 && p.y <= 120 && solidBlocked(nx, nz, 0.34, p.y, 1.7)) {
+          if (!solidBlocked(nx, p.z, 0.34, p.y, 1.7)) nz = p.z;
+          else if (!solidBlocked(p.x, nz, 0.34, p.y, 1.7)) nx = p.x;
+          else { nx = p.x; nz = p.z; }
+        }
+        p.x = nx; p.z = nz;
         // 旧版把步行锁在 ±660 / z[-200,430]：一旦在宫城或灵界行走就被拽回河岸。
         p.x = THREE.MathUtils.clamp(p.x, -20000, 20000);
         p.z = THREE.MathUtils.clamp(p.z, -20000, 20000);
         this.actor.yaw = Math.atan2(mx, mz);
+      }
+      // R27：静止或移动都做一次推出兜底，救回被击退/载具/传送塞进实心墙的玩家。
+      if (p.y > -60 && p.y <= 120 && solidBlocked(p.x, p.z, 0.34, p.y, 1.7)) {
+        solidPushOut(p, 0.34, p.y);
       }
       // 重力/台阶；异界（天宫/地府）不落地，钉在实化的平面上走
       if (this.realmY !== null) {
@@ -424,8 +444,12 @@ export class PlayerController {
         bus.emit('sfx:step', run);
       }
       // 阴阳界传送
-      for (const pt of PORTALS) {
-        if (Math.hypot(p.x - pt.x, p.z - pt.z) < 2.6 && Math.abs(p.y - pt.y) < 4) { this.usePortal(pt); break; }
+      // 全量审核 2026-11-07（M-02 / P-14A）：busy 期（含 460ms 淡入）跳过检测，
+      // 否则每帧重复调用 usePortal 会叠加约 27 个 setTimeout；usePortal 内另有 portalPending 重入锁双保险。
+      if (!busy) {
+        for (const pt of PORTALS) {
+          if (Math.hypot(p.x - pt.x, p.z - pt.z) < 2.6 && Math.abs(p.y - pt.y) < 4) { this.usePortal(pt); break; }
+        }
       }
     }
     if (busy && now >= this.busyUntil) { /* 动作由 interact 恢复 */ }
@@ -443,6 +467,9 @@ export class PlayerController {
   }
 
   private usePortal(pt: { x: number; y: number; z: number; to: [number, number, number]; label: string }): void {
+    // 全量审核 2026-11-07（M-02 / P-14A）：淡入期防重入，避免叠加 setTimeout
+    if (this.portalPending) return;
+    this.portalPending = true;
     if (this.fadeEl) {
       this.fadeEl.style.transition = 'opacity .45s';
       this.fadeEl.style.opacity = '1';
@@ -451,11 +478,13 @@ export class PlayerController {
         this.landAt(pt.to[0], pt.to[1], pt.to[2]);
         bus.emit('ui:toast', pt.label);
         this.fadeEl!.style.opacity = '0';
+        this.portalPending = false; // 全量审核 2026-11-07（M-02 / P-14A）：落点后解锁（fade 分支）
       }, 460);
       this.busyUntil = this.clock() + 1000;
     } else {
       this.landAt(pt.to[0], pt.to[1], pt.to[2]);
       bus.emit('ui:toast', pt.label);
+      this.portalPending = false; // 全量审核 2026-11-07（M-02 / P-14A）：落点后解锁（else 分支）
     }
   }
 

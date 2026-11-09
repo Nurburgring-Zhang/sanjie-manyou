@@ -816,6 +816,10 @@ export interface MountainLifeReport {
   trees: Record<string, number>;
   shrubs: Record<string, number>;
   flowers: Record<string, number>;
+  /** R23：山坡真草丛数（用户「山上要有树、有草、有花」） */
+  grass: Record<string, number>;
+  /** R23 第二轮：山体尺度林团 / 草甸 / 花田覆盖件数 */
+  slopeCover: Record<string, number>;
   flowerColors: number;
   streams: Record<string, number>;
   waterfalls: { mountain: string; drop: number; at: [number, number, number] }[];
@@ -879,6 +883,85 @@ function mountainFlowerBush(b: Baker, x: number, y: number, z: number, hex: numb
 function mountainShrub(b: Baker, x: number, y: number, z: number, hex: number, s: number, rot: number): void {
   b.sphere('leaf', 0.95 * s, 5, x, y + 0.5 * s, z, hex, rot, 0, 0, 1.35, 0.66, 1.2);
   b.sphere('leaf', 0.55 * s, 4, x + Math.cos(rot) * 0.7 * s, y + 0.62 * s, z + Math.sin(rot) * 0.7 * s, shade(hex, 1.12), 0, 0, 0, 1.1, 0.8, 1.05);
+}
+
+/** R23：山坡真草丛 —— 4 片倾斜细叶 + 偶尔一朵五色花，低面数、Baker 合批。
+ *  与 mountainShrub（球状灌丛）区分开：这一层是「草」，近景能看到叶片与花而不是一片绿顶点色。 */
+function mountainGrass(b: Baker, x: number, y: number, z: number, u: number): void {
+  const hgt = 0.5 + u * 0.7;
+  const base = u < 0.5 ? 0x3f6b3a : 0x6d8a3c;
+  for (let k = 0; k < 4; k++) {
+    const a = (k / 4) * Math.PI * 2 + u * 2;
+    b.box('leaf', 0.09, hgt, 0.22, x + Math.cos(a) * 0.14, y + hgt / 2, z + Math.sin(a) * 0.14,
+      shade(base, 0.85 + (k % 3) * 0.08), a, 0.28 * Math.cos(a), 0.28 * Math.sin(a));
+  }
+  if (u > 0.72) b.sphere('ceramic', 0.18, 5, x, y + hgt + 0.08, z, FLOWER_COLORS[(u * 100 | 0) % FLOWER_COLORS.length]);
+}
+
+/**
+ * R23 第二轮：山体尺度的「林团 / 草甸 / 花田」覆盖层。
+ * 0.5m 草叶与 1m 花丛在 2–5km 远景不足 1 像素，实拍 r23-10-mtn-slope.png 仍是
+ * 「大片黄绿坡 + 稀疏小黑点」。这一层按 10–30m 尺度铺，让远中景一眼读出成片森林、
+ * 草甸与彩色花田；与近景小尺度实体互补，不替换任何既有植被。全部 Baker 合批。
+ */
+function mountainSlopeCover(
+  b: Baker, m: Mountain, site: MountainSite,
+  surfaceAt: (x: number, z: number) => number, rnd: () => number,
+): { groves: number; meadows: number; flowerFields: number } {
+  const treeLine = site.treeLine * 1.18;
+  const summit = site.summit;
+  let groves = 0, meadows = 0, flowerFields = 0;
+  const ok = (x: number, z: number, y: number, maxSlope: number): boolean =>
+    y > m.h * 0.04 && y < treeLine * 1.22 &&
+    slopeAt(surfaceAt, x, z, 40) < maxSlope &&
+    Math.hypot(x - summit.x, z - summit.z) > 150;
+
+  // ① 林团：R24b 1500 → 4200 处，叶冠 12–24m → 22–42m，沿坡成片
+  for (let i = 0; i < 4200; i++) {
+    const a = rnd() * Math.PI * 2, rr = m.r * (0.12 + Math.sqrt(rnd()) * 0.92);
+    const x = m.x + Math.cos(a) * rr, z = m.z + Math.sin(a) * rr;
+    const y = surfaceAt(x, z);
+    if (!ok(x, z, y, 1.5)) continue;
+    const s = 22 + rnd() * 20;
+    const hex = LEAF_MIXED[(rnd() * LEAF_MIXED.length) | 0];
+    b.cyl('trunk', 0.7, 1.2, s * 0.9, 6, x, y + s * 0.45, z, 0x4a3524);
+    for (let k = 0; k < 3; k++) {
+      const aa = (k / 3) * Math.PI * 2 + rnd();
+      b.sphere('leaf', s, 7, x + Math.cos(aa) * s * 0.7, y + s * 1.2, z + Math.sin(aa) * s * 0.7,
+        shade(hex, 0.86 + rnd() * 0.26), 0, 0, 0, 1.1, 0.85, 1.1);
+    }
+    groves++;
+  }
+  // ② 草甸斑：R24b 1500 → 6000 处，薄片放大到 26–62m × 18–48m（薄片三角极便宜，优先靠它铺满坡面）
+  for (let i = 0; i < 6000; i++) {
+    const a = rnd() * Math.PI * 2, rr = m.r * (0.10 + Math.sqrt(rnd()) * 1.0);
+    const x = m.x + Math.cos(a) * rr, z = m.z + Math.sin(a) * rr;
+    const y = surfaceAt(x, z);
+    if (!ok(x, z, y, 1.6)) continue;
+    const w = 26 + rnd() * 36, d = 18 + rnd() * 30;
+    b.box('leaf', w, 0.7, d, x, y + 0.6, z,
+      shade(rnd() < 0.5 ? 0x6f9c3e : 0x8bb54a, 0.85 + rnd() * 0.28), rnd() * Math.PI);
+    meadows++;
+  }
+  // ③ 花田：R24b 460 → 1400 处，花球 2.6–5.8m → 4.4–9.4m，远中景能读出彩色花带
+  for (let i = 0; i < 1400; i++) {
+    const a = rnd() * Math.PI * 2, rr = m.r * (0.18 + Math.sqrt(rnd()) * 0.78);
+    const cx = m.x + Math.cos(a) * rr, cz = m.z + Math.sin(a) * rr;
+    const cy = surfaceAt(cx, cz);
+    if (!ok(cx, cz, cy, 1.4)) continue;
+    const hex = FLOWER_COLORS[(rnd() * FLOWER_COLORS.length) | 0];
+    for (let k = 0; k < 4; k++) {
+      const aa = (k / 4) * Math.PI * 2 + rnd();
+      const px = cx + Math.cos(aa) * (5 + rnd() * 9), pz = cz + Math.sin(aa) * (5 + rnd() * 9);
+      b.sphere('ceramic', 4.4 + rnd() * 5.0, 6, px, surfaceAt(px, pz) + 3.6, pz,
+        hex, 0, 0, 0, 1.2, 0.8, 1.2);
+    }
+    flowerFields++;
+  }
+  b.kit('mtn.slopeCover.grove', groves, 0);
+  b.kit('mtn.slopeCover.meadow', meadows, 0);
+  b.kit('mtn.slopeCover.flowerField', flowerFields, 0);
+  return { groves, meadows, flowerFields };
 }
 
 interface StreamPt { x: number; y: number; z: number }
@@ -1127,7 +1210,7 @@ export async function buildMountainLife(
   surfaceAt: (x: number, z: number) => number,
 ): Promise<MountainLifeReport> {
   const rep: MountainLifeReport = {
-    trees: {}, shrubs: {}, flowers: {}, flowerColors: FLOWER_COLORS.length, streams: {}, waterfalls: [], fauna: {}, faunaTotal: 0, groves: {}, tris: 0,
+    trees: {}, shrubs: {}, flowers: {}, grass: {}, slopeCover: {}, flowerColors: FLOWER_COLORS.length, streams: {}, waterfalls: [], fauna: {}, faunaTotal: 0, groves: {}, tris: 0,
   };
   const triOf = (): number => {
     const st = b.stats();
@@ -1141,19 +1224,24 @@ export async function buildMountainLife(
     const site = sites[si];
     const m = site.m;
     const rnd = lifeRng(m, 0x7a11 + si * 37);
-    const treeFrac = site.treeLine / m.h;
-    const treeCount = 540;
+    // R23：全山树木 540 → 1500 株/山；密林 6 → 10 片，林线抬 18% 让雪线附近也有耐寒针叶。
+    // R24b 真回归修复：terrain.ts 的 MTN_R24_SCALE=2 把山体 h/r 整体 ×2，坡面面积变成 4 倍，
+    // 但植被仍用 R23 的绝对数量、绝对尺寸与绝对簇半径，密度掉到 1/4 —— 实拍 r24-12 南坡
+    // 只剩零星树点、大片光滑坡面，读不出「有树！有草！有花！」。这里按面积补密度、
+    // 按尺寸补可见度，全部走既有 Baker 合批，0 新材质组 / 0 独立 Mesh / 0 draw call。
+    const treeFrac = site.treeLine * 1.18 / m.h;
+    const treeCount = 3000;
     let placedTrees = 0;
     const groveCenters: { x: number; z: number; y: number }[] = [];
-    // 6 片密林：给"山腰近景"取证用（散点在山体尺度上会太稀）。密林内 72 株/片，
-    // 半径 300m → 平均 35m 一株；配合林下灌丛与花丛，近景才读得成"林"。
-    for (let g = 0; g < 6 && groveCenters.length < 6; g++) {
+    // R24b：10 → 18 片密林、72 → 120 株/片、半径 240m，配合林下灌丛 / 草丛 / 花丛，
+    // 让放大一倍后的山腰近景仍读得成"林"（散点在放大后的山体尺度上会太稀）。
+    for (let g = 0; g < 18 && groveCenters.length < 18; g++) {
       for (let tries = 0; tries < 28; tries++) {
         const a = rnd() * Math.PI * 2;
         const rr = m.r * (0.3 + rnd() * 0.45);
         const x = m.x + Math.cos(a) * rr, z = m.z + Math.sin(a) * rr;
         const y = surfaceAt(x, z);
-        if (y < m.h * 0.08 || y > site.treeLine * 0.9) continue;
+        if (y < m.h * 0.08 || y > site.treeLine * 1.18 * 0.9) continue;
         if (slopeAt(surfaceAt, x, z, 40) > 1.1) continue;
         if (Math.hypot(x - site.summit.x, z - site.summit.z) < 140) continue;
         groveCenters.push({ x, z, y });
@@ -1171,23 +1259,23 @@ export async function buildMountainLife(
         const inGrove = gi < groveCenters.length && placedTrees < treeCount * 0.8;
         if (inGrove) {
           const c = groveCenters[gi];
-          // 密林半径 150m（不是 300）：72 株/片 → 平均 31m 一株，近景才读得成林
-          const a = rnd() * Math.PI * 2, rr = Math.sqrt(rnd()) * 150;
+          // R24b：密林半径 240m、120 株/片，山体放大后近景仍读得成林
+          const a = rnd() * Math.PI * 2, rr = Math.sqrt(rnd()) * 240;
           x = c.x + Math.cos(a) * rr; z = c.z + Math.sin(a) * rr;
-          if ((placedTrees + 1) % 72 === 0) gi++;
+          if ((placedTrees + 1) % 120 === 0) gi++;
         } else {
           const a = rnd() * Math.PI * 2, rr = m.r * (0.22 + Math.sqrt(rnd()) * 0.78);
           x = m.x + Math.cos(a) * rr; z = m.z + Math.sin(a) * rr;
         }
         const y = surfaceAt(x, z);
-        if (y < m.h * 0.03 || y > site.treeLine) continue;
+        if (y < m.h * 0.03 || y > site.treeLine * 1.18) continue;
         if (Math.hypot(x - site.summit.x, z - site.summit.z) < 130) continue;
         if (slopeAt(surfaceAt, x, z, 38) > maxSlope) continue;
         const local = y / m.h;
         const band = local < treeFrac * 0.52 ? 0 : local < treeFrac * 0.82 ? 1 : 2;
         const palette = band === 0 ? LEAF_BROAD : band === 1 ? LEAF_MIXED : LEAF_CONIF;
         const hex = palette[Math.floor(rnd() * palette.length)];
-        const s = 0.8 + rnd() * 0.75;
+        const s = 1.5 + rnd() * 1.3;   // R24b：山 ×2 后树也要放大，否则远景只剩小黑点
         mountainTree(b, x, y - 0.6, z, band, s, hex, rnd() * Math.PI * 2);
         placedTrees++;
         if (placedTrees % 60 === 0) await new Promise<void>((r) => setTimeout(r, 0));
@@ -1203,11 +1291,11 @@ export async function buildMountainLife(
     // 林下灌丛：每片密林 55 丛（~72 面/丛），填掉乔木之间的裸地
     let shrubs = 0;
     for (const c of groveCenters) {
-      for (let k = 0; k < 55; k++) {
-        const a = rnd() * Math.PI * 2, rr = Math.sqrt(rnd()) * 150;
+      for (let k = 0; k < 180; k++) {
+        const a = rnd() * Math.PI * 2, rr = Math.sqrt(rnd()) * 240;
         const x = c.x + Math.cos(a) * rr, z = c.z + Math.sin(a) * rr;
         const y = surfaceAt(x, z);
-        if (y < m.h * 0.03 || y > site.treeLine) continue;
+        if (y < m.h * 0.03 || y > site.treeLine * 1.18) continue;
         if (slopeAt(surfaceAt, x, z, 30) > 1.6) continue;
         // 灌丛 1.1–2.2 倍（0.7–0.8 倍的只有脚踝高，近景读成一粒黑点）
         mountainShrub(b, x, y - 0.3, z, LEAF_MIXED[Math.floor(rnd() * LEAF_MIXED.length)], 1.1 + rnd() * 1.1, rnd() * Math.PI * 2);
@@ -1216,13 +1304,31 @@ export async function buildMountainLife(
     }
     rep.shrubs[m.name] = shrubs;
 
-    // 五色花丛：12 片，每片同色 9 丛 —— 成片而不是均匀撒点。
-    // 前 6 片直接压在密林中心：保证"山腰近景"一定拍得到五色花丛与花木同框。
+    // R23：山坡真草 —— 每片密林 220 丛倾斜草叶 + 花，用户点名「所有的山上要有树！有草！有花！」
+    let grass = 0;
+    for (const c of groveCenters) {
+      for (let k = 0; k < 360; k++) {
+        const a = rnd() * Math.PI * 2, rr = Math.sqrt(rnd()) * 340;
+        const gx = c.x + Math.cos(a) * rr, gz = c.z + Math.sin(a) * rr;
+        const gy = surfaceAt(gx, gz);
+        if (gy < m.h * 0.03 || gy > site.treeLine * 1.18) continue;
+        if (slopeAt(surfaceAt, gx, gz, 22) > 1.7) continue;
+        mountainGrass(b, gx, gy - 0.08, gz, rnd());
+        grass++;
+      }
+    }
+    rep.grass[m.name] = grass;
+
+    // R23 第二轮：山体尺度林团 / 草甸 / 花田，让 2–5km 远中景一眼读出「满山树草花」
+    const cover = mountainSlopeCover(b, m, site, surfaceAt, rnd);
+    rep.slopeCover[m.name] = cover.groves + cover.meadows + cover.flowerFields;
+
+    // R23：五色花丛 12 → 24 片、每片 9 → 12 丛；前 10 片压密林中心，保证山腰近景花木同框。
     let patches = 0, bushes = 0;
-    for (let g = 0; g < groveCenters.length && patches < 6; g++) {
+    for (let g = 0; g < groveCenters.length && patches < 10; g++) {
       const c = groveCenters[g];
       const cHex = FLOWER_COLORS[patches % FLOWER_COLORS.length];
-      for (let k = 0; k < 9; k++) {
+      for (let k = 0; k < 12; k++) {
         const aa = rnd() * Math.PI * 2, rr2 = Math.sqrt(rnd()) * 60;
         const fx = c.x + Math.cos(aa) * rr2, fz = c.z + Math.sin(aa) * rr2;
         const fy = surfaceAt(fx, fz);
@@ -1232,16 +1338,16 @@ export async function buildMountainLife(
       patches++;
     }
     for (const maxSlope of [0.62, 1.35]) {
-      for (let p = patches; p < 12; p++) {
+      for (let p = patches; p < 24; p++) {
         const cHex = FLOWER_COLORS[p % FLOWER_COLORS.length];
         for (let tries = 0; tries < 24; tries++) {
           const a = rnd() * Math.PI * 2, rr = m.r * (0.3 + rnd() * 0.55);
           const cx = m.x + Math.cos(a) * rr, cz = m.z + Math.sin(a) * rr;
           const cy = surfaceAt(cx, cz);
-          if (cy < m.h * 0.05 || cy > site.treeLine * 0.85) continue;
+          if (cy < m.h * 0.05 || cy > site.treeLine * 1.18 * 0.85) continue;
           if (slopeAt(surfaceAt, cx, cz, 30) > maxSlope) continue;
           if (Math.hypot(cx - site.summit.x, cz - site.summit.z) < 120) continue;
-          for (let k = 0; k < 9; k++) {
+          for (let k = 0; k < 12; k++) {
             const aa = rnd() * Math.PI * 2, rr2 = Math.sqrt(rnd()) * 95;
             const fx = cx + Math.cos(aa) * rr2, fz = cz + Math.sin(aa) * rr2;
             const fy = surfaceAt(fx, fz);
@@ -1252,7 +1358,7 @@ export async function buildMountainLife(
           break;
         }
       }
-      if (patches >= 10) break;
+      if (patches >= 20) break;
     }
     rep.flowers[m.name] = bushes;
 
@@ -1293,6 +1399,8 @@ export async function buildMountainLife(
   }
   rep.tris = Math.max(0, triOf() - t0);
   lifeReport = rep;
+  // R23 验收句柄：让探针直接读到每座山的树 / 灌 / 花 / 草实数，不只靠看图猜
+  if (typeof window !== 'undefined') (window as unknown as Record<string, unknown>).__mtnLife = rep;
   if (typeof window !== 'undefined') (window as unknown as { __mtnLifeStats?: MountainLifeReport }).__mtnLifeStats = rep;
   return rep;
 }

@@ -20,6 +20,20 @@ export const INP = {
   phos: 0x3dff9c, blue: 0x4d7cff, ice: 0xbaffef, cloth: 0x2b1b3d, cloth2: 0x4a3f30,
 } as const;
 
+// ============ 地府夜景提亮规格（用户诉求「地府夜景偏暗」）============
+// 这里只定义「地府专属」的色/增益规格；运行时由 world.ts 的 uf 分支与 HELL_LIGHTS 消费处应用，
+// 人间/天宫零引用、零影响。光色纪律（hells.ts:12）：磷绿 / 演出红 / 青白，禁暖白昼/金光。
+// 雾色提亮一档：主雾走冷紫灰，天幕三段保留「暗紫 → 紫红 → 暗红」的红雾/灰雾层次，绝不拉成纯白。
+export const UNDER_FOG_LIT = new THREE.Color(0x2c2738);   // 主雾（原 0x201c2c）
+export const UNDER_SKY_TOP = new THREE.Color(0x302838);   // 天顶：暗紫灰（原 0x241d2a）
+export const UNDER_SKY_MID = new THREE.Color(0x402c3a);   // 中段：紫红（原 0x332330）
+export const UNDER_SKY_BOT = new THREE.Color(0x5a2830);   // 近地：暗红（原 0x4a2028）
+// WS-25 地府局部点光：只放大冷色白名单（磷绿/幽蓝/青白），暖色檐灯/灶火保持原值，不引入金光。
+// 强度/距离在 world.ts 创建 PointLight 时按此增益放大（HELL_LIGHTS 数据源在 hells.ts，不在授权范围、未改）。
+export const UNDER_POINT_COLD = new Set<number>([0x3dff9c, 0x4d7cff, 0x9d6bff, 0xbaffef]);
+export const UNDER_POINT_INT_GAIN = 1.35;
+export const UNDER_POINT_DIST_GAIN = 1.15;
+
 /** 局部坐标 → 世界（与 Baker 的 ry 约定一致：局部 +z 对齐 (sin ry, cos ry)） */
 function lp(cx: number, cz: number, ry: number, lx: number, lz: number): [number, number] {
   return [cx + Math.cos(ry) * lx + Math.sin(ry) * lz, cz - Math.sin(ry) * lx + Math.cos(ry) * lz];
@@ -900,12 +914,22 @@ export function buildUnderCavern(b: Baker): void {
     }
   }
   // 岩顶：四级阶梯内收（外低内高），四张实心板叠出穹形，几何上无缝隙
-  const slabs: readonly (readonly [number, number, number])[] = [
-    [1000, 820, yRim], [760, 620, -104], [520, 430, -76], [300, 250, -46],
+  // 视觉审核 2026-11-07（V-03）：旧四块板同色且近黑（earth 0x241c17×0.92 / ash 0x322c26×0.7），
+  // 当时已改过一次板色到冷灰紫岩（0x4a4048…0x706872），但整体仍暗 —— 本次「地府夜景偏暗」复审再提一档。
+  // 从 y≈−260 仰视 120–210m 时，朝下的板底只吃 hemi.groundColor、太阳被压掉一档，
+  // 再叠近黑雾 → 酆都/阎罗殿正视上半幅仍偏黑。A/B 证据（`scripts/_va_dome_ab.mjs`）：黑源是岩顶本体。
+  // 本次改法：四级 tone 统一换成更中性偏蓝的「冷灰岩」一档（外圈 0x4a4a52 → 内圈 0x70707c），
+  // 保持外圈→内圈逐级提亮的层次；ash 薄板是实际可见的板底，取主色，earth 实体略压暗形成板缝阴影。
+  // 不改几何、不新增 Mesh/点光、不触碰三角面预算、不动共享 RNG。
+  const slabs: readonly (readonly [number, number, number, number])[] = [
+    [1000, 820, yRim, 0x4a4a52],
+    [760, 620, -104, 0x565260],
+    [520, 430, -76, 0x62606c],
+    [300, 250, -46, 0x70707c],
   ];
-  for (const [hx, hz, yb] of slabs) {
-    b.box('earth', hx * 2, 10, hz * 2, cx, yb + 5, cz, shade(0x241c17, 0.92));
-    b.box('ash', hx * 1.94, 0.5, hz * 1.94, cx, yb - 0.3, cz, shade(0x322c26, 0.7));
+  for (const [hx, hz, yb, tone] of slabs) {
+    b.box('earth', hx * 2, 10, hz * 2, cx, yb + 5, cz, shade(tone, 0.78));
+    b.box('ash', hx * 1.94, 0.5, hz * 1.94, cx, yb - 0.3, cz, tone);
   }
   // 垂石钟乳：按坐标 hash 布点，避开环心（十八狱环/阎罗殿上空留空，不压建筑轮廓）
   for (let i = 0; i < 84; i++) {

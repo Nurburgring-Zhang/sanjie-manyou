@@ -5,6 +5,10 @@ import { topCondition } from '../game/conditions';
 import { bus } from '../core/rng';
 import { POIS } from '../city/layout';
 import { JOBS } from '../data/jobs';
+import { WishPanel } from '../game/wishPanel';
+
+// 全量审核 2026-11-07（UI-10）：小地图逻辑尺寸常量（CSS 像素），与 DPR backing store 解耦
+const MM_W = 216, MM_H = 150;
 
 // ============ UI 总装：HUD / 图鉴 / 传送 / 设置 / 小地图 / 触控 ============
 export function initUI(engine: Engine, world: World): (dt: number) => void {
@@ -50,7 +54,8 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
       <div><kbd>Space</kbd>/<kbd>E</kbd>上升　<kbd>C</kbd>/<kbd>Q</kbd>/<kbd>Ctrl</kbd>下降（飞行模式）</div>
       <div><kbd>拖拽</kbd>转视角　<kbd>滚轮</kbd>推拉　<kbd>点击角色</kbd>查看并聚焦</div>
       <div><kbd>E</kbd>交互（附身）　<kbd>H</kbd>拍照（隐藏全部 UI）　<kbd>M</kbd>海图</div>
-      <div><kbd>F1</kbd>本指南　<kbd>T</kbd>传送　<kbd>B</kbd>图鉴　<kbd>Esc</kbd>关闭面板　<kbd>任意键</kbd>跳过开场运镜</div>
+      <!-- 全量审核 2026-11-07（B-08）：engine.ts 实际只认 Space / Esc / Enter 三键跳过开场运镜 -->
+      <div><kbd>F1</kbd>本指南　<kbd>T</kbd>传送　<kbd>B</kbd>图鉴　<kbd>Esc</kbd>关闭面板　<kbd>Space / Esc / Enter</kbd>跳过开场运镜</div>
       <div class="hint">· 漫游范围：全城 10km 见方（城墙 ±5000）、宫城、天宫（y 200–240）、地府（y −260）均可自由飞行，高度上限 4000m。</div>
       <div class="hint">· 天空即战场：大闹天宫十幕循环上演，底部战报为说书人评话。<br>
       · 水浒一百单八将尽数在城：鲁智深在菜园倒拔垂杨柳，时迁在屋顶飞檐走壁，张顺在汴河浪里白条，凌振在河滩放轰天雷焰火。<br>
@@ -59,7 +64,8 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
     </div>
   </div>
   <div id="infocard"></div>
-  <div id="minimap"><canvas width="216" height="150"></canvas></div>
+  <!-- 全量审核 2026-11-07（UI-10）：CSS 尺寸锁定 216×150，backing store 按 DPR 放大见小地图段 -->
+  <div id="minimap"><canvas width="216" height="150" style="width:216px;height:150px"></canvas></div>
   <div id="toast"></div>
   <div id="skip">跳过开场 »</div>
   <div id="stick"><i></i></div>
@@ -79,16 +85,44 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
   $('bGo').onclick = () => { togglePanel('gotele'); renderTele(); };
   $('bSet').onclick = () => { togglePanel('settings'); };
   $('bHelp').onclick = () => togglePanel('help');
+  // 全量审核 2026-11-07（UI-04）：photoMode 声明上移到两个快捷键 handler 之前（同闭包，避免 TDZ）
+  let photoMode = false;
+  // 全量审核 2026-11-07（B-08 补漏）：拍照模式必须挡住**所有**玩法键。
+  // 下方两个 handler 里的 `if (!modalPass && photoMode) return` 只管得住 ui.ts 自己；
+  // player.ts 的 V/E/F、buildMode.ts 的 G、creation.ts 的 Y 都注册在 window 冒泡阶段，
+  // 仍会照常执行 —— 「隐藏 UI」并不等于「禁用玩法输入」。这里在捕获阶段、事件抵达
+  // 其它监听器之前统一拦掉纯玩法键；Escape / H / Enter / Space 与全部相机移动键放行，
+  // 保证拍照态仍能取景、能退出、能关面板、能跳过开场运镜。
+  const PHOTO_PLAY_KEYS = new Set(['KeyJ', 'KeyV', 'KeyE', 'KeyF', 'KeyG', 'KeyY', 'KeyB', 'KeyT', 'KeyM', 'F1']);
+  window.addEventListener('keydown', (ev) => {
+    if (!photoMode) return;
+    const t = ev.target as HTMLElement | null;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (!PHOTO_PLAY_KEYS.has(ev.code)) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+  }, true);
   // ---- Boss 出手键：J（真实 keydown 到达页面才算数，probe-boss 走同一条路径）----
   window.addEventListener('keydown', (ev) => {
     const t = ev.target as HTMLElement | null;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
-    if (ev.code === 'KeyJ') { ev.preventDefault(); world.boss?.playerAttack(); }
+    // 全量审核 2026-11-07（UI-04）：模态门控。Escape 始终放行（关面板）；拍照态除 KeyH/Escape
+    // 外一律吞；.panel.show 时 KeyJ 与 F1/M/T/B 一律吞（#wishbar 不带 .panel，不受影响）。
+    const modalPass = ev.code === 'Escape' || ev.code === 'KeyH';
+    if (!modalPass && photoMode) return;
+    if (!modalPass && document.querySelector('.panel.show') && ['KeyJ', 'F1', 'KeyM', 'KeyT', 'KeyB'].includes(ev.code)) return;
+    // 全量审核 2026-11-07（P-12）：按住 J 会以系统重复率连调 playerAttack，
+    // 仅靠 hitCooldown 限流成自动连击，绕过「防止连点刷伤害」的设计意图。
+    if (ev.code === 'KeyJ' && !ev.repeat) { ev.preventDefault(); world.boss?.playerAttack(); }
   });
   // ---- 全局快捷键（此前只有按钮、没有键位：M/F1/Esc 按下去没反应）----
   window.addEventListener('keydown', (ev) => {
     const t = ev.target as HTMLElement | null;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+    // 全量审核 2026-11-07（UI-04）：模态门控（同上，Escape 始终放行关面板）
+    const modalPass = ev.code === 'Escape' || ev.code === 'KeyH';
+    if (!modalPass && photoMode) return;
+    if (!modalPass && document.querySelector('.panel.show') && ['KeyJ', 'F1', 'KeyM', 'KeyT', 'KeyB'].includes(ev.code)) return;
     if (ev.code === 'F1') {
       ev.preventDefault();
       togglePanel('help');
@@ -115,13 +149,15 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
   coinsEl.id = 'coins';
   coinsEl.textContent = '💰 -- 文';
   $('topbar').appendChild(coinsEl);
-  bus.on('coins:change', (n) => { coinsEl.textContent = `💰 ${n} 文`; });
+  // 全量审核 2026-11-07（B-02）：删掉独立的 coins:change 订阅，双源（铜钱/三币）统一到 renderTri
   // B10 精修：三币常驻 HUD（铜钱/阴德/蟠桃点——总线同步，InteractSystem save 即刷）
   const triEl = document.createElement('span');
   triEl.style.cssText = 'margin-left:10px;color:#b8ffd8;';
   $('topbar').appendChild(triEl);
   const renderTri = (): void => {
-    const it = (window as unknown as { __qingming?: { world?: { interact?: { yinde: number; peach: number; coins: number } } } }).__qingming?.world?.interact;
+    // 全量审核 2026-11-07（B-02）：改读 initUI 闭包形参 world.interact；
+    // 构造期 __qingming 全局句柄尚未注入，旧写法顶栏恒显「-- 文」且三币空白。
+    const it = world.interact;
     if (it) { triEl.textContent = `💠 ${it.yinde}  🍑 ${it.peach}`; coinsEl.textContent = `💰 ${it.coins} 文`; } // 含铜钱首刷（构造期无 coins:change）
   };
   bus.on('coins:change', renderTri);
@@ -193,12 +229,15 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
   renderGoal();
 
   // ---- 拍照模式（对标落地：Ubisoft/ESO/Larian F10 惯例——H 键隐藏全部 UI 取净景） ----
-  let photoMode = false;
+  // 全量审核 2026-11-07（UI-04）：photoMode 已上移到快捷键 handler 之前，此处不再重复声明。
   window.addEventListener('keydown', (ev) => {
     if (ev.code !== 'KeyH') return;
     photoMode = !photoMode;
     const root = document.getElementById('ui');
     if (root) root.style.display = photoMode ? 'none' : '';
+    // 全量审核 2026-11-07（B-08）：连关所有面板并 blur 焦点，保证拍照态互斥且恢复后快捷键不残留
+    document.querySelectorAll('.panel.show').forEach((el) => el.classList.remove('show'));
+    (document.activeElement as HTMLElement | null)?.blur();
   });
 
   // ---- 音效 ----
@@ -354,20 +393,26 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
   // ---- 小地图 ----
   const mm = q<HTMLCanvasElement>('#minimap canvas');
   const mctx = mm.getContext('2d')!;
-  const mx = (x: number): number => ((x + 5600) / 11200) * mm.width;
-  const mz = (z: number): number => ((z + 5600) / 11200) * mm.height;
+  // 全量审核 2026-11-07（UI-10）：backing store 按 DPR（封顶 2）放大，CSS 尺寸保持 216×150；
+  // 所有绘图坐标统一改用逻辑常量 MM_W/MM_H，避免 DPR 放大后坐标翻倍、画到边界外。
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  mm.width = Math.round(MM_W * dpr);
+  mm.height = Math.round(MM_H * dpr);
+  mctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const mx = (x: number): number => ((x + 5600) / 11200) * MM_W;
+  const mz = (z: number): number => ((z + 5600) / 11200) * MM_H;
 
   function drawMinimap(): void {
-    mctx.clearRect(0, 0, mm.width, mm.height);
+    mctx.clearRect(0, 0, MM_W, MM_H);
     mctx.fillStyle = 'rgba(8,12,22,0.6)';
-    mctx.fillRect(0, 0, mm.width, mm.height);
+    mctx.fillRect(0, 0, MM_W, MM_H);
     // 十公里城墙
     mctx.strokeStyle = 'rgba(200,190,160,0.8)';
     mctx.lineWidth = 2;
     mctx.strokeRect(mx(-5000), mz(-5000), mx(5000) - mx(-5000), mz(5000) - mz(-5000));
     // 汴河
     mctx.fillStyle = 'rgba(0,120,190,0.55)';
-    mctx.fillRect(0, mz(-30), mm.width, mz(30) - mz(-30));
+    mctx.fillRect(0, mz(-30), MM_W, mz(30) - mz(-30));
     // 宫城/两市
     mctx.strokeStyle = 'rgba(255,210,94,0.7)';
     mctx.strokeRect(mx(-1100), mz(-4450), mx(1100) - mx(-1100), mz(-2950) - mz(-4450));
@@ -498,6 +543,20 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
   const kick = (): void => { world.audio.start(); window.removeEventListener('pointerdown', kick); window.removeEventListener('keydown', kick); };
   window.addEventListener('pointerdown', kick);
   window.addEventListener('keydown', kick);
+
+  // ---- 三界造物 · 许愿台：真实可见的输入框 / 状态 / 设置 / 实体列表 / 五玩法入口 ----
+  // 面板自带 DOM 挂载到 #ui（z-index 高于既有 .panel），逻辑见 src/game/wishPanel.ts。
+  const wishPanel = new WishPanel({
+    uiRoot: ui,
+    scene: engine.scene,
+    camera: engine.camera,
+    // R26：多机位离屏截图验证要借用主 renderer（validateAsset 用完即还原 target 并 dispose）
+    renderer: engine.renderer,
+    dropPoint: (f, s) => world.wishDropPoint(f, s),
+    // R25：造物世界循环需要 player / interact / boss（鸭子类型消费，载入期未装配时降级）
+    world,
+  });
+  (window as unknown as Record<string, unknown>)['__wishPanel'] = wishPanel;
 
   return uiTick;
 }
