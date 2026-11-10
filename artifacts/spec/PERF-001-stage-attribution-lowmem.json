@@ -1,0 +1,2352 @@
+{
+  "schema": "perf-001-stage-attribution/v1",
+  "sampledBy": "scripts/probe-boot-memory.mjs",
+  "source": "window.__qingming.bakeStages() -> Baker.stageStats()（flush 落盘精确值）",
+  "url": "http://127.0.0.1:4186/",
+  "low": false,
+  "lowmemSim": true,
+  "perfMode": "low",
+  "total": {
+    "vertices": 126066498,
+    "triangles": 42022166,
+    "bytes": 3686095296
+  },
+  "byRealm": {
+    "human": {
+      "tasks": 12,
+      "vertices": 107470830,
+      "triangles": 35823610,
+      "bytes": 3124981104
+    },
+    "heaven": {
+      "tasks": 6,
+      "vertices": 11892618,
+      "triangles": 3964206,
+      "bytes": 375904896
+    },
+    "underworld": {
+      "tasks": 7,
+      "vertices": 3096252,
+      "triangles": 1032084,
+      "bytes": 98359968
+    },
+    "shared": {
+      "tasks": 2,
+      "vertices": 3606798,
+      "triangles": 1202266,
+      "bytes": 86849328
+    }
+  },
+  "top10": [
+    {
+      "stage": "皇城·街巷铺装",
+      "realm": "human",
+      "vertices": 65173563,
+      "triangles": 21724521,
+      "bytes": 1852805928,
+      "groups": {
+        "wood": {
+          "vertices": 12698244,
+          "triangles": 4232748,
+          "bytes": 406343808
+        },
+        "wall": {
+          "vertices": 1579080,
+          "triangles": 526360,
+          "bytes": 50530560
+        },
+        "roof": {
+          "vertices": 3896874,
+          "triangles": 1298958,
+          "bytes": 124699968
+        },
+        "ash": {
+          "vertices": 4355604,
+          "triangles": 1451868,
+          "bytes": 139379328
+        },
+        "earth": {
+          "vertices": 1797336,
+          "triangles": 599112,
+          "bytes": 57514752
+        },
+        "ground": {
+          "vertices": 602496,
+          "triangles": 200832,
+          "bytes": 19279872
+        },
+        "glow": {
+          "vertices": 276966,
+          "triangles": 92322,
+          "bytes": 6647184
+        },
+        "leaf": {
+          "vertices": 26781909,
+          "triangles": 8927303,
+          "bytes": 642765816
+        },
+        "trunk": {
+          "vertices": 1925388,
+          "triangles": 641796,
+          "bytes": 46209312
+        },
+        "water": {
+          "vertices": 109248,
+          "triangles": 36416,
+          "bytes": 2621952
+        },
+        "ceramic": {
+          "vertices": 9175290,
+          "triangles": 3058430,
+          "bytes": 293609280
+        },
+        "metal": {
+          "vertices": 681588,
+          "triangles": 227196,
+          "bytes": 21810816
+        },
+        "fabric": {
+          "vertices": 913668,
+          "triangles": 304556,
+          "bytes": 29237376
+        },
+        "lacquer": {
+          "vertices": 379872,
+          "triangles": 126624,
+          "bytes": 12155904
+        }
+      }
+    },
+    {
+      "stage": "皇城·宫城",
+      "realm": "human",
+      "vertices": 16885653,
+      "triangles": 5628551,
+      "bytes": 524814936,
+      "groups": {
+        "wood": {
+          "vertices": 4123848,
+          "triangles": 1374616,
+          "bytes": 131963136
+        },
+        "wall": {
+          "vertices": 753540,
+          "triangles": 251180,
+          "bytes": 24113280
+        },
+        "roof": {
+          "vertices": 5497566,
+          "triangles": 1832522,
+          "bytes": 175922112
+        },
+        "ash": {
+          "vertices": 1509984,
+          "triangles": 503328,
+          "bytes": 48319488
+        },
+        "earth": {
+          "vertices": 175392,
+          "triangles": 58464,
+          "bytes": 5612544
+        },
+        "ground": {
+          "vertices": 22548,
+          "triangles": 7516,
+          "bytes": 721536
+        },
+        "glow": {
+          "vertices": 245490,
+          "triangles": 81830,
+          "bytes": 5891760
+        },
+        "leaf": {
+          "vertices": 1601367,
+          "triangles": 533789,
+          "bytes": 38432808
+        },
+        "trunk": {
+          "vertices": 42396,
+          "triangles": 14132,
+          "bytes": 1017504
+        },
+        "water": {
+          "vertices": 51492,
+          "triangles": 17164,
+          "bytes": 1235808
+        },
+        "ceramic": {
+          "vertices": 863478,
+          "triangles": 287826,
+          "bytes": 27631296
+        },
+        "metal": {
+          "vertices": 1272552,
+          "triangles": 424184,
+          "bytes": 40721664
+        },
+        "fabric": {
+          "vertices": 412572,
+          "triangles": 137524,
+          "bytes": 13202304
+        },
+        "lacquer": {
+          "vertices": 313428,
+          "triangles": 104476,
+          "bytes": 10029696
+        }
+      }
+    },
+    {
+      "stage": "山河·地形",
+      "realm": "human",
+      "vertices": 17214486,
+      "triangles": 5738162,
+      "bytes": 488563344,
+      "groups": {
+        "wood": {
+          "vertices": 2535636,
+          "triangles": 845212,
+          "bytes": 81140352
+        },
+        "wall": {
+          "vertices": 3492,
+          "triangles": 1164,
+          "bytes": 111744
+        },
+        "roof": {
+          "vertices": 909018,
+          "triangles": 303006,
+          "bytes": 29088576
+        },
+        "ash": {
+          "vertices": 749064,
+          "triangles": 249688,
+          "bytes": 23970048
+        },
+        "earth": {
+          "vertices": 1635624,
+          "triangles": 545208,
+          "bytes": 52339968
+        },
+        "ground": {
+          "vertices": 114150,
+          "triangles": 38050,
+          "bytes": 3652800
+        },
+        "glow": {
+          "vertices": 18108,
+          "triangles": 6036,
+          "bytes": 434592
+        },
+        "leaf": {
+          "vertices": 6905334,
+          "triangles": 2301778,
+          "bytes": 165728016
+        },
+        "trunk": {
+          "vertices": 843456,
+          "triangles": 281152,
+          "bytes": 20242944
+        },
+        "water": {
+          "vertices": 20628,
+          "triangles": 6876,
+          "bytes": 495072
+        },
+        "ceramic": {
+          "vertices": 3336936,
+          "triangles": 1112312,
+          "bytes": 106781952
+        },
+        "metal": {
+          "vertices": 90000,
+          "triangles": 30000,
+          "bytes": 2880000
+        },
+        "fabric": {
+          "vertices": 46596,
+          "triangles": 15532,
+          "bytes": 1491072
+        },
+        "lacquer": {
+          "vertices": 6444,
+          "triangles": 2148,
+          "bytes": 206208
+        }
+      }
+    },
+    {
+      "stage": "云海·宫阙群",
+      "realm": "heaven",
+      "vertices": 9445908,
+      "triangles": 3148636,
+      "bytes": 298734864,
+      "groups": {
+        "wood": {
+          "vertices": 3693948,
+          "triangles": 1231316,
+          "bytes": 118206336
+        },
+        "wall": {
+          "vertices": 113100,
+          "triangles": 37700,
+          "bytes": 3619200
+        },
+        "roof": {
+          "vertices": 2196948,
+          "triangles": 732316,
+          "bytes": 70302336
+        },
+        "ash": {
+          "vertices": 1979220,
+          "triangles": 659740,
+          "bytes": 63335040
+        },
+        "ground": {
+          "vertices": 199788,
+          "triangles": 66596,
+          "bytes": 6393216
+        },
+        "glow": {
+          "vertices": 30918,
+          "triangles": 10306,
+          "bytes": 742032
+        },
+        "leaf": {
+          "vertices": 279630,
+          "triangles": 93210,
+          "bytes": 6711120
+        },
+        "trunk": {
+          "vertices": 20322,
+          "triangles": 6774,
+          "bytes": 487728
+        },
+        "water": {
+          "vertices": 110904,
+          "triangles": 36968,
+          "bytes": 2661696
+        },
+        "ceramic": {
+          "vertices": 90090,
+          "triangles": 30030,
+          "bytes": 2882880
+        },
+        "metal": {
+          "vertices": 454668,
+          "triangles": 151556,
+          "bytes": 14549376
+        },
+        "fabric": {
+          "vertices": 258840,
+          "triangles": 86280,
+          "bytes": 8282880
+        },
+        "lacquer": {
+          "vertices": 17532,
+          "triangles": 5844,
+          "bytes": 561024
+        }
+      }
+    },
+    {
+      "stage": "筑城·街屋群",
+      "realm": "human",
+      "vertices": 6654288,
+      "triangles": 2218096,
+      "bytes": 212143584,
+      "groups": {
+        "wood": {
+          "vertices": 2437284,
+          "triangles": 812428,
+          "bytes": 77993088
+        },
+        "wall": {
+          "vertices": 366330,
+          "triangles": 122110,
+          "bytes": 11722560
+        },
+        "roof": {
+          "vertices": 2389776,
+          "triangles": 796592,
+          "bytes": 76472832
+        },
+        "ash": {
+          "vertices": 389670,
+          "triangles": 129890,
+          "bytes": 12469440
+        },
+        "earth": {
+          "vertices": 55752,
+          "triangles": 18584,
+          "bytes": 1784064
+        },
+        "ground": {
+          "vertices": 1392,
+          "triangles": 464,
+          "bytes": 44544
+        },
+        "glow": {
+          "vertices": 71598,
+          "triangles": 23866,
+          "bytes": 1718352
+        },
+        "leaf": {
+          "vertices": 18054,
+          "triangles": 6018,
+          "bytes": 433296
+        },
+        "trunk": {
+          "vertices": 2736,
+          "triangles": 912,
+          "bytes": 65664
+        },
+        "water": {
+          "vertices": 6816,
+          "triangles": 2272,
+          "bytes": 163584
+        },
+        "ceramic": {
+          "vertices": 155484,
+          "triangles": 51828,
+          "bytes": 4975488
+        },
+        "metal": {
+          "vertices": 373890,
+          "triangles": 124630,
+          "bytes": 11964480
+        },
+        "fabric": {
+          "vertices": 274278,
+          "triangles": 91426,
+          "bytes": 8776896
+        },
+        "lacquer": {
+          "vertices": 111228,
+          "triangles": 37076,
+          "bytes": 3559296
+        }
+      }
+    },
+    {
+      "stage": "三界生态·草木禽鱼",
+      "realm": "shared",
+      "vertices": 3518136,
+      "triangles": 1172712,
+      "bytes": 84435264,
+      "groups": {
+        "glow": {
+          "vertices": 934002,
+          "triangles": 311334,
+          "bytes": 22416048
+        },
+        "leaf": {
+          "vertices": 2180334,
+          "triangles": 726778,
+          "bytes": 52328016
+        },
+        "trunk": {
+          "vertices": 403800,
+          "triangles": 134600,
+          "bytes": 9691200
+        }
+      }
+    },
+    {
+      "stage": "幽冥·丰都街",
+      "realm": "underworld",
+      "vertices": 2041374,
+      "triangles": 680458,
+      "bytes": 64883280,
+      "groups": {
+        "wood": {
+          "vertices": 460284,
+          "triangles": 153428,
+          "bytes": 14729088
+        },
+        "wall": {
+          "vertices": 20424,
+          "triangles": 6808,
+          "bytes": 653568
+        },
+        "roof": {
+          "vertices": 834552,
+          "triangles": 278184,
+          "bytes": 26705664
+        },
+        "ash": {
+          "vertices": 130920,
+          "triangles": 43640,
+          "bytes": 4189440
+        },
+        "ground": {
+          "vertices": 115164,
+          "triangles": 38388,
+          "bytes": 3685248
+        },
+        "glow": {
+          "vertices": 55086,
+          "triangles": 18362,
+          "bytes": 1322064
+        },
+        "ceramic": {
+          "vertices": 28332,
+          "triangles": 9444,
+          "bytes": 906624
+        },
+        "metal": {
+          "vertices": 358440,
+          "triangles": 119480,
+          "bytes": 11470080
+        },
+        "fabric": {
+          "vertices": 33168,
+          "triangles": 11056,
+          "bytes": 1061376
+        },
+        "lacquer": {
+          "vertices": 5004,
+          "triangles": 1668,
+          "bytes": 160128
+        }
+      }
+    },
+    {
+      "stage": "云起天宫",
+      "realm": "heaven",
+      "vertices": 1406862,
+      "triangles": 468954,
+      "bytes": 44258160,
+      "groups": {
+        "wood": {
+          "vertices": 229032,
+          "triangles": 76344,
+          "bytes": 7329024
+        },
+        "wall": {
+          "vertices": 38304,
+          "triangles": 12768,
+          "bytes": 1225728
+        },
+        "roof": {
+          "vertices": 358080,
+          "triangles": 119360,
+          "bytes": 11458560
+        },
+        "ash": {
+          "vertices": 203772,
+          "triangles": 67924,
+          "bytes": 6520704
+        },
+        "ground": {
+          "vertices": 20916,
+          "triangles": 6972,
+          "bytes": 669312
+        },
+        "glow": {
+          "vertices": 55002,
+          "triangles": 18334,
+          "bytes": 1320048
+        },
+        "leaf": {
+          "vertices": 33852,
+          "triangles": 11284,
+          "bytes": 812448
+        },
+        "trunk": {
+          "vertices": 2544,
+          "triangles": 848,
+          "bytes": 61056
+        },
+        "water": {
+          "vertices": 3780,
+          "triangles": 1260,
+          "bytes": 90720
+        },
+        "ceramic": {
+          "vertices": 316824,
+          "triangles": 105608,
+          "bytes": 10138368
+        },
+        "metal": {
+          "vertices": 47700,
+          "triangles": 15900,
+          "bytes": 1526400
+        },
+        "fabric": {
+          "vertices": 96384,
+          "triangles": 32128,
+          "bytes": 3084288
+        },
+        "lacquer": {
+          "vertices": 672,
+          "triangles": 224,
+          "bytes": 21504
+        }
+      }
+    },
+    {
+      "stage": "幽冥开辟",
+      "realm": "underworld",
+      "vertices": 713724,
+      "triangles": 237908,
+      "bytes": 22632864,
+      "groups": {
+        "wood": {
+          "vertices": 237648,
+          "triangles": 79216,
+          "bytes": 7604736
+        },
+        "wall": {
+          "vertices": 216,
+          "triangles": 72,
+          "bytes": 6912
+        },
+        "roof": {
+          "vertices": 187284,
+          "triangles": 62428,
+          "bytes": 5993088
+        },
+        "ash": {
+          "vertices": 114528,
+          "triangles": 38176,
+          "bytes": 3664896
+        },
+        "earth": {
+          "vertices": 2160,
+          "triangles": 720,
+          "bytes": 69120
+        },
+        "ground": {
+          "vertices": 756,
+          "triangles": 252,
+          "bytes": 24192
+        },
+        "glow": {
+          "vertices": 24744,
+          "triangles": 8248,
+          "bytes": 593856
+        },
+        "leaf": {
+          "vertices": 1044,
+          "triangles": 348,
+          "bytes": 25056
+        },
+        "ceramic": {
+          "vertices": 2640,
+          "triangles": 880,
+          "bytes": 84480
+        },
+        "metal": {
+          "vertices": 89460,
+          "triangles": 29820,
+          "bytes": 2862720
+        },
+        "fabric": {
+          "vertices": 45480,
+          "triangles": 15160,
+          "bytes": 1455360
+        },
+        "lacquer": {
+          "vertices": 7764,
+          "triangles": 2588,
+          "bytes": 248448
+        }
+      }
+    },
+    {
+      "stage": "云海·三殿内饰",
+      "realm": "heaven",
+      "vertices": 471858,
+      "triangles": 157286,
+      "bytes": 14894496,
+      "groups": {
+        "wood": {
+          "vertices": 215556,
+          "triangles": 71852,
+          "bytes": 6897792
+        },
+        "wall": {
+          "vertices": 4896,
+          "triangles": 1632,
+          "bytes": 156672
+        },
+        "roof": {
+          "vertices": 46746,
+          "triangles": 15582,
+          "bytes": 1495872
+        },
+        "ash": {
+          "vertices": 25020,
+          "triangles": 8340,
+          "bytes": 800640
+        },
+        "earth": {
+          "vertices": 396,
+          "triangles": 132,
+          "bytes": 12672
+        },
+        "glow": {
+          "vertices": 25020,
+          "triangles": 8340,
+          "bytes": 600480
+        },
+        "leaf": {
+          "vertices": 396,
+          "triangles": 132,
+          "bytes": 9504
+        },
+        "trunk": {
+          "vertices": 204,
+          "triangles": 68,
+          "bytes": 4896
+        },
+        "ceramic": {
+          "vertices": 35856,
+          "triangles": 11952,
+          "bytes": 1147392
+        },
+        "metal": {
+          "vertices": 87756,
+          "triangles": 29252,
+          "bytes": 2808192
+        },
+        "fabric": {
+          "vertices": 20004,
+          "triangles": 6668,
+          "bytes": 640128
+        },
+        "lacquer": {
+          "vertices": 10008,
+          "triangles": 3336,
+          "bytes": 320256
+        }
+      }
+    }
+  ],
+  "stages": [
+    {
+      "stage": "山河·地形",
+      "realm": "human",
+      "vertices": 17214486,
+      "triangles": 5738162,
+      "bytes": 488563344,
+      "groups": {
+        "wood": {
+          "vertices": 2535636,
+          "triangles": 845212,
+          "bytes": 81140352
+        },
+        "wall": {
+          "vertices": 3492,
+          "triangles": 1164,
+          "bytes": 111744
+        },
+        "roof": {
+          "vertices": 909018,
+          "triangles": 303006,
+          "bytes": 29088576
+        },
+        "ash": {
+          "vertices": 749064,
+          "triangles": 249688,
+          "bytes": 23970048
+        },
+        "earth": {
+          "vertices": 1635624,
+          "triangles": 545208,
+          "bytes": 52339968
+        },
+        "ground": {
+          "vertices": 114150,
+          "triangles": 38050,
+          "bytes": 3652800
+        },
+        "glow": {
+          "vertices": 18108,
+          "triangles": 6036,
+          "bytes": 434592
+        },
+        "leaf": {
+          "vertices": 6905334,
+          "triangles": 2301778,
+          "bytes": 165728016
+        },
+        "trunk": {
+          "vertices": 843456,
+          "triangles": 281152,
+          "bytes": 20242944
+        },
+        "water": {
+          "vertices": 20628,
+          "triangles": 6876,
+          "bytes": 495072
+        },
+        "ceramic": {
+          "vertices": 3336936,
+          "triangles": 1112312,
+          "bytes": 106781952
+        },
+        "metal": {
+          "vertices": 90000,
+          "triangles": 30000,
+          "bytes": 2880000
+        },
+        "fabric": {
+          "vertices": 46596,
+          "triangles": 15532,
+          "bytes": 1491072
+        },
+        "lacquer": {
+          "vertices": 6444,
+          "triangles": 2148,
+          "bytes": 206208
+        }
+      }
+    },
+    {
+      "stage": "山河·旷野",
+      "realm": "human",
+      "vertices": 21384,
+      "triangles": 7128,
+      "bytes": 631680,
+      "groups": {
+        "wood": {
+          "vertices": 2280,
+          "triangles": 760,
+          "bytes": 72960
+        },
+        "wall": {
+          "vertices": 1944,
+          "triangles": 648,
+          "bytes": 62208
+        },
+        "roof": {
+          "vertices": 264,
+          "triangles": 88,
+          "bytes": 8448
+        },
+        "ash": {
+          "vertices": 6468,
+          "triangles": 2156,
+          "bytes": 206976
+        },
+        "earth": {
+          "vertices": 1944,
+          "triangles": 648,
+          "bytes": 62208
+        },
+        "glow": {
+          "vertices": 720,
+          "triangles": 240,
+          "bytes": 17280
+        },
+        "leaf": {
+          "vertices": 4956,
+          "triangles": 1652,
+          "bytes": 118944
+        },
+        "trunk": {
+          "vertices": 336,
+          "triangles": 112,
+          "bytes": 8064
+        },
+        "water": {
+          "vertices": 564,
+          "triangles": 188,
+          "bytes": 13536
+        },
+        "ceramic": {
+          "vertices": 540,
+          "triangles": 180,
+          "bytes": 17280
+        },
+        "metal": {
+          "vertices": 288,
+          "triangles": 96,
+          "bytes": 9216
+        },
+        "fabric": {
+          "vertices": 1080,
+          "triangles": 360,
+          "bytes": 34560
+        }
+      }
+    },
+    {
+      "stage": "筑城·街巷基层",
+      "realm": "human",
+      "vertices": 413790,
+      "triangles": 137930,
+      "bytes": 12782736,
+      "groups": {
+        "wood": {
+          "vertices": 31452,
+          "triangles": 10484,
+          "bytes": 1006464
+        },
+        "wall": {
+          "vertices": 20676,
+          "triangles": 6892,
+          "bytes": 661632
+        },
+        "roof": {
+          "vertices": 3348,
+          "triangles": 1116,
+          "bytes": 107136
+        },
+        "ash": {
+          "vertices": 20040,
+          "triangles": 6680,
+          "bytes": 641280
+        },
+        "earth": {
+          "vertices": 263382,
+          "triangles": 87794,
+          "bytes": 8428224
+        },
+        "ground": {
+          "vertices": 3954,
+          "triangles": 1318,
+          "bytes": 126528
+        },
+        "glow": {
+          "vertices": 1428,
+          "triangles": 476,
+          "bytes": 34272
+        },
+        "leaf": {
+          "vertices": 46206,
+          "triangles": 15402,
+          "bytes": 1108944
+        },
+        "trunk": {
+          "vertices": 9456,
+          "triangles": 3152,
+          "bytes": 226944
+        },
+        "water": {
+          "vertices": 228,
+          "triangles": 76,
+          "bytes": 5472
+        },
+        "ceramic": {
+          "vertices": 4416,
+          "triangles": 1472,
+          "bytes": 141312
+        },
+        "metal": {
+          "vertices": 4164,
+          "triangles": 1388,
+          "bytes": 133248
+        },
+        "fabric": {
+          "vertices": 4464,
+          "triangles": 1488,
+          "bytes": 142848
+        },
+        "lacquer": {
+          "vertices": 576,
+          "triangles": 192,
+          "bytes": 18432
+        }
+      }
+    },
+    {
+      "stage": "筑城·街屋群",
+      "realm": "human",
+      "vertices": 6654288,
+      "triangles": 2218096,
+      "bytes": 212143584,
+      "groups": {
+        "wood": {
+          "vertices": 2437284,
+          "triangles": 812428,
+          "bytes": 77993088
+        },
+        "wall": {
+          "vertices": 366330,
+          "triangles": 122110,
+          "bytes": 11722560
+        },
+        "roof": {
+          "vertices": 2389776,
+          "triangles": 796592,
+          "bytes": 76472832
+        },
+        "ash": {
+          "vertices": 389670,
+          "triangles": 129890,
+          "bytes": 12469440
+        },
+        "earth": {
+          "vertices": 55752,
+          "triangles": 18584,
+          "bytes": 1784064
+        },
+        "ground": {
+          "vertices": 1392,
+          "triangles": 464,
+          "bytes": 44544
+        },
+        "glow": {
+          "vertices": 71598,
+          "triangles": 23866,
+          "bytes": 1718352
+        },
+        "leaf": {
+          "vertices": 18054,
+          "triangles": 6018,
+          "bytes": 433296
+        },
+        "trunk": {
+          "vertices": 2736,
+          "triangles": 912,
+          "bytes": 65664
+        },
+        "water": {
+          "vertices": 6816,
+          "triangles": 2272,
+          "bytes": 163584
+        },
+        "ceramic": {
+          "vertices": 155484,
+          "triangles": 51828,
+          "bytes": 4975488
+        },
+        "metal": {
+          "vertices": 373890,
+          "triangles": 124630,
+          "bytes": 11964480
+        },
+        "fabric": {
+          "vertices": 274278,
+          "triangles": 91426,
+          "bytes": 8776896
+        },
+        "lacquer": {
+          "vertices": 111228,
+          "triangles": 37076,
+          "bytes": 3559296
+        }
+      }
+    },
+    {
+      "stage": "筑城·街屋内饰",
+      "realm": "human",
+      "vertices": 203976,
+      "triangles": 67992,
+      "bytes": 6511584,
+      "groups": {
+        "wood": {
+          "vertices": 81468,
+          "triangles": 27156,
+          "bytes": 2606976
+        },
+        "roof": {
+          "vertices": 4152,
+          "triangles": 1384,
+          "bytes": 132864
+        },
+        "ash": {
+          "vertices": 5412,
+          "triangles": 1804,
+          "bytes": 173184
+        },
+        "earth": {
+          "vertices": 1248,
+          "triangles": 416,
+          "bytes": 39936
+        },
+        "glow": {
+          "vertices": 948,
+          "triangles": 316,
+          "bytes": 22752
+        },
+        "leaf": {
+          "vertices": 252,
+          "triangles": 84,
+          "bytes": 6048
+        },
+        "trunk": {
+          "vertices": 36,
+          "triangles": 12,
+          "bytes": 864
+        },
+        "water": {
+          "vertices": 720,
+          "triangles": 240,
+          "bytes": 17280
+        },
+        "ceramic": {
+          "vertices": 67152,
+          "triangles": 22384,
+          "bytes": 2148864
+        },
+        "metal": {
+          "vertices": 21912,
+          "triangles": 7304,
+          "bytes": 701184
+        },
+        "fabric": {
+          "vertices": 11244,
+          "triangles": 3748,
+          "bytes": 359808
+        },
+        "lacquer": {
+          "vertices": 9432,
+          "triangles": 3144,
+          "bytes": 301824
+        }
+      }
+    },
+    {
+      "stage": "筑城·樊楼相国寺",
+      "realm": "human",
+      "vertices": 199614,
+      "triangles": 66538,
+      "bytes": 6382176,
+      "groups": {
+        "wood": {
+          "vertices": 86820,
+          "triangles": 28940,
+          "bytes": 2778240
+        },
+        "roof": {
+          "vertices": 55752,
+          "triangles": 18584,
+          "bytes": 1784064
+        },
+        "ash": {
+          "vertices": 8274,
+          "triangles": 2758,
+          "bytes": 264768
+        },
+        "earth": {
+          "vertices": 36,
+          "triangles": 12,
+          "bytes": 1152
+        },
+        "glow": {
+          "vertices": 612,
+          "triangles": 204,
+          "bytes": 14688
+        },
+        "leaf": {
+          "vertices": 72,
+          "triangles": 24,
+          "bytes": 1728
+        },
+        "ceramic": {
+          "vertices": 16380,
+          "triangles": 5460,
+          "bytes": 524160
+        },
+        "metal": {
+          "vertices": 10740,
+          "triangles": 3580,
+          "bytes": 343680
+        },
+        "fabric": {
+          "vertices": 15528,
+          "triangles": 5176,
+          "bytes": 496896
+        },
+        "lacquer": {
+          "vertices": 5400,
+          "triangles": 1800,
+          "bytes": 172800
+        }
+      }
+    },
+    {
+      "stage": "筑城·虹桥人流",
+      "realm": "human",
+      "vertices": 112260,
+      "triangles": 37420,
+      "bytes": 3534624,
+      "groups": {
+        "wood": {
+          "vertices": 60768,
+          "triangles": 20256,
+          "bytes": 1944576
+        },
+        "wall": {
+          "vertices": 384,
+          "triangles": 128,
+          "bytes": 12288
+        },
+        "roof": {
+          "vertices": 1404,
+          "triangles": 468,
+          "bytes": 44928
+        },
+        "ash": {
+          "vertices": 34212,
+          "triangles": 11404,
+          "bytes": 1094784
+        },
+        "glow": {
+          "vertices": 7212,
+          "triangles": 2404,
+          "bytes": 173088
+        },
+        "ceramic": {
+          "vertices": 1152,
+          "triangles": 384,
+          "bytes": 36864
+        },
+        "metal": {
+          "vertices": 6840,
+          "triangles": 2280,
+          "bytes": 218880
+        },
+        "fabric": {
+          "vertices": 288,
+          "triangles": 96,
+          "bytes": 9216
+        }
+      }
+    },
+    {
+      "stage": "皇城·宫城",
+      "realm": "human",
+      "vertices": 16885653,
+      "triangles": 5628551,
+      "bytes": 524814936,
+      "groups": {
+        "wood": {
+          "vertices": 4123848,
+          "triangles": 1374616,
+          "bytes": 131963136
+        },
+        "wall": {
+          "vertices": 753540,
+          "triangles": 251180,
+          "bytes": 24113280
+        },
+        "roof": {
+          "vertices": 5497566,
+          "triangles": 1832522,
+          "bytes": 175922112
+        },
+        "ash": {
+          "vertices": 1509984,
+          "triangles": 503328,
+          "bytes": 48319488
+        },
+        "earth": {
+          "vertices": 175392,
+          "triangles": 58464,
+          "bytes": 5612544
+        },
+        "ground": {
+          "vertices": 22548,
+          "triangles": 7516,
+          "bytes": 721536
+        },
+        "glow": {
+          "vertices": 245490,
+          "triangles": 81830,
+          "bytes": 5891760
+        },
+        "leaf": {
+          "vertices": 1601367,
+          "triangles": 533789,
+          "bytes": 38432808
+        },
+        "trunk": {
+          "vertices": 42396,
+          "triangles": 14132,
+          "bytes": 1017504
+        },
+        "water": {
+          "vertices": 51492,
+          "triangles": 17164,
+          "bytes": 1235808
+        },
+        "ceramic": {
+          "vertices": 863478,
+          "triangles": 287826,
+          "bytes": 27631296
+        },
+        "metal": {
+          "vertices": 1272552,
+          "triangles": 424184,
+          "bytes": 40721664
+        },
+        "fabric": {
+          "vertices": 412572,
+          "triangles": 137524,
+          "bytes": 13202304
+        },
+        "lacquer": {
+          "vertices": 313428,
+          "triangles": 104476,
+          "bytes": 10029696
+        }
+      }
+    },
+    {
+      "stage": "皇城·街巷铺装",
+      "realm": "human",
+      "vertices": 65173563,
+      "triangles": 21724521,
+      "bytes": 1852805928,
+      "groups": {
+        "wood": {
+          "vertices": 12698244,
+          "triangles": 4232748,
+          "bytes": 406343808
+        },
+        "wall": {
+          "vertices": 1579080,
+          "triangles": 526360,
+          "bytes": 50530560
+        },
+        "roof": {
+          "vertices": 3896874,
+          "triangles": 1298958,
+          "bytes": 124699968
+        },
+        "ash": {
+          "vertices": 4355604,
+          "triangles": 1451868,
+          "bytes": 139379328
+        },
+        "earth": {
+          "vertices": 1797336,
+          "triangles": 599112,
+          "bytes": 57514752
+        },
+        "ground": {
+          "vertices": 602496,
+          "triangles": 200832,
+          "bytes": 19279872
+        },
+        "glow": {
+          "vertices": 276966,
+          "triangles": 92322,
+          "bytes": 6647184
+        },
+        "leaf": {
+          "vertices": 26781909,
+          "triangles": 8927303,
+          "bytes": 642765816
+        },
+        "trunk": {
+          "vertices": 1925388,
+          "triangles": 641796,
+          "bytes": 46209312
+        },
+        "water": {
+          "vertices": 109248,
+          "triangles": 36416,
+          "bytes": 2621952
+        },
+        "ceramic": {
+          "vertices": 9175290,
+          "triangles": 3058430,
+          "bytes": 293609280
+        },
+        "metal": {
+          "vertices": 681588,
+          "triangles": 227196,
+          "bytes": 21810816
+        },
+        "fabric": {
+          "vertices": 913668,
+          "triangles": 304556,
+          "bytes": 29237376
+        },
+        "lacquer": {
+          "vertices": 379872,
+          "triangles": 126624,
+          "bytes": 12155904
+        }
+      }
+    },
+    {
+      "stage": "筑城·水关收口",
+      "realm": "human",
+      "vertices": 100500,
+      "triangles": 33500,
+      "bytes": 3199104,
+      "groups": {
+        "wood": {
+          "vertices": 28920,
+          "triangles": 9640,
+          "bytes": 925440
+        },
+        "wall": {
+          "vertices": 360,
+          "triangles": 120,
+          "bytes": 11520
+        },
+        "roof": {
+          "vertices": 35148,
+          "triangles": 11716,
+          "bytes": 1124736
+        },
+        "ash": {
+          "vertices": 21288,
+          "triangles": 7096,
+          "bytes": 681216
+        },
+        "earth": {
+          "vertices": 1728,
+          "triangles": 576,
+          "bytes": 55296
+        },
+        "glow": {
+          "vertices": 972,
+          "triangles": 324,
+          "bytes": 23328
+        },
+        "water": {
+          "vertices": 1140,
+          "triangles": 380,
+          "bytes": 27360
+        },
+        "metal": {
+          "vertices": 10584,
+          "triangles": 3528,
+          "bytes": 338688
+        },
+        "lacquer": {
+          "vertices": 360,
+          "triangles": 120,
+          "bytes": 11520
+        }
+      }
+    },
+    {
+      "stage": "筑城·水系支脉",
+      "realm": "human",
+      "vertices": 69438,
+      "triangles": 23146,
+      "bytes": 2133120,
+      "groups": {
+        "ash": {
+          "vertices": 58290,
+          "triangles": 19430,
+          "bytes": 1865280
+        },
+        "ground": {
+          "vertices": 36,
+          "triangles": 12,
+          "bytes": 1152
+        },
+        "leaf": {
+          "vertices": 636,
+          "triangles": 212,
+          "bytes": 15264
+        },
+        "trunk": {
+          "vertices": 60,
+          "triangles": 20,
+          "bytes": 1440
+        },
+        "water": {
+          "vertices": 10416,
+          "triangles": 3472,
+          "bytes": 249984
+        }
+      }
+    },
+    {
+      "stage": "装点市井",
+      "realm": "human",
+      "vertices": 421878,
+      "triangles": 140626,
+      "bytes": 11478288,
+      "groups": {
+        "wood": {
+          "vertices": 47184,
+          "triangles": 15728,
+          "bytes": 1509888
+        },
+        "wall": {
+          "vertices": 252,
+          "triangles": 84,
+          "bytes": 8064
+        },
+        "roof": {
+          "vertices": 2124,
+          "triangles": 708,
+          "bytes": 67968
+        },
+        "ash": {
+          "vertices": 5400,
+          "triangles": 1800,
+          "bytes": 172800
+        },
+        "earth": {
+          "vertices": 3600,
+          "triangles": 1200,
+          "bytes": 115200
+        },
+        "glow": {
+          "vertices": 5580,
+          "triangles": 1860,
+          "bytes": 133920
+        },
+        "leaf": {
+          "vertices": 214494,
+          "triangles": 71498,
+          "bytes": 5147856
+        },
+        "trunk": {
+          "vertices": 32652,
+          "triangles": 10884,
+          "bytes": 783648
+        },
+        "ceramic": {
+          "vertices": 55836,
+          "triangles": 18612,
+          "bytes": 1786752
+        },
+        "metal": {
+          "vertices": 22680,
+          "triangles": 7560,
+          "bytes": 725760
+        },
+        "fabric": {
+          "vertices": 12600,
+          "triangles": 4200,
+          "bytes": 403200
+        },
+        "lacquer": {
+          "vertices": 19476,
+          "triangles": 6492,
+          "bytes": 623232
+        }
+      }
+    },
+    {
+      "stage": "云起天宫",
+      "realm": "heaven",
+      "vertices": 1406862,
+      "triangles": 468954,
+      "bytes": 44258160,
+      "groups": {
+        "wood": {
+          "vertices": 229032,
+          "triangles": 76344,
+          "bytes": 7329024
+        },
+        "wall": {
+          "vertices": 38304,
+          "triangles": 12768,
+          "bytes": 1225728
+        },
+        "roof": {
+          "vertices": 358080,
+          "triangles": 119360,
+          "bytes": 11458560
+        },
+        "ash": {
+          "vertices": 203772,
+          "triangles": 67924,
+          "bytes": 6520704
+        },
+        "ground": {
+          "vertices": 20916,
+          "triangles": 6972,
+          "bytes": 669312
+        },
+        "glow": {
+          "vertices": 55002,
+          "triangles": 18334,
+          "bytes": 1320048
+        },
+        "leaf": {
+          "vertices": 33852,
+          "triangles": 11284,
+          "bytes": 812448
+        },
+        "trunk": {
+          "vertices": 2544,
+          "triangles": 848,
+          "bytes": 61056
+        },
+        "water": {
+          "vertices": 3780,
+          "triangles": 1260,
+          "bytes": 90720
+        },
+        "ceramic": {
+          "vertices": 316824,
+          "triangles": 105608,
+          "bytes": 10138368
+        },
+        "metal": {
+          "vertices": 47700,
+          "triangles": 15900,
+          "bytes": 1526400
+        },
+        "fabric": {
+          "vertices": 96384,
+          "triangles": 32128,
+          "bytes": 3084288
+        },
+        "lacquer": {
+          "vertices": 672,
+          "triangles": 224,
+          "bytes": 21504
+        }
+      }
+    },
+    {
+      "stage": "仙界装点",
+      "realm": "heaven",
+      "vertices": 27636,
+      "triangles": 9212,
+      "bytes": 878496,
+      "groups": {
+        "wood": {
+          "vertices": 7884,
+          "triangles": 2628,
+          "bytes": 252288
+        },
+        "wall": {
+          "vertices": 1344,
+          "triangles": 448,
+          "bytes": 43008
+        },
+        "roof": {
+          "vertices": 15660,
+          "triangles": 5220,
+          "bytes": 501120
+        },
+        "glow": {
+          "vertices": 564,
+          "triangles": 188,
+          "bytes": 13536
+        },
+        "leaf": {
+          "vertices": 168,
+          "triangles": 56,
+          "bytes": 4032
+        },
+        "metal": {
+          "vertices": 2016,
+          "triangles": 672,
+          "bytes": 64512
+        }
+      }
+    },
+    {
+      "stage": "云海·宫阙群",
+      "realm": "heaven",
+      "vertices": 9445908,
+      "triangles": 3148636,
+      "bytes": 298734864,
+      "groups": {
+        "wood": {
+          "vertices": 3693948,
+          "triangles": 1231316,
+          "bytes": 118206336
+        },
+        "wall": {
+          "vertices": 113100,
+          "triangles": 37700,
+          "bytes": 3619200
+        },
+        "roof": {
+          "vertices": 2196948,
+          "triangles": 732316,
+          "bytes": 70302336
+        },
+        "ash": {
+          "vertices": 1979220,
+          "triangles": 659740,
+          "bytes": 63335040
+        },
+        "ground": {
+          "vertices": 199788,
+          "triangles": 66596,
+          "bytes": 6393216
+        },
+        "glow": {
+          "vertices": 30918,
+          "triangles": 10306,
+          "bytes": 742032
+        },
+        "leaf": {
+          "vertices": 279630,
+          "triangles": 93210,
+          "bytes": 6711120
+        },
+        "trunk": {
+          "vertices": 20322,
+          "triangles": 6774,
+          "bytes": 487728
+        },
+        "water": {
+          "vertices": 110904,
+          "triangles": 36968,
+          "bytes": 2661696
+        },
+        "ceramic": {
+          "vertices": 90090,
+          "triangles": 30030,
+          "bytes": 2882880
+        },
+        "metal": {
+          "vertices": 454668,
+          "triangles": 151556,
+          "bytes": 14549376
+        },
+        "fabric": {
+          "vertices": 258840,
+          "triangles": 86280,
+          "bytes": 8282880
+        },
+        "lacquer": {
+          "vertices": 17532,
+          "triangles": 5844,
+          "bytes": 561024
+        }
+      }
+    },
+    {
+      "stage": "云海·三殿内饰",
+      "realm": "heaven",
+      "vertices": 471858,
+      "triangles": 157286,
+      "bytes": 14894496,
+      "groups": {
+        "wood": {
+          "vertices": 215556,
+          "triangles": 71852,
+          "bytes": 6897792
+        },
+        "wall": {
+          "vertices": 4896,
+          "triangles": 1632,
+          "bytes": 156672
+        },
+        "roof": {
+          "vertices": 46746,
+          "triangles": 15582,
+          "bytes": 1495872
+        },
+        "ash": {
+          "vertices": 25020,
+          "triangles": 8340,
+          "bytes": 800640
+        },
+        "earth": {
+          "vertices": 396,
+          "triangles": 132,
+          "bytes": 12672
+        },
+        "glow": {
+          "vertices": 25020,
+          "triangles": 8340,
+          "bytes": 600480
+        },
+        "leaf": {
+          "vertices": 396,
+          "triangles": 132,
+          "bytes": 9504
+        },
+        "trunk": {
+          "vertices": 204,
+          "triangles": 68,
+          "bytes": 4896
+        },
+        "ceramic": {
+          "vertices": 35856,
+          "triangles": 11952,
+          "bytes": 1147392
+        },
+        "metal": {
+          "vertices": 87756,
+          "triangles": 29252,
+          "bytes": 2808192
+        },
+        "fabric": {
+          "vertices": 20004,
+          "triangles": 6668,
+          "bytes": 640128
+        },
+        "lacquer": {
+          "vertices": 10008,
+          "triangles": 3336,
+          "bytes": 320256
+        }
+      }
+    },
+    {
+      "stage": "云海·瑶池水榭",
+      "realm": "heaven",
+      "vertices": 88698,
+      "triangles": 29566,
+      "bytes": 2770464,
+      "groups": {
+        "wood": {
+          "vertices": 23184,
+          "triangles": 7728,
+          "bytes": 741888
+        },
+        "wall": {
+          "vertices": 276,
+          "triangles": 92,
+          "bytes": 8832
+        },
+        "roof": {
+          "vertices": 23058,
+          "triangles": 7686,
+          "bytes": 737856
+        },
+        "ash": {
+          "vertices": 25368,
+          "triangles": 8456,
+          "bytes": 811776
+        },
+        "earth": {
+          "vertices": 336,
+          "triangles": 112,
+          "bytes": 10752
+        },
+        "ground": {
+          "vertices": 6516,
+          "triangles": 2172,
+          "bytes": 208512
+        },
+        "glow": {
+          "vertices": 2184,
+          "triangles": 728,
+          "bytes": 52416
+        },
+        "leaf": {
+          "vertices": 5148,
+          "triangles": 1716,
+          "bytes": 123552
+        },
+        "trunk": {
+          "vertices": 720,
+          "triangles": 240,
+          "bytes": 17280
+        },
+        "water": {
+          "vertices": 432,
+          "triangles": 144,
+          "bytes": 10368
+        },
+        "ceramic": {
+          "vertices": 192,
+          "triangles": 64,
+          "bytes": 6144
+        },
+        "metal": {
+          "vertices": 1284,
+          "triangles": 428,
+          "bytes": 41088
+        }
+      }
+    },
+    {
+      "stage": "云海·仙植鬼植",
+      "realm": "shared",
+      "vertices": 88662,
+      "triangles": 29554,
+      "bytes": 2414064,
+      "groups": {
+        "wood": {
+          "vertices": 26940,
+          "triangles": 8980,
+          "bytes": 862080
+        },
+        "ash": {
+          "vertices": 8832,
+          "triangles": 2944,
+          "bytes": 282624
+        },
+        "glow": {
+          "vertices": 9036,
+          "triangles": 3012,
+          "bytes": 216864
+        },
+        "leaf": {
+          "vertices": 43566,
+          "triangles": 14522,
+          "bytes": 1045584
+        },
+        "trunk": {
+          "vertices": 288,
+          "triangles": 96,
+          "bytes": 6912
+        }
+      }
+    },
+    {
+      "stage": "三界生态·草木禽鱼",
+      "realm": "shared",
+      "vertices": 3518136,
+      "triangles": 1172712,
+      "bytes": 84435264,
+      "groups": {
+        "glow": {
+          "vertices": 934002,
+          "triangles": 311334,
+          "bytes": 22416048
+        },
+        "leaf": {
+          "vertices": 2180334,
+          "triangles": 726778,
+          "bytes": 52328016
+        },
+        "trunk": {
+          "vertices": 403800,
+          "triangles": 134600,
+          "bytes": 9691200
+        }
+      }
+    },
+    {
+      "stage": "云海·天府附院",
+      "realm": "heaven",
+      "vertices": 451656,
+      "triangles": 150552,
+      "bytes": 14368416,
+      "groups": {
+        "wood": {
+          "vertices": 238932,
+          "triangles": 79644,
+          "bytes": 7645824
+        },
+        "wall": {
+          "vertices": 360,
+          "triangles": 120,
+          "bytes": 11520
+        },
+        "roof": {
+          "vertices": 66300,
+          "triangles": 22100,
+          "bytes": 2121600
+        },
+        "ash": {
+          "vertices": 82788,
+          "triangles": 27596,
+          "bytes": 2649216
+        },
+        "glow": {
+          "vertices": 4776,
+          "triangles": 1592,
+          "bytes": 114624
+        },
+        "leaf": {
+          "vertices": 5112,
+          "triangles": 1704,
+          "bytes": 122688
+        },
+        "trunk": {
+          "vertices": 684,
+          "triangles": 228,
+          "bytes": 16416
+        },
+        "metal": {
+          "vertices": 39600,
+          "triangles": 13200,
+          "bytes": 1267200
+        },
+        "fabric": {
+          "vertices": 10920,
+          "triangles": 3640,
+          "bytes": 349440
+        },
+        "lacquer": {
+          "vertices": 2184,
+          "triangles": 728,
+          "bytes": 69888
+        }
+      }
+    },
+    {
+      "stage": "幽冥开辟",
+      "realm": "underworld",
+      "vertices": 713724,
+      "triangles": 237908,
+      "bytes": 22632864,
+      "groups": {
+        "wood": {
+          "vertices": 237648,
+          "triangles": 79216,
+          "bytes": 7604736
+        },
+        "wall": {
+          "vertices": 216,
+          "triangles": 72,
+          "bytes": 6912
+        },
+        "roof": {
+          "vertices": 187284,
+          "triangles": 62428,
+          "bytes": 5993088
+        },
+        "ash": {
+          "vertices": 114528,
+          "triangles": 38176,
+          "bytes": 3664896
+        },
+        "earth": {
+          "vertices": 2160,
+          "triangles": 720,
+          "bytes": 69120
+        },
+        "ground": {
+          "vertices": 756,
+          "triangles": 252,
+          "bytes": 24192
+        },
+        "glow": {
+          "vertices": 24744,
+          "triangles": 8248,
+          "bytes": 593856
+        },
+        "leaf": {
+          "vertices": 1044,
+          "triangles": 348,
+          "bytes": 25056
+        },
+        "ceramic": {
+          "vertices": 2640,
+          "triangles": 880,
+          "bytes": 84480
+        },
+        "metal": {
+          "vertices": 89460,
+          "triangles": 29820,
+          "bytes": 2862720
+        },
+        "fabric": {
+          "vertices": 45480,
+          "triangles": 15160,
+          "bytes": 1455360
+        },
+        "lacquer": {
+          "vertices": 7764,
+          "triangles": 2588,
+          "bytes": 248448
+        }
+      }
+    },
+    {
+      "stage": "幽冥·丰都街",
+      "realm": "underworld",
+      "vertices": 2041374,
+      "triangles": 680458,
+      "bytes": 64883280,
+      "groups": {
+        "wood": {
+          "vertices": 460284,
+          "triangles": 153428,
+          "bytes": 14729088
+        },
+        "wall": {
+          "vertices": 20424,
+          "triangles": 6808,
+          "bytes": 653568
+        },
+        "roof": {
+          "vertices": 834552,
+          "triangles": 278184,
+          "bytes": 26705664
+        },
+        "ash": {
+          "vertices": 130920,
+          "triangles": 43640,
+          "bytes": 4189440
+        },
+        "ground": {
+          "vertices": 115164,
+          "triangles": 38388,
+          "bytes": 3685248
+        },
+        "glow": {
+          "vertices": 55086,
+          "triangles": 18362,
+          "bytes": 1322064
+        },
+        "ceramic": {
+          "vertices": 28332,
+          "triangles": 9444,
+          "bytes": 906624
+        },
+        "metal": {
+          "vertices": 358440,
+          "triangles": 119480,
+          "bytes": 11470080
+        },
+        "fabric": {
+          "vertices": 33168,
+          "triangles": 11056,
+          "bytes": 1061376
+        },
+        "lacquer": {
+          "vertices": 5004,
+          "triangles": 1668,
+          "bytes": 160128
+        }
+      }
+    },
+    {
+      "stage": "幽冥·阎罗殿",
+      "realm": "underworld",
+      "vertices": 720,
+      "triangles": 240,
+      "bytes": 20448,
+      "groups": {
+        "wood": {
+          "vertices": 324,
+          "triangles": 108,
+          "bytes": 10368
+        },
+        "wall": {
+          "vertices": 72,
+          "triangles": 24,
+          "bytes": 2304
+        },
+        "glow": {
+          "vertices": 324,
+          "triangles": 108,
+          "bytes": 7776
+        }
+      }
+    },
+    {
+      "stage": "幽冥·孟婆庄",
+      "realm": "underworld",
+      "vertices": 98250,
+      "triangles": 32750,
+      "bytes": 3125952,
+      "groups": {
+        "wood": {
+          "vertices": 36612,
+          "triangles": 12204,
+          "bytes": 1171584
+        },
+        "wall": {
+          "vertices": 108,
+          "triangles": 36,
+          "bytes": 3456
+        },
+        "roof": {
+          "vertices": 23382,
+          "triangles": 7794,
+          "bytes": 748224
+        },
+        "ash": {
+          "vertices": 9408,
+          "triangles": 3136,
+          "bytes": 301056
+        },
+        "ground": {
+          "vertices": 144,
+          "triangles": 48,
+          "bytes": 4608
+        },
+        "glow": {
+          "vertices": 2256,
+          "triangles": 752,
+          "bytes": 54144
+        },
+        "ceramic": {
+          "vertices": 7632,
+          "triangles": 2544,
+          "bytes": 244224
+        },
+        "metal": {
+          "vertices": 13620,
+          "triangles": 4540,
+          "bytes": 435840
+        },
+        "fabric": {
+          "vertices": 4440,
+          "triangles": 1480,
+          "bytes": 142080
+        },
+        "lacquer": {
+          "vertices": 648,
+          "triangles": 216,
+          "bytes": 20736
+        }
+      }
+    },
+    {
+      "stage": "幽冥·奈何桥",
+      "realm": "underworld",
+      "vertices": 26514,
+      "triangles": 8838,
+      "bytes": 839760,
+      "groups": {
+        "wood": {
+          "vertices": 18804,
+          "triangles": 6268,
+          "bytes": 601728
+        },
+        "wall": {
+          "vertices": 792,
+          "triangles": 264,
+          "bytes": 25344
+        },
+        "roof": {
+          "vertices": 432,
+          "triangles": 144,
+          "bytes": 13824
+        },
+        "ash": {
+          "vertices": 2508,
+          "triangles": 836,
+          "bytes": 80256
+        },
+        "glow": {
+          "vertices": 1050,
+          "triangles": 350,
+          "bytes": 25200
+        },
+        "water": {
+          "vertices": 36,
+          "triangles": 12,
+          "bytes": 864
+        },
+        "ceramic": {
+          "vertices": 288,
+          "triangles": 96,
+          "bytes": 9216
+        },
+        "metal": {
+          "vertices": 1224,
+          "triangles": 408,
+          "bytes": 39168
+        },
+        "fabric": {
+          "vertices": 1044,
+          "triangles": 348,
+          "bytes": 33408
+        },
+        "lacquer": {
+          "vertices": 336,
+          "triangles": 112,
+          "bytes": 10752
+        }
+      }
+    },
+    {
+      "stage": "幽冥·三生石",
+      "realm": "underworld",
+      "vertices": 134796,
+      "triangles": 44932,
+      "bytes": 4288704,
+      "groups": {
+        "wood": {
+          "vertices": 39312,
+          "triangles": 13104,
+          "bytes": 1257984
+        },
+        "roof": {
+          "vertices": 45324,
+          "triangles": 15108,
+          "bytes": 1450368
+        },
+        "ash": {
+          "vertices": 22620,
+          "triangles": 7540,
+          "bytes": 723840
+        },
+        "ground": {
+          "vertices": 852,
+          "triangles": 284,
+          "bytes": 27264
+        },
+        "glow": {
+          "vertices": 3024,
+          "triangles": 1008,
+          "bytes": 72576
+        },
+        "leaf": {
+          "vertices": 72,
+          "triangles": 24,
+          "bytes": 1728
+        },
+        "ceramic": {
+          "vertices": 1008,
+          "triangles": 336,
+          "bytes": 32256
+        },
+        "metal": {
+          "vertices": 17124,
+          "triangles": 5708,
+          "bytes": 547968
+        },
+        "fabric": {
+          "vertices": 4848,
+          "triangles": 1616,
+          "bytes": 155136
+        },
+        "lacquer": {
+          "vertices": 612,
+          "triangles": 204,
+          "bytes": 19584
+        }
+      }
+    },
+    {
+      "stage": "幽冥·望乡台",
+      "realm": "underworld",
+      "vertices": 80874,
+      "triangles": 26958,
+      "bytes": 2568960,
+      "groups": {
+        "wood": {
+          "vertices": 24492,
+          "triangles": 8164,
+          "bytes": 783744
+        },
+        "wall": {
+          "vertices": 720,
+          "triangles": 240,
+          "bytes": 23040
+        },
+        "roof": {
+          "vertices": 13950,
+          "triangles": 4650,
+          "bytes": 446400
+        },
+        "ash": {
+          "vertices": 22068,
+          "triangles": 7356,
+          "bytes": 706176
+        },
+        "glow": {
+          "vertices": 2376,
+          "triangles": 792,
+          "bytes": 57024
+        },
+        "ceramic": {
+          "vertices": 888,
+          "triangles": 296,
+          "bytes": 28416
+        },
+        "metal": {
+          "vertices": 11076,
+          "triangles": 3692,
+          "bytes": 354432
+        },
+        "fabric": {
+          "vertices": 5016,
+          "triangles": 1672,
+          "bytes": 160512
+        },
+        "lacquer": {
+          "vertices": 288,
+          "triangles": 96,
+          "bytes": 9216
+        }
+      }
+    }
+  ]
+}

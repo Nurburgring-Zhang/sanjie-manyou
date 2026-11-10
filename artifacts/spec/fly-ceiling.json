@@ -1,0 +1,65 @@
+{
+  "schema": "fly-ceiling/v1",
+  "sampledBy": "scripts/probe-fly-ceiling.mjs",
+  "url": "http://127.0.0.1:4188/",
+  "mode": "real",
+  "userRequest": "目前镜头飞行到达不了天宫，飞行高度受限了。将镜头飞行高度范围调大一倍。",
+  "rootCause": "fly 模式 clamp 上限硬编码 4000，低于天宫基准面 4066（HEAVEN_BASE_Y+HEAVEN_LIFT），差值 66m",
+  "limits": {
+    "ceiling": 8000,
+    "floor": -640,
+    "heavenBase": 4066,
+    "camMode": "fly",
+    "cameraY": 15.8841615395104
+  },
+  "ascent": {
+    "y0": 4000,
+    "y1": 4119.571200000001,
+    "ms": 1809
+  },
+  "clampTest": {
+    "afterUp": 8000,
+    "afterDown": -640
+  },
+  "heavenViewY": 4206,
+  "screenshot": "artifacts/spec/fly-ceiling-heaven.png",
+  "checks": [
+    {
+      "id": "A1-legacy-wall-removed",
+      "ok": true,
+      "detail": "ceiling=8000 必须 > heavenBase=4066（旧值 4000 比天宫低 66m）"
+    },
+    {
+      "id": "A2-range-doubled",
+      "ok": true,
+      "detail": "ceiling=8000 应为 4000 × 2（用户要求放大一倍）"
+    },
+    {
+      "id": "A3-ascent-crosses-heaven",
+      "ok": true,
+      "detail": "从 y=4000 上升 120m → y=4119.6，必须越过 heavenBase=4066（耗时 1809ms）"
+    },
+    {
+      "id": "B1-clamped-to-ceiling",
+      "ok": true,
+      "detail": "推到 1e6 后应被夹到 8000，实测 8000"
+    },
+    {
+      "id": "C1-clamped-to-floor",
+      "ok": true,
+      "detail": "推到 -1e6 后应被夹到 -640，实测 -640"
+    },
+    {
+      "id": "D1-heaven-view-frame",
+      "ok": true,
+      "detail": "天宫机位 y=4206.0，截图 507841B"
+    },
+    {
+      "id": "E1-no-page-errors",
+      "ok": true,
+      "detail": "0 条 page error"
+    }
+  ],
+  "pageErrors": [],
+  "gate": "PASS"
+}

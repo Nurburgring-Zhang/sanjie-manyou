@@ -305,15 +305,35 @@ function scaleHeavenGeometry(scene: THREE.Scene, s: number): number {
     const pos = g?.getAttribute('position') as AnyAttr | undefined;
     if (!g || !pos) return;
     let any = false;
-    for (let i = 0; i < pos.count; i++) {
-      const y = pos.getY(i);
-      if (y < HEAVEN_Y_MIN) continue;
-      const x = pos.getX(i), z = pos.getZ(i);
-      if (Math.abs(x) > 1500 || Math.abs(z) > 1500) continue;
-      // 抬升与缩放同一处完成（单一通道）：x/z 仍等比，只有 y 多一个 +HEAVEN_LIFT。
-      // 这样天宫尺寸不变，所有烘焙进 city_* 的天宫构件（含 heavenStair/Pine/Colonnade）自动跟随。
-      pos.setXYZ(i, x * s, HEAVEN_BASE_LIFTED + (y - HEAVEN_BASE_Y) * s, z * s);
-      any = true;
+    // PERF-001 R2：原实现对 212,331,813 个顶点逐个 getY/getX/getZ/setXYZ，真机相位归因
+    // 显示 compact 阶段有 19.13s 的单个同步块（采样器整段无法运行，进度条静止）。
+    // Baker 产出的 position 都是连续 Float32BufferAttribute(itemSize=3)，直接访问底层
+    // TypedArray 可省掉每顶点 4 次方法调用/属性分派。运算式与写入精度逐字不变
+    // （读 float32 → JS number → 写回 float32），故顶点结果逐位相同，SSIM 门复核。
+    const arr = (pos as unknown as { array?: Float32Array }).array;
+    const stride = (pos as unknown as { itemSize?: number }).itemSize ?? 3;
+    if (arr instanceof Float32Array && stride === 3 && pos.count * 3 <= arr.length) {
+      for (let i = 0, n = pos.count * 3; i < n; i += 3) {
+        const y = arr[i + 1];
+        if (y < HEAVEN_Y_MIN) continue;
+        const x = arr[i], z = arr[i + 2];
+        if (Math.abs(x) > 1500 || Math.abs(z) > 1500) continue;
+        // 抬升与缩放同一处完成（单一通道）：x/z 仍等比，只有 y 多一个 +HEAVEN_LIFT。
+        arr[i] = x * s;
+        arr[i + 1] = HEAVEN_BASE_LIFTED + (y - HEAVEN_BASE_Y) * s;
+        arr[i + 2] = z * s;
+        any = true;
+      }
+    } else {
+      // 非连续 / 交错布局仍走原通道，行为与改造前一致（不静默跳过）。
+      for (let i = 0; i < pos.count; i++) {
+        const y = pos.getY(i);
+        if (y < HEAVEN_Y_MIN) continue;
+        const x = pos.getX(i), z = pos.getZ(i);
+        if (Math.abs(x) > 1500 || Math.abs(z) > 1500) continue;
+        pos.setXYZ(i, x * s, HEAVEN_BASE_LIFTED + (y - HEAVEN_BASE_Y) * s, z * s);
+        any = true;
+      }
     }
     if (!any) return;
     pos.needsUpdate = true;

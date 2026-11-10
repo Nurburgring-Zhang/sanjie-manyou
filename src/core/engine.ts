@@ -13,6 +13,7 @@ import { LAYER_NO_REFLECT } from './layers';
 import { setLodSink, type LodGroupSpec, type LodTierName } from '../city/infill';
 import { getPerfBudget, getChunkGate, attachPerfExtras, perfBudgetSnapshot, getPoolStats } from './perfBudget';
 import { getOcclusion } from './occlusion';
+import { HW_THRESHOLDS, getActivePerfMode } from '../game/perfMode';
 
 export interface Updatable { update(t: number, dt: number): void }
 
@@ -21,6 +22,20 @@ export type QualityName = 'high' | 'med' | 'low';
 
 /** 俯仰上限 ±85°：留 5° 余量避免万向节翻转（旧值 -71.6°…77.3°，抬头受限且两种模式不一致） */
 export const PITCH_LIMIT = (85 * Math.PI) / 180;
+
+/**
+ * 飞行相机高度范围（fly 模式）。
+ *
+ * 旧值下限 -320 / 上限 4000。天宫整层由 `HEAVEN_LIFT=3870` 抬升，
+ * 天宫基准面 `HEAVEN_BASE_LIFTED = HEAVEN_BASE_Y(196) + 3870 = 4066`，
+ * 凌霄宝殿二次放大后宝顶还要再高约 148m —— 也就是说 **上限 4000 低于天宫地面 66m，
+ * 玩家把摇杆推到底也永远差一截，镜头到不了天宫**（用户实测反馈）。
+ *
+ * 本版按用户要求把高度范围整体放大一倍：下限 -320 → -640、上限 4000 → 8000，
+ * 天宫（≈4066~4260）与云海顶部都进入可达区间，同时仍留出防飞出世界的天花板。
+ */
+export const FLY_CEILING = 8000;
+export const FLY_FLOOR = -640;
 
 export interface QualityTier {
   name: QualityName; crowd: number; bloom: boolean; shadows: boolean; shadowSize: number; pixelRatio: number;
@@ -692,18 +707,25 @@ export class Engine {
 
   applyQuality(q: QualityTier, silent = false): void {
     this.quality = q;
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, q.pixelRatio));
-    this.bloomPass.enabled = q.bloom;
-    if (this.ssaoPass) this.ssaoPass.enabled = q.bloom;
-    this.renderer.shadowMap.enabled = q.shadows;
+    // PERF-001 R6 / PERF-002 R4：低内存模式覆盖画质档的像素比/阴影/泛光。
+    // 必须收口在这一个方法里：autoQuality() 每帧可能重调本方法，若在 main.ts 里
+    // 只在启动后设一次，下一次自适应降档就会把低配覆盖回标准档（静默失效）。
+    const low = getActivePerfMode() === 'low';
+    const eff: QualityTier = low
+      ? { ...q, pixelRatio: HW_THRESHOLDS.lowPixelRatio, shadows: HW_THRESHOLDS.lowShadows, bloom: false }
+      : q;
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, eff.pixelRatio));
+    this.bloomPass.enabled = eff.bloom;
+    if (this.ssaoPass) this.ssaoPass.enabled = eff.bloom;
+    this.renderer.shadowMap.enabled = eff.shadows;
     const sun = this.scene.getObjectByName('sun') as THREE.DirectionalLight | null;
     if (sun) {
-      sun.castShadow = q.shadows;
+      sun.castShadow = eff.shadows;
       // three 的阴影 pass 判图层用的是**渲染相机**（主相机已开第 1 层，所以角色影子照旧）；
       // 这里给 shadow.camera 也开上，只是防上游改成拿阴影相机判图层时角色掉影子。
       sun.shadow.camera.layers.enable(LAYER_NO_REFLECT);
-      if (q.shadows) {
-        sun.shadow.mapSize.set(q.shadowSize, q.shadowSize);
+      if (eff.shadows) {
+        sun.shadow.mapSize.set(eff.shadowSize, eff.shadowSize);
         sun.shadow.map?.dispose(); sun.shadow.map = null;
       }
     }
@@ -1097,7 +1119,9 @@ export class Engine {
         const WB = 20000;
         this.camera.position.x = THREE.MathUtils.clamp(this.camera.position.x, -WB, WB);
         this.camera.position.z = THREE.MathUtils.clamp(this.camera.position.z, -WB, WB);
-        if (this.camMode === 'fly') this.camera.position.y = THREE.MathUtils.clamp(this.camera.position.y, Math.min(this.realmFloor, -320), 4000);
+        // 高度范围按用户要求放大一倍（旧：min(realmFloor,-320) … 4000）。
+        // 旧上限 4000 低于天宫基准面 4066，导致飞行永远到不了天宫。
+        if (this.camMode === 'fly') this.camera.position.y = THREE.MathUtils.clamp(this.camera.position.y, Math.min(this.realmFloor, FLY_FLOOR), FLY_CEILING);
       }
       dir.set(-Math.sin(this.yaw) * cy, sy, -Math.cos(this.yaw) * cy);
       this.lookTarget.copy(this.camera.position).addScaledVector(dir, 30);

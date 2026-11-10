@@ -3,6 +3,7 @@ import type { Random } from '../actors/behaviors';
 import type { PlayerController } from './player';
 import { bus, RNG } from '../core/rng';
 import { collectPersistedEntities } from '../rt/save';
+import type { Calendar } from './calendar';
 
 // ============ 交互系统：提示 / 铜钱经济 / 商铺 / 骰子赌局 / 五子棋 ============
 export interface Interactable {
@@ -15,10 +16,23 @@ export interface Interactable {
 
 interface Good { name: string; price: number; act: string; say: string }
 
+/** FIX-012 R3：忘川渡票持有上限（票券类道具，不入货币轴、不可兑铜钱） */
+const FERRY_TICKET_CAP = 3;
+/** FIX-012 R3：冥途牒阴德成本（karma.ts 不动，仍为 -10） */
+const YINDE_COST = 10;
+
 export class InteractSystem {
   coins = 0;
   yinde = 0;    // 阴德（地府币；只可烧纸单向获得）
   peach = 3;    // 蟠桃点（天宫币；赏赐单向兑铜钱）
+  /** FIX-012 R3：忘川渡票（票券类道具，冥途牒唯一产物） */
+  ferryTicket = 0;
+  /** FIX-012 R2：今日已赏赐次数（cap 1/游戏日） */
+  peachGrantedToday = 0;
+  /** FIX-012 R2：上次赏赐所在游戏日（跨会话兜底，与 calendar.dayIndex() 比较） */
+  private peachGrantDay = -1;
+  /** FIX-012 R2：注入的全仓唯一游戏日来源（world.ts 接线）；未注入时按 peachGrantedToday 独立计数 */
+  private calendar: Calendar | null = null;
   list: Interactable[] = [];
   private prompt: HTMLElement;
   private root: HTMLElement;
@@ -55,13 +69,28 @@ export class InteractSystem {
     this.prompt = document.createElement('div');
     this.prompt.id = 'interact-prompt';
     uiRoot.appendChild(this.prompt);
-    this.coins = InteractSystem.loadInt('cq_coins', 500);
-    this.yinde = InteractSystem.loadInt('cq_yinde', 0);
-    this.peach = InteractSystem.loadInt('cq_peach', 3);
+    this.load();
     this.player.interactHook = () => {
       const n = this.nearest;
       if (n) { n.exec(); }
     };
+  }
+
+  /** FIX-012 R2/R3：从 localStorage 影子键恢复三币 + 渡票 + 每日赏赐计数（向后兼容：缺键用缺省） */
+  load(): void {
+    this.coins = InteractSystem.loadInt('cq_coins', 500);
+    this.yinde = InteractSystem.loadInt('cq_yinde', 0);
+    this.peach = InteractSystem.loadInt('cq_peach', 3);
+    this.ferryTicket = InteractSystem.loadInt('cq_ferry_ticket', 0);
+    this.peachGrantedToday = InteractSystem.loadInt('cq_peach_granted_today', 0);
+    this.peachGrantDay = InteractSystem.loadInt('cq_peach_grant_day', -1);
+  }
+
+  /** FIX-012 R2：注入全仓唯一游戏日来源；onNewDay 清零每日赏赐计数 */
+  setCalendar(cal: Calendar): void {
+    this.calendar = cal;
+    cal.onNewDay(() => { this.peachGrantedToday = 0; });
+    cal.dayIndex();   // 初始化当前游戏日（首次进入不触发回调，防启动误清）
   }
 
   add(pos: THREE.Vector3, r: number, label: string, exec: () => void, enabled?: () => boolean): void {
@@ -90,6 +119,40 @@ export class InteractSystem {
       ? `蟠桃宴赐福：蟠桃点 +${gained}（现 ${this.peach}）`
       : '蟠桃宴赐福——但蟠桃点已满（上限 9），福缘散入云端');
   }
+
+  /**
+   * FIX-012 R2：蟠桃赏赐（蟠桃点 -1 → 铜钱 +100），cap 1/游戏日。
+   * 抽成无 DOM 方法：openShop 只负责表演与提示；跨会话靠 peachGrantDay 兜底。
+   */
+  grantPeach(): { ok: boolean; msg: string } {
+    const day = this.calendar ? this.calendar.dayIndex() : this.peachGrantDay;
+    if (this.peach < 1) return { ok: false, msg: '蟠桃点不足——赴蟠桃宴方可获赐（R5 瑶池青鸾任务线）' };
+    if (day !== this.peachGrantDay) this.peachGrantedToday = 0;   // 跨日自动清零（不依赖 onNewDay 回调）
+    if (this.peachGrantedToday >= 1) return { ok: false, msg: '今日已蒙赏赐' };
+    this.peachGrantDay = day;
+    this.peach -= 1;
+    this.peachGrantedToday += 1;
+    this.earn(100);   // 内部已 save()（写入渡票 / 每日计数等全部字段）
+    return { ok: true, msg: '蟠桃赏赐：蟠桃点 -1，铜钱 +100（单向，不可回兑）' };
+  }
+
+  /**
+   * FIX-012 R3：冥途牒 —— 阴德 -10 → 忘川渡票 +1（上限 3）。
+   * 不再产蟠桃（拆除 V16 §4.3 兑换表禁边），蟠桃数量必须不变；阴德 sink 保留。
+   */
+  redeemFerryTicket(): { ok: boolean; msg: string } {
+    if (this.yinde < YINDE_COST) {
+      return { ok: false, msg: `阴德不足（需 ${YINDE_COST}，现 ${this.yinde}）——多烧些纸钱积攒功德` };
+    }
+    if (this.ferryTicket >= FERRY_TICKET_CAP) {
+      return { ok: false, msg: `忘川渡票已满（上限 ${FERRY_TICKET_CAP}）——冥途牒暂不生效` };
+    }
+    this.yinde -= YINDE_COST;
+    this.ferryTicket += 1;
+    this.save();
+    return { ok: true, msg: `冥途牒生效：阴德 -${YINDE_COST}，忘川渡票 +1（现 🎫${this.ferryTicket}）` };
+  }
+
   refund(n: number): void { this.coins += n; this.save(); bus.emit('coins:change', this.coins); } // 蟠桃不足回退已扣款
   /** 存盘（P1-2 生存循环等系统共用；语义=持久化三币快照） */
   save(): void {
@@ -98,6 +161,10 @@ export class InteractSystem {
     localStorage.setItem('cq_coins', String(this.coins));
     localStorage.setItem('cq_yinde', String(this.yinde));
     localStorage.setItem('cq_peach', String(this.peach));
+    // FIX-012 R2/R3：渡票 + 每日赏赐计数入影子档（向后兼容：旧档缺键由 load() 用缺省）
+    localStorage.setItem('cq_ferry_ticket', String(this.ferryTicket));
+    localStorage.setItem('cq_peach_granted_today', String(this.peachGrantedToday));
+    localStorage.setItem('cq_peach_grant_day', String(this.peachGrantDay));
     // P0-4/P1-2 全量写档：三币 + survival + voxel + karma + entities + bossDefeated → IndexedDB
     try {
       // __saveSave 在 window 上（world.ts 注入）；world 句柄已提前到 initUI 之前注入（B-02），
@@ -119,7 +186,12 @@ export class InteractSystem {
         // 必须显式 .catch 才能让写档失败可观测。
         void W.__saveSave({
           schemaVersion: 2,
-          economy: { coins: this.coins, yinde: this.yinde, peach: this.peach },
+          economy: {
+            coins: this.coins, yinde: this.yinde, peach: this.peach,
+            ferryTicket: this.ferryTicket,
+            peachGrantedToday: this.peachGrantedToday,
+            peachGrantDay: this.peachGrantDay,
+          },
           // 全量审核 2026-11-07（C01 口径收窄）：只收集 creation。
           // crowd.ts:1366 给每个 NPC 都登记 persist:true（全城 4500+ 实例且 pos 是实时引用），
           // 全量收集会把它们每帧变化的坐标全写进档、体积暴涨；读档侧也只重演造物。
@@ -188,23 +260,22 @@ export class InteractSystem {
         // 现在把「资源轴商品」提到通用扣款之前独立结算，普通商品才走 pay。
         if (g.act === 'peachgrant') {
           // 蟠桃点是独立资源，不占铜钱；price 字段语义为「1 枚蟠桃点」，不再是铜钱价
-          if (this.peach < 1) { bus.emit('ui:toast', '蟠桃点不足——赴蟠桃宴方可获赐（R5 瑶池青鸾任务线）'); return; }
-          this.peach -= 1;
-          this.earn(100);
-          this.save();
-          bus.emit('ui:toast', '蟠桃赏赐：蟠桃点 -1，铜钱 +100（单向，不可回兑）');
-          this.act('pray', 3.5, say);
-          this.coinsEl && (this.coinsEl.textContent = `💰 ${this.coins} 文`);
+          const r = this.grantPeach();
+          bus.emit('ui:toast', r.msg);
+          if (r.ok) {
+            this.act('pray', 3.5, say);
+            this.coinsEl && (this.coinsEl.textContent = `💰 ${this.coins} 文`);
+          }
           return;
         }
         if (!this.pay(g.price)) return;
         if (g.act === 'burnpaper') { this.yinde += 1; this.save(); bus.emit('ui:toast', `纸灰化作阴德 💠 ${this.yinde}（三界单向：不可兑回铜钱）`); }
         else if (g.act === 'yindepeach') {
-          // 10 阴德成本 = 烧纸 100 文；蟠桃兑 100 文 → 循环持平不套利，但打通两轴。
-          // 满仓时必须在扣阴德之前拦住并全额退还铜钱（旧版只回滚「阴德不足」一种失败）。
-          if (this.yinde < 10) { this.refund(g.price); bus.emit('ui:toast', `阴德不足（需 10，现 ${this.yinde}）——多烧些纸钱积攒功德`); }
-          else if (this.peach >= 9) { this.refund(g.price); bus.emit('ui:toast', '蟠桃点已满（上限 9）——冥途牒暂不生效，铜钱已退还'); }
-          else { this.yinde -= 10; this.addPeach(1); this.save(); bus.emit('ui:toast', `冥途牒生效：阴德 -10，天庭记功蟠桃 +1（现 🍑${this.peach}）`); }
+          // FIX-012 R3：冥途牒改产忘川渡票（阴德 -10 → 渡票 +1，上限 3），不再产蟠桃。
+          // 失败时全额退还已扣铜钱（旧版只回滚「阴德不足」一种失败，满仓静默吞掉的缺陷同步修掉）。
+          const r = this.redeemFerryTicket();
+          if (!r.ok) this.refund(g.price);
+          bus.emit('ui:toast', r.ok ? r.msg : `${r.msg}，铜钱已退还`);
         }
         else if (g.act === 'eat' || g.act === 'drink') {
           const [hg, hp] = InteractSystem.foodRestore(g.price);

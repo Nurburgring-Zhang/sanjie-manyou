@@ -1,0 +1,128 @@
+{
+  "at": "2026-11-09T21:10:58.680Z",
+  "url": "http://127.0.0.1:4186/",
+  "mode": "real",
+  "evidence": "artifacts/spec/R29-M1-acceptance.png",
+  "gates": {
+    "pageErrorsZero": true,
+    "collisionClean": true,
+    "identity": true,
+    "cspPresent": true,
+    "saveWired": true,
+    "bossDamage": true,
+    "calendarWired": true,
+    "solidsReady": true
+  },
+  "failed": [],
+  "title": "赛博上河 · CyberQingming-R29-1.2.0",
+  "brand": "赛博上河 CyberQingmingCyberQingming-R29-1.2.0",
+  "csp": true,
+  "collisionAtLoad": {
+    "embedded": 0,
+    "sunken": 0,
+    "sample": []
+  },
+  "solids": {
+    "total": 399000,
+    "walls": 185343,
+    "floors": 61806,
+    "plants": 58322,
+    "broken": 0,
+    "skipped": 779144,
+    "cells": 126475,
+    "buildMs": 8.5,
+    "capDropped": 1323227,
+    "capFirstDropAt": 399000,
+    "capFirstDropStage": "皇城·街巷铺装",
+    "wallReserveDropped": 474386,
+    "wallReserveUsed": 79000,
+    "maxTotal": 399000,
+    "wallReserve": 320000
+  },
+  "destruction": {
+    "events": 0,
+    "chunks": 0,
+    "aliveChunks": 0,
+    "vertsDeformed": 0,
+    "solidsBroken": 0,
+    "plantsFelled": 0,
+    "actorsHit": 0,
+    "meshEdits": 0,
+    "drawCallsWhenIdle": 0,
+    "lastReport": null,
+    "physicsTrace": [],
+    "physicsDistinct": 0,
+    "physicsTrackedId": -1
+  },
+  "saveApi": {
+    "hasSave": true,
+    "hasState": true,
+    "state": {
+      "lastAutoMs": 1794258620365,
+      "pending": false,
+      "slots": [
+        "save:a0",
+        "save:a1",
+        "save:a2",
+        "save:m1",
+        "save:m2",
+        "save:m3"
+      ],
+      "saving": false,
+      "failCount": 0
+    }
+  },
+  "calendar": {
+    "day": 0,
+    "hasSetCalendar": true
+  },
+  "economy": {
+    "ferryTicket": 0,
+    "peachGrantedToday": 0,
+    "peach": 3
+  },
+  "panelExists": true,
+  "manualSave": {
+    "slot": "save:m1",
+    "bytes": 26415,
+    "ms": 92,
+    "ok": true
+  },
+  "boss": {
+    "ok": true,
+    "hpBefore": 100,
+    "reach": 3.2,
+    "defeated": false,
+    "state": "idle",
+    "simMs": 592.3999999940424,
+    "bossPos": {
+      "x": 88.4229046725765,
+      "y": 4088.264,
+      "z": 18.00643636554806
+    },
+    "playerPos": {
+      "x": 89.4229046725765,
+      "y": 4088.264,
+      "z": 18.00643636554806
+    },
+    "dist": 1,
+    "hpAfter": 88,
+    "after": {
+      "simMs": 7992.399999994042,
+      "state": "engage",
+      "defeated": false,
+      "dist": 88.4453299866399
+    }
+  },
+  "collisionAfterWalk": {
+    "embedded": 0,
+    "sunken": 0,
+    "sample": []
+  },
+  "pageErrors": [],
+  "screenshot": "artifacts/spec/R29-M1-acceptance.png",
+  "PASS": {
+    "all": true,
+    "note": "pageErrors=0 为硬门禁；任一 gate false 即整体 FAIL"
+  }
+}

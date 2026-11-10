@@ -1,0 +1,94 @@
+{
+  "schema": "memory-budget/v2",
+  "source": "artifacts/boot-memory-profile.json (PERF-001 R1 真机实测) + artifacts/r27-tris-baseline.json + artifacts/solids-cap-histogram.json + artifacts/spec/PERF-001-stage-attribution.json (Baker.stageStats 逐 flush 精确记账)",
+  "release": "R29 M2",
+  "limits": {
+    "heapPeakMB": 1536,
+    "settledMB": 600,
+    "bootSeconds": 120
+  },
+  "overallMeasured": {
+    "heapPeakMB": 6718.1,
+    "settledMB": 5793.7,
+    "bootSeconds": 102.65,
+    "maxProgressStallSeconds": 30.27,
+    "status": "OVER_BUDGET"
+  },
+  "buckets": [
+    {
+      "key": "geometry",
+      "entityCount": 212331813,
+      "entityUnit": "vertex",
+      "bytesPerEntityEstimate": 27.1,
+      "estimatedMB": 5487.6,
+      "measuredMB": 5489.8,
+      "source": "artifacts/r27-tris-baseline.json groups[*].vertices 求和",
+      "note": "PERF-001 R1 扩展后已可逐大户精确实测：Baker.flush() 按 position Float32(4B)/normal Int16(2B)/color Uint16(2B)/uv Float32(4B) 记账，合计 5,756,462,856 B。该值与强制 GC 后常驻堆 5792.4MB 同量级，逐任务台账与 heap 互相印证。",
+      "measuredBytes": 5756462856
+    },
+    {
+      "key": "solids",
+      "entityCount": 399000,
+      "entityUnit": "SolidBox",
+      "bytesPerEntityEstimate": 80,
+      "estimatedMB": 31.9,
+      "measuredMB": null,
+      "source": "artifacts/r27-collision-runtime.json solidsInitial.total",
+      "note": "PERF-001 R4 SoA 化后每实体目标 ~31B；PERF-003 若扩容到 2196613 个实体，AOS 口径将增至约 176MB，故扩容必须先完成 SoA。"
+    },
+    {
+      "key": "crowd",
+      "entityCount": 4510,
+      "entityUnit": "actor CPU state",
+      "bytesPerEntityEstimate": 256,
+      "estimatedMB": 1.1,
+      "measuredMB": null,
+      "source": "PERF-001 背景证据（4510 人群实例）；R5 待核查 CPU 侧是否 TypedArray SoA"
+    },
+    {
+      "key": "textures",
+      "entityCount": null,
+      "entityUnit": "CanvasTexture",
+      "bytesPerEntityEstimate": null,
+      "estimatedMB": null,
+      "measuredMB": null,
+      "source": null,
+      "note": "尚未建立逐纹理尺寸台账，PERF-001 R8 待补；不填估算值冒充实测。"
+    },
+    {
+      "key": "save",
+      "entityCount": null,
+      "entityUnit": "IDB slot",
+      "bytesPerEntityEstimate": null,
+      "estimatedMB": null,
+      "measuredMB": null,
+      "source": null,
+      "note": "SAV-001/003 存档体系已实现，容量台账待 SAV 里程碑补；不填估算值冒充实测。"
+    }
+  ],
+  "gaps": [
+    "solids / crowd / textures / save 四户仍无逐大户隔离实测；measuredMB=null 保持诚实，不把整体峰值分摊冒充单户实测",
+    "reference machine (4C/8G cgroup) 未实测，本机为无堆上限 headless，booted=true 不可外推",
+    "标准档 5.36GiB 静态几何与 600MB 常驻目标相差约 9.65×，见 artifacts/spec/PERF-001.json 的 feasibilityGap"
+  ],
+  "gateContract": "打包门校验 R1 探针实测 ≤ 预算；本次实测 6718.1 > 1536，故 PERF-001 未达标，门如实 FAIL，禁止把本台账当成达标证据。",
+  "latestRun": {
+    "source": "artifacts/boot-memory-profile.json (标准档)",
+    "perfMode": "normal",
+    "heapPeakMB": 7146.1,
+    "settledMB": 5792.4,
+    "bootSeconds": 73.55,
+    "maxStallSeconds": 21.45,
+    "gate": "FAIL(heap-peak-over-budget)"
+  },
+  "lowmemSimRun": {
+    "source": "artifacts/spec/PERF-001-boot-profile-lowmem.json",
+    "perfMode": "low",
+    "heapPeakMB": 6388.1,
+    "settledMB": 3811.4,
+    "bootSeconds": 60.37,
+    "maxStallSeconds": 18,
+    "gate": "FAIL(heap-peak-over-budget)",
+    "note": "已披露的画面降级，不是达标证明"
+  }
+}

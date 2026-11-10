@@ -5,6 +5,7 @@ import type { Vfx } from '../fx/vfx';
 import type { PlayerController } from './player';
 import { bus, RNG } from '../core/rng';
 import type { BossSpec } from '../data/boss';
+import type { Survival } from './survival';
 
 /**
  * 擂台 Boss 状态机（首个遭遇：天宫擂台 · 巨灵神）。
@@ -28,6 +29,19 @@ const DEFAULT_RNG: Random = (() => {
   return () => r.next();
 })();
 
+/**
+ * FIX-010 R2：Boss→玩家判定所需的可选注入（全部可选，7 参数旧调用方零改动）。
+ * world.ts 统一接线时传入 survival；无头测试 / 回放注入 clock 与玩家坐标。
+ */
+export interface ArenaBossOpts {
+  /** 玩家生存系统——Boss 伤害走 survival 的唯一扣血入口；未接线时判定自动空转 */
+  survival?: Survival;
+  /** 注入时钟（毫秒）：attackCooldown 判定用。不注入则用 update(dt) 累积的 sim-time */
+  clock?: () => number;
+  /** 覆盖玩家世界坐标（测试 / 探针注入，跳过 PlayerController 依赖） */
+  getPlayerPos?: () => THREE.Vector3;
+}
+
 export class ArenaBoss {
   readonly spec: BossSpec;
   hp: number;
@@ -46,6 +60,10 @@ export class ArenaBoss {
   private respawnT = 0;
   /** 连续脱离战斗的时长（脱战回血与状态收口共用的闸门） */
   private outT = 0;
+  /** FIX-010 R2：仿真时钟（毫秒）——未注入 clock 时的时间源（update(dt) 按秒→毫秒累加） */
+  private simMs = 0;
+  /** FIX-010 R2：上次 Boss→玩家攻击时刻（毫秒）；-Infinity 保证进入判定范围即可起手 */
+  private lastBossAttackMs = -Infinity;
   /** 击败后战果条保留时长（秒，sim-time） */
   private defeatFade = 3;
   private bar: HTMLDivElement | null = null;
@@ -68,6 +86,8 @@ export class ArenaBoss {
     private getPlayer: () => PlayerController | undefined,
     private onDefeat: () => void,
     private onKnockback: () => void,
+    /** FIX-010 R2：可选注入；不传则 Boss→玩家判定空转（保持旧调用方行为不变） */
+    private opts: ArenaBossOpts = {},
   ) {
     this.spec = spec;
     this.hp = spec.maxHp;
@@ -82,6 +102,7 @@ export class ArenaBoss {
   }
 
   private playerPos(): THREE.Vector3 {
+    if (this.opts.getPlayerPos) return this.opts.getPlayerPos();
     const pc = this.getPlayer();
     const a = pc?.actor;
     return a ? a.pos : this.home;
@@ -90,6 +111,26 @@ export class ArenaBoss {
   private dist(): number {
     const b = this.pos(), p = this.playerPos();
     return Math.hypot(b.x - p.x, b.z - p.z);
+  }
+
+  /** FIX-010 R2：毫秒时钟（注入优先，否则用 sim-time），attackCooldown 单位毫秒 */
+  private nowMs(): number {
+    return this.opts.clock ? this.opts.clock() : this.simMs;
+  }
+
+  /**
+   * FIX-010 R2：Boss→玩家伤害判定（战斗 tick 内）。
+   * 玩家距 Boss ≤ attackReach 且距上次攻击 ≥ attackCooldown 时，
+   * 经 survival 的唯一扣血入口以 source:'boss' 结算（800ms 无敌帧在 survival 内）。
+   */
+  private tickBossAttack(): void {
+    const s = this.opts.survival;
+    if (!s || this.defeated || this.state === 'dead' || this.state === 'respawning') return;
+    const now = this.nowMs();
+    if (now - this.lastBossAttackMs < this.spec.attackCooldown) return;
+    if (this.dist() > this.spec.attackReach) return;
+    this.lastBossAttackMs = now;
+    s.damage(this.spec.bossDamageToPlayer[this.phase - 1], { source: 'boss' });
   }
 
   /** 抓取的阶段闸门：只有阶段 2 允许（探针可直接读这个字段） */
@@ -114,7 +155,7 @@ export class ArenaBoss {
       return false;
     }
     this.cd = this.spec.hitCooldown;
-    const dmg = this.spec.hitDamage[this.phase - 1];
+    const dmg = this.spec.playerDamageToBoss[this.phase - 1];
     this.hp = Math.max(0, this.hp - dmg);
     this.hits++;
     this.vfx.burst(this.pos().clone().add(new THREE.Vector3(0, 3.2, 0)), 26, 0xffd27a, 9, 1, 1.2);
@@ -155,6 +196,7 @@ export class ArenaBoss {
   }
 
   update(dt: number): void {
+    this.simMs += dt * 1000;                 // 秒 → 毫秒（FIX-010 R2 仿真时钟）
     if (this.cd > 0) this.cd -= dt;
     if (this.defeated) {
       // P-05 / UI-02：击败后旧版直接 return，syncHud 再不被调用 → 「已伏誅 0/320」血条锁死常驻。
@@ -170,6 +212,8 @@ export class ArenaBoss {
       if (this.respawnT <= 0) this.state = 'engage';
       return;
     }
+    // FIX-010 R2：Boss→玩家伤害判定（独立于招式状态机，进 reach 且冷却到即结算）
+    this.tickBossAttack();
     const d = this.dist();
     // 脱战回血：玩家被击退/离开 34m 之外，Boss 每秒回 15% —— 离开是有代价的，但不会被一次失误清零
     // 脱战 2.5s 后才开始回血（4%/s）：闪避 1.2s 不算脱战，否则「撤一步回血」会让仗永远打不完

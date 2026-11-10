@@ -25,7 +25,10 @@ artifacts/cqwall/
 *.png
 *.jpg
 *.jpeg
-!docs/demo-poster.jpg
+# README 直接引用的两张封面/证据图必须进仓库（其余截图一律不进）
+# 2026-11-10：从只放行 demo-poster.jpg 改为放行 docs 根下全部 jpg，
+# 因为 README 新增了 docs/heaven-reachable.jpg（飞行可达天宫的真机截图）。
+!docs/*.jpg
 
 # ---- 探针与调试的临时产物 ----
 scripts/_*.mjs

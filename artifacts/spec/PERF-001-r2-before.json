@@ -1,0 +1,97 @@
+{
+  "schema": "perf-001-r2-screenshot-set/v1",
+  "tag": "before",
+  "url": "http://127.0.0.1:4186/",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "cams": [
+    {
+      "id": "01-wumen-axis",
+      "c": [
+        0,
+        12,
+        -3300
+      ],
+      "p": [
+        0,
+        11,
+        -2860
+      ]
+    },
+    {
+      "id": "02-wumen-axis-wide",
+      "c": [
+        0,
+        16,
+        -3300
+      ],
+      "p": [
+        0,
+        26,
+        -2820
+      ]
+    },
+    {
+      "id": "04-court-guard-east",
+      "c": [
+        300,
+        2,
+        -3220
+      ],
+      "p": [
+        372,
+        12,
+        -3150
+      ]
+    },
+    {
+      "id": "06-street-house",
+      "c": [
+        200,
+        4,
+        42
+      ],
+      "p": [
+        200,
+        9,
+        98
+      ]
+    }
+  ],
+  "shots": [
+    {
+      "id": "01-wumen-axis",
+      "file": "artifacts/spec/PERF-001-r2-before-01-wumen-axis.png",
+      "width": 1600,
+      "height": 900,
+      "sha256": "d4c86e79f622938d9a5ea4af6c8943f0d6d5b98d10e9ab6881f9ce3f0cae0a48"
+    },
+    {
+      "id": "02-wumen-axis-wide",
+      "file": "artifacts/spec/PERF-001-r2-before-02-wumen-axis-wide.png",
+      "width": 1600,
+      "height": 900,
+      "sha256": "877385820a6add420bf5d0fb94dfba99703a787cd084e45af71a7bee06feedfd"
+    },
+    {
+      "id": "04-court-guard-east",
+      "file": "artifacts/spec/PERF-001-r2-before-04-court-guard-east.png",
+      "width": 1600,
+      "height": 900,
+      "sha256": "d44ace6f082ca3832bdb1ae68e736e093377252d37f672ada2513d082d77b68e"
+    },
+    {
+      "id": "06-street-house",
+      "file": "artifacts/spec/PERF-001-r2-before-06-street-house.png",
+      "width": 1600,
+      "height": 900,
+      "sha256": "da36c6d2180e51af0df88fd9490751f4261c3b6fd4246c575f50e5ee329e337c"
+    }
+  ],
+  "totalTris": 70777271,
+  "groupCount": 14,
+  "pageErrors": 0,
+  "pageErrorSamples": []
+}

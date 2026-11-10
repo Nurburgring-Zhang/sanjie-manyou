@@ -5605,7 +5605,7 @@
       "id": "C-ITM-0001",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L176",
+        "assetRef": "src/city/architecture.ts#L243",
         "note": "源码 ID 锚点：// ---- C-ITM-0001 双阙墩台：夯土包砖 · 高 11m · 上起观楼（门楼两侧，2 座） ----"
       }
     },
@@ -5621,7 +5621,7 @@
       "id": "C-ITM-0003",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L224",
+        "assetRef": "src/city/architecture.ts#L291",
         "note": "源码 ID 锚点：// ---- C-ITM-0003 铺首衔环：鎏金铜 · 兽面衔环（门扇内外，4 件） ----"
       }
     },
@@ -5630,22 +5630,22 @@
       "impl": {
         "status": "implemented",
         "assetRef": "src/city/imperial.ts#L164",
-        "note": "场景构件（代码实测命中「xuande」）：匾额「宣德門」"
+        "note": "场景归因（新 schema，静态校验 src/city/imperial.ts）：C-ITM-0004"
       }
     },
     {
       "id": "C-ITM-0005",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/creatures.ts#L72",
-        "note": "场景构件（代码实测命中「shishi」）：石狮"
+        "assetRef": "src/sky/creatures.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/sky/creatures.ts）：C-ITM-0005"
       }
     },
     {
       "id": "C-ITM-0006",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L264",
+        "assetRef": "src/city/architecture.ts#L331",
         "note": "源码 ID 锚点：// ---- C-ITM-0006 拒马叉子：木铁 · 交叉拒马（广场前沿，6 座） ----"
       }
     },
@@ -5685,7 +5685,7 @@
       "id": "C-ITM-0011",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L623",
+        "assetRef": "src/city/buildings.ts#L1831",
         "note": "源码 ID 锚点：// 千斤闸（C-ITM-0011 / C-ITM-0297 / D-ITM-0070）：本城只有东门一处门洞，故三件同名条目各落一处"
       }
     },
@@ -5693,7 +5693,7 @@
       "id": "C-ITM-0012",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L289",
+        "assetRef": "src/city/architecture.ts#L356",
         "note": "源码 ID 锚点：// ---- C-ITM-0012 麒麟拴桩：石桩铜环（门东侧麟厩，2 座） ----"
       }
     },
@@ -5701,24 +5701,24 @@
       "id": "C-ITM-0013",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/imperial.ts#L167",
-        "note": "场景构件（代码实测命中「hall」）：殿匾「大庆殿」"
+        "assetRef": "src/city/imperial.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/imperial.ts）：C-ITM-0013"
       }
     },
     {
       "id": "C-ITM-0014",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/imperial.ts#L229",
-        "note": "场景构件（代码实测命中「wall」）：丹陛石"
+        "assetRef": "src/city/imperial.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/imperial.ts）：C-ITM-0014"
       }
     },
     {
       "id": "C-ITM-0015",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L29",
-        "note": "场景构件（代码实测命中「glow」）：蟠龙金柱"
+        "assetRef": "src/sky/palace.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/sky/palace.ts）：C-ITM-0015"
       }
     },
     {
@@ -5757,23 +5757,23 @@
       "id": "C-ITM-0020",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L34",
-        "note": "场景构件（代码实测命中「斗八藻井」）：斗八藻井"
+        "assetRef": "src/sky/palace.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/sky/palace.ts）：C-ITM-0020"
       }
     },
     {
       "id": "C-ITM-0021",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L312",
-        "note": "源码 ID 锚点：// ---- C-ITM-0021 红罗地衣：织物 · 通殿长毯（大庆殿御道） ----"
+        "assetRef": "src/city/architecture.ts#L379",
+        "note": "源码 ID 锚点：// ---- C-ITM-0021 红罗地衣：织物 · 通殿长毯（太和殿御道：广场 → 踏道 → 殿内） ----"
       }
     },
     {
       "id": "C-ITM-0022",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L1248",
+        "assetRef": "src/city/buildings.ts#L2611",
         "note": "源码 ID 锚点：/** 嘉量（C-ITM-0022）：标准量器——石座 + 铜斛 + 四耳 + 盖钮，立于街口 */"
       }
     },
@@ -5781,8 +5781,8 @@
       "id": "C-ITM-0023",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/imperial.ts#L256",
-        "note": "场景构件（代码实测命中「日晷」）：日晷"
+        "assetRef": "src/city/imperial.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/imperial.ts）：C-ITM-0023"
       }
     },
     {
@@ -5893,15 +5893,15 @@
       "id": "C-ITM-0037",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L373",
-        "note": "源码 ID 锚点：// ---- C-ITM-0037 绣帘：织物 · 缠枝纹（垂拱殿格扇，4 幅） ----"
+        "assetRef": "src/city/architecture.ts#L433",
+        "note": "源码 ID 锚点：// ---- C-ITM-0037 绣帘：织物 · 缠枝纹（中和殿格扇，4 幅） ----"
       }
     },
     {
       "id": "C-ITM-0038",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L1262",
+        "assetRef": "src/city/buildings.ts#L2625",
         "note": "源码 ID 锚点：/** 地龙火道口（C-ITM-0038）：台基上方的火膛口——石框、铁栅、余烬、烟道、灰堆 */"
       }
     },
@@ -5909,7 +5909,7 @@
       "id": "C-ITM-0039",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L405",
+        "assetRef": "src/city/architecture.ts#L465",
         "note": "源码 ID 锚点：// ---- C-ITM-0039 / C-ITM-0054 绣墩 / 宫娥绣墩：藤木 · 鼓形 ----"
       }
     },
@@ -5925,7 +5925,7 @@
       "id": "C-ITM-0041",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L423",
+        "assetRef": "src/city/architecture.ts#L483",
         "note": "源码 ID 锚点：// ---- C-ITM-0041 斗拱彩画组：木彩 · 五铺作双杪（紫宸殿檐下，214 攒 + 转角斜栱） ----"
       }
     },
@@ -6013,7 +6013,7 @@
       "id": "C-ITM-0052",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L475",
+        "assetRef": "src/city/architecture.ts#L535",
         "note": "源码 ID 锚点：// ---- C-ITM-0052 簋尊礼器：铜 · 仿古礼器（紫宸殿后阁架，6 件） ----"
       }
     },
@@ -6021,15 +6021,15 @@
       "id": "C-ITM-0053",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L341",
-        "note": "源码 ID 锚点：// ---- C-ITM-0053 红罗地衣：织物 · 团窠纹（紫宸殿通殿） ----"
+        "assetRef": "src/city/architecture.ts#L411",
+        "note": "源码 ID 锚点：// ---- C-ITM-0053 红罗地衣：织物 · 团窠纹（保和殿通殿） ----"
       }
     },
     {
       "id": "C-ITM-0054",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L405",
+        "assetRef": "src/city/architecture.ts#L465",
         "note": "源码 ID 锚点：// ---- C-ITM-0039 / C-ITM-0054 绣墩 / 宫娥绣墩：藤木 · 鼓形 ----"
       }
     },
@@ -6037,15 +6037,15 @@
       "id": "C-ITM-0055",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L19",
-        "note": "场景构件（代码实测命中「贯木拱肋」）：贯木拱纵梁"
+        "assetRef": "src/city/bridge.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/bridge.ts）：C-ITM-0055"
       }
     },
     {
       "id": "C-ITM-0056",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L507",
+        "assetRef": "src/city/architecture.ts#L567",
         "note": "源码 ID 锚点：// ---- C-ITM-0056 拱骨交叠组：圆木 · 编木交叠（虹桥拱体） ----"
       }
     },
@@ -6053,39 +6053,39 @@
       "id": "C-ITM-0057",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L10",
-        "note": "场景构件（代码实测命中「桥面板」）：桥面板"
+        "assetRef": "src/city/bridge.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/bridge.ts）：C-ITM-0057"
       }
     },
     {
       "id": "C-ITM-0058",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L35",
-        "note": "场景构件（代码实测命中「栏杆 + 霓虹沿口」）：朱漆栏杆"
+        "assetRef": "src/city/bridge.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/bridge.ts）：C-ITM-0058"
       }
     },
     {
       "id": "C-ITM-0059",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L44",
-        "note": "场景构件（代码实测命中「wood」）：望柱"
+        "assetRef": "src/city/bridge.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/bridge.ts）：C-ITM-0059"
       }
     },
     {
       "id": "C-ITM-0060",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L50",
-        "note": "场景构件（代码实测命中「桥头华表」）：桥头华表"
+        "assetRef": "src/city/bridge.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/bridge.ts）：C-ITM-0060"
       }
     },
     {
       "id": "C-ITM-0061",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L533",
+        "assetRef": "src/city/architecture.ts#L593",
         "note": "源码 ID 锚点：// ---- C-ITM-0061 华表仙鹤顶：木雕 · 立鹤引颈（虹桥桥头华表，4 座） ----"
       }
     },
@@ -6093,8 +6093,8 @@
       "id": "C-ITM-0062",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L88",
-        "note": "场景构件（代码实测命中「bridgename」）：匾额「虹橋」"
+        "assetRef": "src/city/bridge.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/bridge.ts）：C-ITM-0062"
       }
     },
     {
@@ -6109,7 +6109,7 @@
       "id": "C-ITM-0064",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L553",
+        "assetRef": "src/city/architecture.ts#L613",
         "note": "源码 ID 锚点：// ---- C-ITM-0064 缆桩：木铁 · 系缆凸桩（虹桥桥脚两侧，6 座） ----"
       }
     },
@@ -6117,7 +6117,7 @@
       "id": "C-ITM-0065",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L649",
+        "assetRef": "src/city/props.ts#L817",
         "note": "源码 ID 锚点：* 泊船石鼻（C-ITM-0065 / C-ITM-0076，各一）：甲板南缘的系船石鼻——"
       }
     },
@@ -6125,7 +6125,7 @@
       "id": "C-ITM-0066",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L571",
+        "assetRef": "src/city/architecture.ts#L631",
         "note": "源码 ID 锚点：// ---- C-ITM-0066 摊贩担：竹木 · 香饮担 / 杂货担（虹桥桥面两侧，2 副） ----"
       }
     },
@@ -6133,7 +6133,7 @@
       "id": "C-ITM-0067",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L670",
+        "assetRef": "src/city/props.ts#L838",
         "note": "源码 ID 锚点：* 水尺刻度（C-ITM-0067，两处）：甲板缘支座石悬挑一根石柱，铜尺板刻 0.1m 一道、半米一长刻，"
       }
     },
@@ -6141,7 +6141,7 @@
       "id": "C-ITM-0068",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L93",
+        "assetRef": "src/city/bridge.ts#L97",
         "note": "源码 ID 锚点：bridgeCrownPad(b);        // C-ITM-0068 桥心垫石"
       }
     },
@@ -6149,15 +6149,15 @@
       "id": "C-ITM-0069",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L601",
-        "note": "场景构件（代码实测命中「排叉柱」）：排叉柱"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0069"
       }
     },
     {
       "id": "C-ITM-0070",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L95",
+        "assetRef": "src/city/bridge.ts#L99",
         "note": "源码 ID 锚点：bridgeArchBands(b);       // C-ITM-0070 木楔铁箍"
       }
     },
@@ -6165,7 +6165,7 @@
       "id": "C-ITM-0071",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L96",
+        "assetRef": "src/city/bridge.ts#L100",
         "note": "源码 ID 锚点：bridgeStoneArch(b);       // C-ITM-0071 石拱券"
       }
     },
@@ -6173,7 +6173,7 @@
       "id": "C-ITM-0072",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L97",
+        "assetRef": "src/city/bridge.ts#L101",
         "note": "源码 ID 锚点：bridgeSeaHorseRail(b);    // C-ITM-0072 海马瑞兽石栏"
       }
     },
@@ -6181,7 +6181,7 @@
       "id": "C-ITM-0073",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L618",
+        "assetRef": "src/city/architecture.ts#L678",
         "note": "源码 ID 锚点：// ---- C-ITM-0073 望柱：青石 · 柱头狮子（州桥石栏 / 栏杆间断，16 根） ----"
       }
     },
@@ -6189,7 +6189,7 @@
       "id": "C-ITM-0074",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/bridge.ts#L94",
+        "assetRef": "src/city/bridge.ts#L98",
         "note": "源码 ID 锚点：bridgeImperialApron(b);   // C-ITM-0074 桥心青石（御道衔接段）"
       }
     },
@@ -6205,7 +6205,7 @@
       "id": "C-ITM-0076",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L649",
+        "assetRef": "src/city/props.ts#L817",
         "note": "源码 ID 锚点：* 泊船石鼻（C-ITM-0065 / C-ITM-0076，各一）：甲板南缘的系船石鼻——"
       }
     },
@@ -6269,7 +6269,7 @@
       "id": "C-ITM-0084",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L54",
+        "assetRef": "src/city/interiors.ts#L60",
         "note": "源码 ID 锚点：/** 八仙桌：独板面 0.9×0.75 + 四腿（47 卷 C-ITM-0084） */"
       }
     },
@@ -6325,7 +6325,7 @@
       "id": "C-ITM-0091",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L63",
+        "assetRef": "src/city/interiors.ts#L69",
         "note": "源码 ID 锚点：/** 酒瓮 + 封泥红签（47 卷 C-ITM-0091，陶 #955539 签 #9D2933） */"
       }
     },
@@ -6501,8 +6501,8 @@
       "id": "C-ITM-0113",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L996",
-        "note": "场景构件（代码实测命中「趙太丞家」）：匾额「趙太丞家」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0113"
       }
     },
     {
@@ -6565,8 +6565,8 @@
       "id": "C-ITM-0121",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L997",
-        "note": "场景构件（代码实测命中「解」）：「解」字大字牌"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0121"
       }
     },
     {
@@ -6629,8 +6629,8 @@
       "id": "C-ITM-0129",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L998",
-        "note": "场景构件（代码实测命中「王家紙馬」）：匾额「王家紙馬」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0129"
       }
     },
     {
@@ -6685,16 +6685,16 @@
       "id": "C-ITM-0136",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L999",
-        "note": "场景构件（代码实测命中「香藥鋪」）：主牌「香藥鋪」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0136"
       }
     },
     {
       "id": "C-ITM-0137",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L915",
-        "note": "场景构件（代码实测命中「劉家上色沉檀揀香」）：侧招「劉家上色沉檀揀香」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0137"
       }
     },
     {
@@ -6813,7 +6813,7 @@
       "id": "C-ITM-0152",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L1149",
+        "assetRef": "src/city/buildings.ts#L2512",
         "note": "源码 ID 锚点：/** 入口木牌坊（C-ITM-0152）：两柱一间木构，花板题「積善堂」宅匾，落在宅院门前 */"
       }
     },
@@ -6822,15 +6822,15 @@
       "impl": {
         "status": "implemented",
         "assetRef": "src/city/buildings.ts#L849",
-        "note": "场景构件（代码实测命中「棚架 + 大顶」）：勾栏大棚"
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0153"
       }
     },
     {
       "id": "C-ITM-0154",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L855",
-        "note": "场景构件（代码实测命中「wood」）：戏台"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0154"
       }
     },
     {
@@ -6941,15 +6941,15 @@
       "id": "C-ITM-0168",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L1001",
-        "note": "场景构件（代码实测命中「上清觀」）：观匾「上清觀」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0168"
       }
     },
     {
       "id": "C-ITM-0169",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1276",
+        "assetRef": "src/city/architecture.ts#L1405",
         "note": "源码 ID 锚点：// 三清像：C-ITM-0169 —— 上清觀三清殿殿心（殿前抱厦，殿身是实心体，像落廊内殿心位）"
       }
     },
@@ -6965,7 +6965,7 @@
       "id": "C-ITM-0171",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L1010",
+        "assetRef": "src/city/interiors.ts#L1026",
         "note": "源码 ID 锚点：// 感应签筒 ×2：C-ITM-0171（竹 · 签案求签）——上清观签案无室内壳，落 R06 香客棚东侧签案位"
       }
     },
@@ -7005,7 +7005,7 @@
       "id": "C-ITM-0176",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L1023",
+        "assetRef": "src/city/interiors.ts#L1039",
         "note": "源码 ID 锚点：// 暮鼓：C-ITM-0176（皮木 · 鼓楼击鼓）——上清观鼓楼无室内壳，落 R01 门厅鼓位（与登闻鼓、更鼓分立）"
       }
     },
@@ -7021,7 +7021,7 @@
       "id": "C-ITM-0178",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L1000",
+        "assetRef": "src/city/interiors.ts#L1016",
         "note": "源码 ID 锚点：// 三足丹炉：C-ITM-0178（铁铜 · 丹房）——上清观丹房无室内壳，落 R16 后院香药炮制作坊"
       }
     },
@@ -7029,7 +7029,7 @@
       "id": "C-ITM-0179",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1365",
+        "assetRef": "src/city/props.ts#L1607",
         "note": "源码 ID 锚点：/** 鹤舍仙鹤：C-ITM-0179（活体 · 2 只 · 鹤舍）——丹顶白鹤，长颈伏背、单腿收立 */"
       }
     },
@@ -7189,7 +7189,7 @@
       "id": "C-ITM-0199",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L847",
+        "assetRef": "src/city/buildings.ts#L2058",
         "note": "源码 ID 锚点：// 琉璃砖面（C-ITM-0199）塔基部分：台基上沿一圈琉璃压边（四面，每面 20 块）"
       }
     },
@@ -7197,7 +7197,7 @@
       "id": "C-ITM-0200",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L831",
+        "assetRef": "src/city/buildings.ts#L2042",
         "note": "源码 ID 锚点：// 塔身十三层：C-ITM-0200 —— 开宝寺塔八角十三层楼阁式（塔心柱 0202 / 塔窗 0204 同批挂在塔体上）"
       }
     },
@@ -7205,15 +7205,15 @@
       "id": "C-ITM-0201",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L817",
-        "note": "场景构件（代码实测命中「pagoda.dewPlate」）：塔刹宝顶"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0201"
       }
     },
     {
       "id": "C-ITM-0202",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L870",
+        "assetRef": "src/city/buildings.ts#L2081",
         "note": "源码 ID 锚点：// 塔心柱：C-ITM-0202 —— 木心柱一柱到顶，柱顶抵刹座（刹杆即其向上延伸的延续）。"
       }
     },
@@ -7229,7 +7229,7 @@
       "id": "C-ITM-0204",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L913",
+        "assetRef": "src/city/buildings.ts#L2124",
         "note": "源码 ID 锚点：// 塔窗：C-ITM-0204 —— 砖券瞭望口（暗腔 + 两侧门桯 + 窗台 + 三块券脸石）"
       }
     },
@@ -7237,15 +7237,15 @@
       "id": "C-ITM-0205",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/detailKit.ts#L109",
-        "note": "场景构件（代码实测命中「eave.windBell」）：风铎"
+        "assetRef": "src/city/detailKit.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/detailKit.ts）：C-ITM-0205"
       }
     },
     {
       "id": "C-ITM-0206",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L955",
+        "assetRef": "src/city/buildings.ts#L2166",
         "note": "源码 ID 锚点：// 千佛砖龛（C-ITM-0206）：平座外圈分层小龛——每层八面各 5 龛（龛框 + 暗腔 + 小佛像）"
       }
     },
@@ -7261,7 +7261,7 @@
       "id": "C-ITM-0208",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L1016",
+        "assetRef": "src/city/buildings.ts#L2227",
         "note": "源码 ID 锚点：// 塔院围墙（C-ITM-0208）：围塔一圈（x 512–552 / z 170–230），东墙留门朝城内南北街"
       }
     },
@@ -7277,7 +7277,7 @@
       "id": "C-ITM-0210",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1019",
+        "assetRef": "src/city/architecture.ts#L1148",
         "note": "源码 ID 锚点：/** 碑亭（C-ITM-0210）：石木「京城寶剎」碑——石台基、四石柱、石阑额、瓦顶、碑座碑身碑首 */"
       }
     },
@@ -7293,8 +7293,8 @@
       "id": "C-ITM-0212",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L758",
-        "note": "场景构件（代码实测命中「wall」）：石砌平台"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0212"
       }
     },
     {
@@ -7317,7 +7317,7 @@
       "id": "C-ITM-0215",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L690",
+        "assetRef": "src/city/props.ts#L858",
         "note": "源码 ID 锚点：* 跳板（C-ITM-0215，两处）：甲板缘搭向水面的木跳板——板面横木条防滑、两侧边梁，"
       }
     },
@@ -7349,7 +7349,7 @@
       "id": "C-ITM-0219",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1046",
+        "assetRef": "src/city/architecture.ts#L1175",
         "note": "源码 ID 锚点：/** 泊位（C-ITM-0219 / C-ITM-0394）：汴河粮船——船底、两舷、甲板、船首尾起翘、拱篷、桅、舵、粮袋、缆 */"
       }
     },
@@ -7413,7 +7413,7 @@
       "id": "C-ITM-0227",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L1027",
+        "assetRef": "src/city/interiors.ts#L1043",
         "note": "源码 ID 锚点：// 公平秤（天平）：C-ITM-0227（铜木 · 楼前亭复秤）——市楼前亭无室内壳，落 R06 户房官秤位"
       }
     },
@@ -7437,7 +7437,7 @@
       "id": "C-ITM-0230",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1308",
+        "assetRef": "src/city/architecture.ts#L1437",
         "note": "源码 ID 锚点：// 值事房（东市）：C-ITM-0230 —— 东市市楼东侧 2 间"
       }
     },
@@ -7493,7 +7493,7 @@
       "id": "C-ITM-0237",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1089",
+        "assetRef": "src/city/props.ts#L1257",
         "note": "源码 ID 锚点：/** 更铺：C-ITM-0237（砖木 · 1 座 · 楼北）——巡防值房，砖身木柱，门前告示板与号灯 */"
       }
     },
@@ -7581,7 +7581,7 @@
       "id": "C-ITM-0248",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1353",
+        "assetRef": "src/city/props.ts#L1595",
         "note": "源码 ID 锚点：/** 拴马桩：C-ITM-0248（石 · 8 根 · 街缘）——石座方桩，桩头刻莲瓣，铁环磨亮 */"
       }
     },
@@ -7597,7 +7597,7 @@
       "id": "C-ITM-0250",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1309",
+        "assetRef": "src/city/architecture.ts#L1438",
         "note": "源码 ID 锚点：// 值事房（西市）：C-ITM-0250 —— 西市市楼东侧 2 间"
       }
     },
@@ -7613,8 +7613,8 @@
       "id": "C-ITM-0252",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L915",
-        "note": "场景构件（代码实测命中「綢緞莊」）：匾额「綢緞莊」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0252"
       }
     },
     {
@@ -7669,8 +7669,8 @@
       "id": "C-ITM-0259",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L915",
-        "note": "场景构件（代码实测命中「果子鋪」）：匾额「果子鋪」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0259"
       }
     },
     {
@@ -7725,15 +7725,15 @@
       "id": "C-ITM-0266",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L915",
-        "note": "场景构件（代码实测命中「飯鋪」）：匾额「飯鋪」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0266"
       }
     },
     {
       "id": "C-ITM-0267",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L996",
+        "assetRef": "src/city/interiors.ts#L1012",
         "note": "源码 ID 锚点：// 双眼猛火灶：C-ITM-0267（砖铁 · 灶间）——飯鋪灶间无室内壳，落 R15 大灶厨主灶位"
       }
     },
@@ -7781,8 +7781,8 @@
       "id": "C-ITM-0273",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L915",
-        "note": "场景构件（代码实测命中「唐家酒店」）：匾额「唐家酒店」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0273"
       }
     },
     {
@@ -7837,8 +7837,8 @@
       "id": "C-ITM-0280",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L915",
-        "note": "场景构件（代码实测命中「久住王員外家」）：匾额「久住王員外家」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0280"
       }
     },
     {
@@ -7893,8 +7893,8 @@
       "id": "C-ITM-0287",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L915",
-        "note": "场景构件（代码实测命中「明家靴店」）：匾额「明家靴店」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0287"
       }
     },
     {
@@ -7949,8 +7949,8 @@
       "id": "C-ITM-0294",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L626",
-        "note": "场景构件（代码实测命中「城楼」）：城楼"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0294"
       }
     },
     {
@@ -7965,15 +7965,15 @@
       "id": "C-ITM-0296",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L707",
-        "note": "场景构件（代码实测命中「gateTower.plaque」）：门匾「上東門」"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0296"
       }
     },
     {
       "id": "C-ITM-0297",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L623",
+        "assetRef": "src/city/buildings.ts#L1831",
         "note": "源码 ID 锚点：// 千斤闸（C-ITM-0011 / C-ITM-0297 / D-ITM-0070）：本城只有东门一处门洞，故三件同名条目各落一处"
       }
     },
@@ -7989,15 +7989,15 @@
       "id": "C-ITM-0299",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L572",
-        "note": "场景构件（代码实测命中「马道」）：马道"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0299"
       }
     },
     {
       "id": "C-ITM-0300",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L1212",
+        "assetRef": "src/city/buildings.ts#L2575",
         "note": "源码 ID 锚点：/** 戍铺（C-ITM-0300）：军巡铺——台基、板壁、门窗、瓦顶、兵器架、长凳、火盆、灯 */"
       }
     },
@@ -8013,7 +8013,7 @@
       "id": "C-ITM-0302",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1239",
+        "assetRef": "src/city/architecture.ts#L1368",
         "note": "源码 ID 锚点：/** 夯土残墙（C-ITM-0302）：x=462 线旧垣——夯层墙体、残高 2–4m、塌垛口、三处通行豁口、墙根夯土堆 */"
       }
     },
@@ -8021,7 +8021,7 @@
       "id": "C-ITM-0303",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1332",
+        "assetRef": "src/city/props.ts#L1574",
         "note": "源码 ID 锚点：/** 塌垛口：C-ITM-0303（夯土 · 8 处豁口 · 墙顶）——旧垣残段九截、八处崩塌缺口，缺处散落夯块"
       }
     },
@@ -8101,7 +8101,7 @@
       "id": "C-ITM-0313",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L982",
+        "assetRef": "src/city/architecture.ts#L1111",
         "note": "源码 ID 锚点：/** 草亭（C-ITM-0313）：六柱攒尖茅顶——石台明、竹柱、阑额挂落、攒尖草顶、石桌 */"
       }
     },
@@ -8109,7 +8109,7 @@
       "id": "C-ITM-0314",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L1015",
+        "assetRef": "src/city/interiors.ts#L1031",
         "note": "源码 ID 锚点：// 茶担：C-ITM-0314（竹铜 · 亭内凉茶热茶）——柳林茶亭无室内壳，落 R03 散座堂东侧茶位"
       }
     },
@@ -8117,7 +8117,7 @@
       "id": "C-ITM-0315",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1135",
+        "assetRef": "src/city/props.ts#L1303",
         "note": "源码 ID 锚点：/** 射柳靶场：C-ITM-0315（柳桩彩绳 · 1 处 · 林间空地）——三道箭道，柳桩挂彩绳，起射线立界石 */"
       }
     },
@@ -8149,15 +8149,15 @@
       "id": "C-ITM-0319",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L184",
-        "note": "场景构件（代码实测命中「mt」）：祠匾「碧霞祠」"
+        "assetRef": "src/world/terrain.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/world/terrain.ts）：C-ITM-0319"
       }
     },
     {
       "id": "C-ITM-0320",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1326",
+        "assetRef": "src/city/architecture.ts#L1460",
         "note": "源码 ID 锚点：// 碧霞元君像：C-ITM-0320 —— 泰山（14000,−6000）元君殿殿心，凤冠霞帔"
       }
     },
@@ -8165,7 +8165,7 @@
       "id": "C-ITM-0321",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L276",
+        "assetRef": "src/world/terrain.ts#L1322",
         "note": "源码 ID 锚点：/** C-ITM-0321 香亭：泰山碧霞祠下院西庭，石铁焚香亭（44 卷归型：香亭石铁，卷棚同剪边） */"
       }
     },
@@ -8181,7 +8181,7 @@
       "id": "C-ITM-0323",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L935",
+        "assetRef": "src/city/architecture.ts#L1064",
         "note": "源码 ID 锚点：/** 云房（C-ITM-0323）：石木挂单道舍——石墙身 + 木前檐柱 + 瓦顶 + 门枕窗 */"
       }
     },
@@ -8205,15 +8205,15 @@
       "id": "C-ITM-0326",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L185",
-        "note": "场景构件（代码实测命中「鎮江王廟」）：庙匾「镇江王庙」"
+        "assetRef": "src/world/terrain.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/world/terrain.ts）：C-ITM-0326"
       }
     },
     {
       "id": "C-ITM-0327",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1339",
+        "assetRef": "src/city/architecture.ts#L1473",
         "note": "源码 ID 锚点：// 镇江王像：C-ITM-0327 —— 华山（−15000,4000）镇江王庙大殿殿心，冕旒持圭"
       }
     },
@@ -8237,7 +8237,7 @@
       "id": "C-ITM-0330",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L992",
+        "assetRef": "src/city/interiors.ts#L1008",
         "note": "源码 ID 锚点：// 脱险签筒：C-ITM-0330（竹 · 廊下求签）——镇江王庙廊下无室内壳，落 L3 天阁供案东侧"
       }
     },
@@ -8253,15 +8253,15 @@
       "id": "C-ITM-0332",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L186",
-        "note": "场景构件（代码实测命中「祝融殿」）：殿匾「祝融殿」"
+        "assetRef": "src/world/terrain.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/world/terrain.ts）：C-ITM-0332"
       }
     },
     {
       "id": "C-ITM-0333",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1346",
+        "assetRef": "src/city/architecture.ts#L1480",
         "note": "源码 ID 锚点：// 祝融像：C-ITM-0333 —— 衡山（2000,16500）祝融殿殿心，赤衣执简立像"
       }
     },
@@ -8269,7 +8269,7 @@
       "id": "C-ITM-0334",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1176",
+        "assetRef": "src/city/architecture.ts#L1305",
         "note": "源码 ID 锚点：/** 铁瓦殿面（C-ITM-0334）：衡山祝融殿黑铁瓦——同形铁壳整个包住既有瓦面 + 正脊鸱吻 + 四条垂脊 + 铁檐口 */"
       }
     },
@@ -8285,7 +8285,7 @@
       "id": "C-ITM-0336",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1152",
+        "assetRef": "src/city/architecture.ts#L1281",
         "note": "源码 ID 锚点：/** 云海观台（C-ITM-0336）：峰沿石台——台面、望柱栏板、踏跺、观景石案 */"
       }
     },
@@ -8293,7 +8293,7 @@
       "id": "C-ITM-0337",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1067",
+        "assetRef": "src/city/props.ts#L1235",
         "note": "源码 ID 锚点：/** 道士舍：C-ITM-0337（石木 · 2 座 · 殿侧）——石砌墙身 + 木柱檐廊的守殿人居所 */"
       }
     },
@@ -8301,15 +8301,15 @@
       "id": "C-ITM-0338",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L187",
-        "note": "场景构件（代码实测命中「北嶽廟」）：殿匾「北岳庙」"
+        "assetRef": "src/world/terrain.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/world/terrain.ts）：C-ITM-0338"
       }
     },
     {
       "id": "C-ITM-0339",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1357",
+        "assetRef": "src/city/architecture.ts#L1491",
         "note": "源码 ID 锚点：// 北岳大帝像：C-ITM-0339 —— 恒山（−3500,−16200）北岳庙大殿殿心，冕服持圭"
       }
     },
@@ -8317,7 +8317,7 @@
       "id": "C-ITM-0340",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L369",
+        "assetRef": "src/world/terrain.ts#L1425",
         "note": "源码 ID 锚点：/** C-ITM-0340 悬空栈道门：华山崖口，木石栈门＋悬挑栈道（柱脚逐根 terrainHeight 落坡，栈面悬出坡外） */"
       }
     },
@@ -8325,7 +8325,7 @@
       "id": "C-ITM-0341",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1195",
+        "assetRef": "src/city/props.ts#L1400",
         "note": "源码 ID 锚点：/** 石阶：C-ITM-0341（朝岳阶 · 108 级 · 山门内）——9 段 × 12 级（LOD 压成 9 段可视踏步），总升 3.46m，"
       }
     },
@@ -8341,7 +8341,7 @@
       "id": "C-ITM-0343",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1073",
+        "assetRef": "src/city/props.ts#L1241",
         "note": "源码 ID 锚点：/** 守庙人舍：C-ITM-0343（石木 · 1 座 · 殿侧）——殿侧守庙人居所，门侧立香炉与扫帚 */"
       }
     },
@@ -8349,15 +8349,15 @@
       "id": "C-ITM-0344",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L188",
-        "note": "场景构件（代码实测命中「中嶽廟」）：殿匾「中岳庙」"
+        "assetRef": "src/world/terrain.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/world/terrain.ts）：C-ITM-0344"
       }
     },
     {
       "id": "C-ITM-0345",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1364",
+        "assetRef": "src/city/architecture.ts#L1498",
         "note": "源码 ID 锚点：// 中岳大帝像：C-ITM-0345 —— 嵩山（9500,10500）中岳庙大殿殿心，冕十二旒"
       }
     },
@@ -8365,23 +8365,23 @@
       "id": "C-ITM-0346",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L224",
-        "note": "场景构件（代码实测命中「嵩山」）：神道石翁仲"
+        "assetRef": "src/world/terrain.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/world/terrain.ts）：C-ITM-0346"
       }
     },
     {
       "id": "C-ITM-0347",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1179",
-        "note": "源码 ID 锚点：/** 古柏群：C-ITM-0347（千年柏 · 60 株 · 全庙）——老干扭结、五层平顶云冠、两道枯枝 */"
+        "assetRef": "src/city/props.ts#L1361",
+        "note": "源码 ID 锚点：/** 古柏群：C-ITM-0347（千年柏 · 60 株 · 全庙）——根盘 + 两段扭干 + 五层平顶云冠（每层三团压扁球）+ 两道枯枝。"
       }
     },
     {
       "id": "C-ITM-0348",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L327",
+        "assetRef": "src/world/terrain.ts#L1378",
         "note": "源码 ID 锚点：/** C-ITM-0348 遥参亭：嵩山中岳庙庙前歇脚亭（44 卷：遥参亭攒尖） */"
       }
     },
@@ -8397,7 +8397,7 @@
       "id": "C-ITM-0350",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1157",
+        "assetRef": "src/city/props.ts#L1339",
         "note": "源码 ID 锚点：/** 庙市棚：C-ITM-0350（席竹 · 20 组 · 庙前街）——四柱席棚、摊案、货堆、垂席招帘 */"
       }
     },
@@ -8405,15 +8405,15 @@
       "id": "C-ITM-0351",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L189",
-        "note": "场景构件（代码实测命中「雪簾禪院」）：山门匾「雪簾禪院」"
+        "assetRef": "src/world/terrain.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/world/terrain.ts）：C-ITM-0351"
       }
     },
     {
       "id": "C-ITM-0352",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1371",
+        "assetRef": "src/city/architecture.ts#L1505",
         "note": "源码 ID 锚点：// 大雄殿佛坐像：C-ITM-0352 —— 天山（−22000,−16000）雪帘禅院大雄殿殿心，铜漆坐像"
       }
     },
@@ -8421,7 +8421,7 @@
       "id": "C-ITM-0353",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L429",
+        "assetRef": "src/world/terrain.ts#L1490",
         "note": "源码 ID 锚点：/** C-ITM-0353 冰纹窗 12：雪帘禅院殿周四座窗屏 ×3 扇（木框＋冰裂格心＋双层糊：内绢外明瓦） */"
       }
     },
@@ -8429,7 +8429,7 @@
       "id": "C-ITM-0354",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L459",
+        "assetRef": "src/world/terrain.ts#L1525",
         "note": "源码 ID 锚点：/** C-ITM-0354 雪廊：雪帘禅院西院墙内挡雪连廊（木柱＋单坡瓦顶＋雪脊冰凌） */"
       }
     },
@@ -8437,7 +8437,7 @@
       "id": "C-ITM-0355",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1377",
+        "assetRef": "src/city/architecture.ts#L1511",
         "note": "源码 ID 锚点：// 禅房坐席：C-ITM-0355 —— 禅房四席（蒲草坐禅位）"
       }
     },
@@ -8453,7 +8453,7 @@
       "id": "C-ITM-0357",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1224",
+        "assetRef": "src/city/props.ts#L1429",
         "note": "源码 ID 锚点：/** 白玉阶：C-ITM-0357（九重玉阶 · 9 段 · 宫前）——九段白玉踏步自池沿下到水面，两侧玉栏 */"
       }
     },
@@ -8461,7 +8461,7 @@
       "id": "C-ITM-0358",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1106",
+        "assetRef": "src/city/architecture.ts#L1235",
         "note": "源码 ID 锚点：/** 云桥（C-ITM-0358）：瑶池上玉木小拱桥——池沿、拱板逐段起拱、两侧寻杖望柱、桥台 */"
       }
     },
@@ -8469,7 +8469,7 @@
       "id": "C-ITM-0359",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1240",
+        "assetRef": "src/city/props.ts#L1445",
         "note": "源码 ID 锚点：/** 瑶池：C-ITM-0359（温泉池 · 1 座 · 殿前）——白玉池沿、温泉水不冻、池面三处雾气。"
       }
     },
@@ -8477,7 +8477,7 @@
       "id": "C-ITM-0360",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1398",
+        "assetRef": "src/city/architecture.ts#L1532",
         "note": "源码 ID 锚点：// 西王母像：C-ITM-0360 —— 昆仑（−27000,4000）瑶池行宫王母殿殿心，玉塑凤冠金帔"
       }
     },
@@ -8493,15 +8493,15 @@
       "id": "C-ITM-0362",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1277",
-        "note": "源码 ID 锚点：/** 蟠桃园：C-ITM-0362（仙桃树 · 12 株 · 殿后）——矮壮仙桃，云霞满枝，蟠桃压枝 */"
+        "assetRef": "src/city/props.ts#L1489",
+        "note": "源码 ID 锚点：/** 蟠桃园：C-ITM-0362（仙桃树 · 12 株 · 殿后）——根盘 + 两段矮干 + 三俯仰主枝 + 六团球冠 + 八枚仙桃。"
       }
     },
     {
       "id": "C-ITM-0363",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1300",
+        "assetRef": "src/city/props.ts#L1537",
         "note": "源码 ID 锚点：/** 结界玉柱：C-ITM-0363（玉 · 4 根 · 宫四角）——玉柱承霞光，柱身四道符纹，柱头明光 */"
       }
     },
@@ -8557,7 +8557,7 @@
       "id": "C-ITM-0370",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1055",
+        "assetRef": "src/city/props.ts#L1223",
         "note": "源码 ID 锚点：/** 驿卒舍：C-ITM-0370（夯土 · 4 座 · 站北）——夯土小屋，平檐草顶，门前系马石 */"
       }
     },
@@ -8573,7 +8573,7 @@
       "id": "C-ITM-0372",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1106",
+        "assetRef": "src/city/props.ts#L1274",
         "note": "源码 ID 锚点：/** 石堆敖包：C-ITM-0372（垒石经幡 · 1 座 · 坛心）——八层垒石高 3.1m、中心插柳、五色经幡满顶到 6m */"
       }
     },
@@ -8581,7 +8581,7 @@
       "id": "C-ITM-0373",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1207",
+        "assetRef": "src/city/architecture.ts#L1336",
         "note": "源码 ID 锚点：/** 祭台（C-ITM-0373）：敖包前牛羊供案——三级石台、木供案、牛羊牲、铜盘、香炉、长明灯 */"
       }
     },
@@ -8613,7 +8613,7 @@
       "id": "C-ITM-0377",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1037",
+        "assetRef": "src/city/props.ts#L1205",
         "note": "源码 ID 锚点：/** 渔舍：C-ITM-0377（茅草木 · 10 座 · 村中）——悬山草顶土屋，檐下挂网、门口火塘 */"
       }
     },
@@ -8629,7 +8629,7 @@
       "id": "C-ITM-0379",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L822",
+        "assetRef": "src/city/props.ts#L990",
         "note": "源码 ID 锚点：/** 渔船：C-ITM-0379（鸭划子 · 木 · 6 艘 · 小埠）——平底小舟，水线 y=1.0、吃水 0.26 */"
       }
     },
@@ -8637,7 +8637,7 @@
       "id": "C-ITM-0380",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/world/terrain.ts#L497",
+        "assetRef": "src/world/terrain.ts#L1568",
         "note": "源码 ID 锚点：/** C-ITM-0380 石碣：恒山北嶽廟庙前石（「石碣村」刻字，打卡点） */"
       }
     },
@@ -8653,7 +8653,7 @@
       "id": "C-ITM-0382",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L848",
+        "assetRef": "src/city/props.ts#L1016",
         "note": "源码 ID 锚点：/** 小埠头：C-ITM-0382（碎石木桩 · 1 处 · 水缘）——乱石坡台接岸、十二根木桩托三层铺板 */"
       }
     },
@@ -8661,7 +8661,7 @@
       "id": "C-ITM-0383",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L865",
+        "assetRef": "src/city/props.ts#L1033",
         "note": "源码 ID 锚点：/** 埠头马道：C-ITM-0383（条石 · 1 处 · 河沿）——条石缓坡自岸上地面抬到岸顶，接出挑石埠台 */"
       }
     },
@@ -8669,7 +8669,7 @@
       "id": "C-ITM-0384",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L882",
+        "assetRef": "src/city/props.ts#L1050",
         "note": "源码 ID 锚点：/** 渡船：C-ITM-0384（官渡平底船 · 木 · 2 艘 · 河心）——五米平底，方艏方艉，水线 y=1.0 */"
       }
     },
@@ -8677,7 +8677,7 @@
       "id": "C-ITM-0385",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L911",
+        "assetRef": "src/city/props.ts#L1079",
         "note": "源码 ID 锚点：/** 缆桩：C-ITM-0385（木铁 · 4 根 · 埠头）——石座木桩、双道铁箍、缆绳三匝（y0 为埠台面高） */"
       }
     },
@@ -8685,7 +8685,7 @@
       "id": "C-ITM-0386",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L921",
+        "assetRef": "src/city/props.ts#L1089",
         "note": "源码 ID 锚点：/** 跳板：C-ITM-0386（木 · 2 处 · 埠头）——接舷板，自埠台面落到船舷，两道横木防滑 */"
       }
     },
@@ -8693,7 +8693,7 @@
       "id": "C-ITM-0387",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L935",
+        "assetRef": "src/city/props.ts#L1103",
         "note": "源码 ID 锚点：/** 渡口草棚：C-ITM-0387（茅竹 · 1 座 · 埠侧）——四柱茅顶茶棚，内置茶案、长凳与渡资牌位 */"
       }
     },
@@ -8709,7 +8709,7 @@
       "id": "C-ITM-0389",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1000",
+        "assetRef": "src/city/props.ts#L1168",
         "note": "源码 ID 锚点：/** 仓廒：C-ITM-0389（转运仓 6 座）/ C-ITM-0395（丰济仓 4 座）——高台防潮 + 砖木广厦 + 檐下通风格栅 */"
       }
     },
@@ -8717,7 +8717,7 @@
       "id": "C-ITM-0390",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L714",
+        "assetRef": "src/city/props.ts#L882",
         "note": "源码 ID 锚点：* 水门船闸（C-ITM-0390）：码头西口的漕运水门——两岸闸墩夹住航道，人字闸门敞靠墩侧，"
       }
     },
@@ -8741,7 +8741,7 @@
       "id": "C-ITM-0393",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1024",
+        "assetRef": "src/city/props.ts#L1192",
         "note": "源码 ID 锚点：/** 守仓兵铺：C-ITM-0393（砖木 · 2 座 · 仓门）——门前值房，柜台朝外，檐下一盏号灯 */"
       }
     },
@@ -8749,7 +8749,7 @@
       "id": "C-ITM-0394",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1046",
+        "assetRef": "src/city/architecture.ts#L1175",
         "note": "源码 ID 锚点：/** 泊位（C-ITM-0219 / C-ITM-0394）：汴河粮船——船底、两舷、甲板、船首尾起翘、拱篷、桅、舵、粮袋、缆 */"
       }
     },
@@ -8757,7 +8757,7 @@
       "id": "C-ITM-0395",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1000",
+        "assetRef": "src/city/props.ts#L1168",
         "note": "源码 ID 锚点：/** 仓廒：C-ITM-0389（转运仓 6 座）/ C-ITM-0395（丰济仓 4 座）——高台防潮 + 砖木广厦 + 檐下通风格栅 */"
       }
     },
@@ -8781,7 +8781,7 @@
       "id": "C-ITM-0398",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L756",
+        "assetRef": "src/city/props.ts#L924",
         "note": "源码 ID 锚点：* 护仓栅栏（C-ITM-0398）：漕运仓场沿汴河北岸的一周木栅尖桩——"
       }
     },
@@ -8797,7 +8797,7 @@
       "id": "C-ITM-0400",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/architecture.ts#L1417",
+        "assetRef": "src/city/architecture.ts#L1551",
         "note": "源码 ID 锚点：// 押粮官房：C-ITM-0400 —— 金耀门漕运仓仓西（4626, 120），文书官房"
       }
     },
@@ -8805,7 +8805,7 @@
       "id": "C-ITM-0401",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L987",
+        "assetRef": "src/city/interiors.ts#L1003",
         "note": "源码 ID 锚点：// 宅匾「積善堂」：C-ITM-0401（木金漆 · 正房堂匾）——積善坊卢宅正房无室内壳，落 L2 主雅间北壁堂位"
       }
     },
@@ -8813,8 +8813,8 @@
       "id": "C-ITM-0402",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L376",
-        "note": "场景构件（代码实测命中「影壁」）：影壁"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0402"
       }
     },
     {
@@ -8877,7 +8877,7 @@
       "id": "C-ITM-0410",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L1279",
+        "assetRef": "src/city/buildings.ts#L2642",
         "note": "源码 ID 锚点：/** 花园石亭（C-ITM-0410）：仿木石构——石台基、四石柱、石枋、瓦顶、坐凳、石桌、花池，悬「守拙齋」斋匾 */"
       }
     },
@@ -8901,7 +8901,7 @@
       "id": "C-ITM-0413",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L1203",
+        "assetRef": "src/city/buildings.ts#L2566",
         "note": "源码 ID 锚点：/** 上马石（C-ITM-0413）：三级石阶 + 卷云肩，宅院门前左右各一 */"
       }
     },
@@ -9205,7 +9205,7 @@
       "id": "C-ITM-0451",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L1236",
+        "assetRef": "src/city/buildings.ts#L2599",
         "note": "源码 ID 锚点：/** 排门板（C-ITM-0451）：铺面卸下的排门板靠墙斜码 + 落地平码 + 捆绳 */"
       }
     },
@@ -9229,15 +9229,15 @@
       "id": "C-ITM-0454",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L438",
-        "note": "场景构件（代码实测命中「招幌」）：招幌"
+        "assetRef": "src/city/props.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/props.ts）：C-ITM-0454"
       }
     },
     {
       "id": "C-ITM-0455",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/interiors.ts#L1002",
+        "assetRef": "src/city/interiors.ts#L1018",
         "note": "源码 ID 锚点：// 后灶：C-ITM-0455（砖土 · 后灶间）——小店附宅后灶，落 R16 后院后院墙下"
       }
     },
@@ -9317,15 +9317,15 @@
       "id": "C-ITM-0465",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L362",
-        "note": "场景构件（代码实测命中「house」）：院门楼"
+        "assetRef": "src/city/buildings.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/city/buildings.ts）：C-ITM-0465"
       }
     },
     {
       "id": "C-ITM-0466",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/props.ts#L1314",
+        "assetRef": "src/city/props.ts#L1554",
         "note": "源码 ID 锚点：/** 共井：C-ITM-0466（砖石辘轳 · 1 眼 · 院心）——砖砌井台 + 石井圈 + 辘轳架 + 木桶 */"
       }
     },
@@ -9621,7 +9621,7 @@
       "id": "D-ITM-0031",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/hells.ts#L525",
+        "assetRef": "src/sky/hells.ts#L1081",
         "note": "源码 ID 锚点：// 碗架三层 108 粗陶碗（D-ITM-0031，缺角 36 意象用暗档色）"
       }
     },
@@ -9701,7 +9701,7 @@
       "id": "D-ITM-0041",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/hells.ts#L534",
+        "assetRef": "src/sky/hells.ts#L1090",
         "note": "源码 ID 锚点：// 绿灯笼对（D-ITM-0041 檐下）"
       }
     },
@@ -9909,8 +9909,8 @@
       "id": "D-ITM-0067",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L253",
-        "note": "场景构件（代码实测命中「过街城门」）：丰都城门台"
+        "assetRef": "src/sky/fengduGround.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/sky/fengduGround.ts）：D-ITM-0067"
       }
     },
     {
@@ -9933,7 +9933,7 @@
       "id": "D-ITM-0070",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/buildings.ts#L623",
+        "assetRef": "src/city/buildings.ts#L1831",
         "note": "源码 ID 锚点：// 千斤闸（C-ITM-0011 / C-ITM-0297 / D-ITM-0070）：本城只有东门一处门洞，故三件同名条目各落一处"
       }
     },
@@ -9941,7 +9941,7 @@
       "id": "D-ITM-0071",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2830",
+        "assetRef": "src/sky/underworld.ts#L3240",
         "note": "源码 ID 锚点：// 门钉铜乳：D-ITM-0071"
       }
     },
@@ -9949,7 +9949,7 @@
       "id": "D-ITM-0072",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2704",
+        "assetRef": "src/sky/underworld.ts#L3114",
         "note": "源码 ID 锚点：w37ScreenWall(b, sg, atlas, 180, 37);                                   // 照壁：D-"
       }
     },
@@ -9973,7 +9973,7 @@
       "id": "D-ITM-0075",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L810",
+        "assetRef": "src/sky/fengduGround.ts#L891",
         "note": "源码 ID 锚点：// 1 返阳门·青砖门楼：东街(z=25)东口 x=876，14m 双门洞，阳间窑色青砖（D-ITM-0075）"
       }
     },
@@ -9981,15 +9981,15 @@
       "id": "D-ITM-0076",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L1009",
-        "note": "场景构件（代码实测命中「fanyang」）：门匾「返阳门」"
+        "assetRef": "src/sky/underworld.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/sky/underworld.ts）：D-ITM-0076"
       }
     },
     {
       "id": "D-ITM-0077",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2706",
+        "assetRef": "src/sky/underworld.ts#L3116",
         "note": "源码 ID 锚点：w37WarmLight(b, 0, -124);                                               // 阳气温光："
       }
     },
@@ -9997,7 +9997,7 @@
       "id": "D-ITM-0078",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2707",
+        "assetRef": "src/sky/underworld.ts#L3117",
         "note": "源码 ID 锚点：w37JudgeDesk(b, -7.3, -127.6, Math.PI / 2);                             // 守门判官位"
       }
     },
@@ -10005,7 +10005,7 @@
       "id": "D-ITM-0079",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2708",
+        "assetRef": "src/sky/underworld.ts#L3118",
         "note": "源码 ID 锚点：w37RevivalDrum(b, 7.3, -127.6, -Math.PI / 2);                           // 回生鼓：D"
       }
     },
@@ -10021,7 +10021,7 @@
       "id": "D-ITM-0081",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/hells.ts#L864",
+        "assetRef": "src/sky/hells.ts#L1687",
         "note": "源码 ID 锚点：// WS-37 忘川双渡口（D-ITM-0081/0082/0083/0086）：归魂渡 / 迎魂渡 / 孟婆渡船 / 系舟缆桩"
       }
     },
@@ -10029,7 +10029,7 @@
       "id": "D-ITM-0082",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/hells.ts#L1747",
+        "assetRef": "src/sky/hells.ts#L2585",
         "note": "源码 ID 锚点：/** 迎魂渡（南岸）：堤顶平台 + 下河六级 + 灯桩二根 + 登岸新灰 + 阶脚缆桩（D-ITM-0082） */"
       }
     },
@@ -10037,7 +10037,7 @@
       "id": "D-ITM-0083",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/hells.ts#L1787",
+        "assetRef": "src/sky/hells.ts#L2625",
         "note": "源码 ID 锚点：/** 孟婆渡船：平底乌篷船（船底/四道列板/船首楔/船尾板）+ 乌篷 + 灯桅绿灯 + 渡资灰钱匣（D-ITM-0083） */"
       }
     },
@@ -10061,7 +10061,7 @@
       "id": "D-ITM-0086",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/hells.ts#L1779",
+        "assetRef": "src/sky/hells.ts#L2617",
         "note": "源码 ID 锚点：// 阶脚缆桩（与 D-ITM-0086 四桩分设，此处只做渡口自带的一对系船石）"
       }
     },
@@ -10069,7 +10069,7 @@
       "id": "D-ITM-0087",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2718",
+        "assetRef": "src/sky/underworld.ts#L3128",
         "note": "源码 ID 锚点：w37BloodAltar(b, -240, 88);                                             // 黑石祭台："
       }
     },
@@ -10077,7 +10077,7 @@
       "id": "D-ITM-0088",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2721",
+        "assetRef": "src/sky/underworld.ts#L3131",
         "note": "源码 ID 锚点：w37ChainStake(b, -240 + Math.cos(a) * 21, 58 + Math.sin(a) * 21, a, k);  // 锁链桩："
       }
     },
@@ -10085,7 +10085,7 @@
       "id": "D-ITM-0089",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2724",
+        "assetRef": "src/sky/underworld.ts#L3134",
         "note": "源码 ID 锚点：PILLARS.forEach(([px, pz], i) => w37CopperPillar(b, px, pz, i));        // 铜柱：D-"
       }
     },
@@ -10093,7 +10093,7 @@
       "id": "D-ITM-0090",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2726",
+        "assetRef": "src/sky/underworld.ts#L3136",
         "note": "源码 ID 锚点：VENTS.forEach(([px, pz], i) => w37BloodVent(b, px, pz, i));             // 血雾喷口："
       }
     },
@@ -10101,7 +10101,7 @@
       "id": "D-ITM-0091",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2727",
+        "assetRef": "src/sky/underworld.ts#L3137",
         "note": "源码 ID 锚点：for (let k = 0; k < 12; k++) w37AltarBones(b, -240, 88, k);             // 祭台骨缘："
       }
     },
@@ -10109,7 +10109,7 @@
       "id": "D-ITM-0092",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2877",
+        "assetRef": "src/sky/underworld.ts#L3287",
         "note": "源码 ID 锚点：// 城墙垣：D-ITM-0092"
       }
     },
@@ -10117,7 +10117,7 @@
       "id": "D-ITM-0093",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L1633",
+        "assetRef": "src/sky/underworld.ts#L2043",
         "note": "源码 ID 锚点：// 北门楼：环北缺口 (0,150)，骨白路穿门而过，是环上唯一常开之门（D-ITM-0093）"
       }
     },
@@ -10125,7 +10125,7 @@
       "id": "D-ITM-0094",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L1635",
+        "assetRef": "src/sky/underworld.ts#L2045",
         "note": "源码 ID 锚点：// 死门三：东 (93.5,71.5) / 南 (32.4,-34) / 西 (-93.5,71.5)，砖封满掌印（D-ITM-0094）"
       }
     },
@@ -10133,7 +10133,7 @@
       "id": "D-ITM-0095",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L1640",
+        "assetRef": "src/sky/underworld.ts#L2050",
         "note": "源码 ID 锚点：// 更楼两座：广场两翼 (±30,100)，悬「枉」字灯、置更鼓（D-ITM-0095）"
       }
     },
@@ -10141,7 +10141,7 @@
       "id": "D-ITM-0096",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2915",
+        "assetRef": "src/sky/underworld.ts#L3325",
         "note": "源码 ID 锚点：// 枉死衙署：D-ITM-0096"
       }
     },
@@ -10173,7 +10173,7 @@
       "id": "D-ITM-0100",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2730",
+        "assetRef": "src/sky/underworld.ts#L3140",
         "note": "源码 ID 锚点：w37WheelHub(b, 0, 216.3, y + 10.6);                                     // 轮心墨洞："
       }
     },
@@ -10181,7 +10181,7 @@
       "id": "D-ITM-0101",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2729",
+        "assetRef": "src/sky/underworld.ts#L3139",
         "note": "源码 ID 锚点：w37SoulAxle(b, 0, 215);                                                 // 转轴魂柱："
       }
     },
@@ -10189,7 +10189,7 @@
       "id": "D-ITM-0102",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L1642",
+        "assetRef": "src/sky/underworld.ts#L2052",
         "note": "源码 ID 锚点：// 六道光门：广场北缘 z=122，六色各一道光帘（D-ITM-0102）"
       }
     },
@@ -10197,7 +10197,7 @@
       "id": "D-ITM-0103",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2975",
+        "assetRef": "src/sky/underworld.ts#L3385",
         "note": "源码 ID 锚点：// 坠井井口：D-ITM-0103"
       }
     },
@@ -10205,7 +10205,7 @@
       "id": "D-ITM-0104",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L818",
+        "assetRef": "src/sky/fengduGround.ts#L899",
         "note": "源码 ID 锚点：// 5 六角井亭：东街与七巷之间的街心 (470,25)，亭顶开孔正对井口（D-ITM-0104）"
       }
     },
@@ -10229,7 +10229,7 @@
       "id": "D-ITM-0107",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2710",
+        "assetRef": "src/sky/underworld.ts#L3120",
         "note": "源码 ID 锚点：w37Paifang(b, sg, atlas, 0, -196, 0);                                   // 三间四柱牌"
       }
     },
@@ -10245,7 +10245,7 @@
       "id": "D-ITM-0109",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2711",
+        "assetRef": "src/sky/underworld.ts#L3121",
         "note": "源码 ID 锚点：w37Beast(b, -7.6, -193.4, Math.PI / 2, shade(W37.stL, 1.02));           // 镇坊石兽："
       }
     },
@@ -10269,7 +10269,7 @@
       "id": "D-ITM-0112",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2715",
+        "assetRef": "src/sky/underworld.ts#L3125",
         "note": "源码 ID 锚点：for (const [s, z, i] of INSC) w37LampInscription(b, s * 7, z, s, i);   // 柱身铭文：D"
       }
     },
@@ -10277,7 +10277,7 @@
       "id": "D-ITM-0113",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2860",
+        "assetRef": "src/sky/underworld.ts#L3270",
         "note": "源码 ID 锚点：// 城墙垣：D-ITM-0113"
       }
     },
@@ -10285,15 +10285,15 @@
       "id": "D-ITM-0114",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L167",
-        "note": "场景构件（代码实测命中「fengdu-gate」）：南·丰都门"
+        "assetRef": "src/sky/fengduGround.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/sky/fengduGround.ts）：D-ITM-0114"
       }
     },
     {
       "id": "D-ITM-0115",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L812",
+        "assetRef": "src/sky/fengduGround.ts#L893",
         "note": "源码 ID 锚点：// 2 东·生门：北街(z=145)东口 x=879，常年砖封、门缝透天光（D-ITM-0115）"
       }
     },
@@ -10301,7 +10301,7 @@
       "id": "D-ITM-0116",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L814",
+        "assetRef": "src/sky/fengduGround.ts#L895",
         "note": "源码 ID 锚点：// 3 西市门：东街(z=25)西口 x=200，双扇敞开、纸扎货运驼道（D-ITM-0116 双门之一）"
       }
     },
@@ -10309,8 +10309,8 @@
       "id": "D-ITM-0117",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L468",
-        "note": "场景构件（代码实测命中「过街城门：两墩一门洞」）：丰都街尾城门"
+        "assetRef": "src/sky/fengduGround.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/sky/fengduGround.ts）：D-ITM-0117"
       }
     },
     {
@@ -10325,7 +10325,7 @@
       "id": "D-ITM-0119",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2737",
+        "assetRef": "src/sky/underworld.ts#L3147",
         "note": "源码 ID 锚点：w37MarketGong(b, 238, 85, Math.PI / 2);                                 // 市锣：D-"
       }
     },
@@ -10333,7 +10333,7 @@
       "id": "D-ITM-0120",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3017",
+        "assetRef": "src/sky/underworld.ts#L3427",
         "note": "源码 ID 锚点：// 骨骰：D-ITM-0120"
       }
     },
@@ -10341,7 +10341,7 @@
       "id": "D-ITM-0121",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3055",
+        "assetRef": "src/sky/underworld.ts#L3465",
         "note": "源码 ID 锚点：// 押魂签筹：D-ITM-0121"
       }
     },
@@ -10381,7 +10381,7 @@
       "id": "D-ITM-0126",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3095",
+        "assetRef": "src/sky/underworld.ts#L3505",
         "note": "源码 ID 锚点：// 招魂食幌：D-ITM-0126"
       }
     },
@@ -10389,7 +10389,7 @@
       "id": "D-ITM-0127",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3123",
+        "assetRef": "src/sky/underworld.ts#L3533",
         "note": "源码 ID 锚点：// 气味灶：D-ITM-0127"
       }
     },
@@ -10405,7 +10405,7 @@
       "id": "D-ITM-0129",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3156",
+        "assetRef": "src/sky/underworld.ts#L3566",
         "note": "源码 ID 锚点：// 垂涎幌：D-ITM-0129"
       }
     },
@@ -10413,7 +10413,7 @@
       "id": "D-ITM-0130",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3184",
+        "assetRef": "src/sky/underworld.ts#L3594",
         "note": "源码 ID 锚点：// 饿鬼食槽：D-ITM-0130"
       }
     },
@@ -10429,7 +10429,7 @@
       "id": "D-ITM-0132",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2738",
+        "assetRef": "src/sky/underworld.ts#L3148",
         "note": "源码 ID 锚点：w37PaperDolls(b, 320, 145, 0);                                          // 纸人阵列："
       }
     },
@@ -10437,7 +10437,7 @@
       "id": "D-ITM-0133",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3218",
+        "assetRef": "src/sky/underworld.ts#L3628",
         "note": "源码 ID 锚点：// 纸马纸轿：D-ITM-0133"
       }
     },
@@ -10445,7 +10445,7 @@
       "id": "D-ITM-0134",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3260",
+        "assetRef": "src/sky/underworld.ts#L3670",
         "note": "源码 ID 锚点：// 纸宅模型：D-ITM-0134"
       }
     },
@@ -10453,7 +10453,7 @@
       "id": "D-ITM-0135",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3287",
+        "assetRef": "src/sky/underworld.ts#L3697",
         "note": "源码 ID 锚点：// 浆糊陶盆：D-ITM-0135"
       }
     },
@@ -10461,7 +10461,7 @@
       "id": "D-ITM-0136",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2739",
+        "assetRef": "src/sky/underworld.ts#L3149",
         "note": "源码 ID 锚点：w37Burner(b, 400, 145, 0);                                              // 烧件炉：D"
       }
     },
@@ -10469,7 +10469,7 @@
       "id": "D-ITM-0137",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3320",
+        "assetRef": "src/sky/underworld.ts#L3730",
         "note": "源码 ID 锚点：// 价目阴签：D-ITM-0137"
       }
     },
@@ -10477,7 +10477,7 @@
       "id": "D-ITM-0138",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2740",
+        "assetRef": "src/sky/underworld.ts#L3150",
         "note": "源码 ID 锚点：w37StandingCoffins(b, 480, 145, 0);                                     // 竖棺陈列："
       }
     },
@@ -10485,7 +10485,7 @@
       "id": "D-ITM-0139",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3354",
+        "assetRef": "src/sky/underworld.ts#L3764",
         "note": "源码 ID 锚点：// 棺木阴纹：D-ITM-0139"
       }
     },
@@ -10493,7 +10493,7 @@
       "id": "D-ITM-0140",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3389",
+        "assetRef": "src/sky/underworld.ts#L3799",
         "note": "源码 ID 锚点：// 敲棺声：D-ITM-0140"
       }
     },
@@ -10533,7 +10533,7 @@
       "id": "D-ITM-0145",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L820",
+        "assetRef": "src/sky/fengduGround.ts#L901",
         "note": "源码 ID 锚点：// 6 挂符梁：后巷(z=115)西口 x=210，梁下符纸串（D-ITM-0145）"
       }
     },
@@ -10541,7 +10541,7 @@
       "id": "D-ITM-0146",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3419",
+        "assetRef": "src/sky/underworld.ts#L3829",
         "note": "源码 ID 锚点：// 守庄梆子：D-ITM-0146"
       }
     },
@@ -10549,7 +10549,7 @@
       "id": "D-ITM-0147",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2741",
+        "assetRef": "src/sky/underworld.ts#L3151",
         "note": "源码 ID 锚点：w37CorpseTags(b, 560, 145, 0);                                           // 尸牌墙："
       }
     },
@@ -10557,7 +10557,7 @@
       "id": "D-ITM-0148",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3454",
+        "assetRef": "src/sky/underworld.ts#L3864",
         "note": "源码 ID 锚点：// 分殿正堂：D-ITM-0148"
       }
     },
@@ -10573,7 +10573,7 @@
       "id": "D-ITM-0150",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2734",
+        "assetRef": "src/sky/underworld.ts#L3144",
         "note": "源码 ID 锚点：w37LedgerStand(b, -46.4, 74.6, -Math.PI / 2);                           // 功过格：D"
       }
     },
@@ -10581,7 +10581,7 @@
       "id": "D-ITM-0151",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2735",
+        "assetRef": "src/sky/underworld.ts#L3145",
         "note": "源码 ID 锚点：w37FortuneSticks(b, -65.6, 74.6, Math.PI / 2);                          // 福签筒：D"
       }
     },
@@ -10589,7 +10589,7 @@
       "id": "D-ITM-0152",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2732",
+        "assetRef": "src/sky/underworld.ts#L3142",
         "note": "源码 ID 锚点：w37YamenGuard(b, -61.2, 72.4, Math.PI, 0);                              // 皂隶立像："
       }
     },
@@ -10597,7 +10597,7 @@
       "id": "D-ITM-0153",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3501",
+        "assetRef": "src/sky/underworld.ts#L3911",
         "note": "源码 ID 锚点：// 绕梁香烟：D-ITM-0153"
       }
     },
@@ -10605,7 +10605,7 @@
       "id": "D-ITM-0154",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3527",
+        "assetRef": "src/sky/underworld.ts#L3937",
         "note": "源码 ID 锚点：// 「未时开张」幌：D-ITM-0154"
       }
     },
@@ -10613,7 +10613,7 @@
       "id": "D-ITM-0155",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3562",
+        "assetRef": "src/sky/underworld.ts#L3972",
         "note": "源码 ID 锚点：// 通铺大房：D-ITM-0155"
       }
     },
@@ -10637,7 +10637,7 @@
       "id": "D-ITM-0158",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2746",
+        "assetRef": "src/sky/underworld.ts#L3156",
         "note": "源码 ID 锚点：w37GuestBell(b, 320, 25, 0);                                            // 唤客铜铃："
       }
     },
@@ -10645,7 +10645,7 @@
       "id": "D-ITM-0159",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3599",
+        "assetRef": "src/sky/underworld.ts#L4009",
         "note": "源码 ID 锚点：// 望夫窗：D-ITM-0159"
       }
     },
@@ -10653,7 +10653,7 @@
       "id": "D-ITM-0160",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3620",
+        "assetRef": "src/sky/underworld.ts#L4030",
         "note": "源码 ID 锚点：// 泪烛：D-ITM-0160"
       }
     },
@@ -10661,7 +10661,7 @@
       "id": "D-ITM-0161",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3651",
+        "assetRef": "src/sky/underworld.ts#L4061",
         "note": "源码 ID 锚点：// 绣鞋一双：D-ITM-0161"
       }
     },
@@ -10669,7 +10669,7 @@
       "id": "D-ITM-0162",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3673",
+        "assetRef": "src/sky/underworld.ts#L4083",
         "note": "源码 ID 锚点：// 织机半幅：D-ITM-0162"
       }
     },
@@ -10677,7 +10677,7 @@
       "id": "D-ITM-0163",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3708",
+        "assetRef": "src/sky/underworld.ts#L4118",
         "note": "源码 ID 锚点：// 逆行梯影：D-ITM-0163"
       }
     },
@@ -10685,7 +10685,7 @@
       "id": "D-ITM-0164",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2743",
+        "assetRef": "src/sky/underworld.ts#L3153",
         "note": "源码 ID 锚点：w37Stage(b, sg, atlas, 720, 145, Math.PI);                              // 戏台：D-"
       }
     },
@@ -10709,7 +10709,7 @@
       "id": "D-ITM-0167",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2744",
+        "assetRef": "src/sky/underworld.ts#L3154",
         "note": "源码 ID 锚点：w37StageBanner(b, sg, atlas, 727.6, 140.4, Math.PI);                    // 「夜夜笙歌"
       }
     },
@@ -10717,7 +10717,7 @@
       "id": "D-ITM-0168",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2745",
+        "assetRef": "src/sky/underworld.ts#L3155",
         "note": "源码 ID 锚点：w37Playbill(b, sg, atlas, 712.4, 140.4, Math.PI);                       // 血戏单：D"
       }
     },
@@ -10733,7 +10733,7 @@
       "id": "D-ITM-0170",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2747",
+        "assetRef": "src/sky/underworld.ts#L3157",
         "note": "源码 ID 锚点：w37Scale(b, 400, 25, 0);                                                // 阴阳秤：D"
       }
     },
@@ -10749,7 +10749,7 @@
       "id": "D-ITM-0172",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3737",
+        "assetRef": "src/sky/underworld.ts#L4147",
         "note": "源码 ID 锚点：// 「万货全」匾：D-ITM-0172"
       }
     },
@@ -10757,7 +10757,7 @@
       "id": "D-ITM-0173",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2748",
+        "assetRef": "src/sky/underworld.ts#L3158",
         "note": "源码 ID 锚点：w37MatchCabinet(b, 480, 25, 0);                                         // 洋火纸煤："
       }
     },
@@ -10765,7 +10765,7 @@
       "id": "D-ITM-0174",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L822",
+        "assetRef": "src/sky/fengduGround.ts#L903",
         "note": "源码 ID 锚点：// 7 门前碑：中巷(x=680)南口碑位 (687.6,145)，以碑为门匾（D-ITM-0174）"
       }
     },
@@ -10805,7 +10805,7 @@
       "id": "D-ITM-0179",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/fengduGround.ts#L824",
+        "assetRef": "src/sky/fengduGround.ts#L905",
         "note": "源码 ID 锚点：// 8 无名神龛：中巷(x=520)南口神龛位 (527.6,145)，龛中唯雾（D-ITM-0179）"
       }
     },
@@ -10813,7 +10813,7 @@
       "id": "D-ITM-0180",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L2742",
+        "assetRef": "src/sky/underworld.ts#L3152",
         "note": "源码 ID 锚点：w37SoulTags(b, 640, 145, 0);                                             // 万魂签墙"
       }
     },
@@ -10837,7 +10837,7 @@
       "id": "D-ITM-0183",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/underworld.ts#L3768",
+        "assetRef": "src/sky/underworld.ts#L4178",
         "note": "源码 ID 锚点：// 庙祝空位：D-ITM-0183"
       }
     },
@@ -10853,8 +10853,8 @@
       "id": "T-ITM-0002",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L20",
-        "note": "源码 ID 锚点：// 九龙金漆背屏（R02/T-ITM-0002：北正位高 5m 五联扇）+ 明黄云锦帷六幅两侧"
+        "assetRef": "src/sky/palace.ts#L912",
+        "note": "源码 ID 锚点：// ① 九龙金漆背屏（R02/T-ITM-0002）：五联扇，明间正中，面向殿门（−z）"
       }
     },
     {
@@ -10877,8 +10877,8 @@
       "id": "T-ITM-0005",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L45",
-        "note": "源码 ID 锚点：// 蟠龙金烛台 ×2（T-ITM-0005 高 1.4 焰玉白）"
+        "assetRef": "src/sky/palace.ts#L978",
+        "note": "源码 ID 锚点：// ④ 蟠龙金烛台 ×2（T-ITM-0005 高 1.4 焰玉白）——御案两侧"
       }
     },
     {
@@ -10997,7 +10997,7 @@
       "id": "T-ITM-0020",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L499",
+        "assetRef": "src/sky/realm.ts#L820",
         "note": "源码 ID 锚点：for (const sx of [-1, 1]) itmCloudRaft(b, sx * 4.6, 201, -125, sx * 0.1);       "
       }
     },
@@ -11005,15 +11005,15 @@
       "id": "T-ITM-0021",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/creatures.ts#L73",
-        "note": "场景构件（代码实测命中「pixiu」）：貔貅门墩"
+        "assetRef": "src/sky/creatures.ts#L0",
+        "note": "场景归因（新 schema，静态校验 src/sky/creatures.ts）：T-ITM-0021"
       }
     },
     {
       "id": "T-ITM-0022",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1252",
+        "assetRef": "src/sky/palace.ts#L3619",
         "note": "源码 ID 锚点：// 采桃玉篮：T-ITM-0022"
       }
     },
@@ -11021,7 +11021,7 @@
       "id": "T-ITM-0023",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1278",
+        "assetRef": "src/sky/palace.ts#L3645",
         "note": "源码 ID 锚点：// 桃木仙锄：T-ITM-0023"
       }
     },
@@ -11029,7 +11029,7 @@
       "id": "T-ITM-0024",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L730",
+        "assetRef": "src/sky/realm.ts#L1589",
         "note": "源码 ID 锚点：// 九千年桃王挂牌：T-ITM-0024"
       }
     },
@@ -11053,7 +11053,7 @@
       "id": "T-ITM-0027",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1235",
+        "assetRef": "src/sky/palace.ts#L3602",
         "note": "源码 ID 锚点：// 园志玉简：T-ITM-0027"
       }
     },
@@ -11381,7 +11381,7 @@
       "id": "T-ITM-0068",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L86",
+        "assetRef": "src/sky/palace.ts#L1202",
         "note": "源码 ID 锚点：// 冰魄屏风五扇（T-ITM-0068：框冰魄石半透+夜显星图）"
       }
     },
@@ -11389,7 +11389,7 @@
       "id": "T-ITM-0069",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L500",
+        "assetRef": "src/sky/realm.ts#L821",
         "note": "源码 ID 锚点：itmLotusThrone(b, lotus.x, 207.1, lotus.z);                                     "
       }
     },
@@ -11421,7 +11421,7 @@
       "id": "T-ITM-0073",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L501",
+        "assetRef": "src/sky/realm.ts#L822",
         "note": "源码 ID 锚点：itmSandalCenser(b, lotus.x, 206.12, lotus.z + 10);                              "
       }
     },
@@ -11453,7 +11453,7 @@
       "id": "T-ITM-0077",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1182",
+        "assetRef": "src/sky/palace.ts#L3549",
         "note": "源码 ID 锚点：// 待漏更香：T-ITM-0077"
       }
     },
@@ -11461,7 +11461,7 @@
       "id": "T-ITM-0078",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1218",
+        "assetRef": "src/sky/palace.ts#L3585",
         "note": "源码 ID 锚点：// 灵墨玉简笔砚：T-ITM-0078"
       }
     },
@@ -11469,8 +11469,8 @@
       "id": "T-ITM-0079",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L502",
-        "note": "源码 ID 锚点：itmTeaStove(b, 40, 206.12, 55.2);                                               "
+        "assetRef": "src/sky/realm.ts#L824",
+        "note": "源码 ID 锚点：itmTeaStove(b, 34.2, 206.12, 55.2);                                             "
       }
     },
     {
@@ -11501,8 +11501,8 @@
       "id": "T-ITM-0083",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L503",
-        "note": "源码 ID 锚点：itmRollCallTokens(b, -40, 206.12, 55.2);                                        "
+        "assetRef": "src/sky/realm.ts#L825",
+        "note": "源码 ID 锚点：itmRollCallTokens(b, -34.2, 206.12, 55.2);                                      "
       }
     },
     {
@@ -11517,7 +11517,7 @@
       "id": "T-ITM-0085",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L485",
+        "assetRef": "src/sky/palace.ts#L2124",
         "note": "源码 ID 锚点：itmNineEyeStove(b, 69.5 + k * 5.5, 206.12, 76.0);                               "
       }
     },
@@ -11525,7 +11525,7 @@
       "id": "T-ITM-0086",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L488",
+        "assetRef": "src/sky/palace.ts#L2127",
         "note": "源码 ID 锚点：itmIceCoffer(b, 81.8, 206.12, 79.8, -0.34);                                     "
       }
     },
@@ -11533,7 +11533,7 @@
       "id": "T-ITM-0087",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L490",
+        "assetRef": "src/sky/palace.ts#L2129",
         "note": "源码 ID 锚点：itmJadeFoodRail(b, 75, 206.12, 80.2);                                           "
       }
     },
@@ -11565,7 +11565,7 @@
       "id": "T-ITM-0091",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L492",
+        "assetRef": "src/sky/palace.ts#L2131",
         "note": "源码 ID 锚点：itmRecipeRack(b, 67.6, 206.12, 80.4, 0);                                        "
       }
     },
@@ -11581,7 +11581,7 @@
       "id": "T-ITM-0093",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L494",
+        "assetRef": "src/sky/palace.ts#L2133",
         "note": "源码 ID 锚点：itmNightPearlNiche(b, -68.4, 207.12, 75, 0);                                    "
       }
     },
@@ -11589,7 +11589,7 @@
       "id": "T-ITM-0094",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L496",
+        "assetRef": "src/sky/palace.ts#L2135",
         "note": "源码 ID 锚点：itmLedgerRack(b, -81.6, 207.12, 75, 0);                                         "
       }
     },
@@ -11605,7 +11605,7 @@
       "id": "T-ITM-0096",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L498",
+        "assetRef": "src/sky/palace.ts#L2137",
         "note": "源码 ID 锚点：itmImmortalBalance(b, -75, 207.12, 68.0, 0);                                    "
       }
     },
@@ -11645,7 +11645,7 @@
       "id": "T-ITM-0101",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L501",
+        "assetRef": "src/sky/palace.ts#L2140",
         "note": "源码 ID 锚点：itmWuKuDrum(b, -75 + sx * 4.8, 206.12, 24.0);                                   "
       }
     },
@@ -11661,15 +11661,15 @@
       "id": "T-ITM-0103",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/itemKit.ts#bell",
-        "note": "品类器件已建模并在摊位/室内使用；该条目本体未单独落到指定位置"
+        "assetRef": "src/sky/realm.ts#L2174",
+        "note": "源码 ID 锚点：// 万年玄铜晨钟（T-ITM-0103）：吊杆 + 蒲牢钮 + 钟身 2.4m + 钟口 + 两道星名铭带"
       }
     },
     {
       "id": "T-ITM-0104",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L654",
+        "assetRef": "src/sky/realm.ts#L1513",
         "note": "源码 ID 锚点：// 悬杵撞木：T-ITM-0104"
       }
     },
@@ -11685,15 +11685,15 @@
       "id": "T-ITM-0106",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/city/itemKit.ts#lantern",
-        "note": "品类器件已建模并在摊位/室内使用；该条目本体未单独落到指定位置"
+        "assetRef": "src/sky/realm.ts#L2198",
+        "note": "源码 ID 锚点：// 长明灯 ×2（T-ITM-0106，顶层两角指位灯）"
       }
     },
     {
       "id": "T-ITM-0107",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L667",
+        "assetRef": "src/sky/realm.ts#L1526",
         "note": "源码 ID 锚点：// 更签筒：T-ITM-0107"
       }
     },
@@ -11709,7 +11709,7 @@
       "id": "T-ITM-0109",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L699",
+        "assetRef": "src/sky/realm.ts#L1558",
         "note": "源码 ID 锚点：// 雷纹鼓槌：T-ITM-0109"
       }
     },
@@ -11717,7 +11717,7 @@
       "id": "T-ITM-0110",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L720",
+        "assetRef": "src/sky/realm.ts#L1579",
         "note": "源码 ID 锚点：// 鼓谱玉简：T-ITM-0110"
       }
     },
@@ -11733,7 +11733,7 @@
       "id": "T-ITM-0112",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L681",
+        "assetRef": "src/sky/realm.ts#L1540",
         "note": "源码 ID 锚点：// 值楼茶炉：T-ITM-0112"
       }
     },
@@ -11741,7 +11741,7 @@
       "id": "T-ITM-0113",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1461",
+        "assetRef": "src/sky/palace.ts#L3828",
         "note": "源码 ID 锚点：// 蛟角冠：T-ITM-0113"
       }
     },
@@ -11765,7 +11765,7 @@
       "id": "T-ITM-0116",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1479",
+        "assetRef": "src/sky/palace.ts#L3846",
         "note": "源码 ID 锚点：// 角宿令牌：T-ITM-0116"
       }
     },
@@ -11781,7 +11781,7 @@
       "id": "T-ITM-0118",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1496",
+        "assetRef": "src/sky/palace.ts#L3863",
         "note": "源码 ID 锚点：// 金鳞宝甲：T-ITM-0118"
       }
     },
@@ -11829,7 +11829,7 @@
       "id": "T-ITM-0124",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1683",
+        "assetRef": "src/sky/palace.ts#L4112",
         "note": "源码 ID 锚点：itmHiddenRobe(b, a.cx - 0.9, a.fy, a.cz - 0.8, 0.3);               // T-ITM-0124"
       }
     },
@@ -11845,7 +11845,7 @@
       "id": "T-ITM-0126",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1542",
+        "assetRef": "src/sky/palace.ts#L3909",
         "note": "源码 ID 锚点：// 陨铁磨爪石：T-ITM-0126"
       }
     },
@@ -11853,7 +11853,7 @@
       "id": "T-ITM-0127",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1524",
+        "assetRef": "src/sky/palace.ts#L3891",
         "note": "源码 ID 锚点：// 狼府星图壁挂：T-ITM-0127"
       }
     },
@@ -11861,7 +11861,7 @@
       "id": "T-ITM-0128",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1559",
+        "assetRef": "src/sky/palace.ts#L3926",
         "note": "源码 ID 锚点：// 獬豸冠：T-ITM-0128"
       }
     },
@@ -11869,7 +11869,7 @@
       "id": "T-ITM-0129",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1577",
+        "assetRef": "src/sky/palace.ts#L3944",
         "note": "源码 ID 锚点：// 牛金牛铜铃：T-ITM-0129"
       }
     },
@@ -11885,7 +11885,7 @@
       "id": "T-ITM-0131",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1687",
+        "assetRef": "src/sky/palace.ts#L4116",
         "note": "源码 ID 锚点：itmStarRaftModel(b, a.cx + 0.9, a.fy, a.cz - 0.8, 0.2);            // T-ITM-0131"
       }
     },
@@ -11893,7 +11893,7 @@
       "id": "T-ITM-0132",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1350",
+        "assetRef": "src/sky/palace.ts#L3717",
         "note": "源码 ID 锚点：// 劝酒葫芦：T-ITM-0132"
       }
     },
@@ -11901,7 +11901,7 @@
       "id": "T-ITM-0133",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1593",
+        "assetRef": "src/sky/palace.ts#L3960",
         "note": "源码 ID 锚点：// 报晓天鸡冠：T-ITM-0133"
       }
     },
@@ -11917,7 +11917,7 @@
       "id": "T-ITM-0135",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1611",
+        "assetRef": "src/sky/palace.ts#L3978",
         "note": "源码 ID 锚点：// 晨啼音叉：T-ITM-0135"
       }
     },
@@ -11949,7 +11949,7 @@
       "id": "T-ITM-0139",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1433",
+        "assetRef": "src/sky/palace.ts#L3800",
         "note": "源码 ID 锚点：// 心宿迷香：T-ITM-0139"
       }
     },
@@ -11973,7 +11973,7 @@
       "id": "T-ITM-0142",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1298",
+        "assetRef": "src/sky/palace.ts#L3665",
         "note": "源码 ID 锚点：// 胭脂玉盒：T-ITM-0142"
       }
     },
@@ -11981,7 +11981,7 @@
       "id": "T-ITM-0143",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1314",
+        "assetRef": "src/sky/palace.ts#L3681",
         "note": "源码 ID 锚点：// 乌羽翎笔：T-ITM-0143"
       }
     },
@@ -11989,7 +11989,7 @@
       "id": "T-ITM-0144",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1335",
+        "assetRef": "src/sky/palace.ts#L3702",
         "note": "源码 ID 锚点：// 月露香墨：T-ITM-0144"
       }
     },
@@ -12013,7 +12013,7 @@
       "id": "T-ITM-0147",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1368",
+        "assetRef": "src/sky/palace.ts#L3735",
         "note": "源码 ID 锚点：// 夜行斗篷：T-ITM-0147"
       }
     },
@@ -12021,7 +12021,7 @@
       "id": "T-ITM-0148",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1392",
+        "assetRef": "src/sky/palace.ts#L3759",
         "note": "源码 ID 锚点：// 穿山宝铲：T-ITM-0148"
       }
     },
@@ -12029,7 +12029,7 @@
       "id": "T-ITM-0149",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1698",
+        "assetRef": "src/sky/palace.ts#L4127",
         "note": "源码 ID 锚点：itmCellarHatch(b, a.cx + 1.0, a.fy, a.cz - 0.75, 0);               // T-ITM-0149"
       }
     },
@@ -12037,7 +12037,7 @@
       "id": "T-ITM-0150",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1411",
+        "assetRef": "src/sky/palace.ts#L3778",
         "note": "源码 ID 锚点：// 日晷残片：T-ITM-0150"
       }
     },
@@ -12045,7 +12045,7 @@
       "id": "T-ITM-0151",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1699",
+        "assetRef": "src/sky/palace.ts#L4128",
         "note": "源码 ID 锚点：for (let k = 0; k < 4; k++) itmGrainSilo(b, a.cx - 2.85 + k * 0.75, a.fy, a.cz -"
       }
     },
@@ -12101,7 +12101,7 @@
       "id": "T-ITM-0158",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1160",
+        "assetRef": "src/sky/palace.ts#L3527",
         "note": "源码 ID 锚点：// 传旨玉音铃：T-ITM-0158"
       }
     },
@@ -12117,7 +12117,7 @@
       "id": "T-ITM-0160",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1204",
+        "assetRef": "src/sky/palace.ts#L3571",
         "note": "源码 ID 锚点：// 值殿名录：T-ITM-0160"
       }
     },
@@ -12125,7 +12125,7 @@
       "id": "T-ITM-0161",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1116",
+        "assetRef": "src/sky/palace.ts#L3483",
         "note": "源码 ID 锚点：// 通明长烛：T-ITM-0161"
       }
     },
@@ -12133,7 +12133,7 @@
       "id": "T-ITM-0162",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1137",
+        "assetRef": "src/sky/palace.ts#L3504",
         "note": "源码 ID 锚点：// 传令金牌：T-ITM-0162"
       }
     },
@@ -12141,7 +12141,7 @@
       "id": "T-ITM-0163",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L504",
+        "assetRef": "src/sky/realm.ts#L826",
         "note": "源码 ID 锚点：itmOracleRubbing(b, 9.6, 214.12, 133.8, 0);                                     "
       }
     },
@@ -12149,7 +12149,7 @@
       "id": "T-ITM-0164",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L505",
+        "assetRef": "src/sky/realm.ts#L827",
         "note": "源码 ID 锚点：for (let k = 0; k < 3; k++) itmQingSeat(b, 7.5 + k * 2.1, 214.12, 136.6, Math.PI"
       }
     },
@@ -12189,7 +12189,7 @@
       "id": "T-ITM-0169",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1696",
+        "assetRef": "src/sky/palace.ts#L4125",
         "note": "源码 ID 锚点：itmMeritRack(b, a.cx - 0.9, a.fy, a.cz - 0.8, 0);                  // T-ITM-0169"
       }
     },
@@ -12221,8 +12221,8 @@
       "id": "T-ITM-0173",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L506",
-        "note": "源码 ID 锚点：itmNineColorWheel(b, gate.x, 235.4, gate.z);                                    "
+        "assetRef": "src/sky/realm.ts#L829",
+        "note": "源码 ID 锚点：itmNineColorWheel(b, gate.x, 238.8, gate.z);                                    "
       }
     },
     {
@@ -12245,7 +12245,7 @@
       "id": "T-ITM-0176",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/palace.ts#L1652",
+        "assetRef": "src/sky/palace.ts#L4063",
         "note": "源码 ID 锚点：itmGlazedBricks(b, a.cx + 0.3, a.fy, a.cz + 2.72, 0);              // T-ITM-0176"
       }
     },
@@ -12277,7 +12277,7 @@
       "id": "T-ITM-0180",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L596",
+        "assetRef": "src/sky/realm.ts#L1455",
         "note": "源码 ID 锚点：// 将台战鼓：T-ITM-0180"
       }
     },
@@ -12301,7 +12301,7 @@
       "id": "T-ITM-0183",
       "impl": {
         "status": "implemented",
-        "assetRef": "src/sky/realm.ts#L620",
+        "assetRef": "src/sky/realm.ts#L1479",
         "note": "源码 ID 锚点：// 镇台活化石狮：T-ITM-0183"
       }
     }
@@ -19066,7 +19066,7 @@
     }
   ],
   "implSummary": {
-    "generatedAt": "2026-10-28T16:03:38",
+    "generatedAt": "deterministic:e4a0f716d7d5c64bbdd",
     "counts": {
       "buildings": 139,
       "items": 838,

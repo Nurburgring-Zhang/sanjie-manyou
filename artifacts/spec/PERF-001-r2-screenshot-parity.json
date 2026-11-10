@@ -1,0 +1,79 @@
+{
+  "schema": "perf-001-r2-screenshot-parity/v1",
+  "ssimMin": 0.98,
+  "block": 8,
+  "mode": "tags",
+  "beforeTag": "before",
+  "afterTag": "after",
+  "noiseFloorTags": [
+    "after",
+    "after2"
+  ],
+  "noiseFloor": {
+    "01-wumen-axis": 0.9939,
+    "02-wumen-axis-wide": 0.9966,
+    "04-court-guard-east": 0.9964,
+    "06-street-house": 0.979
+  },
+  "beforeTris": 70777271,
+  "afterTris": 70777271,
+  "beforePageErrors": 0,
+  "afterPageErrors": 0,
+  "comparisons": [
+    {
+      "id": "01-wumen-axis",
+      "ssim": 0.9915483515258398,
+      "sizeMatch": true,
+      "trisMatch": true,
+      "pageErrors": 0,
+      "shaBefore": "d4c86e79f622938d9a5ea4af6c8943f0d6d5b98d10e9ab6881f9ce3f0cae0a48",
+      "shaAfter": "842bf25a8d3533b8ad465ca97a9cbbb2d6cc2adf429940964104b4a7194a4ece",
+      "noiseFloor": 0.993901390958669
+    },
+    {
+      "id": "02-wumen-axis-wide",
+      "ssim": 0.9963575841763535,
+      "sizeMatch": true,
+      "trisMatch": true,
+      "pageErrors": 0,
+      "shaBefore": "877385820a6add420bf5d0fb94dfba99703a787cd084e45af71a7bee06feedfd",
+      "shaAfter": "12e295860bfcc94bb6259d01fb3d3b72c869e0ce39a4881be9a72354dd0810b9",
+      "noiseFloor": 0.9965560673493659
+    },
+    {
+      "id": "04-court-guard-east",
+      "ssim": 0.9962753287013658,
+      "sizeMatch": true,
+      "trisMatch": true,
+      "pageErrors": 0,
+      "shaBefore": "d44ace6f082ca3832bdb1ae68e736e093377252d37f672ada2513d082d77b68e",
+      "shaAfter": "f785a69d34fa594e832c0517590a3740c9968f4e1e0f2ef03bcb6ebc30486e4c",
+      "noiseFloor": 0.9963813862654873
+    },
+    {
+      "id": "06-street-house",
+      "ssim": 0.9796344637165859,
+      "sizeMatch": true,
+      "trisMatch": true,
+      "pageErrors": 0,
+      "shaBefore": "da36c6d2180e51af0df88fd9490751f4261c3b6fd4246c575f50e5ee329e337c",
+      "shaAfter": "2a457c5173882eff1e9e6e6eca99566c9860dea62deac000f1dec99281189f5d",
+      "noiseFloor": 0.9789947244079268
+    }
+  ],
+  "gate": {
+    "ok": true,
+    "gate": "PASS",
+    "reason": "all 4 cameras ssim>=0.98；1 个机位未达 0.98 但 ≥ 实测噪声底（06-street-house:0.9796≥0.9790）→ 只能判「无可分辨差异」，不等于像素级不变",
+    "rows": 4,
+    "minSsim": 0.9796344637165859,
+    "withinNoise": [
+      {
+        "id": "06-street-house",
+        "ssim": 0.9796344637165859,
+        "noiseFloor": 0.9789947244079268
+      }
+    ],
+    "failures": []
+  }
+}

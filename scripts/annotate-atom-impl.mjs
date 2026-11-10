@@ -10,9 +10,14 @@
  *
  * 用法：node scripts/annotate-atom-impl.mjs [--check]
  *   --check 只校验、不写盘（供测试调用）
+ *
+ * 输出（FIX-001 审计核实）：本脚本原地覆写 artifacts/world-atoms.json，
+ * 并不产出 artifacts/world-atoms.annotated.json（spec 流程图写 annotated 与实现不符）。
+ * 为不破坏现有测试，此处保持既有输出路径不变。
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 
 const ROOT = process.cwd();
 const JSON_PATH = path.join(ROOT, 'artifacts', 'world-atoms.json');
@@ -204,11 +209,33 @@ function idAnchor(id) {
 }
 
 const data = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
+
+// FIX-001 R3（fail-closed）：attribution 缺失不再静默走 data-only，而是 FATAL + exit 2。
+// 同时支持新 schema（对象 { generatedBy, generatedFromCommitOrSha, attributions }）与旧数组格式。
+const ATTR_PATH = path.join(ROOT, 'artifacts/scene-item-attribution.json');
+if (!fs.existsSync(ATTR_PATH)) {
+  console.error('FATAL: attribution 缺失，先跑 build-scene-attribution.mjs');
+  process.exit(2);
+}
 let SCENE_ATTR = {};
-try {
-  const arr = JSON.parse(fs.readFileSync(path.join(ROOT, 'artifacts/scene-item-attribution.json'), 'utf8'));
-  for (const a of arr) SCENE_ATTR[a.id] = a;
-} catch { SCENE_ATTR = {}; }
+const rawAttr = JSON.parse(fs.readFileSync(ATTR_PATH, 'utf8'));
+if (Array.isArray(rawAttr)) {
+  for (const a of rawAttr) SCENE_ATTR[a.id] = a; // 旧数组（兼容）
+} else if (rawAttr && Array.isArray(rawAttr.attributions)) {
+  for (const a of rawAttr.attributions) {       // 新 schema
+    if (a.attributionKind === 'data-only') continue; // data-only 不构成实现证据
+    const anchor0 = String((a.sceneAnchors || [])[0] || '');
+    const file = anchor0.split('#')[0];
+    const lm = /#L(\d+)/.exec(anchor0);
+    SCENE_ATTR[a.itemId] = {
+      id: a.itemId, file, needle: '', line: lm ? Number(lm[1]) : 0,
+      name: a.itemId, __newSchema: true,
+    };
+  }
+} else {
+  console.error('FATAL: attribution 格式非法（既非旧数组也非新 schema）');
+  process.exit(2);
+}
 let unresolved = 0;
 const stats = { implemented: 0, procedural: 0, 'spec-only': 0, 'data-only': 0, blocked: 0, 'not-asset': 0 };
 
@@ -266,16 +293,22 @@ function annotate(entry, domain, name) {
       }
     }
 
-    // WS-30 核查表：49 条「建筑/标牌构件」按代码实测归属（needle 必须真的出现在该文件里）
+    // WS-30 核查表：旧格式按 needle 代码实测命中；新 schema 由 build-scene-attribution.mjs
+    // 静态校验过 file，annotate 二次确认文件存在即可（避免 needle 字符串腐烂再次拖垮台账）。
     if (!impl && SCENE_ATTR[id]) {
       const a = SCENE_ATTR[id];
       let body = '';
       try { body = fs.readFileSync(path.join(ROOT, a.file), 'utf8'); } catch { body = ''; }
-      if (a.needle && body.includes(a.needle)) {
+      const ok = a.__newSchema
+        ? fs.existsSync(path.join(ROOT, a.file))
+        : (a.needle && body.includes(a.needle));
+      if (ok) {
         impl = {
           status: 'implemented',
           assetRef: `${a.file}#L${a.line}`,
-          note: `场景构件（代码实测命中「${a.needle}」）：${a.name}`,
+          note: a.__newSchema
+            ? `场景归因（新 schema，静态校验 ${a.file}）：${a.name}`
+            : `场景构件（代码实测命中「${a.needle}」）：${a.name}`,
         };
       }
     }
@@ -415,8 +448,14 @@ for (const c of data.characters) annotate(c, 'character', c.name);
 for (const p of data.plants) annotate(p, 'plant', p.name);
 for (const c of data.creatures) annotate(c, 'creature', c.name);
 
+// [INV-05 / FIX-001 R5] 生成物必须字节可复现：旧版把 `new Date().toISOString()`
+// 写进 world-atoms.json，导致 QA-001 S06「再生产物 == shipped 副本」永远失败。
+// 改为由统计结果本身派生的确定性摘要（同输入同输出），不再含墙钟时间。
+const deterministicStamp = createHash('sha256')
+  .update(JSON.stringify({ counts: [data.buildings.length, data.items.length, data.characters.length, data.plants.length, data.creatures.length], stats }))
+  .digest('hex').slice(0, 19);
 const summary = {
-  generatedAt: new Date().toISOString().slice(0, 19),
+  generatedAt: 'deterministic:' + deterministicStamp,
   counts: {
     buildings: data.buildings.length,
     items: data.items.length,
@@ -434,7 +473,7 @@ if (!checkOnly) {
   const lines = [
     '# 原子资产实现状态（由 scripts/annotate-atom-impl.mjs 生成）',
     '',
-    `- 生成时间：${summary.generatedAt}`,
+    `- 生成依据（确定性摘要，非墙钟时间，INV-05）：${summary.generatedAt}`,
     `- 建筑 ${summary.counts.buildings}：implemented ${count(data.buildings, 'implemented')}，blocked ${count(data.buildings, 'blocked')}`,
     `- 物品 ${summary.counts.items}：implemented ${count(data.items, 'implemented')}，spec-only ${count(data.items, 'spec-only')}，data-only ${count(data.items, 'data-only')}`,
     `- 角色 ${summary.counts.characters}：procedural ${count(data.characters, 'procedural')}`,

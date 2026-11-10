@@ -1,345 +1,5167 @@
-[
- {
-  "id": "C-ITM-0004",
-  "name": "匾额「宣德門」",
-  "file": "src/city/imperial.ts",
-  "needle": "xuande",
-  "line": 164
- },
- {
-  "id": "C-ITM-0013",
-  "name": "殿匾「大庆殿」",
-  "file": "src/city/imperial.ts",
-  "needle": "hall",
-  "line": 167
- },
- {
-  "id": "C-ITM-0014",
-  "name": "丹陛石",
-  "file": "src/city/imperial.ts",
-  "needle": "wall",
-  "line": 229
- },
- {
-  "id": "C-ITM-0023",
-  "name": "日晷",
-  "file": "src/city/imperial.ts",
-  "needle": "日晷",
-  "line": 256
- },
- {
-  "id": "C-ITM-0015",
-  "name": "蟠龙金柱",
-  "file": "src/sky/palace.ts",
-  "needle": "glow",
-  "line": 29
- },
- {
-  "id": "C-ITM-0020",
-  "name": "斗八藻井",
-  "file": "src/sky/palace.ts",
-  "needle": "斗八藻井",
-  "line": 34
- },
- {
-  "id": "C-ITM-0005",
-  "name": "石狮",
-  "file": "src/sky/creatures.ts",
-  "needle": "shishi",
-  "line": 72
- },
- {
-  "id": "T-ITM-0021",
-  "name": "貔貅门墩",
-  "file": "src/sky/creatures.ts",
-  "needle": "pixiu",
-  "line": 73
- },
- {
-  "id": "C-ITM-0057",
-  "name": "桥面板",
-  "file": "src/city/bridge.ts",
-  "needle": "桥面板",
-  "line": 10
- },
- {
-  "id": "C-ITM-0059",
-  "name": "望柱",
-  "file": "src/city/bridge.ts",
-  "needle": "wood",
-  "line": 44
- },
- {
-  "id": "C-ITM-0060",
-  "name": "桥头华表",
-  "file": "src/city/bridge.ts",
-  "needle": "桥头华表",
-  "line": 50
- },
- {
-  "id": "C-ITM-0062",
-  "name": "匾额「虹橋」",
-  "file": "src/city/bridge.ts",
-  "needle": "bridgename",
-  "line": 88
- },
- {
-  "id": "C-ITM-0296",
-  "name": "门匾「上東門」",
-  "file": "src/city/buildings.ts",
-  "needle": "gateTower.plaque",
-  "line": 707
- },
- {
-  "id": "C-ITM-0294",
-  "name": "城楼",
-  "file": "src/city/buildings.ts",
-  "needle": "城楼",
-  "line": 626
- },
- {
-  "id": "C-ITM-0113",
-  "name": "匾额「趙太丞家」",
-  "file": "src/city/buildings.ts",
-  "needle": "趙太丞家",
-  "line": 996
- },
- {
-  "id": "C-ITM-0121",
-  "name": "「解」字大字牌",
-  "file": "src/city/buildings.ts",
-  "needle": "解",
-  "line": 997
- },
- {
-  "id": "C-ITM-0129",
-  "name": "匾额「王家紙馬」",
-  "file": "src/city/buildings.ts",
-  "needle": "王家紙馬",
-  "line": 998
- },
- {
-  "id": "C-ITM-0136",
-  "name": "主牌「香藥鋪」",
-  "file": "src/city/buildings.ts",
-  "needle": "香藥鋪",
-  "line": 999
- },
- {
-  "id": "C-ITM-0168",
-  "name": "观匾「上清觀」",
-  "file": "src/city/buildings.ts",
-  "needle": "上清觀",
-  "line": 1001
- },
- {
-  "id": "C-ITM-0137",
-  "name": "侧招「劉家上色沉檀揀香」",
-  "file": "src/city/buildings.ts",
-  "needle": "劉家上色沉檀揀香",
-  "line": 915
- },
- {
-  "id": "C-ITM-0252",
-  "name": "匾额「綢緞莊」",
-  "file": "src/city/buildings.ts",
-  "needle": "綢緞莊",
-  "line": 915
- },
- {
-  "id": "C-ITM-0259",
-  "name": "匾额「果子鋪」",
-  "file": "src/city/buildings.ts",
-  "needle": "果子鋪",
-  "line": 915
- },
- {
-  "id": "C-ITM-0266",
-  "name": "匾额「飯鋪」",
-  "file": "src/city/buildings.ts",
-  "needle": "飯鋪",
-  "line": 915
- },
- {
-  "id": "C-ITM-0273",
-  "name": "匾额「唐家酒店」",
-  "file": "src/city/buildings.ts",
-  "needle": "唐家酒店",
-  "line": 915
- },
- {
-  "id": "C-ITM-0280",
-  "name": "匾额「久住王員外家」",
-  "file": "src/city/buildings.ts",
-  "needle": "久住王員外家",
-  "line": 915
- },
- {
-  "id": "C-ITM-0287",
-  "name": "匾额「明家靴店」",
-  "file": "src/city/buildings.ts",
-  "needle": "明家靴店",
-  "line": 915
- },
- {
-  "id": "C-ITM-0069",
-  "name": "排叉柱",
-  "file": "src/city/buildings.ts",
-  "needle": "排叉柱",
-  "line": 601
- },
- {
-  "id": "C-ITM-0299",
-  "name": "马道",
-  "file": "src/city/buildings.ts",
-  "needle": "马道",
-  "line": 572
- },
- {
-  "id": "C-ITM-0154",
-  "name": "戏台",
-  "file": "src/city/buildings.ts",
-  "needle": "wood",
-  "line": 855
- },
- {
-  "id": "C-ITM-0402",
-  "name": "影壁",
-  "file": "src/city/buildings.ts",
-  "needle": "影壁",
-  "line": 376
- },
- {
-  "id": "C-ITM-0454",
-  "name": "招幌",
-  "file": "src/city/props.ts",
-  "needle": "招幌",
-  "line": 438
- },
- {
-  "id": "C-ITM-0465",
-  "name": "院门楼",
-  "file": "src/city/buildings.ts",
-  "needle": "house",
-  "line": 362
- },
- {
-  "id": "C-ITM-0319",
-  "name": "祠匾「碧霞祠」",
-  "file": "src/world/terrain.ts",
-  "needle": "mt",
-  "line": 184
- },
- {
-  "id": "C-ITM-0326",
-  "name": "庙匾「镇江王庙」",
-  "file": "src/world/terrain.ts",
-  "needle": "鎮江王廟",
-  "line": 185
- },
- {
-  "id": "C-ITM-0332",
-  "name": "殿匾「祝融殿」",
-  "file": "src/world/terrain.ts",
-  "needle": "祝融殿",
-  "line": 186
- },
- {
-  "id": "C-ITM-0338",
-  "name": "殿匾「北岳庙」",
-  "file": "src/world/terrain.ts",
-  "needle": "北嶽廟",
-  "line": 187
- },
- {
-  "id": "C-ITM-0344",
-  "name": "殿匾「中岳庙」",
-  "file": "src/world/terrain.ts",
-  "needle": "中嶽廟",
-  "line": 188
- },
- {
-  "id": "C-ITM-0351",
-  "name": "山门匾「雪簾禪院」",
-  "file": "src/world/terrain.ts",
-  "needle": "雪簾禪院",
-  "line": 189
- },
- {
-  "id": "C-ITM-0346",
-  "name": "神道石翁仲",
-  "file": "src/world/terrain.ts",
-  "needle": "嵩山",
-  "line": 224
- },
- {
-  "id": "C-ITM-0212",
-  "name": "石砌平台",
-  "file": "src/city/buildings.ts",
-  "needle": "wall",
-  "line": 758
- },
- {
-  "id": "C-ITM-0205",
-  "name": "风铎",
-  "file": "src/city/detailKit.ts",
-  "needle": "eave.windBell",
-  "line": 109
- },
- {
-  "id": "D-ITM-0114",
-  "name": "南·丰都门",
-  "file": "src/sky/fengduGround.ts",
-  "needle": "fengdu-gate",
-  "line": 167
- },
- {
-  "id": "D-ITM-0076",
-  "name": "门匾「返阳门」",
-  "file": "src/sky/underworld.ts",
-  "needle": "fanyang",
-  "line": 1009
- },
- {
-  "id": "C-ITM-0055",
-  "name": "贯木拱纵梁",
-  "file": "src/city/bridge.ts",
-  "needle": "贯木拱肋",
-  "line": 19
- },
- {
-  "id": "C-ITM-0058",
-  "name": "朱漆栏杆",
-  "file": "src/city/bridge.ts",
-  "needle": "栏杆 + 霓虹沿口",
-  "line": 35
- },
- {
-  "id": "C-ITM-0153",
-  "name": "勾栏大棚",
-  "file": "src/city/buildings.ts",
-  "needle": "棚架 + 大顶",
-  "line": 849
- },
- {
-  "id": "C-ITM-0201",
-  "name": "塔刹宝顶",
-  "file": "src/city/buildings.ts",
-  "needle": "pagoda.dewPlate",
-  "line": 817
- },
- {
-  "id": "D-ITM-0117",
-  "name": "丰都街尾城门",
-  "file": "src/sky/fengduGround.ts",
-  "needle": "过街城门：两墩一门洞",
-  "line": 468
- },
- {
-  "id": "D-ITM-0067",
-  "name": "丰都城门台",
-  "file": "src/sky/fengduGround.ts",
-  "needle": "过街城门",
-  "line": 253
- }
-]
+{
+  "generatedBy": "build-scene-attribution.mjs@1.0.0",
+  "generatedFromCommitOrSha": "12d4040ff1c8e275093eecbfae18aa41c28521ca531a6b264ef1409451674d81",
+  "attributions": [
+    {
+      "itemId": "C-ITM-0001",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L243"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0002",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0003",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L291"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0004",
+      "sceneAnchors": [
+        "src/city/imperial.ts#L164"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0005",
+      "sceneAnchors": [
+        "src/sky/creatures.ts#shishi"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0006",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L331"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0007",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0008",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0009",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0010",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0011",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L1831"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0012",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L356"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0013",
+      "sceneAnchors": [
+        "src/city/imperial.ts#hall"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0014",
+      "sceneAnchors": [
+        "src/city/imperial.ts#wall"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0015",
+      "sceneAnchors": [
+        "src/sky/palace.ts#glow"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0016",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0017",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0018",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0019",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0020",
+      "sceneAnchors": [
+        "src/sky/palace.ts#斗八藻井"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0021",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L379"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0022",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2611"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0023",
+      "sceneAnchors": [
+        "src/city/imperial.ts#日晷"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0024",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0025",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0026",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0027",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0028",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1456"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0029",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0030",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0031",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0032",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0033",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0034",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0035",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0036",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0037",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L433"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0038",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2625"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0039",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L465"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0040",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0041",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L483"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0042",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0043",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1511"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0044",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0045",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0046",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0047",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0048",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0049",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0050",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0051",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0052",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L535"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0053",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L411"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0054",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L465"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0055",
+      "sceneAnchors": [
+        "src/city/bridge.ts#贯木拱肋"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0056",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L567"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0057",
+      "sceneAnchors": [
+        "src/city/bridge.ts#桥面板"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0058",
+      "sceneAnchors": [
+        "src/city/bridge.ts#栏杆 + 霓虹沿口"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0059",
+      "sceneAnchors": [
+        "src/city/bridge.ts#wood"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0060",
+      "sceneAnchors": [
+        "src/city/bridge.ts#桥头华表"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0061",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L593"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0062",
+      "sceneAnchors": [
+        "src/city/bridge.ts#bridgename"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0063",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0064",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L613"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0065",
+      "sceneAnchors": [
+        "src/city/props.ts#L817"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0066",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L631"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0067",
+      "sceneAnchors": [
+        "src/city/props.ts#L838"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0068",
+      "sceneAnchors": [
+        "src/city/bridge.ts#L97"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0069",
+      "sceneAnchors": [
+        "src/city/buildings.ts#排叉柱"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0070",
+      "sceneAnchors": [
+        "src/city/bridge.ts#L99"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0071",
+      "sceneAnchors": [
+        "src/city/bridge.ts#L100"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0072",
+      "sceneAnchors": [
+        "src/city/bridge.ts#L101"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0073",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L678"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0074",
+      "sceneAnchors": [
+        "src/city/bridge.ts#L98"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0075",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0076",
+      "sceneAnchors": [
+        "src/city/props.ts#L817"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0077",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0078",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0079",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L738"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0080",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0081",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L358"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0082",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0083",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L370"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0084",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L60"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0085",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0086",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L750"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0087",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L932"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0088",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0089",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L807"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0090",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L918"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0091",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L69"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0092",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0093",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L444"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0094",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0095",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0096",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L428"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0097",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0098",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0099",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0100",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0101",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0102",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0103",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L606"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0104",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0105",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L385"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0106",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L402"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0107",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L412"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0108",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L459"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0109",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L488"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0110",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0111",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L473"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0112",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0113",
+      "sceneAnchors": [
+        "src/city/buildings.ts#趙太丞家"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0114",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0115",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1790"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0116",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1346"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0117",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1360"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0118",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1371"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0119",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0120",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0121",
+      "sceneAnchors": [
+        "src/city/buildings.ts#解"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0122",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0123",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1837"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0124",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1804"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0125",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1466"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0126",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1200"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0127",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1821"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0128",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0129",
+      "sceneAnchors": [
+        "src/city/buildings.ts#王家紙馬"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0130",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0131",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1759"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0132",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1775"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0133",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0134",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1279"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0135",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0136",
+      "sceneAnchors": [
+        "src/city/buildings.ts#香藥鋪"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0137",
+      "sceneAnchors": [
+        "src/city/buildings.ts#劉家上色沉檀揀香"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0138",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0139",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0140",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1381"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0141",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1392"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0142",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1269"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0143",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0144",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0145",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0146",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0147",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1403"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0148",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1413"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0149",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0150",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1920"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0151",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0152",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2512"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0153",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L849"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0154",
+      "sceneAnchors": [
+        "src/city/buildings.ts#wood"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0155",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1933"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0156",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0157",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0158",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1951"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0159",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0160",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1967"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0161",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1984"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0162",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2001"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0163",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0164",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1724"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0165",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0166",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2013"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0167",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1246"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0168",
+      "sceneAnchors": [
+        "src/city/buildings.ts#上清觀"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0169",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1405"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0170",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1525"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0171",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L1026",
+        "src/city/itemKit.ts#L3096"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0172",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0173",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0174",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0175",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0176",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L1039",
+        "src/city/itemKit.ts#L3123"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0177",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0178",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L1016",
+        "src/city/itemKit.ts#L3144"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0179",
+      "sceneAnchors": [
+        "src/city/props.ts#L1607"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0180",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1258"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0181",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0182",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L956"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0183",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L941"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0184",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L968"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0185",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L744"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0186",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0187",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L760"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0188",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L773"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0189",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L982"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0190",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0191",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0192",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L797"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0193",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L784"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0194",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0195",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0196",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0197",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L993"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0198",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0199",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2058"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0200",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2042"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0201",
+      "sceneAnchors": [
+        "src/city/buildings.ts#pagoda.dewPlate"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0202",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2081"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0203",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1551"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0204",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2124"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0205",
+      "sceneAnchors": [
+        "src/city/detailKit.ts#eave.windBell"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0206",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2166"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0207",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2285"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0208",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2227"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0209",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2813"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0210",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1148"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0211",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0212",
+      "sceneAnchors": [
+        "src/city/buildings.ts#wall"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0213",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2030"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0214",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2634"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0215",
+      "sceneAnchors": [
+        "src/city/props.ts#L858"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0216",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2653"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0217",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2044"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0218",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1847"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0219",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1175"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0220",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0221",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2944"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0222",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0223",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0224",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0225",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0226",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2463"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0227",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L1043",
+        "src/city/itemKit.ts#L3168"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0228",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2844"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0229",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0230",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1437"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0231",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2528"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0232",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2123"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0233",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2547"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0234",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2591"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0235",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2575"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0236",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0237",
+      "sceneAnchors": [
+        "src/city/props.ts#L1257"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0238",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0239",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0240",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0241",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0242",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0243",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2768"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0244",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2060"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0245",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2079"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0246",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2092"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0247",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2529"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0248",
+      "sceneAnchors": [
+        "src/city/props.ts#L1595"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0249",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0250",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1438"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0251",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2561"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0252",
+      "sceneAnchors": [
+        "src/city/buildings.ts#綢緞莊"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0253",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0254",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1892"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0255",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1905"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0256",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0257",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0258",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0259",
+      "sceneAnchors": [
+        "src/city/buildings.ts#果子鋪"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0260",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0261",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0262",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1475"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0263",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1310"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0264",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1422"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0265",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1742"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0266",
+      "sceneAnchors": [
+        "src/city/buildings.ts#飯鋪"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0267",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L1012",
+        "src/city/itemKit.ts#L3195"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0268",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1707"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0269",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0270",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0271",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0272",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1299"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0273",
+      "sceneAnchors": [
+        "src/city/buildings.ts#唐家酒店"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0274",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1691"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0275",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0276",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0277",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1332"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0278",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1433"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0279",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0280",
+      "sceneAnchors": [
+        "src/city/buildings.ts#久住王員外家"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0281",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1485"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0282",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0283",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0284",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1321"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0285",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0286",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2891"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0287",
+      "sceneAnchors": [
+        "src/city/buildings.ts#明家靴店"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0288",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0289",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1862"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0290",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0291",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1877"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0292",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0293",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0294",
+      "sceneAnchors": [
+        "src/city/buildings.ts#城楼"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0295",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0296",
+      "sceneAnchors": [
+        "src/city/buildings.ts#gateTower.plaque"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0297",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L1831"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0298",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0299",
+      "sceneAnchors": [
+        "src/city/buildings.ts#马道"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0300",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2575"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0301",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0302",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1368"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0303",
+      "sceneAnchors": [
+        "src/city/props.ts#L1574"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0304",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2756"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0305",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0306",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2797"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0307",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2858"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0308",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0309",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2299"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0310",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1443"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0311",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2827"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0312",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2930"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0313",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1111"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0314",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L1031",
+        "src/city/itemKit.ts#L3215"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0315",
+      "sceneAnchors": [
+        "src/city/props.ts#L1303"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0316",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2741"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0317",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0318",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2874"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0319",
+      "sceneAnchors": [
+        "src/world/terrain.ts#mt"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0320",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1460"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0321",
+      "sceneAnchors": [
+        "src/world/terrain.ts#L1322"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0322",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2514"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0323",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1064"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0324",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0325",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1538"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0326",
+      "sceneAnchors": [
+        "src/world/terrain.ts#鎮江王廟"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0327",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1473"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0328",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0329",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0330",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L1008",
+        "src/city/itemKit.ts#L3110"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0331",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0332",
+      "sceneAnchors": [
+        "src/world/terrain.ts#祝融殿"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0333",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1480"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0334",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1305"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0335",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0336",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1281"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0337",
+      "sceneAnchors": [
+        "src/city/props.ts#L1235"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0338",
+      "sceneAnchors": [
+        "src/world/terrain.ts#北嶽廟"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0339",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1491"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0340",
+      "sceneAnchors": [
+        "src/world/terrain.ts#L1425"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0341",
+      "sceneAnchors": [
+        "src/city/props.ts#L1400"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0342",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2501"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0343",
+      "sceneAnchors": [
+        "src/city/props.ts#L1241"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0344",
+      "sceneAnchors": [
+        "src/world/terrain.ts#中嶽廟"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0345",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1498"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0346",
+      "sceneAnchors": [
+        "src/world/terrain.ts#嵩山"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0347",
+      "sceneAnchors": [
+        "src/city/props.ts#L1361"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0348",
+      "sceneAnchors": [
+        "src/world/terrain.ts#L1378"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0349",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0350",
+      "sceneAnchors": [
+        "src/city/props.ts#L1339"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0351",
+      "sceneAnchors": [
+        "src/world/terrain.ts#雪簾禪院"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0352",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1505"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0353",
+      "sceneAnchors": [
+        "src/world/terrain.ts#L1490"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0354",
+      "sceneAnchors": [
+        "src/world/terrain.ts#L1525"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0355",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1511"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0356",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2447"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0357",
+      "sceneAnchors": [
+        "src/city/props.ts#L1429"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0358",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1235"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0359",
+      "sceneAnchors": [
+        "src/city/props.ts#L1445"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0360",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1532"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0361",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2618"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0362",
+      "sceneAnchors": [
+        "src/city/props.ts#L1489"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0363",
+      "sceneAnchors": [
+        "src/city/props.ts#L1537"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0364",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0365",
+      "sceneAnchors": [
+        "src/world/desertOutpost.ts#L363"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0366",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2915"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0367",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2784"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0368",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2903"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0369",
+      "sceneAnchors": [
+        "src/world/desertOutpost.ts#L363"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0370",
+      "sceneAnchors": [
+        "src/city/props.ts#L1223"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0371",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0372",
+      "sceneAnchors": [
+        "src/city/props.ts#L1274"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0373",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1336"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0374",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0375",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0376",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0377",
+      "sceneAnchors": [
+        "src/city/props.ts#L1205"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0378",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0379",
+      "sceneAnchors": [
+        "src/city/props.ts#L990"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0380",
+      "sceneAnchors": [
+        "src/world/terrain.ts#L1568"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0381",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0382",
+      "sceneAnchors": [
+        "src/city/props.ts#L1016"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0383",
+      "sceneAnchors": [
+        "src/city/props.ts#L1033"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0384",
+      "sceneAnchors": [
+        "src/city/props.ts#L1050"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0385",
+      "sceneAnchors": [
+        "src/city/props.ts#L1079"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0386",
+      "sceneAnchors": [
+        "src/city/props.ts#L1089"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0387",
+      "sceneAnchors": [
+        "src/city/props.ts#L1103"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0388",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2109"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0389",
+      "sceneAnchors": [
+        "src/city/props.ts#L1168"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0390",
+      "sceneAnchors": [
+        "src/city/props.ts#L882"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0391",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2476"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0392",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0393",
+      "sceneAnchors": [
+        "src/city/props.ts#L1192"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0394",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1175"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0395",
+      "sceneAnchors": [
+        "src/city/props.ts#L1168"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0396",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2669"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0397",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2488"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0398",
+      "sceneAnchors": [
+        "src/city/props.ts#L924"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0399",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2681"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0400",
+      "sceneAnchors": [
+        "src/city/architecture.ts#L1551"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0401",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L1003",
+        "src/city/itemKit.ts#L3256"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0402",
+      "sceneAnchors": [
+        "src/city/buildings.ts#影壁"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0403",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2266"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0404",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0405",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0406",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0407",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0408",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0409",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1211"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0410",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2642"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0411",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2699"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0412",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0413",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2566"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0414",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0415",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0416",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0417",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0418",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0419",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0420",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2391"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0421",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2725"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0422",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2711"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0423",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2605"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0424",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0425",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0426",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2136"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0427",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0428",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0429",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2378"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0430",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2148"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0431",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0432",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0433",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0434",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0435",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0436",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0437",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1494"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0438",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1223"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0439",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0440",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2166"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0441",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2712"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0442",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0443",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0444",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0445",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2406"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0446",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0447",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0448",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2179"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0449",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2195"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0450",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0451",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L2599"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0452",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0453",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0454",
+      "sceneAnchors": [
+        "src/city/props.ts#招幌"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0455",
+      "sceneAnchors": [
+        "src/city/interiors.ts#L1018",
+        "src/city/itemKit.ts#L3241"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0456",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1565"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0457",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0458",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0459",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0460",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1234"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0461",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2433"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0462",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1289"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0463",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2211"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0464",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0465",
+      "sceneAnchors": [
+        "src/city/buildings.ts#house"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0466",
+      "sceneAnchors": [
+        "src/city/props.ts#L1554"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0467",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2420"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0468",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2223"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0469",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "C-ITM-0470",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2238"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0471",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L2254"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "C-ITM-0472",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0001",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0002",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0003",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0004",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0005",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0006",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L818"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0007",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L828"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0008",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L840"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0009",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1020"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0010",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0011",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0012",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1035"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0013",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0014",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1059"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0015",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1062"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0016",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0017",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0018",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1065"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0019",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0020",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0021",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0022",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0023",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0024",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0025",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L621"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0026",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0027",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0028",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0029",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1005"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0030",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L513",
+        "src/sky/hells.ts#L1073"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0031",
+      "sceneAnchors": [
+        "src/sky/hells.ts#L1081"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0032",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L595"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0033",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L583"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0034",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0035",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0036",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L528"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0037",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L536"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0038",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L548"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0039",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L559"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0040",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0041",
+      "sceneAnchors": [
+        "src/sky/hells.ts#L1090"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0042",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L570"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0043",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0044",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0045",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0046",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0047",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0048",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0049",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L500"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0050",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1078"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0051",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0052",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L854"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0053",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1094"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0054",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0055",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0056",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0057",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L879"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0058",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0059",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1127"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0060",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L621"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0061",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1106"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0062",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L904"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0063",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0064",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0065",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0066",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1116"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0067",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#过街城门"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0068",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0069",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0070",
+      "sceneAnchors": [
+        "src/city/buildings.ts#L1831"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0071",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3240"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0072",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3114"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0073",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0074",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0075",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#L891"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0076",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#fanyang"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0077",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3116"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0078",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3117"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0079",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3118"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0080",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0081",
+      "sceneAnchors": [
+        "src/sky/hells.ts#L1687"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0082",
+      "sceneAnchors": [
+        "src/sky/hells.ts#L2585"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0083",
+      "sceneAnchors": [
+        "src/sky/hells.ts#L2625"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0084",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0085",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0086",
+      "sceneAnchors": [
+        "src/sky/hells.ts#L2617"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0087",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3128"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0088",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3131"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0089",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3134"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0090",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3136"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0091",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3137"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0092",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3287"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0093",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L2043"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0094",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L2045"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0095",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L2050"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0096",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3325"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0097",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0098",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0099",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0100",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3140"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0101",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3139"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0102",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L2052"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0103",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3385"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0104",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#L899"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0105",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0106",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0107",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3120"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0108",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0109",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3121"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0110",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0111",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0112",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3125"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0113",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3270"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0114",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#fengdu-gate"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0115",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#L893"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0116",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#L895"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0117",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#过街城门：两墩一门洞"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0118",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0119",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3147"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0120",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3427"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0121",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3465"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0122",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0123",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0124",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0125",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0126",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3505"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0127",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3533"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0128",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0129",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3566"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0130",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3594"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0131",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0132",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3148"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0133",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3628"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0134",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3670"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0135",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3697"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0136",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3149"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0137",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3730"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0138",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3150"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0139",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3764"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0140",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3799"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0141",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0142",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0143",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0144",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0145",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#L901"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0146",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3829"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0147",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3151"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0148",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3864"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0149",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0150",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3144"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0151",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3145"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0152",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3142"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0153",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3911"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0154",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3937"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0155",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3972"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0156",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1502"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0157",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0158",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3156"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0159",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L4009"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0160",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L4030"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0161",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L4061"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0162",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L4083"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0163",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L4118"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0164",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3153"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0165",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0166",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0167",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3154"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0168",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3155"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0169",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0170",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3157"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0171",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0172",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L4147"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0173",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3158"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0174",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#L903"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0175",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0176",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0177",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0178",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0179",
+      "sceneAnchors": [
+        "src/sky/fengduGround.ts#L905"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0180",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L3152"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "D-ITM-0181",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0182",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "D-ITM-0183",
+      "sceneAnchors": [
+        "src/sky/underworld.ts#L4178"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0001",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0002",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L912"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0003",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0004",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0005",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L978"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0006",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0007",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0008",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0009",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0010",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0011",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0012",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0013",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L690"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0014",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0015",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0016",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0017",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0018",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0019",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0020",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L820"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0021",
+      "sceneAnchors": [
+        "src/sky/creatures.ts#pixiu"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0022",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3619"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0023",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3645"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0024",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L1589"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0025",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0026",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0027",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3602"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0028",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1141",
+        "src/sky/palace.ts#L1172"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0029",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L704"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0030",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L715"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0031",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0032",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0033",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0034",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0035",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0036",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L621"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0037",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L674"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0038",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1156"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0039",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0040",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0041",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0042",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0043",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0044",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0045",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0046",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0047",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0048",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0049",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1179"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0050",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0051",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0052",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0053",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0054",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0055",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0056",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0057",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L647"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0058",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0059",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0060",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0061",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L1166"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0062",
+      "sceneAnchors": [
+        "src/city/itemKit.ts#L659"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0063",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0064",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0065",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0066",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0067",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0068",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L1202"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0069",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L821"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0070",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0071",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0072",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0073",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L822"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0074",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0075",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0076",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0077",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3549"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0078",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3585"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0079",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L824"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0080",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0081",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0082",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0083",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L825"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0084",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0085",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L2124"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0086",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L2127"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0087",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L2129"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0088",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0089",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0090",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0091",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L2131"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0092",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0093",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L2133"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0094",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L2135"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0095",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0096",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L2137"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0097",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0098",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0099",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0100",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0101",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L2140"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0102",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0103",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L2174"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0104",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L1513"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0105",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0106",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L2198"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0107",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L1526"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0108",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L2183"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0109",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L1558"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0110",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L1579"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0111",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0112",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L1540"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0113",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3828"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0114",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0115",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0116",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3846"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0117",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0118",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3863"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0119",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0120",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0121",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0122",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0123",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0124",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L4112"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0125",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0126",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3909"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0127",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3891"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0128",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3926"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0129",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3944"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0130",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0131",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L4116"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0132",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3717"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0133",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3960"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0134",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0135",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3978"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0136",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0137",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0138",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0139",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3800"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0140",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0141",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0142",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3665"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0143",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3681"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0144",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3702"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0145",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0146",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0147",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3735"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0148",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3759"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0149",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L4127"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0150",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3778"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0151",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L4128"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0152",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0153",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0154",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0155",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0156",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0157",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0158",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3527"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0159",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0160",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3571"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0161",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3483"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0162",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L3504"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0163",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L826"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0164",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L827"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0165",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0166",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0167",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0168",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0169",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L4125"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0170",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0171",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0172",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0173",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L829"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0174",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0175",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0176",
+      "sceneAnchors": [
+        "src/sky/palace.ts#L4063"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0177",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0178",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0179",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0180",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L1455"
+      ],
+      "attributionKind": "placed"
+    },
+    {
+      "itemId": "T-ITM-0181",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0182",
+      "sceneAnchors": [],
+      "attributionKind": "data-only"
+    },
+    {
+      "itemId": "T-ITM-0183",
+      "sceneAnchors": [
+        "src/sky/realm.ts#L1479"
+      ],
+      "attributionKind": "placed"
+    }
+  ]
+}

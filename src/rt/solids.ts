@@ -32,13 +32,63 @@ export interface SolidBox {
   hp: number; maxHp: number; broken: boolean;
 }
 
+/**
+ * PERF-003 R1 的机读数据源：触顶丢弃「按 bake 阶段 × 构件类型」直方图。
+ * 由 setSolidsStage() 从 world.ts 的 tasks 阶段名驱动；未接线时 stage 退化为
+ * 构件 BGroup 并把 currentStage 明写 '(unset)'，单测可据此断言降级归因确实可见，
+ * 而不是悄悄变成某个看似真实的阶段名。
+ * 全部数组按字典序排序 → JSON 字节可复现（QA-001 S06 口径）。
+ */
+export interface SolidsCapHistogram {
+  maxTotal: number;
+  wallReserve: number;
+  capDropped: number;
+  wallReserveDropped: number;
+  capFirstDropAt: number | null;
+  capFirstDropStage: string | null;
+  capFirstDropGroup: string | null;
+  capFirstDropKind: string | null;
+  byStage: { stage: string; count: number }[];
+  byKind: { kind: string; count: number }[];
+  byStageKind: { stage: string; kind: string; count: number }[];
+  wallReserveByStage: { stage: string; count: number }[];
+  currentStage: string;
+}
+
+/**
+ * FIX-004 R1：cap 触顶可见、可量化、可验收。
+ * 保留 R27 全部旧字段（r27 验收 / README 数字管线依赖），新增 4 个 cap 相关字段。
+ */
+export interface SolidsStats {
+  total: number; walls: number; floors: number; plants: number;
+  broken: number; skipped: number; cells: number; buildMs: number;
+  capDropped: number;             // 因 registered >= MAX_TOTAL 被静默丢弃的实体数
+  capFirstDropAt: number | null;  // 首次触顶时的 registered 值（null = 从未触顶）
+  capFirstDropStage: string | null; // 首次触顶的 bake 阶段名（由 group 推断，供直方图归因）
+  wallReserveDropped: number;     // 因 WALL_RESERVE 让路被丢弃的非 wall 实体数
+  wallReserveUsed: number;        // WALL_RESERVE 通道的实际占用（超预留后登记的 wall 数）
+  maxTotal: number;               // 当前生效上限（PERF-003 扩容后可观测）
+  wallReserve: number;            // 当前生效预留额度
+}
+
 // ---- 空间哈希常量（R27 内存/性能硬预算） ----
 const CELL = 8;              // wall/plant/roof 主哈希格
 const BIG_CELL = 64;         // 大构件粗哈希格（跨度 >60 单独判，避免逐 8m 格插入 O(n²)）
 const BIG_SPAN = 60;         // 水平跨度阈值：超过放大构件索引
 const MAX_CELLS = 64;        // 单构件逐格插入上限，超过改放 bigGrid（每格插入数封顶）
-const MAX_TOTAL = 399000;    // solidsStats().total 硬上限 → ≤400000（decor/三界跳过项不占）
-const WALL_RESERVE = 320000; // 达此量后非 wall 让路，给构建后段真宫墙保留配额（优先保证 wall）
+// FIX-004 R5：常量取值理由（此前无注释，审计无法判断是不是拍脑袋）。
+//   MAX_TOTAL = 399000：R27 立台账时按「对象数组 AOS」估算——每个 SolidBox 约 80B
+//     （9 个 number + 3 个小字段 + 对象头/GC 指针），399k × 80B ≈ 32MB 量级，
+//     加上 8m 空间哈希的 number[] 桶开销后，取 ≤400000 作为当时 8GB 参考机的常驻预算上限。
+//     实测（artifacts/r27-collision-runtime.json solidsInitial.total === 399000）证明该上限
+//     在真实世界烘焙中**确实触顶**，且当时静默丢弃、无计数 → 本项整改的直接动因。
+//   WALL_RESERVE = 320000：为构建后段才出现的真宫墙保留的配额。达此量后非 wall
+//     （floor/plant/roof）让路，避免前半段的铺装/植被把额度吃光导致穿墙。
+//     语义见 FIX-004 R5 / PERF-003 R5；wallReserveUsed 记录该通道的实际占用。
+//   R29 按 PERF-001 R4 把 AOS 改 SoA 后每实体降到 ~31B，本常量应由 PERF-003 依据
+//   probe-solids-cap.mjs 的实测直方图重算，不得沿用旧 AOS 口径。
+let MAX_TOTAL = 399000;
+let WALL_RESERVE = 320000;
 const STEP_UP = 0.95;        // solidFloorY 单步可抬升高度
 const CAPSULE_H = 1.7;       // 角色胶囊默认身高
 const FOOT_R = 0.34;         // 角色水平半径
@@ -60,6 +110,83 @@ let built = false;
 let buildMs = 0;
 let registered = 0, wallCount = 0, floorCount = 0, plantCount = 0, roofCount = 0, brokenCount = 0, skippedCount = 0;
 let nextId = 1;
+
+// ---- FIX-004：cap 触顶遥测（此前两处 return 完全静默，穿墙风险不可见） ----
+let capDropped = 0;                        // 因 MAX_TOTAL 触顶被丢弃的实体数
+let capFirstDropAt: number | null = null;  // 首次触顶时的 registered 值
+let capFirstDropStage: string | null = null; // 首次触顶的 bake 阶段（未接线时退化为 BGroup）
+let capFirstDropGroup: string | null = null; // 首次触顶构件的 BGroup（构件类型，永远真实）
+let capFirstDropKind: string | null = null;  // 首次触顶构件的 classify 结果
+let capWarned = false;                     // R2：warn 只发一次，防 39 万次刷屏
+let wallReserveDropped = 0;                // 因 WALL_RESERVE 让路被丢弃的非 wall 数
+let wallReserveUsed = 0;                   // 预留通道的实际占用（超预留后登记的 wall 数）
+
+// ---- PERF-003 R1：触顶丢弃直方图（阶段 × 构件类型） ----
+const UNSET_STAGE = '(unset)';
+let currentStage = UNSET_STAGE;
+const capDropStage = new Map<string, number>();
+const capDropKind = new Map<string, number>();
+const capDropStageKind = new Map<string, number>();
+const wallReserveDropStage = new Map<string, number>();
+
+/** 由 world.ts 的 tasks 阶段名驱动；每个 bake 步骤开始时调用一次。 */
+export function setSolidsStage(stage: string): string {
+  if (typeof stage !== 'string' || stage.trim() === '') {
+    throw new Error('[solids] setSolidsStage 需要非空阶段名');
+  }
+  const prev = currentStage;
+  currentStage = stage;
+  return prev;
+}
+
+/** Map → 排序数组：保证同样的丢弃序列永远产出同样的 JSON 字节。 */
+function sortedBuckets<K extends string>(m: Map<string, number>, key: K): (Record<K, string> & { count: number })[] {
+  return [...m.entries()].sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0)
+    .map(([k, count]) => ({ [key]: k, count }) as Record<K, string> & { count: number });
+}
+
+function bump(m: Map<string, number>, key: string): void {
+  m.set(key, (m.get(key) ?? 0) + 1);
+}
+
+/** 机读直方图；未接线时 currentStage 显式为 '(unset)'，byStage 用 BGroup 降级归因。 */
+export function solidsCapHistogram(): SolidsCapHistogram {
+  const byStageKind: { stage: string; kind: string; count: number }[] = [];
+  for (const [composite, count] of [...capDropStageKind.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1)) {
+    const sep = composite.indexOf('\u0000');
+    byStageKind.push({ stage: composite.slice(0, sep), kind: composite.slice(sep + 1), count });
+  }
+  return {
+    maxTotal: MAX_TOTAL, wallReserve: WALL_RESERVE,
+    capDropped, wallReserveDropped,
+    capFirstDropAt, capFirstDropStage, capFirstDropGroup, capFirstDropKind,
+    byStage: sortedBuckets(capDropStage, 'stage'),
+    byKind: sortedBuckets(capDropKind, 'kind'),
+    byStageKind,
+    wallReserveByStage: sortedBuckets(wallReserveDropStage, 'stage'),
+    currentStage,
+  };
+}
+
+/** 默认 cap（PERF-003 扩容前的 R27 口径），configureSolidsCap 可覆盖。 */
+const DEFAULT_MAX_TOTAL = 399000;
+const DEFAULT_WALL_RESERVE = 320000;
+
+/**
+ * FIX-004 R1 / PERF-003 R3：可参数化 cap，供单测注入小上限与运行时扩容使用。
+ * 只允许在**尚未登记任何实体**时调用，避免中途改上限造成台账口径漂移（INV-01）。
+ * 返回生效值；非法参数（非正整数 / reserve >= total）直接抛错，绝不静默。
+ */
+export function configureSolidsCap(maxTotal: number, wallReserve: number): { maxTotal: number; wallReserve: number } {
+  if (!Number.isInteger(maxTotal) || maxTotal <= 0) throw new Error(`[solids] 非法 MAX_TOTAL: ${maxTotal}`);
+  if (!Number.isInteger(wallReserve) || wallReserve < 0 || wallReserve >= maxTotal) {
+    throw new Error(`[solids] 非法 WALL_RESERVE: ${wallReserve}（需 0 ≤ reserve < ${maxTotal}）`);
+  }
+  if (registered !== 0) throw new Error('[solids] configureSolidsCap 必须在登记前调用（当前 registered=' + registered + '）');
+  MAX_TOTAL = maxTotal;
+  WALL_RESERVE = wallReserve;
+  return { maxTotal: MAX_TOTAL, wallReserve: WALL_RESERVE };
+}
 
 /** 查询候选去重集（模块级复用，避免每帧几十万次 new Set；本文件所有查询均不嵌套调用） */
 const Q_SEEN = new Set<number>();
@@ -136,8 +263,33 @@ export function registerSolid(
   if (kind === 'decor') return;                      // 无碰撞语义且数量巨大：不登记（控制内存）
   // 硬预算 total ≤ 400000：decor/三界跳过项不占；达上限后一律停登记。
   // 优先保证 wall：接近上限时非 wall（floor/plant/roof）先让路，给构建后段真宫墙留配额。
-  if (registered >= MAX_TOTAL) return;
-  if (kind !== 'wall' && registered >= WALL_RESERVE) return;
+  // FIX-004 R1/R2：两处 return 不再静默 —— 精确计数、记录首次触顶位置、只告警一次。
+  if (registered >= MAX_TOTAL) {
+    capDropped++;
+    // 阶段归因：world.ts 的 tasks 已接线时用真实阶段名；单测/未接线场景退化为 BGroup，
+    // 让「没有阶段信息」这件事本身可见，绝不伪装成某个真实阶段。
+    const stage = currentStage === UNSET_STAGE ? (group || '(unknown)') : currentStage;
+    if (capFirstDropAt === null) {
+      capFirstDropAt = registered;
+      capFirstDropStage = stage;
+      capFirstDropGroup = group || '(unknown)';
+      capFirstDropKind = kind;
+    }
+    bump(capDropStage, stage);
+    bump(capDropKind, kind);
+    bump(capDropStageKind, stage + '\u0000' + kind);
+    if (!capWarned) {
+      capWarned = true;
+      console.warn(`[solids] MAX_TOTAL 触顶，后续构件无碰撞体，capDropped 计数中（maxTotal=${MAX_TOTAL}，首次触顶阶段=${capFirstDropStage}）`);
+    }
+    return;
+  }
+  if (kind !== 'wall' && registered >= WALL_RESERVE) {
+    wallReserveDropped++;
+    bump(wallReserveDropStage, currentStage === UNSET_STAGE ? (group || '(unknown)') : currentStage);
+    return;
+  }
+  if (kind === 'wall' && registered >= WALL_RESERVE) wallReserveUsed++;
   registered++;
   if (kind === 'floor') {
     // floor 走 putFloor/bigFloors 紧凑结构，不进 boxes（不占 SolidBox 对象内存）。
@@ -334,18 +486,27 @@ export function solidBreachAt(x: number, z: number, r = 1.2): boolean {
   return false;
 }
 
-export function solidsStats(): { total: number; walls: number; floors: number; plants: number; broken: number; skipped: number; cells: number; buildMs: number } {
+export function solidsStats(): SolidsStats {
   return {
     total: registered, walls: wallCount, floors: floorCount, plants: plantCount,
     broken: brokenCount, skipped: skippedCount, cells: grid.size + bigGrid.size + floorTop.size, buildMs: +buildMs.toFixed(2),
+    capDropped, capFirstDropAt, capFirstDropStage, wallReserveDropped, wallReserveUsed,
+    maxTotal: MAX_TOTAL, wallReserve: WALL_RESERVE,
   };
 }
 
-/** 单测用：清空全部状态。 */
+/** 单测用：清空全部状态（含 FIX-004 遥测与 cap 配置，保证用例间零残留）。 */
 export function resetSolids(): void {
   boxes = []; brokenWalls = []; floorTop = new Map(); bigFloors = []; grid = new Map(); bigGrid = new Map();
   built = false; buildMs = 0;
-  registered = 0; wallCount = 0; floorCount = 0; plantCount = 0; roofCount = 0; brokenCount = 0;
+  registered = 0; wallCount = 0; floorCount = 0; plantCount = 0; roofCount = 0; brokenCount = 0; skippedCount = 0;
   nextId = 1;
   Q_SEEN.clear();
+  capDropped = 0; capFirstDropAt = null; capFirstDropStage = null; capWarned = false;
+  capFirstDropGroup = null; capFirstDropKind = null;
+  wallReserveDropped = 0; wallReserveUsed = 0;
+  currentStage = UNSET_STAGE;
+  capDropStage.clear(); capDropKind.clear(); capDropStageKind.clear(); wallReserveDropStage.clear();
+  MAX_TOTAL = DEFAULT_MAX_TOTAL;
+  WALL_RESERVE = DEFAULT_WALL_RESERVE;
 }

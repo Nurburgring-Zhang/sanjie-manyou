@@ -8,6 +8,8 @@ import { buildGatePalaceFittings, buildDevotionalWorks } from './architecture';
 // 只读取坊心与路廊判据（imperial → buildings 已是既有单向环，本文件只在函数体内调用，不参与模块初始化）
 import { wardCells, roadBlocked, wardReserved } from './imperial';
 import { buildInstitutions } from './institutions';
+// PERF-001 R2：让帧判定统一走 8ms 时间预算，替换本文件原来的「每 30 条让一帧」。
+import { getBakeBudget } from '../core/bakeBudget';
 
 // ============ 配色 ============
 /** 三界调色板——对齐 docs/assets/44-材质色彩总谱.md（CJ 人间本体/NH 霓虹/DF 地府） */
@@ -2960,11 +2962,14 @@ function hasBespokeInterior(x: number, z: number): boolean {
   return false;
 }
 
-const yieldFrameB = (): Promise<void> => new Promise((r) => { if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => r()); else setTimeout(r, 0); });
+// PERF-001 R2：原 `yieldFrameB` 固定「每 30 条让一帧」已删除。让帧时机改由
+// core/bakeBudget.ts 按累计同步耗时 8ms 统一裁决；本文件只在原有 await 点调用 tick()，
+// 循环体语句顺序与 rng 消耗序逐值不变（INV-01 / 截图 SSIM 门复核）。
 
 /**
- * 全城街屋。**异步分片**：`sorted` 每条街屋要建街墙、后院、厢房、屋面、门窗、檐口，
- * 一次跑完实测 2.1s，整段阻塞主线程。现在每 30 条让一帧，单次占用降到 ~0.15s。
+ * 全城街屋。**异步时间预算分片**：`sorted` 每条街屋要建街墙、后院、厢房、屋面、门窗、檐口，
+ * 一次跑完实测 2.1s，整段阻塞主线程。现在按 8ms 同步预算让帧，单次主线程占用受预算约束，
+ * 且轻机器上不再为每 30 条白等一次 16.7ms vsync。
  */
 export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: SignAtlas, rng: RNG): Promise<void> {
   const shopSigns = ['綢緞莊', '香藥鋪', '解當鋪', '紙馬鋪', '明家靴店', '劉家上色沉檀揀香', '王家紙馬', '果子鋪', '飯鋪', '唐家酒店', '久住王員外家', '積善堂', '守拙齋', '萬貨全'];
@@ -2973,7 +2978,8 @@ export async function buildAllCityBuildings(b: Baker, sg: SignMesher, atlas: Sig
     // 街墙与后院：把"一排孤立房子"补成连续街墙 + 进深院落
     const sorted = [...plots].sort((a, b) => a.x - b.x);
     for (let i = 0; i < sorted.length; i++) {
-      if (i > 0 && i % 30 === 0) await yieldFrameB();
+      // PERF-001 R2：仍在原 await 点，只把「固定块数」换成「8ms 累计预算」。
+      await getBakeBudget().tick();
       const p = sorted[i];
       const facing = p.ry === Math.PI ? -1 : 1;
       const frontZ = p.z + facing * (p.d / 2 + 0.18);

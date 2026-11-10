@@ -1,0 +1,93 @@
+{
+  "schema": "perf-003-decision/v2",
+  "mode": "real",
+  "evidence": "artifacts/solids-cap-histogram.json",
+  "supportingEvidence": [
+    "artifacts/spec/PROBE-SOLIDS-CAP.json",
+    "artifacts/spec/PERF-001.json",
+    "artifacts/boot-memory-profile.json",
+    "artifacts/solids-budget.json",
+    "artifacts/spec/PERF-001-stage-attribution.json"
+  ],
+  "release": "R29 M2",
+  "R1_histogram": {
+    "maxTotal": 399000,
+    "wallReserve": 320000,
+    "capDropped": 1323227,
+    "wallReserveDropped": 474386,
+    "capFirstDropAt": 399000,
+    "capFirstDropStage": "皇城·街巷铺装",
+    "capFirstDropGroup": "roof",
+    "byKind": [
+      {
+        "kind": "plant",
+        "count": 1211906
+      },
+      {
+        "kind": "floor",
+        "count": 72635
+      },
+      {
+        "kind": "wall",
+        "count": 24474
+      },
+      {
+        "kind": "roof",
+        "count": 14212
+      }
+    ],
+    "topStage": {
+      "stage": "皇城·街巷铺装",
+      "count": 1230648,
+      "share": 0.93
+    },
+    "requiredRegistrationsForZeroDrop": 2196613,
+    "reproducible": "连续两次真机复跑 capDropped 完全一致，直方图 sha256=d82f251c7d059554bf1c7cbffbcf9f1afbd86805a8b1cd398cf65d9126796c86 前后相同"
+  },
+  "R2_decision": {
+    "selectedPath": "DEFERRED",
+    "pathA": "NOT_NOW",
+    "pathB": "NOT_NOW",
+    "targetAchieved": false,
+    "capDroppedNow": 1323227,
+    "capDroppedTarget": 0,
+    "rationale": [
+      "路径 A 的前置条件不成立：spec 规定 A 在『PERF-001 R4 SoA 化后每实体 ~31B』前提下扩容。当前 solids 仍是 AOS 对象数组（~80B/实体），2,196,613 个实体将占约 176MB，且 PERF-001 R1 实测 heap 峰值已达 6718.1MB（目标 1536MB 的 4.37×）、常驻 5793.7MB（目标 600MB 的 9.66×）。此刻扩容会直接加剧内存危机。",
+      "归因显示主因不是 solids：BakerStats 静态几何 212,331,813 顶点 / 精确属性字节 5,756,462,856 B ≈ 5.36GiB（见 PERF-001.json v2 的逐任务台账） 与实测峰值同量级，而 399k SolidBox 仅约 31.9MB。先动 solids 扩容属于优化错对象。",
+      "路径 B 的触发条件也不成立：spec 规定『若路径 A 实测查询性能退化（1.2M 实体查询 P99 >0.05ms）才允许走 B』。路径 A 尚未实施，查询 P99 从未测量，没有数据可裁决 B。",
+      "因此按 spec『路径二选一，由数据裁决』的纪律，合法结论是记 DEFERRED 并列出解锁条件，不得凭空选一条路径、不得写一张超大豁免单假装达标、不得直接改 MAX_TOTAL 制造 capDropped=0 的假象。"
+    ],
+    "unlockConditions": [
+      "PERF-001 R2-R5 完成且 probe-boot-memory.mjs 实测 heapPeakMB ≤ 1536、settledMB ≤ 600",
+      "SolidBox SoA 化落地并实测每实体字节数与查询 P99",
+      "重跑 probe-solids-cap.mjs --histogram 取更新后的直方图",
+      "在 artifacts/spec/PERF-003.json 改写 selectedPath 为 A 或 B，并记录查询性能证据"
+    ]
+  },
+  "specBackgroundCorrections": [
+    {
+      "claim": "触顶丢弃集中在人界晚期构件",
+      "measured": "首次触顶在『皇城·街巷铺装』（人间中段），registered=399000 时即发生，丢弃 1323227 个构件",
+      "impact": "PERF-003 背景证据需更正；不能按『晚期少量』设计预算"
+    },
+    {
+      "claim": "路径 A 提 MAX_TOTAL 至全量注册约 1.2M 实体",
+      "measured": "仅人间就需 2196613 个登记（399000 已登记 + 474386 让路 + 1323227 触顶），尚未计入 FEAT-004 天宫/地府域",
+      "impact": "1.2M 估算偏低约 1.83×，内存预算与域分片方案须重算"
+    },
+    {
+      "claim": "PERF-001 R3（两界懒烘焙）是把启动常驻降下来的主收益路径",
+      "measured": "逐任务界域台账：天宫 12,812,664 + 地府 3,276,858 = 16,089,522 顶点，仅占 7.58%；人间独占 87.34%。R3 最多省约 0.47GiB。",
+      "impact": "两界懒烘焙不能解决 600MB 目标；本项 DEFERRED 的解锁条件仍以 PERF-001 整体达标为准，不再把 R3 单独当解锁钥匙。"
+    }
+  ],
+  "waiverState": {
+    "file": "artifacts/solids-budget.json",
+    "allowance": 1323227,
+    "expiresAt": "2026-11-30",
+    "status": "ACTIVE_TECH_DEBT",
+    "clearCondition": "capDropped === 0 后删除豁免单，并同步更新 MANIFEST 与 README 披露口径"
+  },
+  "R3_R5_status": "TODO — 路径选定后重跑 r27 全套验收 / 建 src/rt/solidsBudget.ts / 裁决 WALL_RESERVE 语义",
+  "invariant": "本文件不把 DEFERRED 写成 PASS；FIX-004 R4 的 capNotHit 门当前是 PASS(waived) 而非 PASS(capNotHit)，两者必须分账披露。 本轮新增 PERF-001 R1 逐任务几何台账后复核：DEFERRED 结论不变，且新增 E-R3 勘误（见 artifacts/spec/PERF-001.json）。"
+}

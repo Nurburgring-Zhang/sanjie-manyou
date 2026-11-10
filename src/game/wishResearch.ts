@@ -24,6 +24,15 @@
 export type ResearchProvider = 'brave' | 'serper' | 'bing' | 'custom' | 'webpage';
 export type ResearchStatus = 'disabled' | 'ok' | 'no-results' | 'failed' | 'cors' | 'bad-config';
 
+/**
+ * FIX-003 R4 / QA-004 四态披露：每次检索调用的结果对象都带 mode。
+ *   real    —— 真的向外部端点发过请求（成功或失败/CORS 均属真实尝试，由 status 细分）
+ *   offline —— 功能默认关闭 / 未发起任何网络请求（如实降级，不冒充联网）
+ *   mocked  —— 仅测试注入时出现（例如 Puppeteer 请求拦截伪造应答的验收场景），
+ *              运行期默认路径绝不会自行返回 mocked。
+ */
+export type ResearchMode = 'real' | 'offline' | 'mocked';
+
 export interface ResearchConfig {
   enabled: boolean;
   endpoint: string;
@@ -46,6 +55,7 @@ export interface ResearchFinding {
  * 因此一个扁平对象即可同时满足「合并资料卡」与「如实记录桥状态」。
  */
 export interface ResearchOutcome {
+  mode: ResearchMode;        // FIX-003 R4：四态披露，见 ResearchMode 注释
   bridge: 'online' | 'offline';
   status: ResearchStatus;
   provider: string;
@@ -87,6 +97,15 @@ const KEY = {
 };
 
 let runtimeOverride: Partial<ResearchConfig> | null = null;
+
+/**
+ * 测试注入用的 mode 覆盖（默认 null）。仅供验收/测试显式调用，运行期不会自行置位；
+ * 置 'mocked' 后 performResearch 返回的 mode 才会是 mocked（例如请求拦截伪造应答的场景）。
+ */
+let injectedMode: ResearchMode | null = null;
+export function setResearchModeForTest(mode: 'mocked' | null): void {
+  injectedMode = mode;
+}
 
 function storage(): Storage | null {
   try { return typeof localStorage !== 'undefined' ? localStorage : null; } catch { return null; }
@@ -412,8 +431,10 @@ function outcome(
   bridge: 'online' | 'offline', status: ResearchStatus, cfg: ResearchConfig, q: string,
   error: string, findings: ResearchFinding[], fields: CardFields, merged: number,
 ): ResearchOutcome {
+  // offline 降级如实披露；其余真实请求（成功/失败/CORS）均为 real；mocked 只在测试注入出现
+  const mode: ResearchMode = injectedMode ?? (bridge === 'offline' ? 'offline' : 'real');
   return {
-    bridge, status, provider: cfg.provider, endpoint: cfg.endpoint || DEFAULT_ENDPOINTS[cfg.provider],
+    mode, bridge, status, provider: cfg.provider, endpoint: cfg.endpoint || DEFAULT_ENDPOINTS[cfg.provider],
     error, query: q, merged, resultCount: findings.length, findings,
     ...fields,
   };

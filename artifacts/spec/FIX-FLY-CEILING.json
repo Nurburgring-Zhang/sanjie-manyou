@@ -1,0 +1,78 @@
+{
+  "schema": "fix-record/v1",
+  "id": "FIX-FLY-CEILING",
+  "title": "镜头飞行高度范围放大一倍：解决「飞不到天宫」",
+  "raisedBy": "用户实测反馈 2026-11-09",
+  "userRequest": "目前镜头飞行到达不了天宫，飞行高度受限了。将镜头飞行高度范围调大一倍。",
+  "inSpec": false,
+  "note": "本条为用户反馈的功能缺陷修复，不对应 SPEC-三界漫游-R29-MASTER.md 的既有条目，故不计入 spec 完成度（不虚增）。",
+
+  "rootCause": {
+    "claim": "不是天宫太高，是相机 clamp 上限比天宫地面还低",
+    "detail": "src/core/engine.ts 的 fly 模式把相机 y 硬编码 clamp 到 4000；而天宫整层由 HEAVEN_LIFT=3870 抬升，基准面 HEAVEN_BASE_LIFTED = HEAVEN_BASE_Y(196) + 3870 = 4066。上限 4000 比天宫地面低 66m，摇杆推到底也差一截。",
+    "sourceOfTruth": "src/sky/heavenFrame.ts（HEAVEN_SCALE / HEAVEN_BASE_Y / HEAVEN_LIFT / HEAVEN_BASE_LIFTED）",
+    "gapMeters": 66,
+    "legacyCeiling": 4000,
+    "legacyFloor": -320,
+    "heavenBaseLifted": 4066
+  },
+
+  "change": {
+    "files": [
+      {
+        "path": "src/core/engine.ts",
+        "what": "新增导出常量 FLY_CEILING=8000 / FLY_FLOOR=-640（附根因注释），fly 模式 clamp 改用常量",
+        "why": "范围整体放大一倍：-320→-640、4000→8000；同时把「上限必须高于天宫基准面」这条不变式写成具名常量，避免下次再被一个裸数字埋掉"
+      },
+      {
+        "path": "src/main.ts",
+        "what": "调试句柄 __qingming.flyLimits() = { ceiling, floor, heavenBase }",
+        "why": "机检探针不抄裸数字，改为读运行期真值；heavenFrame 若再抬高而 ceiling 没跟上，探针立刻红"
+      },
+      {
+        "path": "src/game/player.ts",
+        "what": "坐骑飞行上限维持 900+HEAVEN_LIFT=4770，仅补注释说明与 FLY_CEILING 的关系",
+        "why": "用户诉求是镜头飞行；4770 已高于天宫 4066，骑坐骑能到天宫。擅自放大反而会让坐骑飞出空域，属未被要求的手感变更，故不改数值、只把关系写清楚"
+      },
+      {
+        "path": "scripts/probe-fly-ceiling.mjs",
+        "what": "新增真机机检门（7 项断言）",
+        "why": "「4000 < 4066」是算术不是证据；必须有运行期证明（能穿过旧墙 + 新上限夹住 + 下限夹住 + pageErrors=0）"
+      }
+    ],
+    "constants": { "ceiling": 8000, "floor": -640, "legacyCeiling": 4000, "doublingFactor": 2 }
+  },
+
+  "evidence": {
+    "mode": "real",
+    "probe": "artifacts/spec/fly-ceiling.json",
+    "screenshot": "artifacts/spec/fly-ceiling-heaven.png",
+    "readmeImage": "docs/heaven-reachable.jpg",
+    "checks": [
+      { "id": "A1-legacy-wall-removed", "result": "PASS", "detail": "ceiling=8000 > heavenBase=4066（旧值 4000 比天宫低 66m）" },
+      { "id": "A2-range-doubled", "result": "PASS", "detail": "8000 = 4000 × 2" },
+      { "id": "A3-ascent-crosses-heaven", "result": "PASS", "detail": "从 y=4000 按住升键 1809ms → y=4119.6，越过 heavenBase=4066（旧墙确实没了）" },
+      { "id": "B1-clamped-to-ceiling", "result": "PASS", "detail": "推到 1e6 → 夹到 8000" },
+      { "id": "C1-clamped-to-floor", "result": "PASS", "detail": "推到 -1e6 → 夹到 -640" },
+      { "id": "D1-heaven-view-frame", "result": "PASS", "detail": "天宫机位 y=4206，截图 507841B，画面为天宫宫殿群 + 云海" },
+      { "id": "E1-no-page-errors", "result": "PASS", "detail": "0 条 page error" }
+    ],
+    "visualRegression": {
+      "gate": "artifacts/spec/PERF-001-r2-screenshot-parity.json",
+      "minSsim": 0.9796,
+      "trianglesBefore": 70777271,
+      "trianglesAfter": 70777271,
+      "note": "06-street-house 未达 0.98，但同版本自比实测噪声底为 0.9790（抓图自带约 2% 抖动：人群走动 / 云海飘移 / HUD 实时数字 / 昼夜相位随到达时刻漂移）。0.9796 ≥ 噪声底 → 只能判「无可分辨差异」，不等于像素级不变。达标线未下调。"
+    }
+  },
+
+  "limits": {
+    "ceilingAboveHeavenPlatform": 3934,
+    "mountCeilingUnchanged": 4770,
+    "notClaimed": [
+      "未声称坐骑飞行上限已放大（仍是 4770，够到天宫但不跟镜头到 8000）",
+      "未声称 06-street-house 机位像素级不变（噪声底本身就低于 0.98）",
+      "未声称云海以上空域有内容（8000 是防飞出世界的天花板，不是新场景）"
+    ]
+  }
+}

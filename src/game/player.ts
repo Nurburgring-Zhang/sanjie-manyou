@@ -338,6 +338,11 @@ export class PlayerController {
         }
         // 上限 900 是「天宫在 200m」时代的天花板；整层抬到 2150 后必须放开到 900+HEAVEN_LIFT，
         // 否则骑飞行坐骑永远飞不到天宫（到 900 就被夹住）。
+        //
+        // 与镜头自由飞行上限（engine.ts 的 FLY_CEILING=8000）的关系，明确记一笔免得后人以为是漏改：
+        //   本值 900+HEAVEN_LIFT = 900+3870 = 4770，仍高于天宫基准面 HEAVEN_BASE_LIFTED=4066，
+        //   骑飞行坐骑能正常抵达天宫。用户 2026-11-09 的诉求是「镜头飞行高度范围调大一倍」，
+        //   只针对 fly 模式相机；坐骑手感不在该需求内，故不擅自放大（改大反而会让坐骑飞到空域外）。
         m.pos.y = THREE.MathUtils.clamp(m.pos.y, -60, 900 + HEAVEN_LIFT);
         m.yaw = this.camYaw + Math.PI;
         m.phase += dt * (6 + (run ? 5 : 0));

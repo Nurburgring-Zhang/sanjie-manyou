@@ -8,8 +8,15 @@ export interface BossSpec {
   name: string;
   /** 总血量 */
   maxHp: number;
-  /** 玩家一次命中的伤害（阶段 1/阶段 2） */
-  hitDamage: [number, number];
+  /** 玩家一次命中对 Boss 的伤害（阶段 1/阶段 2）。
+   *  旧字段语义反转（位于玩家攻击方法内，实为玩家→Boss），FIX-010 R1 更名钉死。 */
+  playerDamageToBoss: [number, number];
+  /** Boss→玩家伤害（阶段 1 / 阶段 2）——FIX-010 R1 新增，闭合单向输出 */
+  bossDamageToPlayer: [number, number];
+  /** Boss 攻击判定距离（米）——FIX-010 R1 新增 */
+  attackReach: number;
+  /** Boss 两次攻击间隔（毫秒）——FIX-010 R1 新增 */
+  attackCooldown: number;
   /** 阶段 2 触发阈值（血量比例） */
   phase2At: number;
   /** 玩家近身判定距离（m） */
@@ -36,7 +43,10 @@ export const JULING: BossSpec = {
   code: 'juling',
   name: '巨灵神',  // 与 DEITIES 表同名，才能拿到已有化身（省一个角色池名额）
   maxHp: 320,
-  hitDamage: [12, 12],
+  playerDamageToBoss: [12, 12],
+  bossDamageToPlayer: [12, 20],
+  attackReach: 3.2,
+  attackCooldown: 1800,
   phase2At: 0.5,
   meleeRange: 12,
   hitCooldown: 0.28,

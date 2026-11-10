@@ -1,6 +1,6 @@
 # 原子资产实现状态（由 scripts/annotate-atom-impl.mjs 生成）
 
-- 生成时间：2026-10-28T16:03:38
+- 生成依据（确定性摘要，非墙钟时间，INV-05）：deterministic:e4a0f716d7d5c64bbdd
 - 建筑 139：implemented 139，blocked 0
 - 物品 838：implemented 838，spec-only 0，data-only 0
 - 角色 243：procedural 243

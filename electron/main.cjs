@@ -41,7 +41,8 @@ function createWindow() {
     minHeight: 600,
     backgroundColor: '#05070d',
     autoHideMenuBar: true,
-    title: '赛博上河 · NEON BIANJING',
+    // FIX-007：规范串由 scripts/lib/identity.mjs 派生；scripts/check-naming.mjs 守卫一致性
+    title: '赛博上河 · CyberQingming-R29-1.2.0',
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,

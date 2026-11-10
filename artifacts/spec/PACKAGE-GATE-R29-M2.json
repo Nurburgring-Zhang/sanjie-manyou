@@ -1,0 +1,162 @@
+{
+  "release": "R29",
+  "milestone": "M2",
+  "generatedAt": "2026-11-09T21:13:48.774Z",
+  "candidate": "D:\\workbuddy\\CyberQingming-R29-Delivery.zip",
+  "candidateSha256": "1a2194b416df2b82e3f7dabb29ee084d6f2879395fca4b6ac3c007dd533cf9f0",
+  "candidateFileSha256": "df71a8fea4b9334655c64b0ddc98218ad5c5541f17f8c566182f75953d757aba",
+  "extractor": "python-zipfile(UTF-8 aware)",
+  "utf8NamesVerified": true,
+  "allGreen": true,
+  "counts": {
+    "stages": 13,
+    "pass": 9,
+    "fail": 0,
+    "deferred": 3,
+    "degradedOrSkipped": 1,
+    "extras": 4
+  },
+  "disclosure": {
+    "note": "DEFERRED / SKIPPED / DEGRADED 均与 PASS 分账，绝不混算为绿（FIX-003 R2 / QA-004）",
+    "deferred": [
+      "S08-deadmodules（属 M3，当前 M2 未到期，以 --report-only 如实列出）",
+      "S09-check-tests（属 M3，当前 M2 未到期，以 --report-only 如实列出）",
+      "S10-check-gates（属 M3，当前 M2 未到期，以 --report-only 如实列出）"
+    ],
+    "degraded": [
+      "S02-npm-ci: SKIPPED: --skip-npm-ci，复用开发树 node_modules（非完全干净，如实披露）"
+    ]
+  },
+  "stages": [
+    {
+      "id": "S01-prepare",
+      "label": "干净屋解压候选包",
+      "rc": 0,
+      "ms": 0,
+      "status": "PASS",
+      "output": "cleanhouse=C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\cq-gate-kLa9v9\\CyberQingming-R29-Delivery"
+    },
+    {
+      "id": "S02-npm-ci",
+      "label": "npm ci --no-audit --no-fund",
+      "rc": null,
+      "ms": 0,
+      "status": "DEGRADED",
+      "output": "SKIPPED: --skip-npm-ci，复用开发树 node_modules（非完全干净，如实披露）"
+    },
+    {
+      "id": "S03-tsc",
+      "label": "npx tsc --noEmit",
+      "rc": 0,
+      "ms": 3779,
+      "status": "PASS",
+      "output": ""
+    },
+    {
+      "id": "S04-vitest",
+      "label": "npx vitest run",
+      "rc": 0,
+      "ms": 2676,
+      "status": "PASS",
+      "output": " \u001b[32m✓\u001b[39m tests/roomLiving.test.ts \u001b[2m(\u001b[22m\u001b[2m8 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 295\u001b[2mms\u001b[22m\u001b[39m \u001b[32m✓\u001b[39m tests/palaceDetail.test.ts \u001b[2m(\u001b[22m\u001b[2m7 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 400\u001b[2mms\u001b[22m\u001b[39m \u001b[32m✓\u001b[39m tests/core.test.ts \u001b[2m(\u001b[22m\u001b[2m35 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 325\u001b[2mms\u001b[22m\u001b[39m \u001b[32m✓\u001b[39m tests/architectureAtoms.test.ts \u001b[2m(\u001b[22m\u001b[2m22 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 331\u001b[2mms\u001b[22m\u001b[39m \u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m30 passed\u001b[39m\u001b[22m\u001b[90m (30)\u001b[39m \u001b[2m Tests \u001b[22m \u001b[1m\u001b[32m318 passed\u001b[39m\u001b[22m\u001b[90m (318)\u001b[39m \u001b[2m Start at \u001b[22m 05:13:28 \u001b[2m Duration \u001b[22m 2.04s\u001b[2m (transform 5.31s, setup 0ms, collect 16.53s, tests 3.28s, environment 4ms, prepare 3.82s)\u001b[22m m > \u001b[22m\u001b[2mFIX-004 · solids cap 触顶遥测\u001b[2m > \u001b[22m\u001b[2m直方图区分触顶与 WALL_RESERVE 让路；reset 后零残留 \u001b[22m\u001b[39m[solids] MAX_TOTAL 触顶，后续构件无碰撞体，capDropped 计数中（maxTotal=10，首次触顶阶段=阶段B） \u001b[90mstderr\u001b[2m | tests/solidsCap.test.ts\u001b[2m > \u001b[22m\u001b[2mFIX-004 · solids cap 触顶遥测\u001b[2m > \u001b[22m\u001b[2m未接线时 currentStage 显式 (unset)，降级归因用 BGroup 而非伪造阶"
+    },
+    {
+      "id": "S05-build-compare",
+      "label": "vite build → 与包内 dist 逐文件 sha 比对",
+      "rc": 0,
+      "ms": 3268,
+      "status": "PASS",
+      "output": "{\"ok\":true,\"files\":3,\"missing\":[],\"extra\":[],\"changed\":[]} | \u001b[36mvite v7.3.6 \u001b[32mbuilding client environment for production...\u001b[36m\u001b[39m transforming... \u001b[32m✓\u001b[39m 134 modules transformed. rendering chunks... computing gzip size... \u001b[2m.gate-dist/\u001b[22m\u001b[32mindex.html \u001b[39m\u001b[1m\u001b[2m 1.51 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 0.87 kB\u001b[22m \u001b[2m.gate-dist/\u001b[22m\u001b[35massets/index-zJ-JsaHs.css \u001b[39m\u001b[1m\u001b[2m 16.57 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip: 4.22 kB\u001b[22m \u001b[2m.gate-dist/\u001b[22m\u001b[36massets/index-XVLA1QEp.js \u001b[39m\u001b[1m\u001b[33m2,938.43 kB\u001b[39m\u001b[22m\u001b[2m │ gzip: 996.03 kB\u001b[22m \u001b[32m✓ built in 2.79s\u001b[39m \u001b[33m (!) Some chunks are larger than 1600 kB after minification. Consider: - Using dynamic import() to code-split the application - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m "
+    },
+    {
+      "id": "S06-atoms-rebuild",
+      "label": "npm run atoms:rebuild → 台账字节比对",
+      "rc": 0,
+      "ms": 808,
+      "status": "PASS",
+      "output": "shipped=2 regenerated-diff=0  |  \"creatures\": 37, \"outputs\": [ \"src\\\\data\\\\worldAtomCatalog.generated.ts\", \"artifacts\\\\world-atoms.json\", \"artifacts\\\\world-atoms.md\" ] } { \"generatedBy\": \"build-scene-attribution.mjs@1.0.0\", \"generatedFromCommitOrSha\": \"725dba99fcef75c2403515aefe228fd62861417cf2ed6da8c50753006eebf00e\", \"attributions\": 838, \"placed\": 480, \"dataOnly\": 358, \"catalogOnly\": 838 } { \"generatedAt\": \"deterministic:e4a0f716d7d5c64bbdd\", \"counts\": { \"buildings\": 139, \"items\": 838, \"characters\": 243, \"plants\": 32, \"creatures\": 37 }, \"status\": { \"implemented\": 1005, \"procedural\": 280, \"spec-only\": 0, \"data-only\": 0, \"blocked\": 0, \"not-asset\": 4 }, \"blocked\": 0 } "
+    },
+    {
+      "id": "S07-doc-refs",
+      "label": "node scripts/check-doc-refs.mjs",
+      "rc": 0,
+      "ms": 472,
+      "status": "PASS",
+      "output": "check-doc-refs: 82 files | 97 refs | 21 [外部] | 0 dangling 0 dangling refs "
+    },
+    {
+      "id": "S08-deadmodules",
+      "label": "node scripts/check-deadmodules.mjs",
+      "rc": 0,
+      "ms": 380,
+      "status": "DEFERRED",
+      "output": "orphan modules: 5 (src 124 files, live 119) - src/core/culling.worker.ts 零入度：未被任何运行时根引用 - src/data/worldAtomCatalog.generated.ts 零入度：未被任何运行时根引用 - src/rt/ground.ts 零入度：未被任何运行时根引用 - src/rt/loop.ts 零入度：未被任何运行时根引用 - src/rt/runtimeAssets.ts 零入度：未被任何运行时根引用 REPORT-ONLY: 孤儿已如实列出，未阻断（里程碑未到期） "
+    },
+    {
+      "id": "S09-check-tests",
+      "label": "node scripts/check-tests.mjs",
+      "rc": 0,
+      "ms": 10366,
+      "status": "DEFERRED",
+      "output": "tests: 30 files | zero-assert 0 | test-only imports 4 | weak-assert 0 [R2] tests/atomicCatalog.test.ts -> src/data/worldAtomCatalog.generated.ts（仅测试导入） [R2] tests/ground.test.ts -> src/rt/ground.ts（仅测试导入） [R2] tests/p05-p06.test.ts -> src/rt/loop.ts（仅测试导入） [R2] tests/runtimeAssets.test.ts -> src/rt/runtimeAssets.ts（仅测试导入） REPORT-ONLY [R2]: 接线交叉审计未通过（FIX-005 属 M3，未到期，如实列出不阻断） check-tests: OK "
+    },
+    {
+      "id": "S10-check-gates",
+      "label": "node scripts/check-gates.mjs",
+      "rc": 0,
+      "ms": 1407,
+      "status": "DEFERRED",
+      "output": "check-gates: 158 acceptance/probe scripts | static 2 | selfTestFail 0 | noSelfTest 143 [static] scripts/probe-perf-ab.mjs 空 catch 吞异常 ×1 [static] scripts/probe-save-corrupt.mjs 空 catch 吞异常 ×1 [coverage] 143 个脚本尚未实现 --self-test（QA-003 R2，M3 到期） REPORT-ONLY: 静态/自检发现已如实列出，未阻断（M1 阶段） check-gates: OK "
+    },
+    {
+      "id": "S11-gen-docs",
+      "label": "node scripts/gen-docs.mjs --check",
+      "rc": 0,
+      "ms": 61,
+      "status": "PASS",
+      "output": "gen-docs: 6 docs | 35 placeholders docs in sync "
+    },
+    {
+      "id": "S12-disclosure",
+      "label": "node scripts/qa/check-disclosure.mjs",
+      "rc": 0,
+      "ms": 75,
+      "status": "PASS",
+      "output": "check-disclosure: 17 json | 3 docs | 0 violations INCLUDE 子集：artifacts/spec/*.json + 4 条显式登记；排除制度文档 2 份（逐条理由见脚本顶部） check-disclosure: OK — 0 disclosure violations "
+    },
+    {
+      "id": "S13-sha-ledger",
+      "label": "SHA 台账重算双向对账",
+      "rc": 0,
+      "ms": 408,
+      "status": "PASS",
+      "output": "{\"ok\":true,\"ledger\":\"DELIVERY-R29-SHA256.txt\",\"total\":661,\"missing\":[],\"mismatch\":[],\"extra\":[]} | {\"ok\":true,\"ledger\":\"DELIVERY-R29-SHA256.txt\",\"total\":661,\"missing\":[],\"mismatch\":[],\"extra\":[]}"
+    }
+  ],
+  "additionalChecks": [
+    {
+      "id": "X01-naming",
+      "status": "PASS",
+      "rc": 0,
+      "output": "身份: productName=赛博上河 CyberQingming | release=R29 | version=1.2.0 期望串: CyberQingming-R29-1.2.0 期望 exe: CyberQingming-R29-1.2.0-x64.exe [OK] ① README*.md 标题 [OK] ② electron/main.cjs 窗口标题 [OK] ③ 根目录 *.bat 内可执行名 [OK] ④ serve-dist.cjs 日志前缀 [OK] "
+    },
+    {
+      "id": "X02-manifest",
+      "status": "PASS",
+      "rc": 0,
+      "output": "check-manifest: consumers=30 entries=48 未登记=0 违规=0 check-manifest: PASS 0 未登记 / 0 违规 "
+    },
+    {
+      "id": "X03-numbers",
+      "status": "PASS",
+      "rc": 0,
+      "output": "check-numbers/HW: 7 项阈值 | 运行期已比对 | 0 findings [未纳管] docs/交付报告.md：无 {{json:...}} 占位符，跳过裸数字硬校验（接入 FIX-002 后自动纳管） [未纳管] docs/DISCLOSURE.md：无 {{json:...}} 占位符，跳过裸数字硬校验（接入 FIX-002 后自动纳管） check-numbers: 6 docs | 4 managed | 236 tokens | 160 white"
+    },
+    {
+      "id": "X04-disclosure-selftest",
+      "status": "PASS",
+      "rc": 1,
+      "output": "check-disclosure --self-test: 注入 { \"realX\": true }（无 mode） check-disclosure --self-test: 命中 1 条违规 <self-test 负例> :: 声称字段 [realX] 缺同级 mode（∈ real|mocked|offline|degraded） SELF_TEST=DETECTED：负例被拦下（rc=1 expected） "
+    }
+  ]
+}

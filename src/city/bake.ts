@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { registerSolid } from '../rt/solids';
 import { tagStaticChunk } from '../core/layers';
 import { PERF_CHUNK } from '../core/perfBudget';
+// PERF-001 R2：flush() 的让帧阈值与 builder 循环共用同一个 8ms 常量，杜绝三套口径漂移。
+import { BAKE_FRAME_BUDGET_MS, getBakeBudget } from '../core/bakeBudget';
 
 /**
  * 估算一个包围球覆盖了多少个空间区块（PERF_CHUNK 见 core/perfBudget.ts）。
@@ -647,6 +649,26 @@ export interface BakerStats {
   detailBounds: Record<string, { minY: number; maxY: number }>;
 }
 
+/**
+ * PERF-001 R1：逐 bake 任务的几何归因（不是堆采样的近似分桶）。
+ *
+ * world.ts 在跑每个 task 之前调 `setBakeStage(name, realm)`，随后那一次 `flush()`
+ * 把「本次真正落盘的顶点/三角/属性字节」记到该 stage 名下。bytes 按实际
+ * BufferAttribute 的数组类型精确计算（position float32=4B、normal int16=2B、
+ * color uint16=2B、uv float32=2B×4B），不是估算，也不含 Baker 内部已 reset 的
+ * 临时缓冲。这样 R2–R6 改任何一步都能用同一口径做前后对比（INV-01）。
+ */
+export type BakeRealm = 'human' | 'heaven' | 'underworld' | 'shared';
+
+export interface BakeStageStats {
+  stage: string;
+  realm: BakeRealm;
+  vertices: number;
+  triangles: number;
+  bytes: number;
+  groups: Record<string, { vertices: number; triangles: number; bytes: number }>;
+}
+
 // 调试开关：?traceGlow=1 时记录每个 glow 盒体的世界坐标与调用栈，
 // 用于把"某处发光伪影"定位到具体绘制语句（正式构建无额外开销）
 const TRACE_GLOW = typeof window !== 'undefined' && /traceGlow=1/.test(window.location.search);
@@ -655,6 +677,39 @@ const glowTrace: GlowTrace[] = [];
 if (TRACE_GLOW) (window as unknown as { __glowTrace: GlowTrace[] }).__glowTrace = glowTrace;
 
 const UV_GROUPS = new Set<BGroup>(['wood', 'wall', 'ash', 'earth', 'roof', 'ground', 'ceramic', 'metal', 'fabric', 'lacquer']);
+
+// ============ PERF-001 R6：低内存模式的装饰几何降档 ============
+/**
+ * 只对 leaf / trunk / glow 三组生效（r27-tris-baseline 实测 leaf 独占 114,316,389 顶点，
+ * 占全量 212,331,813 的 54%，是名副其实的第一大户）。保留 1/3，按「量化坐标哈希」
+ * 决定去留，因此同 seed 同参数每次构建的几何逐值一致（INV-01），不会出现随机漂移。
+ *
+ * 结构件（wall/roof/ground/wood/…）一律不动：降档只允许削装饰，不允许削碰撞体、
+ * 建筑主体或地面，否则会破坏 r27 的碰撞/三角数冻结口径。
+ */
+let bakeLowMode = false;
+let lowDecorDropped = 0;
+
+export function setBakeLowMode(on: boolean): void {
+  bakeLowMode = on === true;
+  lowDecorDropped = 0;
+}
+export function isBakeLowMode(): boolean { return bakeLowMode; }
+export function lowDecorStats(): { enabled: boolean; dropped: number } {
+  return { enabled: bakeLowMode, dropped: lowDecorDropped };
+}
+
+function skipLowDecor(g: BGroup, x: number, y: number, z: number): boolean {
+  if (!bakeLowMode) return false;
+  if (g !== 'leaf' && g !== 'trunk' && g !== 'glow') return false;
+  // 量化到 1/4 米再做整数混合哈希；同坐标恒得同一结论。
+  const a = Math.imul(Math.round(x * 4) | 0, 73856093);
+  const b = Math.imul(Math.round(y * 4) | 0, 19349663);
+  const c = Math.imul(Math.round(z * 4) | 0, 83492791);
+  const keep = ((a ^ b ^ c) >>> 0) % 3 === 0;
+  if (!keep) lowDecorDropped++;
+  return !keep;
+}
 
 // ============ 屋面审计（?roofAudit=1）============
 /**
@@ -775,6 +830,41 @@ export class Baker {
   };
   private dupSeen: Map<number, number> | null = null;
 
+  // PERF-001 R1：当前 bake 阶段 / 界域标签与逐阶段几何台账。
+  // 只记「flush 真正落盘」的量，不记被丢弃/被拒收的构件，故求和恒等于 stats().groups 的总和。
+  private stageTag = '(unset)';
+  private stageRealm: BakeRealm = 'shared';
+  private stageRows = new Map<string, BakeStageStats>();
+
+  /** 由 world.ts 的任务循环在每个 task 执行前调用；flush() 据此归账。 */
+  setBakeStage(stage: string, realm: BakeRealm = 'shared'): void {
+    this.stageTag = stage;
+    this.stageRealm = realm;
+  }
+
+  /** 逐任务几何台账（插入序 = 任务执行序），供探针与 PERF-001 对比数据读取。 */
+  stageStats(): BakeStageStats[] {
+    return [...this.stageRows.values()].map((r) => ({
+      ...r,
+      groups: Object.fromEntries(Object.entries(r.groups).map(([k, v]) => [k, { ...v }])),
+    }));
+  }
+
+  private recordStage(g: BGroup, vertices: number, triangles: number, bytes: number): void {
+    let row = this.stageRows.get(this.stageTag);
+    if (!row) {
+      row = { stage: this.stageTag, realm: this.stageRealm, vertices: 0, triangles: 0, bytes: 0, groups: {} };
+      this.stageRows.set(this.stageTag, row);
+    }
+    row.vertices += vertices;
+    row.triangles += triangles;
+    row.bytes += bytes;
+    const cell = row.groups[g] ?? (row.groups[g] = { vertices: 0, triangles: 0, bytes: 0 });
+    cell.vertices += vertices;
+    cell.triangles += triangles;
+    cell.bytes += bytes;
+  }
+
   /** 屋面审计的当前构件标签 / 是否按单位包络算越界（?roofAudit=1 时才有意义） */
   private roofKind = 'push';
   private roofAuditEnv = true;
@@ -834,7 +924,12 @@ export class Baker {
     };
   }
 
-  private push(g: BGroup, geo: THREE.BufferGeometry, x: number, y: number, z: number, hex: number, ry: number, rx: number, rz: number, sx = 1, sy = 1, sz = 1, uvDims?: [number, number, number]): void {
+  private push(g: BGroup, geo: THREE.BufferGeometry, x: number, y: number, z: number, hex: number, ry: number, rx: number, rz: number, sx = 1, sy = 1, sz = 1, uvDims?: [number, number, number], ownedGeo = true): void {
+    // PERF-001 R6：低配只削装饰几何；ownedGeo=false 表示这是调用方缓存复用的几何，不能 dispose。
+    if (skipLowDecor(g, x, y, z)) {
+      if (ownedGeo) geo.dispose();
+      return;
+    }
     const needsUv = UV_GROUPS.has(g);
     if (uvDims && needsUv) scaleGeoUV(geo, 0.24, uvDims);
     const src = geo.index ? geo.toNonIndexed() : geo;
@@ -979,7 +1074,8 @@ export class Baker {
    * 几何自带 position/normal/color/uv，就地按位姿落进材质组；调用方负责 UV 已按世界尺寸展开。
    */
   addGeo(g: BGroup, geo: THREE.BufferGeometry, x: number, y: number, z: number, hex: number, ry = 0, rx = 0, rz = 0, sx = 1, sy = 1, sz = 1): void {
-    this.push(g, geo, x, y, z, hex, ry, rx, rz, sx, sy, sz);
+    // freeBlob.ts 传入的是 CACHE 里复用的几何，低配跳过时绝不能 dispose（ownedGeo=false）。
+    this.push(g, geo, x, y, z, hex, ry, rx, rz, sx, sy, sz, undefined, false);
   }
 
   box(g: BGroup, w: number, h: number, d: number, x: number, y: number, z: number, hex: number, ry = 0, rx = 0, rz = 0): void {
@@ -1065,6 +1161,8 @@ export class Baker {
    *   BoxGeometry 的 (a,b,d)(b,c,d) 索引 → 每面 4 角按 [0,2,1,2,3,1] 展开
    */
   private boxFast(g: BGroup, w: number, h: number, d: number, x: number, y: number, z: number, hex: number, ry: number, rx: number, rz: number): void {
+    // PERF-001 R6：低配削装饰盒体，与 push() 同一份确定性哈希，两条路径不漂移。
+    if (skipLowDecor(g, x, y, z)) return;
     if (NO_RIB && g === 'roof' && rx !== 0 && Math.abs(h - 0.055) < 1e-6) return;
     // 「粗垄」下压：roofOn 每根垄是一跨 t=0.18→0.97 的**直箱**（0.055 厚、带俯仰角），
     // 而屋面剖面 roofProfile=(1−t)^1.35 是上凸的：弦恒在曲面之上，中段实测浮空约 0.1H（21m 屋面约 0.7m）。
@@ -1393,11 +1491,18 @@ export class Baker {
     for (const g of Object.keys(this.buf) as BGroup[]) {
       const b = this.buf[g];
       if (b.p.n === 0) continue;
-      if (pending >= 8) {
+      if (pending >= BAKE_FRAME_BUDGET_MS) {
         await new Promise<void>((r) => { if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => r()); else setTimeout(r, 0); });
+        // PERF-001 R2：flush 自带 pending 计时，让帧后把这一片并入统一遥测，
+        // buildings / imperial / flush 三处让帧点才能共用同一份切片台账复核。
+        getBakeBudget().noteExternalSlice(pending);
         pending = 0;
       }
       const _w0 = performance.now();
+      // PERF-001 R1：在 take()/reset() 清空缓冲之前记下本次落盘的精确字节数与顶点数。
+      // 数组类型见 FBuf/QBuf：position Float32(4B)、normal Int16(2B)、color Uint16(2B)、uv Float32(4B)。
+      const pN = b.p.n, nN = b.n.n, cN = b.c.n, uvN = b.uv ? b.uv.n : 0;
+      this.recordStage(g, pN / 3, pN / 9, pN * 4 + nN * 2 + cN * 2 + uvN * 4);
       const geo = new THREE.BufferGeometry();
       geo.setAttribute('position', new THREE.Float32BufferAttribute(b.p.take(), 3));
       // 法线/顶点色是量化属性：normalized SHORT / UNSIGNED_SHORT，GPU 端解码回 float 后

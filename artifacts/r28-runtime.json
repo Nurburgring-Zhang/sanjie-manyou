@@ -1,6 +1,8 @@
 {
   "at": "2026-11-08T19:27:59.401Z",
   "url": "http://127.0.0.1:4186/",
+  "mode": "mocked",
+  "researchDisclosure": "puppeteer 请求拦截伪造 brave 应答；验证 fetch/CSP/解析管线，不验证外网可达",
   "pageErrors": [],
   "shots": [
     "artifacts/r28-01-wish-generated.png",
@@ -857,7 +859,11 @@
     "wishesHonestOffline": true,
     "pluralArmy": true,
     "reuseFastPath": true,
-    "realOnlineResearch": true,
+    "researchPipeline": {
+      "mode": "mocked",
+      "gate": "PASS",
+      "note": "puppeteer 请求拦截伪造 brave 应答；验证 fetch/CSP/解析管线，不验证外网可达"
+    },
     "perfBudgetExposed": true,
     "nearQualityProtected": true,
     "chunkCullingActive": true,

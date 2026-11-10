@@ -1,0 +1,327 @@
+{
+  "schema": "perf-001-r1-baseline/v2",
+  "mode": "real",
+  "evidence": "artifacts/boot-memory-profile.json",
+  "timelineEvidence": "artifacts/spec/PERF-001-boot-timeline.json",
+  "stageEvidence": "artifacts/spec/PERF-001-stage-attribution.json",
+  "stageEvidenceLow": "artifacts/spec/PERF-001-stage-attribution-lowmem.json",
+  "hwEvidence": "artifacts/boot-hw.json",
+  "release": "R29 M2",
+  "probe": "scripts/probe-boot-memory.mjs",
+  "referenceMachineNote": "本次实测为本机 headless Chromium + SwiftShader 软渲染，未加 --max-old-space-size / cgroup 限制；与 spec 审计参考机（4C/8G cgroup，113s OOM）不是同一内存上限环境，故 booted=true 不代表 8GB 参考机可用。",
+  "baseline": {
+    "booted": true,
+    "bootSeconds": 102.65,
+    "heapPeakMB": 6718.1,
+    "settledMB": 5793.7,
+    "maxStallSeconds": 30.27,
+    "pageErrors": 0,
+    "sampleCount": 77,
+    "stageCount": 24,
+    "gate": "FAIL(heap-peak-over-budget)",
+    "note": "R1 首次真机采样，保留为历史基线，不被后续运行覆盖"
+  },
+  "limits": {
+    "heapPeakMB": 1536,
+    "bootSeconds": 120,
+    "settledMB": 600,
+    "maxProgressStallSeconds": 4
+  },
+  "gapToTarget": {
+    "heapPeakRatio": 4.37,
+    "settledRatio": 9.66,
+    "stallRatio": 7.57,
+    "bootSecondsWithinLimit": true
+  },
+  "top3StageAttribution": [
+    {
+      "stage": "山河·地形",
+      "deltaMB": 1159.3,
+      "durationMs": 15054,
+      "samples": 38
+    },
+    {
+      "stage": "flush@山河·地形",
+      "deltaMB": 539.7,
+      "durationMs": 745,
+      "samples": 2
+    },
+    {
+      "stage": "flush@皇城·街巷铺装",
+      "deltaMB": 251.5,
+      "durationMs": 2692,
+      "samples": 4,
+      "note": "进入本阶段时堆已达 6466.6MB，峰值 6718.1MB"
+    }
+  ],
+  "quantifiedRootCause": {
+    "totalVertices": 212331813,
+    "totalTriangles": 70777271,
+    "attributeBytes": 5756462856,
+    "groups": 14,
+    "source": "Baker.stageStats() 逐 flush 精确记账（position 4B/float、normal 2B、color 2B、uv 4B）；与 artifacts/r27-tris-baseline.json 的 212331813 顶点 / 70777271 三角完全一致",
+    "crossCheck": "属性字节合计 5,756,462,856 B ≈ 5.36 GiB，与强制 GC 后常驻堆 5792.4MB 同量级 —— 逐任务台账与 heap 实测互相印证，不是估算。",
+    "oldEstimateErratum": "v1 用「每顶点 ~35B」估出 7.1GB；精确记账为每顶点平均 27.1B（部分组无 uv），5.76GB。结论方向不变：主因是静态几何顶点缓冲，不是 399k SolidBox。",
+    "topTask": {
+      "stage": "皇城·街巷铺装",
+      "realm": "human",
+      "vertices": 122940042,
+      "bytes": 3239201424,
+      "shareOfAllVertices": 0.579,
+      "shareOfAllBytes": 0.563
+    },
+    "topGroup": {
+      "group": "leaf",
+      "vertices": 114316389,
+      "shareOfAllVertices": 0.538,
+      "source": "artifacts/r27-tris-baseline.json"
+    }
+  },
+  "perRealmAttribution": {
+    "source": "artifacts/spec/PERF-001-stage-attribution.json (标准档 perfMode=normal)",
+    "human": {
+      "tasks": 12,
+      "vertices": 185445675,
+      "triangles": 61815225,
+      "bytes": 4996377384,
+      "shareOfVertices": 0.8734
+    },
+    "heaven": {
+      "tasks": 6,
+      "vertices": 12812664,
+      "triangles": 4270888,
+      "bytes": 397986000,
+      "shareOfVertices": 0.0603
+    },
+    "underworld": {
+      "tasks": 7,
+      "vertices": 3276858,
+      "triangles": 1092286,
+      "bytes": 102694512,
+      "shareOfVertices": 0.0154
+    },
+    "shared": {
+      "tasks": 2,
+      "vertices": 10796616,
+      "triangles": 3598872,
+      "bytes": 259404960,
+      "shareOfVertices": 0.0508
+    }
+  },
+  "specBackgroundErratum": {
+    "id": "E-R3",
+    "specClaim": "PERF-001 背景称「三界几何全量一次性烘焙」，并把 R3 两界懒烘焙写成 R2-R5 的主收益路径；本文件 v1 的 implication 也照抄了这个判断。",
+    "measured": "天宫 + 地府合计仅 16,089,522 顶点 = 7.58% 的几何量、500,680,512 B = 8.70% 的属性字节；人间独占 87.34%。",
+    "conclusion": "**R3 不是主收益路径**。即使两界几何 100% 延迟到传送时烘焙，启动期常驻最多降 ~0.47GiB，仍远高于 600MB 目标。该判断必须改：优先治理人间 `皇城·街巷铺装` 与 `leaf` 组（合计 >50% 几何量）。",
+    "impact": "PERF-001 R3 的优先级下调；PERF-003 的 DEFERRED 决策不受影响（其前置是 R4 SoA 化与查询 P99，仍未满足）。"
+  },
+  "feasibilityGap": {
+    "targetSettledMB": 600,
+    "measuredAttributeGB": 5.36,
+    "requiredReductionFactor": 9.65,
+    "finding": "在不改画面内容的前提下，把 5.36GiB 静态几何压到 600MB 需要约 9.65× 缩减。R2 时间切片只削峰、R4/R5 SoA 只省对象头、R3 懒两界最多省 8.7%，三者叠加远不够。",
+    "candidateLevers": [
+      "① 已落地：低配装饰降档（leaf/trunk/glow 保留 1/3）—— 属已披露降级，不是标准档达标",
+      "② 需要架构改造：leaf 球体改 indexed geometry / InstancedMesh，消除重复顶点（画面可保持等价）",
+      "③ 需要风险论证：GPU 上传后释放 CPU 侧 attribute 数组 —— 会破坏 raycast 与 WebGL 上下文恢复，须先证明可安全绕过",
+      "④ 或由 spec 维护方按实测修订 600MB / 1536MB 目标（当前目标与 212M 顶点的内容规模不相容）"
+    ],
+    "decision": "不在无数据支撑下选任一路径；本文件只登记量化缺口与候选，等待 spec 裁决。"
+  },
+  "comparison": {
+    "status": "measured",
+    "method": "同机同预览包，标准档（默认）与 --lowmem-sim（注入 navigator.deviceMemory=2）各 1 次真机；**单次 A/B，不是受控多次中位数**，运行间波动见下方 caveat。",
+    "changeUnderTest": "PERF-001 R6 低内存模式 + QA-008 启动自检 + Baker 逐任务几何归因（标准档几何逐值不变：212331813 顶点与 r27-tris-baseline 一致）",
+    "standard": {
+      "perfMode": "normal",
+      "bootSeconds": 73.55,
+      "heapPeakMB": 7146.1,
+      "settledMB": 5792.4,
+      "maxStallSeconds": 21.45,
+      "pageErrors": 0,
+      "sampleCount": 121,
+      "bakeStages": 27,
+      "vertices": 212331813,
+      "triangles": 70777271,
+      "attributeBytes": 5756462856,
+      "gate": "FAIL(heap-peak-over-budget)"
+    },
+    "low": {
+      "perfMode": "low",
+      "bootSeconds": 60.37,
+      "heapPeakMB": 6388.1,
+      "settledMB": 3811.4,
+      "maxStallSeconds": 18,
+      "pageErrors": 0,
+      "bakeStages": 27,
+      "vertices": 126066498,
+      "triangles": 42022166,
+      "attributeBytes": 3686095296,
+      "qa008": "PASS（提示卡出现 + 自动低配 + bootPhase=ready）",
+      "gate": "FAIL(heap-peak-over-budget)"
+    },
+    "delta": {
+      "vertices": -86265315,
+      "verticesPct": -40.63,
+      "attributeBytes": -2070367560,
+      "attributeBytesPct": -35.97,
+      "settledMB": -1981,
+      "settledPct": -34.2,
+      "heapPeakMB": -758,
+      "heapPeakPct": -10.61,
+      "bootSeconds": -13.18,
+      "bootSecondsPct": -17.92,
+      "maxStallSeconds": -3.45,
+      "maxStallPct": -16.08
+    },
+    "honestCaveat": "低配档是**已披露的画面降级**（装饰几何抽稀），不是性能优化达标证明；两次运行均 heap 超预算、gate=FAIL。标准档几何量与历史基线逐值相等，说明新增遥测与降档开关对标准档零影响。",
+    "evidence": [
+      "artifacts/spec/PERF-001-stage-attribution.json",
+      "artifacts/spec/PERF-001-stage-attribution-lowmem.json",
+      "artifacts/spec/PERF-001-boot-profile-lowmem.json",
+      "artifacts/spec/PERF-001-lowmem-sim-run.json"
+    ],
+    "r2": {
+      "before": {
+        "bootSeconds": 73.55,
+        "heapPeakMB": 7146.1,
+        "settledMB": 5792.4,
+        "maxStallSeconds": 21.45
+      },
+      "after": {
+        "bootSeconds": 61.51,
+        "heapPeakMB": 6721.3,
+        "settledMB": 5791.9,
+        "maxStallSeconds": 20.82,
+        "pageErrors": 0
+      },
+      "gate": "PARTIAL",
+      "honestCaveat": "单次 A/B，非受控中位数；heap 与停滞门均 FAIL，仅记录真实变化，不计入达标。"
+    }
+  },
+  "progress": {
+    "R1": "DONE（本轮扩展）—— 探针、真机采样、堆阶段归因、**逐任务/逐界域精确几何台账**、两档 A/B 对比全部完成",
+    "R2": "PARTIAL（本轮落地并真机验证）—— 8ms 时间预算切片 + 任务内真实进度上报 + 截图 SSIM 门全部实现；但 maxProgressStall 仍 FAIL，根因已用运行期计时精确定位，见 r2Findings",
+    "R3": "DEPRIORITIZED（有数据依据）—— 实测两界仅占 7.58% 几何量，不是主收益路径；优先级下调，理由见 specBackgroundErratum",
+    "R4": "TODO — SolidBox SoA 化（FEAT-004 域分片 / PERF-003 扩容前置）",
+    "R5": "TODO — crowd CPU 态 SoA 核查",
+    "R6": "DONE — 低内存模式：人群收窄、装饰几何确定性降档、阴影/泛光/像素比覆盖、提示卡与 HUD 逐条披露、QA-008 真机断言通过",
+    "R7": "DONE — README 硬件要求节 + docs/HW-REQUIREMENTS.md 阈值同源机检",
+    "R8": "DONE(部分) — artifacts/memory-budget.json 已建；逐大户隔离实测由本次逐任务台账补齐（bytes 精确到组）"
+  },
+  "invariant": "禁止无归因数据的优化：任何 R2-R5 改动后必须重跑本探针并把增量写入 comparison。v1 的 comparison=null 只表示当时未实施任何优化；v2 已填入真实 A/B，未达标项仍如实 FAIL，绝不混算为绿。",
+  "r2Implementation": {
+    "schema": "perf-001-r2-implementation/v1",
+    "budgetModule": "src/core/bakeBudget.ts（BAKE_FRAME_BUDGET_MS=8、SliceBudget、reportFraction 节流、统一遥测）",
+    "rewiredYieldPoints": [
+      "src/city/buildings.ts：每 30 条街屋让一帧 → tick() 8ms 预算",
+      "src/city/imperial.ts：每 3 坊让一帧 → tick() 8ms 预算",
+      "src/city/bake.ts flush()：硬编码 8 → 共用 BAKE_FRAME_BUDGET_MS + noteExternalSlice 并入遥测",
+      "src/world/terrain.ts：每 5000 顶点 rAF → 每 64 顶点 tick() + i/pos.count 真实进度",
+      "src/world.ts：皇城·街巷铺装 5 个 builder 分步让帧；收尾 0-90%/90-100% 分段上报"
+    ],
+    "progressBarFix": "src/main.ts 进度条 toFixed(0) → toFixed(1)（如实显示细粒度真实进度，不伪造数值）",
+    "hotPathOptimization": "src/sky/expansion.ts scaleHeavenGeometry 逐顶点 getY/setXYZ → 直接 Float32Array 读写；运算式与写入精度不变，SSIM 门复核",
+    "newGate": "scripts/probe-screenshot-parity.mjs（零新依赖 PNG 解码 + 8x8 块 SSIM + 8 例负例自证，补齐 spec 引用但工程缺失的验收命令）",
+    "unitTests": "tests/bakeBudget.test.ts 11 例；全套 30 files / 318 tests",
+    "determinism": "所有 await 都插在原让帧点或任务边界，不重排 builder、不改共享 rng 消耗序；Baker 逐任务几何台账与 tris 基线逐值不变"
+  },
+  "r2Findings": {
+    "schema": "perf-001-r2-findings/v1",
+    "gate": "PARTIAL",
+    "measuredRuns": [
+      {
+        "stage": "R2 前（M2 续波标准档）",
+        "bootSeconds": 73.55,
+        "heapPeakMB": 7146.1,
+        "settledMB": 5792.4,
+        "maxStallSeconds": 21.45
+      },
+      {
+        "stage": "仅三处让帧点改时间预算",
+        "bootSeconds": 67.3,
+        "heapPeakMB": 7123.9,
+        "settledMB": 5791.6,
+        "maxStallSeconds": 19.85
+      },
+      {
+        "stage": "+地形循环接入切片与真实进度",
+        "bootSeconds": 60.59,
+        "heapPeakMB": 6723.3,
+        "settledMB": 5792.2,
+        "maxStallSeconds": 19.65
+      },
+      {
+        "stage": "+收尾分段与铺装分步",
+        "bootSeconds": 56.56,
+        "heapPeakMB": 7126.7,
+        "settledMB": 5801.9,
+        "maxStallSeconds": 19.13
+      },
+      {
+        "stage": "+顶点直写与运行期计时（最终）",
+        "bootSeconds": 61.51,
+        "heapPeakMB": 6721.3,
+        "settledMB": 5791.9,
+        "maxStallSeconds": 20.82
+      }
+    ],
+    "decisiveNegativeFinding": {
+      "claim": "8ms 时间切片能把 maxProgressStall 从 21.45s 压到 4s 门以内",
+      "measured": "21.45 → 19.85 → 19.65 → 19.13 → 20.82s，五次真机均远超 4s，未达标",
+      "closingTimingsMs": {
+        "compactStatic": 295,
+        "buildCloudSeaView": 0,
+        "liftHeavenResiduals": 0,
+        "applyDensity": 0,
+        "cinema+applyQuality": 0
+      },
+      "rootCause": "收尾全部 JS 函数合计 ≤295ms；采样器连续约 19.1s 完全无法运行，说明 19~20s 的单个同步块不在 world.ts 收尾、也不在任何 JS 烘焙函数内，而在 engine.start() 之后的首帧 WebGL 几何上传（SwiftShader 软渲染，5.36GiB 属性缓冲）。",
+      "conclusion": "R2 时间切片只能削 JS 同步占用峰，无法切分 GPU / 驱动侧同步上传。4s 停滞门需首帧分帧上传或渲染架构改造（PERF-001 后续 / PERF-002），继续堆切片无效。",
+      "status": "未解决，如实披露"
+    },
+    "visualParity": {
+      "gate": "PASS",
+      "ssimMin": 0.98,
+      "minSsim": 0.9796,
+      "rows": 4,
+      "perCamera": {
+        "01-wumen-axis": {
+          "ssim": 0.9915,
+          "noiseFloor": 0.9939
+        },
+        "02-wumen-axis-wide": {
+          "ssim": 0.9964,
+          "noiseFloor": 0.9966
+        },
+        "04-court-guard-east": {
+          "ssim": 0.9963,
+          "noiseFloor": 0.9964
+        },
+        "06-street-house": {
+          "ssim": 0.9796,
+          "noiseFloor": 0.979
+        }
+      },
+      "trisBefore": 70777271,
+      "trisAfter": 70777271,
+      "pageErrors": 0,
+      "evidence": "artifacts/spec/PERF-001-r2-screenshot-parity.json",
+      "noiseFloorFinding": "2026-11-10 同版本连拍两测（tag after / after2，代码完全相同）自比 SSIM：01=0.9939 / 02=0.9966 / 04=0.9964 / 06=0.9790。06-street-house 的抓图抖动本身就低于 0.98 门槛（人群走动、云海飘移、HUD 实时数字、昼夜相位随到达时刻漂移），所以该机位单靠 SSIM 无法区分「回归」与「抖动」。处置：先用 --noise <tagA> <tagB> 实测噪声底，再判回归；达标线仍为 0.98，未下调；06 的 0.9796 ≥ 0.9790 记为 within-noise 并独立列账，且噪声底不豁免 sizeMatch/trisMatch/pageErrors。",
+      "notClaimed": "06-street-house 只能判「无可分辨差异」，不等于像素级不变。"
+    },
+    "notClaimed": [
+      "不把 R2 写成 DONE：4s 停滞门仍 FAIL",
+      "不把启动提速写成 PERF-001 达标：heap 峰值 6721.3MB / 常驻 5791.9MB 仍远超 1536/600MB",
+      "不把顶点直写写成解决了停滞：实测无改善，已用计时证伪",
+      "不降低 BOOT_LIMITS 或修改停滞门阈值来制造假绿"
+    ],
+    "measuredDeltas": {
+      "bootSeconds": "73.55 → 61.51（单次 A/B，非受控中位数，含运行波动）",
+      "terrainPhase": "14.75s → 8.09s（逐 phase 连续采样归因）",
+      "heapPeakMB": "7146.1 → 6721.3（波动范围内，不作为达标证据）",
+      "settledMB": "5792.4 → 5791.9（基本不变，符合「R2 只削峰、不降常驻」的预期）",
+      "slices": "真机 127~130 片 / ticks 6040 / fractionReports 216（8ms 预算与进度上报确实生效）"
+    }
+  }
+}

@@ -1,4 +1,7 @@
 import { defineConfig, type Plugin } from 'vite';
+// FIX-007 R2 / QA-005：身份唯一真相源 = package.json，经 scripts/lib/identity.mjs 派生。
+// @ts-ignore 零依赖 ESM 构建期模块，不进 tsconfig include；由 check-naming.mjs 守卫一致性
+import { constantsForVite, loadIdentity } from './scripts/lib/identity.mjs';
 
 /**
  * P0-8 / R28：打包态 CSP 注入（仅 build——dev server 不注入，HMR/探针不受影响）。
@@ -38,9 +41,21 @@ function injectCspForElectron(): Plugin {
   };
 }
 
+/** FIX-007 R2：构建期把 identity.title 注入 <title>，并注入 __APP_IDENTITY__ 供 ui.ts 使用 */
+function injectIdentityTitle(): Plugin {
+  return {
+    name: 'r29-identity-title',
+    transformIndexHtml(html) {
+      const title = String(loadIdentity().title);
+      return html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`);
+    },
+  };
+}
+
 export default defineConfig({
   base: './',
+  define: constantsForVite(),
   build: { chunkSizeWarningLimit: 1600, target: 'es2022' },
   server: { port: 5173, strictPort: false },
-  plugins: [injectCspForElectron()],
+  plugins: [injectCspForElectron(), injectIdentityTitle()],
 });

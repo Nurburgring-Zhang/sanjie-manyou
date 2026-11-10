@@ -1,0 +1,330 @@
+{
+  "schema": "boot-memory-profile/v1",
+  "sampledBy": "scripts/probe-boot-memory.mjs",
+  "url": "http://127.0.0.1:4186/",
+  "runs": 1,
+  "low": false,
+  "lowmemSim": true,
+  "limits": {
+    "heapPeakMB": 1536,
+    "bootSeconds": 120,
+    "settledMB": 600,
+    "minSamples": 3,
+    "maxProgressStallSeconds": 4
+  },
+  "medianBootSeconds": 60.37,
+  "bootSeconds": [
+    60.37
+  ],
+  "heapPeakMB": 6388.1,
+  "settledMB": 3811.4,
+  "maxStallSeconds": 18,
+  "pageErrors": [],
+  "top3": [
+    {
+      "stage": "flush@皇城·街巷铺装",
+      "samples": 6,
+      "firstT": 34777,
+      "lastT": 35827,
+      "entryHeapMB": 4994.8,
+      "maxHeapMB": 6310.9,
+      "deltaMB": 1316.1,
+      "durationMs": 1050
+    },
+    {
+      "stage": "山河·地形",
+      "samples": 58,
+      "firstT": 1006,
+      "lastT": 14689,
+      "entryHeapMB": 83,
+      "maxHeapMB": 780.4,
+      "deltaMB": 697.4,
+      "durationMs": 13683
+    },
+    {
+      "stage": "flush@山河·地形",
+      "samples": 4,
+      "firstT": 15257,
+      "lastT": 15808,
+      "entryHeapMB": 924.6,
+      "maxHeapMB": 1330,
+      "deltaMB": 405.4,
+      "durationMs": 551
+    }
+  ],
+  "stages": [
+    {
+      "stage": "flush@皇城·街巷铺装",
+      "samples": 6,
+      "firstT": 34777,
+      "lastT": 35827,
+      "entryHeapMB": 4994.8,
+      "maxHeapMB": 6310.9,
+      "deltaMB": 1316.1,
+      "durationMs": 1050
+    },
+    {
+      "stage": "山河·地形",
+      "samples": 58,
+      "firstT": 1006,
+      "lastT": 14689,
+      "entryHeapMB": 83,
+      "maxHeapMB": 780.4,
+      "deltaMB": 697.4,
+      "durationMs": 13683
+    },
+    {
+      "stage": "flush@山河·地形",
+      "samples": 4,
+      "firstT": 15257,
+      "lastT": 15808,
+      "entryHeapMB": 924.6,
+      "maxHeapMB": 1330,
+      "deltaMB": 405.4,
+      "durationMs": 551
+    },
+    {
+      "stage": "flush@皇城·宫城",
+      "samples": 4,
+      "firstT": 23024,
+      "lastT": 23603,
+      "entryHeapMB": 1871.1,
+      "maxHeapMB": 2215.8,
+      "deltaMB": 344.7,
+      "durationMs": 579
+    },
+    {
+      "stage": "皇城·宫城",
+      "samples": 21,
+      "firstT": 17497,
+      "lastT": 21411,
+      "entryHeapMB": 884.2,
+      "maxHeapMB": 984.5,
+      "deltaMB": 100.3,
+      "durationMs": 3914
+    },
+    {
+      "stage": "flush@云海·宫阙群",
+      "samples": 2,
+      "firstT": 37994,
+      "lastT": 38212,
+      "entryHeapMB": 4350.8,
+      "maxHeapMB": 4413.8,
+      "deltaMB": 63,
+      "durationMs": 218
+    },
+    {
+      "stage": "云海·宫阙群",
+      "samples": 2,
+      "firstT": 36608,
+      "lastT": 36811,
+      "entryHeapMB": 3337,
+      "maxHeapMB": 3390.6,
+      "deltaMB": 53.6,
+      "durationMs": 203
+    },
+    {
+      "stage": "筑城·街屋群",
+      "samples": 4,
+      "firstT": 16013,
+      "lastT": 16622,
+      "entryHeapMB": 1410.9,
+      "maxHeapMB": 1447.7,
+      "deltaMB": 36.8,
+      "durationMs": 609
+    },
+    {
+      "stage": "flush@筑城·街屋群",
+      "samples": 2,
+      "firstT": 17034,
+      "lastT": 17205,
+      "entryHeapMB": 1211.3,
+      "maxHeapMB": 1228,
+      "deltaMB": 16.7,
+      "durationMs": 171
+    },
+    {
+      "stage": "compact",
+      "samples": 3,
+      "firstT": 40377,
+      "lastT": 40633,
+      "entryHeapMB": 3947.1,
+      "maxHeapMB": 3952.7,
+      "deltaMB": 5.6,
+      "durationMs": 256
+    },
+    {
+      "stage": "post@开天辟地",
+      "samples": 1,
+      "firstT": 934,
+      "lastT": 934,
+      "entryHeapMB": 55.6,
+      "maxHeapMB": 55.6,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "post@皇城·里坊民居",
+      "samples": 1,
+      "firstT": 25267,
+      "lastT": 25267,
+      "entryHeapMB": 1632.1,
+      "maxHeapMB": 1632.1,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "post@装点市井",
+      "samples": 1,
+      "firstT": 36087,
+      "lastT": 36087,
+      "entryHeapMB": 6388.1,
+      "maxHeapMB": 6388.1,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "flush@云起天宫",
+      "samples": 1,
+      "firstT": 36446,
+      "lastT": 36446,
+      "entryHeapMB": 3332.4,
+      "maxHeapMB": 3332.4,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "post@云海·仙植鬼植",
+      "samples": 1,
+      "firstT": 38419,
+      "lastT": 38419,
+      "entryHeapMB": 4473,
+      "maxHeapMB": 4473,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "flush@三界生态·草木禽鱼",
+      "samples": 1,
+      "firstT": 39366,
+      "lastT": 39366,
+      "entryHeapMB": 4716.4,
+      "maxHeapMB": 4716.4,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "flush@云海·天府附院",
+      "samples": 1,
+      "firstT": 39424,
+      "lastT": 39424,
+      "entryHeapMB": 4795.3,
+      "maxHeapMB": 4795.3,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "flush@幽冥开辟",
+      "samples": 1,
+      "firstT": 39666,
+      "lastT": 39666,
+      "entryHeapMB": 3704,
+      "maxHeapMB": 3704,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "post@幽冥·丰都街",
+      "samples": 1,
+      "firstT": 39907,
+      "lastT": 39907,
+      "entryHeapMB": 3895.2,
+      "maxHeapMB": 3895.2,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "post@合拢万象",
+      "samples": 1,
+      "firstT": 40015,
+      "lastT": 40015,
+      "entryHeapMB": 3926.5,
+      "maxHeapMB": 3926.5,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "done",
+      "samples": 3,
+      "firstT": 58433,
+      "lastT": 60588,
+      "entryHeapMB": 3926.8,
+      "maxHeapMB": 3926.8,
+      "deltaMB": 0,
+      "durationMs": 2155
+    }
+  ],
+  "stageCount": 21,
+  "sampleCount": 120,
+  "gates": [
+    {
+      "ok": false,
+      "gate": "FAIL",
+      "reason": "heap-peak-over-budget",
+      "heapPeakMB": 6388.1
+    }
+  ],
+  "PASS": {
+    "all": false
+  },
+  "bakeStageCount": 27,
+  "bakeTotal": {
+    "vertices": 126066498,
+    "triangles": 42022166,
+    "bytes": 3686095296
+  },
+  "bakeByRealm": {
+    "human": {
+      "tasks": 12,
+      "vertices": 107470830,
+      "triangles": 35823610,
+      "bytes": 3124981104
+    },
+    "heaven": {
+      "tasks": 6,
+      "vertices": 11892618,
+      "triangles": 3964206,
+      "bytes": 375904896
+    },
+    "underworld": {
+      "tasks": 7,
+      "vertices": 3096252,
+      "triangles": 1032084,
+      "bytes": 98359968
+    },
+    "shared": {
+      "tasks": 2,
+      "vertices": 3606798,
+      "triangles": 1202266,
+      "bytes": 86849328
+    }
+  },
+  "perfMode": "low",
+  "bootPhase": "ready",
+  "qa008": {
+    "ok": true,
+    "gate": "PASS",
+    "reason": "lowmem-sim 提示卡出现且自动进低配",
+    "promptShown": true,
+    "perfMode": "low",
+    "deviceMemoryGB": 2,
+    "bootPhase": "ready",
+    "degradedItems": [
+      "人群 4510 → 1500",
+      "装饰几何降档（leaf / trunk / glow 按确定性哈希保留 1/3）",
+      "阴影关闭",
+      "像素比降至 0.75",
+      "solids 分坊预算：未实施（PERF-003 DEFERRED，cap 触顶仍按豁免单披露）"
+    ]
+  }
+}

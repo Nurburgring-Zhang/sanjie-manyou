@@ -6,7 +6,12 @@ const _skyTopHigh = new THREE.Color(0x4d8ecb);
 const _skyMidHigh = new THREE.Color(0xbcd8ee);
 const _skyBotHigh = new THREE.Color(0xf2e6cd);
 import { Engine } from './core/engine';
-import { Baker, BakerStats, SignAtlas, SignMesher } from './city/bake';
+import { Baker, BakerStats, SignAtlas, SignMesher, type BakeStageStats } from './city/bake';
+import { realmOfTask } from './game/bakePlan';
+import { crowdDensityFactor } from './game/perfMode';
+import { setSolidsStage } from './rt/solids';
+// PERF-001 R2：8ms 时间预算切片 + 任务内子进度上报。
+import { getBakeBudget, configureBakeBudget, resetBakeBudget } from './core/bakeBudget';
 import { buildNav, POIS, bridgeDeckY } from './city/layout';
 import { buildAllCityBuildings, buildBridgePlaza } from './city/buildings';
 import { buildRiverbank } from './city/riverbank';
@@ -30,7 +35,9 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { PoiGuide } from './game/poiGuide';
 import { Survival } from './game/survival';
 import { Karma } from './game/karma';
-import { SaveManager, loadOrMigrateLegacy, type SaveData } from './rt/save';
+import { SaveManager, loadOrMigrateLegacy, collectPersistedEntities, type SaveData } from './rt/save';
+import { createCalendar } from './game/calendar';
+import { initSaveSystem } from './game/savePolicy';
 import { allocate } from './rt/entity';
 import { ensureWorkshopBase, voxelStore, VOX } from './rt/voxelStore';
 import { buildVoxelMesh } from './game/voxelMesh';
@@ -341,6 +348,10 @@ export class World {
   private realmSnapDone = false;
   /** P1-2 玩法实体：生存循环（血量/饥饿/晕倒迁地府）——probe-economy 同代探针验收 */
   readonly survival = new Survival();
+  /** FIX-012 R1：全仓唯一游戏日来源（速度取自 core/palette.ts TimeOfDay.speed = 1/420） */
+  readonly calendar = createCalendar();
+  /** 会话仿真时钟（毫秒）——与 dayIndex / Boss cooldown / 无敌帧的毫秒口径统一 */
+  private _simMs = 0;
   /** P1-5 六道阶位：业力轴（三界动词产出）——HUD 阶位行共用 */
   readonly karma = new Karma();
   /** P1-4：已造物数量（main 注入；条件节点 c-creation 用） */
@@ -349,6 +360,10 @@ export class World {
   voxelStore: typeof voxelStore = voxelStore;   // P1-2：探针/存档从实例取（避免 HMR 双实例分裂）
   poiGuide: PoiGuide | null = null;
   assetAudit: BakerStats | null = null;
+  /** PERF-001 R1：逐 bake 任务几何归因（顶点/三角/属性字节 × 界域），World.init() 末尾落定。 */
+  bakeStages: BakeStageStats[] = [];
+  /** PERF-002 R3：loading 移除后仍有背景补烘焙时置 'settling'，全量就绪置 'ready'。 */
+  bootPhase: 'loading' | 'settling' | 'ready' = 'loading';
   private dynamicLights: { l: THREE.PointLight; base: number }[] = []; // 精修5：室内/界域点光（昼夜节律驱动）
   private scrollT = 0;
   /** 当前音轨所属界域：renjian / tiangong / difu（只在跨界时切换） */
@@ -413,6 +428,9 @@ export class World {
       ['开天辟地', () => {
         this.buildLights(scene);
         this.crowd = new Crowd(scene, buildNav());
+        // PERF-001 R6：低内存模式在 spawnCrowd() 之前收窄计划人口，而不是事后 hidden
+        // （hidden 只省 draw call，不省实例与 CPU 态内存）。口径来自 perfMode 的单一真相源。
+        this.crowd.density = crowdDensityFactor();
         POIS['yinyanggate'] = { name: '阴阳界（地府入口）', pos: new THREE.Vector3(470, 2, 24), radius: 14 };
         POIS['naihe'] = { name: '地府·奈何桥', pos: new THREE.Vector3(0, UNDER.y + 2, -60), radius: 18 };
         POIS['yanluo'] = { name: '地府·阎罗殿', pos: new THREE.Vector3(0, UNDER.y + 2, 60), radius: 22 };
@@ -584,17 +602,28 @@ export class World {
         // 里坊密集民居填充（数万栋连片院落，构成真实都城密度）
         new WardInfill(scene, rng, wardCells(), wardReserved);
       }],
-      ['皇城·街巷铺装', () => {
-        // 地坪细节层：石板铺装 + 坊区色斑（ISS-31 高空地坪观感）
-        buildPavement(scene, rng);
-        // 桥东/桥西广场：补掉 wardReserved 中央带留下的 200×200m 裸土
-        buildBridgePlaza(baker, rng);
-        // 河岸商业带（R2/R3）：x −4800..4800 两岸连续铺面，与里坊咬合、不留长空段
-        buildRiverbank(baker);
-        // R15-B：御街两厢商业带（临街排 554 + 后巷排 320 间 + 值房/小院/牌坊/行道树/水井）
-        buildCentralBelt(baker, sg, this.atlas, rng);
-        // R11：2 处大苑囿 + 6–10 处中小园林 + 4–6 处瓦舍勾栏
-        buildParks(baker, sg, this.atlas, rng);
+      ['皇城·街巷铺装', async () => {
+        // PERF-001 R2：这 5 个 builder 是天然分步点。原实现是一整段同步（占 57.9% 几何量、
+        // 真机 14.33s 进度条不动），现在逐步让帧并按真实步数上报进度。
+        // 调用顺序与共享 rng 消耗序逐字不变（INV-01）：只插入 await，不重排 builder。
+        const steps: [string, () => void][] = [
+          // 地坪细节层：石板铺装 + 坊区色斑（ISS-31 高空地坪观感）
+          ['石板铺装', () => buildPavement(scene, rng)],
+          // 桥东/桥西广场：补掉 wardReserved 中央带留下的 200×200m 裸土
+          ['桥头广场', () => buildBridgePlaza(baker, rng)],
+          // 河岸商业带（R2/R3）：x −4800..4800 两岸连续铺面，与里坊咬合、不留长空段
+          ['河岸商业带', () => buildRiverbank(baker)],
+          // R15-B：御街两厢商业带（临街排 554 + 后巷排 320 间 + 值房/小院/牌坊/行道树/水井）
+          ['御街两厢', () => buildCentralBelt(baker, sg, this.atlas, rng)],
+          // R11：2 处大苑囿 + 6–10 处中小园林 + 4–6 处瓦舍勾栏
+          ['苑囿瓦舍', () => buildParks(baker, sg, this.atlas, rng)],
+        ];
+        for (let k = 0; k < steps.length; k++) {
+          getBakeBudget().reportFraction(k / steps.length);
+          await raf();
+          steps[k][1]();
+        }
+        getBakeBudget().reportFraction(1);
       }],
       ['筑城·水关收口', () => {
         // R15-C：汴河两端水关（涵洞+闸门+驳岸延伸+城墙水门楼）、御沟龙头吐水口
@@ -897,6 +926,8 @@ export class World {
             this.survival.bossReward();
           },
           () => { this.respawnPlayerAt(JULING.recoverPoi); },
+          // FIX-010 R2：Boss→玩家伤害闭环接线（唯一扣血入口 survival.damage）
+          { survival: this.survival },
         );
         // 全量审核 2026-11-07（C01）：跨会话每次 `new ArenaBoss` 都重置 defeated=false。
         // 用入档的 bossDefeated 恢复战绩并占住奖励闸门，堵死「读档 → 再杀 → 再领」。
@@ -930,11 +961,47 @@ export class World {
         document.getElementById('ui')!.appendChild(fade);
         this.player.setFadeEl(fade);
         this.interact = new InteractSystem(document.getElementById('ui')!, this.player);
+        // FIX-012 R2：蟠桃赏赐每日 cap 依赖游戏日跨日清零，挂唯一 calendar
+        this.interact.setCalendar(this.calendar);
         // 全量审核 2026-11-07（P-01）：付费饮食真正回饥饿/血，生存循环「吃」链路闭环。
         this.interact.survivalSink = (hg, hp) => this.survival.eat(hg, hp);
         // 全量审核 2026-11-07（B-02）：initUI() 首刷早于 interact 创建，新档路径原本
         // 不发 coins:change，顶栏恒显 '-- 文' 与空白三币；这里主动刷一次 HUD。
         bus.emit('coins:change', this.interact.coins);
+
+        // ---- SAV-001 接线：四层保存策略唯一入口（自动/手动/退出/检查点） ----
+        // 复用现有 bus，不新增 IPC 通道；快照形状保持 SaveDataV2 向后兼容。
+        initSaveSystem({
+          bus,
+          getSnapshot: () => ({
+            schemaVersion: 2,
+            savedAt: Date.now(),
+            economy: {
+              coins: this.interact?.coins ?? 0,
+              yinde: this.interact?.yinde ?? 0,
+              peach: this.interact?.peach ?? 3,
+            },
+            entities: collectPersistedEntities(['creation']),
+            voxel: voxelStore.serialize(),
+            survival: this.survival.serialize(),
+            karma: this.karma.current().karma,
+            bossDefeated: !!this.boss?.defeated,
+            day: this.calendar.dayIndex(),
+            playMs: this._simMs,
+          }),
+          applySnapshot: (s: unknown) => {
+            const d = s as SaveData;
+            if (!d || d.schemaVersion !== 2 || !d.economy) return;
+            const it = this.interact;
+            if (it) { it.coins = d.economy.coins; it.yinde = d.economy.yinde; it.peach = d.economy.peach; }
+            if (d.voxel?.length) voxelStore.deserialize(d.voxel);
+            if (d.survival) this.survival.deserialize(d.survival);
+            if (typeof d.karma === 'number') this.karma.deserialize({ karma: d.karma });
+            if (typeof d.bossDefeated === 'boolean') this.bossRewardPaid = d.bossDefeated;
+            bus.emit('coins:change', it?.coins ?? 0);
+          },
+        });
+
         if (this.pendingKarmaVerb) {
           const kv = this.pendingKarmaVerb;
           this.interact.add(kv.pos, kv.r, kv.label, () => {
@@ -1076,12 +1143,40 @@ export class World {
     // 「载入峰值 2.1GB」，量不出峰值落在哪一步、以及落在「步骤」还是「flush」里——
     // 实测就是靠 flush@ / post@ 把 850MB 瞬态钉在 baker.flush 内部的。
     const phase = (p: string): void => { (window as unknown as { __phase?: string }).__phase = p; };
+    // PERF-001 R2：进度条原先只在任务边界推进，单个重任务（实测「皇城·街巷铺装」）
+    // 会让 2s 采样的进度长时间不动（maxStallSeconds=21.45，>4s 门 FAIL）。
+    // 现在由 8ms 切片广播 onSlice，在任务区间内按真实切片数做渐近插值推进。
+    // 语义诚实边界：这是「任务内切片推进感」，不是精确完成百分比；精确权重进度条属 PERF-002 R1。
+    const N = tasks.length;
+    let currentTask = 0;
+    let lastProgress = 0;
+    resetBakeBudget();
+    // 真机相位归因：任务循环结束（约 37s）后，compact / cloud / lift / applyDensity /
+    // 首帧准备还有近 20s。旧实现把任务循环末尾钳到 0.97，收尾整段进度条静止，
+    // 造成 19.88s 的 maxProgressStall。故把任务循环映射到 0–90%，收尾占 90–100%。
+    const TASK_SHARE = 0.9;
+    const pushProgress = (p: number, label: string): void => {
+      const clamped = Math.min(0.995, Math.max(lastProgress, p));
+      lastProgress = clamped;
+      onP(clamped, label);
+    };
+    configureBakeBudget(() => {
+      pushProgress(((currentTask + getBakeBudget().taskFraction()) / N) * TASK_SHARE, tasks[currentTask][0]);
+    });
     for (let i = 0; i < tasks.length; i++) {
-      onP(i / tasks.length, tasks[i][0]);
+      currentTask = i;
+      getBakeBudget().beginScope(tasks[i][0]);
+      pushProgress((i / N) * TASK_SHARE, tasks[i][0]);
       await raf();
       // 逐步日志：主线程若被同步死循环冻住，这是唯一能定位到「哪一步」的线索。
       console.log(`[加载] ▶ ${tasks[i][0]}`);
       phase(tasks[i][0]);
+      // FIX-004 / PERF-003 R1：把真实 bake 阶段名透给 solids 台账，触顶丢弃才能按
+      // 「阶段 × 构件类型」归因。顺序与 tasks 完全一致，不改变任何几何/rng 消耗。
+      setSolidsStage(tasks[i][0]);
+      // PERF-001 R1：把「任务名 + 界域」透给 Baker，flush 才能按任务精确归账。
+      // 与 setSolidsStage 同点调用，执行序 / rng 消耗序完全不变，画面与碰撞逐值不变。
+      baker.setBakeStage(tasks[i][0], realmOfTask(tasks[i][0]));
       const t0 = performance.now();
       await tasks[i][1]();
       phase('flush@' + tasks[i][0]);
@@ -1109,6 +1204,8 @@ export class World {
       console.log(`[加载] ✔ ${tasks[i][0]} ${dt.toFixed(0)}ms tris=${Math.round(tris / 1000)}k heap=${mem ? (mem.usedJSHeapSize / 1048576).toFixed(0) : '?'}MB | ${top}`);
       timings.push([tasks[i][0], dt]);
       if (dt > LOAD_BUDGET_MS) console.warn(`[加载] ${tasks[i][0]} 超预算 ${dt.toFixed(0)}ms`);
+      // PERF-001 R2：任务收口，进度条跳到该任务的确定终点（单调不减）。
+      pushProgress(((i + 1) / N) * TASK_SHARE, tasks[i][0]);
       await raf();
     }
     // 合批前等一次 idle：给 idle GC 一个明确的结算点，`__heapPre` 才是「合批真实起点」，
@@ -1133,7 +1230,22 @@ export class World {
       w.__heapPre = heapAudit && mem ? Math.round(mem.usedJSHeapSize / 1048576) : -1;
     }
     phase('compact');
+    // PERF-001 R2 诊断：真机出现 19.1s 的单个同步块（采样器整段无法运行）。
+    // 按 R1「先测量后动刀」精神，先把收尾各函数的真实耗时打成运行期台账，
+    // 不再凭直觉猜哪个函数慢；探针读 window.__r2Timings。
+    const r2t: Record<string, number> = {};
+    if (typeof window !== 'undefined') (window as unknown as Record<string, unknown>)['__r2Timings'] = r2t;
+    const lap = (k: string, t0: number): void => { r2t[k] = Math.round(performance.now() - t0); };
+    let _lap = performance.now();
+    // PERF-001 R2：收尾阶段按真实步骤上报进度。旧实现任务循环末尾就钳到 97%，
+    // compact→done 近 20s 进度条完全静止（真机 maxStallSeconds=19.68 的主因）。
+    pushProgress(0.90, '合批');
+    await raf();
+    _lap = performance.now();
     await compactStatic();
+    lap('compactStatic', _lap);
+    pushProgress(0.93, '合批');
+    await raf();
     phase('cloud');
     {
       const mem = (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory;
@@ -1142,20 +1254,44 @@ export class World {
     }
     // R19：云海从 city_fabric 切出来单独淡出。必须在 compactStatic 之后——切分对象是合并后的整块几何，
     // 之前各步的 city_fabric 碎片还没合批，切一次会有大半云海留在原网格里继续糊在天上。
+    _lap = performance.now();
     this.cloudSea = buildCloudSeaView(scene);
+    lap('buildCloudSeaView', _lap);
+    pushProgress(0.95, '云海');
+    await raf();
     // 几何已由 scaleHeavenGeometry 统一「缩放 + 抬升」；下面把不经过顶点通道的几类对象补齐。
+    _lap = performance.now();
     this.liftHeavenResiduals();
+    lap('liftHeavenResiduals', _lap);
+    pushProgress(0.97, '三界归位');
+    await raf();
     // 生成结束时间戳：与 __loadStartAt 一起界定「世界生成期」，把首帧着色器编译排除在阻塞统计外
     if (typeof window !== 'undefined') (window as unknown as { __loadEndAt?: number }).__loadEndAt = performance.now();
     if (typeof window !== 'undefined') {
       (window as unknown as { __loadTimings?: [string, number][] }).__loadTimings = timings.slice().sort((a, b) => b[1] - a[1]);
     }
-    onP(0.97, '长卷徐展');
+    pushProgress(0.98, '长卷徐展');
     await raf();
     phase('done');
+    // PERF-001 R1：全部 flush 已落盘，此刻取逐任务几何台账（含合拢万象那次 build→flush）。
+    // 写到 window 供探针在 loading 移除后一次性读走，也留在 World 实例上供 __qingming.world.bakeStages 查。
+    this.bakeStages = baker.stageStats();
+    if (typeof window !== 'undefined') {
+      (window as unknown as Record<string, unknown>)['__bakeStages'] = this.bakeStages;
+    }
+    // PERF-002 R3：当前实现没有后台补烘焙，loading 移除即全量就绪；
+    // 'settling' 只在 R3 懒烘焙接线后由 ensureRealm() 置位，此处不伪造过渡态。
+    this.bootPhase = 'ready';
+    _lap = performance.now();
     this.applyDensity();
+    lap('applyDensity', _lap);
+    pushProgress(0.99, '众生入场');
+    await raf();
+    _lap = performance.now();
     this.buildCinema();
     this.engine.applyQuality(this.engine.quality, true);
+    lap('cinema+applyQuality', _lap);
+    pushProgress(0.995, '就绪');
     bus.on('quality:change', () => this.applyDensity());
     bus.on('battle:report', () => { /* ticker 由 UI 订阅 */ });
     // 上河长卷：teleport('scroll') 启停见 teleport() 尾部置位；运镜在 update()
@@ -1634,6 +1770,9 @@ export class World {
 
     this._lastT = t;
     this._frame++;
+    // FIX-012 R1：唯一游戏日时钟由仿真毫秒驱动（update 的 t 是秒，绝不可直接喂 tick）
+    this._simMs += dt * 1000;
+    this.calendar.tick(this._simMs);
     // 全量审核 2026-11-07（B-04 / P-07）：sim-time 延迟结算推进。
     // dt 来自 engine 主循环（钳到 ≤0.1s）；后台标签页 rAF 暂停时本段不执行 →
     // 扛包 / 狱环结算与 havoc 一起冻结，不再出现「后台照发人间 / 地府业力、

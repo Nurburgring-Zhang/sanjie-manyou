@@ -1,0 +1,615 @@
+{
+  "at": "2026-11-09T21:05:23.538Z",
+  "url": "http://127.0.0.1:4187/",
+  "runs": [
+    {
+      "runIndex": 1,
+      "timeline": [
+        {
+          "t": 527,
+          "heapMB": 10.7,
+          "phase": null,
+          "progress": 0,
+          "solidsTotal": 0,
+          "capDropped": 0,
+          "crowd": null
+        },
+        {
+          "t": 912,
+          "heapMB": 53.6,
+          "phase": "post@开天辟地",
+          "progress": 2.4,
+          "solidsTotal": 0,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 1008,
+          "heapMB": 97.4,
+          "phase": "山河·地形",
+          "progress": 2.7,
+          "solidsTotal": 0,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 1214,
+          "heapMB": 98.6,
+          "phase": "山河·地形",
+          "progress": 3.3,
+          "solidsTotal": 0,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 1411,
+          "heapMB": 89.2,
+          "phase": "山河·地形",
+          "progress": 3.9,
+          "solidsTotal": 0,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 1606,
+          "heapMB": 116,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 0,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 1929,
+          "heapMB": 194.5,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 52,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 2008,
+          "heapMB": 191.5,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 52,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 2206,
+          "heapMB": 217.1,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 54,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 2793,
+          "heapMB": 342.4,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 62,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 3007,
+          "heapMB": 486.4,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 62,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 3213,
+          "heapMB": 488.2,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 72,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 3800,
+          "heapMB": 518.7,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 238,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 4007,
+          "heapMB": 514.6,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 238,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 4205,
+          "heapMB": 511.9,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 238,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 5090,
+          "heapMB": 618.6,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 275,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 5206,
+          "heapMB": 594.8,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 275,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 5405,
+          "heapMB": 604.7,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 323,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 6262,
+          "heapMB": 821.6,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 468,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 6404,
+          "heapMB": 868.2,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 468,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 6605,
+          "heapMB": 862.3,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 480,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 7347,
+          "heapMB": 911,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 586,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 7403,
+          "heapMB": 912.3,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 590,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 7602,
+          "heapMB": 892.9,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 590,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 8367,
+          "heapMB": 1028.3,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 590,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 8405,
+          "heapMB": 1025.1,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 590,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 8605,
+          "heapMB": 1018.9,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 590,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 9223,
+          "heapMB": 1048.8,
+          "phase": "山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 590,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 9907,
+          "heapMB": 1208.9,
+          "phase": "flush@山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 110503,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 10012,
+          "heapMB": 1238.3,
+          "phase": "flush@山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 110503,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 10579,
+          "heapMB": 1688.5,
+          "phase": "flush@山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 110503,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 10651,
+          "heapMB": 1779.4,
+          "phase": "flush@山河·地形",
+          "progress": 4.4,
+          "solidsTotal": 110503,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 11033,
+          "heapMB": 1989.6,
+          "phase": "筑城·街屋群",
+          "progress": 12.1,
+          "solidsTotal": 131725,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 11465,
+          "heapMB": 2500.8,
+          "phase": "flush@筑城·街屋群",
+          "progress": 12.9,
+          "solidsTotal": 158546,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 11604,
+          "heapMB": 1417.9,
+          "phase": "flush@筑城·街屋群",
+          "progress": 13.1,
+          "solidsTotal": 158546,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 11801,
+          "heapMB": 1442.6,
+          "phase": "post@筑城·街屋群",
+          "progress": 14.2,
+          "solidsTotal": 158546,
+          "capDropped": 0,
+          "crowd": 0
+        },
+        {
+          "t": 12043,
+          "heapMB": 1561.6,
+          "phase": "皇城·宫城",
+          "progress": 21.6,
+          "solidsTotal": 175788,
+          "capDropped": 0,
+          "crowd": 20
+        },
+        {
+          "t": 13828,
+          "heapMB": 2495.5,
+          "phase": "flush@皇城·宫城",
+          "progress": 22.7,
+          "solidsTotal": 320390,
+          "capDropped": 0,
+          "crowd": 176
+        },
+        {
+          "t": 14026,
+          "heapMB": 2746.9,
+          "phase": "flush@皇城·宫城",
+          "progress": 22.9,
+          "solidsTotal": 320390,
+          "capDropped": 0,
+          "crowd": 176
+        },
+        {
+          "t": 14203,
+          "heapMB": 2957.7,
+          "phase": "flush@皇城·宫城",
+          "progress": 22.9,
+          "solidsTotal": 320390,
+          "capDropped": 0,
+          "crowd": 176
+        },
+        {
+          "t": 14409,
+          "heapMB": 2081.7,
+          "phase": "flush@皇城·宫城",
+          "progress": 23,
+          "solidsTotal": 320390,
+          "capDropped": 0,
+          "crowd": 176
+        },
+        {
+          "t": 16110,
+          "heapMB": 2074.7,
+          "phase": "post@皇城·里坊民居",
+          "progress": 26.1,
+          "solidsTotal": 320390,
+          "capDropped": 0,
+          "crowd": 176
+        },
+        {
+          "t": 17091,
+          "heapMB": 3313.9,
+          "phase": "皇城·街巷铺装",
+          "progress": 27.9,
+          "solidsTotal": 365900,
+          "capDropped": 0,
+          "crowd": 176
+        },
+        {
+          "t": 30780,
+          "heapMB": 6402.5,
+          "phase": "flush@皇城·街巷铺装",
+          "progress": 28.4,
+          "solidsTotal": 399000,
+          "capDropped": 1230648,
+          "crowd": 176
+        },
+        {
+          "t": 30944,
+          "heapMB": 6624.3,
+          "phase": "flush@皇城·街巷铺装",
+          "progress": 28.4,
+          "solidsTotal": 399000,
+          "capDropped": 1230648,
+          "crowd": 176
+        },
+        {
+          "t": 31013,
+          "heapMB": 6692.9,
+          "phase": "flush@皇城·街巷铺装",
+          "progress": 28.4,
+          "solidsTotal": 399000,
+          "capDropped": 1230648,
+          "crowd": 176
+        },
+        {
+          "t": 31204,
+          "heapMB": 6721.3,
+          "phase": "flush@皇城·街巷铺装",
+          "progress": 28.4,
+          "solidsTotal": 399000,
+          "capDropped": 1230648,
+          "crowd": 176
+        },
+        {
+          "t": 32570,
+          "heapMB": 5390.3,
+          "phase": "flush@皇城·街巷铺装",
+          "progress": 28.4,
+          "solidsTotal": 399000,
+          "capDropped": 1230648,
+          "crowd": 176
+        },
+        {
+          "t": 32715,
+          "heapMB": 5955.4,
+          "phase": "flush@皇城·街巷铺装",
+          "progress": 28.4,
+          "solidsTotal": 399000,
+          "capDropped": 1230648,
+          "crowd": 176
+        },
+        {
+          "t": 32814,
+          "heapMB": 6020.1,
+          "phase": "flush@皇城·街巷铺装",
+          "progress": 28.4,
+          "solidsTotal": 399000,
+          "capDropped": 1230648,
+          "crowd": 176
+        },
+        {
+          "t": 33048,
+          "heapMB": 6097.5,
+          "phase": "post@装点市井",
+          "progress": 35.5,
+          "solidsTotal": 399000,
+          "capDropped": 1245452,
+          "crowd": 176
+        },
+        {
+          "t": 33308,
+          "heapMB": 6199.5,
+          "phase": "flush@云起天宫",
+          "progress": 35.8,
+          "solidsTotal": 399000,
+          "capDropped": 1245638,
+          "crowd": 176
+        },
+        {
+          "t": 33415,
+          "heapMB": 6225.5,
+          "phase": "云海·宫阙群",
+          "progress": 40.3,
+          "solidsTotal": 399000,
+          "capDropped": 1245638,
+          "crowd": 176
+        },
+        {
+          "t": 33611,
+          "heapMB": 6254.3,
+          "phase": "云海·宫阙群",
+          "progress": 40.3,
+          "solidsTotal": 399000,
+          "capDropped": 1245638,
+          "crowd": 176
+        },
+        {
+          "t": 35027,
+          "heapMB": 5776.9,
+          "phase": "flush@云海·宫阙群",
+          "progress": 40.5,
+          "solidsTotal": 399000,
+          "capDropped": 1245638,
+          "crowd": 176
+        },
+        {
+          "t": 35204,
+          "heapMB": 5856.5,
+          "phase": "flush@云海·宫阙群",
+          "progress": 40.9,
+          "solidsTotal": 399000,
+          "capDropped": 1245638,
+          "crowd": 176
+        },
+        {
+          "t": 35449,
+          "heapMB": 5895.3,
+          "phase": "flush@云海·三殿内饰",
+          "progress": 42.6,
+          "solidsTotal": 399000,
+          "capDropped": 1245666,
+          "crowd": 176
+        },
+        {
+          "t": 37244,
+          "heapMB": 6043.8,
+          "phase": "flush@三界生态·草木禽鱼",
+          "progress": 50,
+          "solidsTotal": 399000,
+          "capDropped": 1323170,
+          "crowd": 176
+        },
+        {
+          "t": 37426,
+          "heapMB": 6102.3,
+          "phase": "post@幽冥开辟",
+          "progress": 56.8,
+          "solidsTotal": 399000,
+          "capDropped": 1323227,
+          "crowd": 176
+        },
+        {
+          "t": 37638,
+          "heapMB": 6294.3,
+          "phase": "flush@幽冥·丰都街",
+          "progress": 57.1,
+          "solidsTotal": 399000,
+          "capDropped": 1323227,
+          "crowd": 176
+        },
+        {
+          "t": 37814,
+          "heapMB": 6365.1,
+          "phase": "post@合拢万象",
+          "progress": 78.2,
+          "solidsTotal": 399000,
+          "capDropped": 1323227,
+          "crowd": 176
+        },
+        {
+          "t": 38164,
+          "heapMB": 6359.9,
+          "phase": "compact",
+          "progress": 90,
+          "solidsTotal": 399000,
+          "capDropped": 1323227,
+          "crowd": 2665
+        },
+        {
+          "t": 38233,
+          "heapMB": 6356.7,
+          "phase": "compact",
+          "progress": 90,
+          "solidsTotal": 399000,
+          "capDropped": 1323227,
+          "crowd": 2665
+        },
+        {
+          "t": 38416,
+          "heapMB": 6356.8,
+          "phase": "compact",
+          "progress": 90,
+          "solidsTotal": 399000,
+          "capDropped": 1323227,
+          "crowd": 2665
+        },
+        {
+          "t": 59054,
+          "heapMB": 5760,
+          "phase": "done",
+          "progress": 100,
+          "solidsTotal": 399000,
+          "capDropped": 1323227,
+          "crowd": 5843
+        },
+        {
+          "t": 61502,
+          "heapMB": 5825,
+          "phase": "done",
+          "progress": 100,
+          "solidsTotal": 399000,
+          "capDropped": 1323227,
+          "crowd": 5843
+        },
+        {
+          "t": 61673,
+          "heapMB": 5791.9,
+          "phase": "done",
+          "progress": 100,
+          "solidsTotal": 399000,
+          "capDropped": 1323227,
+          "crowd": 5843
+        }
+      ],
+      "pageErrors": []
+    }
+  ]
+}

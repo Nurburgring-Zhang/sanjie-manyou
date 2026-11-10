@@ -1,0 +1,58 @@
+{
+  "schema": "boot-hw/v1",
+  "sampledBy": "scripts/probe-boot-memory.mjs",
+  "url": "http://127.0.0.1:4187/",
+  "low": false,
+  "lowmemSim": false,
+  "hwProfile": {
+    "deviceMemoryGB": 32,
+    "hardwareConcurrency": 28,
+    "webgl2": true,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4090 (0x00002684) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "softwareRenderer": false,
+    "minMet": true,
+    "recommendedMet": true,
+    "failures": [],
+    "warnings": []
+  },
+  "perfDecision": {
+    "mode": "normal",
+    "reason": "default",
+    "degraded": [],
+    "prompt": false,
+    "forced": false
+  },
+  "thresholds": {
+    "minRamGB": 8,
+    "recommendedRamGB": 16,
+    "minCores": 4,
+    "lowRamGB": 4,
+    "normalCrowd": 4510,
+    "lowCrowd": 1500,
+    "lowPixelRatio": 0.75,
+    "lowShadows": false
+  },
+  "qa008": {
+    "ok": null,
+    "gate": "SKIPPED",
+    "reason": "QA-008 断言仅在 --lowmem-sim 工况执行"
+  },
+  "runtime": {
+    "bootPhase": "ready",
+    "pixelRatio": 1,
+    "shadowsEnabled": true,
+    "crowd": 5843,
+    "lowDecor": {
+      "enabled": false,
+      "dropped": 0
+    },
+    "promptShown": false,
+    "promptMode": null,
+    "promptReason": null
+  },
+  "measured": {
+    "bootSeconds": 61.51,
+    "heapPeakMB": 6721.3,
+    "settledMB": 5791.9
+  }
+}

@@ -1,7 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+// @ts-ignore - srcTreeSha.mjs 无 .d.ts，vitest 以 ESM 运行时解析
+import { srcTreeSha } from '../scripts/lib/srcTreeSha.mjs';
 import { WORLD_ATOM_CATALOG } from '../src/data/worldAtomCatalog.generated';
 import { ATOM_ANATOMY, auditWorldAtoms, REQUIRED_ROOM_FIELDS } from '../src/data/worldAtoms';
+
+// ROOT 由 import.meta.url 推导，不依赖 cwd。
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 describe('世界原子资产清单', () => {
   it('全库计数与 99 卷汇总一致', () => {
@@ -100,5 +107,22 @@ describe('原子清单的实现状态台账', () => {
     expect(atoms.items.filter((i) => i.impl.status === 'data-only').length).toBe(0);
     expect(atoms.plants.filter((p) => p.impl.status === 'blocked').length).toBe(0);
     expect(atoms.plants.filter((p) => p.impl.status === 'not-asset').length).toBe(4);
+  });
+});
+
+describe('FIX-001 台账再生链 / QA-007 三态清单', () => {
+  it('attribution.generatedFromCommitOrSha === 当前 src 树 sha（防台账陈旧）', () => {
+    const attr = JSON.parse(fs.readFileSync(path.join(ROOT, 'artifacts/scene-item-attribution.json'), 'utf8'));
+    expect(attr.generatedFromCommitOrSha).toBe(srcTreeSha(ROOT));
+  });
+
+  it('MANIFEST 中每个 regenerable 项的 generator 文件存在', () => {
+    const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'artifacts/MANIFEST.json'), 'utf8'));
+    const regenerable = manifest.artifacts.filter((a: { state: string }) => a.state === 'shipped+regenerable');
+    expect(regenerable.length).toBeGreaterThan(0);
+    for (const a of regenerable) {
+      expect(typeof a.generator).toBe('string');
+      expect(fs.existsSync(path.join(ROOT, a.generator as string)), `generator 不存在: ${a.generator}`).toBe(true);
+    }
   });
 });

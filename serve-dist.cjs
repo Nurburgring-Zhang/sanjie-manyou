@@ -1,4 +1,4 @@
-/* CyberQingming R22 - zero-dependency static server for dist/
+/* 赛博上河 · CyberQingming-R29-1.2.0 - zero-dependency static server for dist/
  * No npm install, no vite, no build needed. Requires Node.js >= 18.
  * Run: node serve-dist.cjs   (or double-click START-GAME.bat)
  */
@@ -78,7 +78,7 @@ function listen(port) {
       if (m) bundle = 'assets/' + m[1];
     } catch (_) { /* index.html 已在启动前校验存在 */ }
     console.log('');
-    console.log('  CyberQingming R22  -  FULL DELIVERY');
+    console.log('  赛博上河 · CyberQingming-R29-1.2.0 - FULL DELIVERY');
     console.log('  ----------------------------------------');
     console.log('  Game URL : ' + url);
     console.log('  Bundle   : ' + bundle);

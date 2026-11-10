@@ -1,0 +1,449 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "QA-007 生成物三态清单（R29 M2：FIX-004/006、PERF-001 R1 逐任务归因、R6 低配 + QA-008 自检证据补全）",
+  "artifacts": [
+    {
+      "path": "world-atoms.json",
+      "state": "shipped+regenerable",
+      "generator": "scripts/build-atomic-catalog.mjs",
+      "consumers": [
+        "tests/atomicCatalog.test.ts",
+        "scripts/annotate-atom-impl.mjs",
+        "scripts/build-scene-attribution.mjs",
+        "scripts/qa/package-gate.mjs"
+      ]
+    },
+    {
+      "path": "scene-item-attribution.json",
+      "state": "shipped+regenerable",
+      "generator": "scripts/build-scene-attribution.mjs",
+      "consumers": [
+        "tests/atomicCatalog.test.ts",
+        "scripts/annotate-atom-impl.mjs",
+        "scripts/qa/package-gate.mjs"
+      ]
+    },
+    {
+      "path": "MANIFEST.json",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "tests/atomicCatalog.test.ts",
+        "scripts/qa/check-manifest.mjs"
+      ]
+    },
+    {
+      "path": "world-atoms.annotated.json",
+      "state": "external-skip",
+      "generator": null,
+      "skipGuard": "scripts/qa/package-gate.mjs:S06 以 fs.existsSync 过滤不存在项；annotate-atom-impl.mjs 实际原地覆写 artifacts/world-atoms.json（不产出本文件，spec 流程图写 annotated 与实现不符），故本文件恒缺失且不计入 shipped 比对",
+      "consumers": [
+        "scripts/qa/package-gate.mjs"
+      ]
+    },
+    {
+      "path": "audit.json",
+      "state": "external-skip",
+      "generator": null,
+      "skipGuard": "scripts/verify-bake-parity.mjs 仅在 --dump 模式写出、按命令行参数读取本文件；非随包生成物，缺失时脚本不进入比对分支",
+      "consumers": [
+        "scripts/verify-bake-parity.mjs"
+      ]
+    },
+    {
+      "path": "spec/template-observation.json",
+      "state": "external-skip",
+      "generator": null,
+      "skipGuard": "scripts/qa/template-acceptance.mjs:45-48 以 fs.existsSync ? JSON.parse(readFileSync) : null 判定，缺失时 decide() 产出 gate=SKIPPED 并打印 SKIPPED 字样",
+      "consumers": [
+        "scripts/qa/template-acceptance.mjs"
+      ]
+    },
+    {
+      "path": "spec/check-tests-warnings.json",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "scripts/qa/check-tests.mjs"
+      ]
+    },
+    {
+      "path": "SPEC-全面审计-20261103.md",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "scripts/probe-audit-coverage.mjs"
+      ]
+    },
+    {
+      "path": "SPEC-总账.md",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "scripts/probe-ledger-coverage.mjs"
+      ]
+    },
+    {
+      "path": "hud-occlusion.json",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "scripts/probe-hud-occlusion.mjs"
+      ]
+    },
+    {
+      "path": "palace-paving/calib.json",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "scripts/probe-palace-paving.mjs"
+      ]
+    },
+    {
+      "path": "r20-mtn-diag.json",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "scripts/r20-mtn-slope.mjs"
+      ]
+    },
+    {
+      "path": "BASELINE-v2.md",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "DISCLOSURE-REGISTRY.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/qa/check-disclosure.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "baseline-<build>.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "karma-run.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "karma-run.md",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "perf-baseline.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "probe-<name>-<build>.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "probe-runs/*.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "probe-runs/<name>-<date>.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "probe-runs/<name>.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "r28-acceptance.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/qa/check-disclosure.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "r28-runtime.json",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "scripts/qa/check-disclosure.mjs"
+      ]
+    },
+    {
+      "path": "replays/<fixture>.diff.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/check-doc-refs.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "spec/PROBE-BOSS-DAMAGE.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/probe-boss-damage.mjs"
+      ],
+      "skipGuard": "规划产物名模板 / 未产出文件：由 scripts/check-doc-refs.mjs 的 [外部] 白名单显式豁免，或由 check-disclosure.mjs 的 INCLUDE 子集登记；非随包生成物，缺失时脚本不进入读取分支（QA-007 external-skip 如实登记）"
+    },
+    {
+      "path": "r27-collision-runtime.json",
+      "state": "shipped",
+      "generator": "scripts/r27_collision_acceptance.mjs",
+      "consumers": [
+        "scripts/r27_acceptance.mjs"
+      ]
+    },
+    {
+      "path": "r27-tris-baseline.json",
+      "state": "shipped",
+      "generator": "scripts/r27_acceptance.mjs --init-baseline",
+      "consumers": [
+        "scripts/lib/r27Gates.mjs",
+        "scripts/r27_acceptance.mjs",
+        "scripts/r27_collision_acceptance.mjs"
+      ],
+      "skipGuard": "FIX-006 R1 静态总三角数基线：BakerStats.groups[*].triangles 求和，不含时间戳，重复重采字节一致；缺失时 trisUnchanged 门 fail-closed"
+    },
+    {
+      "path": "solids-budget.json",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "scripts/lib/capGate.mjs",
+        "scripts/lib/r27Gates.mjs",
+        "scripts/probe-solids-cap.mjs"
+      ],
+      "skipGuard": "FIX-004 R4 豁免台账：真机实测额度人工登记，带 expiresAt 与 PERF-003 技术债条款；PERF-003 清零后删除。缺失或过期时 capNotHit 门 fail-closed"
+    },
+    {
+      "path": "solids-cap-histogram.json",
+      "state": "shipped",
+      "generator": "scripts/probe-solids-cap.mjs --histogram",
+      "consumers": [
+        "scripts/probe-solids-cap.mjs",
+        "scripts/lib/r27Gates.mjs"
+      ],
+      "skipGuard": "PERF-003 R1 阶段×构件类型直方图；按字典序排序且不含时间戳，真机复跑 sha256 一致"
+    },
+    {
+      "path": "spec/PROBE-SOLIDS-CAP.json",
+      "state": "shipped",
+      "generator": "scripts/probe-solids-cap.mjs",
+      "consumers": [
+        "scripts/probe-solids-cap.mjs"
+      ],
+      "skipGuard": "artifacts/spec/ 为 QA-001 S13 定义的 gate 运行期证据目录，允许门运行后写入，静态 SHA 台账豁免"
+    },
+    {
+      "path": "spec/PERF-003.json",
+      "state": "shipped",
+      "generator": "scripts/probe-solids-cap.mjs --histogram (R1 数据) + 人工数据裁决 (R2)",
+      "consumers": [
+        "scripts/qa/check-disclosure.mjs"
+      ],
+      "skipGuard": "PERF-003 R2 决策记录：selectedPath=DEFERRED，附解锁条件与 spec 背景勘误；不是达标证明"
+    },
+    {
+      "path": "spec/PERF-001.json",
+      "state": "shipped",
+      "generator": "scripts/probe-boot-memory.mjs (R1 数据) + 人工归因结论",
+      "consumers": [
+        "scripts/qa/check-disclosure.mjs"
+      ],
+      "skipGuard": "PERF-001 R1 基线归因；comparison 字段保留 null 直到 R2-R5 真实实施，禁止预填"
+    },
+    {
+      "path": "boot-memory-profile.json",
+      "state": "shipped",
+      "generator": "scripts/probe-boot-memory.mjs",
+      "consumers": [
+        "scripts/probe-boot-memory.mjs"
+      ],
+      "skipGuard": "PERF-001 R1 启动内存摘要（不含绝对时间戳）；逐样本时间线另存 artifacts/spec/，该文件为探针运行期重采产物，最终交付前须重跑探针再生成 SHA 台账"
+    },
+    {
+      "path": "spec/PERF-001-boot-timeline.json",
+      "state": "shipped",
+      "generator": "scripts/probe-boot-memory.mjs",
+      "consumers": [
+        "scripts/probe-boot-memory.mjs"
+      ],
+      "skipGuard": "artifacts/spec/ 为 QA-001 S13 定义的 gate 运行期证据目录，允许门运行后写入，静态 SHA 台账豁免"
+    },
+    {
+      "path": "memory-budget.json",
+      "state": "shipped",
+      "generator": null,
+      "consumers": [
+        "scripts/probe-boot-memory.mjs"
+      ],
+      "skipGuard": "PERF-001 R8 内存预算台账：每个大户登记 实体数×字节估算×实测值；实测由 boot-memory-profile.json 渲染，禁止手抄"
+    },
+    {
+      "path": "boot-hw.json",
+      "state": "external-skip",
+      "generator": null,
+      "consumers": [
+        "scripts/qa/check-disclosure.mjs"
+      ],
+      "skipGuard": "QA-008 R2 首帧硬件自检台账（M2 后续产出）；当前为规划产物名，缺失时不进入读取分支"
+    },
+    {
+      "path": "spec/PERF-001-stage-attribution.json",
+      "state": "shipped",
+      "generator": "scripts/probe-boot-memory.mjs",
+      "consumers": [
+        "scripts/probe-boot-memory.mjs"
+      ]
+    },
+    {
+      "path": "spec/PERF-001-stage-attribution-lowmem.json",
+      "state": "shipped",
+      "generator": "scripts/probe-boot-memory.mjs --lowmem-sim",
+      "consumers": []
+    },
+    {
+      "path": "spec/PERF-001-boot-hw-lowmem.json",
+      "state": "shipped",
+      "generator": "scripts/probe-boot-memory.mjs --lowmem-sim",
+      "consumers": []
+    },
+    {
+      "path": "spec/PERF-001-boot-profile-lowmem.json",
+      "state": "shipped",
+      "generator": "scripts/probe-boot-memory.mjs --lowmem-sim",
+      "consumers": []
+    },
+    {
+      "path": "spec/PERF-001-lowmem-sim-run.json",
+      "state": "shipped",
+      "generator": "scripts/probe-boot-memory.mjs --lowmem-sim",
+      "consumers": []
+    },
+    {
+      "path": "spec/PERF-001-r2-slices.json",
+      "state": "shipped",
+      "generator": "scripts/probe-boot-memory.mjs",
+      "consumers": [
+        "scripts/probe-boot-memory.mjs"
+      ]
+    },
+    {
+      "path": "spec/PERF-001-r2-screenshot-parity.json",
+      "state": "shipped",
+      "generator": "scripts/probe-screenshot-parity.mjs --compare",
+      "consumers": [
+        "scripts/probe-screenshot-parity.mjs"
+      ]
+    },
+    {
+      "path": "spec/PERF-001-r2-before.json",
+      "state": "shipped",
+      "generator": "scripts/probe-screenshot-parity.mjs --capture before",
+      "consumers": [
+        "scripts/probe-screenshot-parity.mjs"
+      ]
+    },
+    {
+      "path": "spec/PERF-001-r2-after.json",
+      "state": "shipped",
+      "generator": "scripts/probe-screenshot-parity.mjs --capture after",
+      "consumers": [
+        "scripts/probe-screenshot-parity.mjs"
+      ]
+    },
+    {
+      "path": "spec/PERF-001-r2-before-*.png",
+      "state": "shipped",
+      "generator": "scripts/probe-screenshot-parity.mjs --capture before",
+      "consumers": [
+        "scripts/probe-screenshot-parity.mjs"
+      ]
+    },
+    {
+      "path": "spec/PERF-001-r2-after-*.png",
+      "state": "shipped",
+      "generator": "scripts/probe-screenshot-parity.mjs --capture after",
+      "consumers": [
+        "scripts/probe-screenshot-parity.mjs"
+      ]
+    },
+    {
+      "path": "spec/fly-ceiling.json",
+      "state": "shipped",
+      "generator": "scripts/probe-fly-ceiling.mjs",
+      "consumers": "scripts/probe-fly-ceiling.mjs"
+    },
+    {
+      "path": "spec/fly-ceiling-heaven.png",
+      "state": "shipped",
+      "generator": "scripts/probe-fly-ceiling.mjs（天宫机位真机截图）",
+      "consumers": "scripts/probe-fly-ceiling.mjs"
+    },
+    {
+      "path": "spec/FIX-FLY-CEILING.json",
+      "state": "shipped",
+      "generator": "人工登记（用户反馈缺陷修复台账）",
+      "consumers": "scripts/gen-docs.mjs（README 占位符 spec/FIX-FLY-CEILING.json#rootCause.legacyCeiling）"
+    },
+    {
+      "path": "spec/PERF-001-r2-after2.json",
+      "state": "shipped",
+      "generator": "scripts/probe-screenshot-parity.mjs --capture after2",
+      "consumers": "scripts/probe-screenshot-parity.mjs（--noise 实测噪声底）"
+    },
+    {
+      "path": "spec/PERF-001-r2-after2-*.png",
+      "state": "shipped",
+      "generator": "scripts/probe-screenshot-parity.mjs --capture after2",
+      "consumers": "scripts/probe-screenshot-parity.mjs（--noise 实测噪声底）"
+    }
+  ]
+}

@@ -6,6 +6,12 @@ import { bus } from '../core/rng';
 import { POIS } from '../city/layout';
 import { JOBS } from '../data/jobs';
 import { WishPanel } from '../game/wishPanel';
+// FIX-007 R2：身份常量由 vite define 注入（scripts/lib/identity.mjs → constantsForVite()）
+declare const __APP_IDENTITY__: { productName: string; title: string; release: string; version: string } | undefined;
+// SAV-001 R2 / SAV-003 R5：存档面板与 IDB 降级常驻告知
+import { mountSavePanel, toggleSavePanel } from './savePanel';
+import { downgradeNotice, mountDegradedNotice } from '../game/saveRecovery';
+import { isIdbAvailable } from '../rt/save';
 
 // 全量审核 2026-11-07（UI-10）：小地图逻辑尺寸常量（CSS 像素），与 DPR backing store 解耦
 const MM_W = 216, MM_H = 150;
@@ -13,9 +19,21 @@ const MM_W = 216, MM_H = 150;
 // ============ UI 总装：HUD / 图鉴 / 传送 / 设置 / 小地图 / 触控 ============
 export function initUI(engine: Engine, world: World): (dt: number) => void {
   const ui = document.getElementById('ui')!;
+  // FIX-007：身份取自构建期注入；define 未生效时降级到规范串，绝不白屏
+  const idObj = typeof __APP_IDENTITY__ !== 'undefined' ? __APP_IDENTITY__ : undefined;
+  const brandName = idObj && typeof idObj === 'object' && idObj.productName
+    ? idObj.productName : '赛博上河 CyberQingming';
+
+  // SAV-001 R2：存档面板自带样式，默认隐藏；Esc 打开
+  mountSavePanel(document.body);
+  // SAV-003 R5：IDB 不可用必须常驻可见提示，禁止只 console.warn
+  void isIdbAvailable().then((ok) => {
+    if (!ok) mountDegradedNotice(document.body, downgradeNotice(false));
+  }).catch(() => { mountDegradedNotice(document.body, downgradeNotice(false)); });
+
   ui.innerHTML = `
   <div id="topbar">
-    <div class="brand">赛博上河<small>NEON BIANJING</small></div>
+    <div class="brand">${brandName}<small>CyberQingming-R29-1.2.0</small></div>
     <div id="ticker"><span>长卷徐展，汴京入市……</span></div>
     <div id="stats"></div>
   </div>
@@ -130,6 +148,8 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
       const mmEl = document.getElementById('minimap');
       if (mmEl) mmEl.style.display = mmEl.style.display === 'none' ? '' : 'none';
     } else if (ev.code === 'Escape') {
+      // SAV-001 R2：Esc → 存档面板（与关面板同键，不新增键位冲突）
+      toggleSavePanel();
       document.querySelectorAll('.panel.show').forEach((el) => el.classList.remove('show'));
     } else if (ev.code === 'KeyT') {
       togglePanel('gotele'); renderTele();
@@ -348,6 +368,37 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
     if (i === 0) { engine.qualityAuto = true; }
     else { engine.qualityAuto = false; engine.applyQuality(QUALITY[qNames[i - 1]]); }
   });
+
+  // PERF-001 R6 / QA-008 R3：性能档与全部降级项在设置面板逐条披露（INV-04 禁止静默降级）。
+  // 面板里没有「关于页」，这是设置面板的等价披露位；数值一律从 __qingming.perfDecision 读，
+  // 不手抄、不硬编码，避免文档/代码/UI 三处漂移。
+  {
+    const q = (window as unknown as { __qingming?: Record<string, unknown> }).__qingming;
+    const decision = q?.perfDecision as { mode?: string; reason?: string; degraded?: string[] } | undefined;
+    const profile = q?.hwProfile as { deviceMemoryGB?: number | null; hardwareConcurrency?: number | null; renderer?: string | null; minMet?: boolean; recommendedMet?: boolean } | undefined;
+    const row = document.createElement('div');
+    row.className = 'set-row';
+    const lab = document.createElement('label');
+    lab.textContent = '性能档';
+    const val = document.createElement('div');
+    val.style.cssText = 'flex:1;font-size:12px;line-height:1.55;opacity:.9';
+    const mode = decision?.mode ?? 'normal';
+    const mem = profile?.deviceMemoryGB === null || profile?.deviceMemoryGB === undefined ? '未知' : `${profile.deviceMemoryGB}GB`;
+    const cores = profile?.hardwareConcurrency ?? '未知';
+    val.innerHTML = `<b>${mode === 'low' ? '低配' : '标准'}</b> · 内存 ${mem} / 逻辑核 ${cores}`
+      + ` · 判定 ${decision?.reason ?? 'default'}`
+      + `<br>最低档 ${profile?.minMet ? '达标' : '未达标'} / 推荐档 ${profile?.recommendedMet ? '达标' : '未达标'}`;
+    if (decision?.degraded?.length) {
+      const ul = document.createElement('ul');
+      ul.style.cssText = 'margin:4px 0 0 16px;padding:0';
+      for (const d of decision.degraded) {
+        const li = document.createElement('li'); li.textContent = d; ul.appendChild(li);
+      }
+      val.appendChild(ul);
+    }
+    row.appendChild(lab); row.appendChild(val);
+    setBody.appendChild(row);
+  }
   seg('人流', ['繁盛', '适中', '疏朗'], 0, (i) => world.setDensity([1, 0.62, 0.34][i]));
   const tglRow = (label: string, start: boolean, on: (v: boolean) => void): void => {
     const row = document.createElement('div');
@@ -389,6 +440,20 @@ export function initUI(engine: Engine, world: World): (dt: number) => void {
   const toast = $('toast');
   let toastTimer = 0;
   bus.on('ui:toast', (s) => { toast.textContent = String(s); toast.classList.add('show'); toastTimer = 2.6; });
+
+  // FIX-010 R4：受击 HUD 红晕；payload = { hp, amount, source }（survival.damage 统一 emit）
+  bus.on('player:damaged', (raw) => {
+    const p = (raw ?? {}) as { hp?: number; amount?: number; source?: string };
+    const flash = document.createElement('div');
+    flash.style.cssText = 'position:fixed;inset:0;pointer-events:none;background:rgba(220,40,40,.18);opacity:0;transition:opacity .12s;z-index:89;';
+    document.body.appendChild(flash);
+    requestAnimationFrame(() => { flash.style.opacity = '1'; });
+    window.setTimeout(() => {
+      flash.style.opacity = '0';
+      window.setTimeout(() => flash.remove(), 180);
+    }, 120);
+    void p;
+  });
 
   // ---- 小地图 ----
   const mm = q<HTMLCanvasElement>('#minimap canvas');

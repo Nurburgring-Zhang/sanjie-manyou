@@ -17,9 +17,22 @@
 import puppeteer from 'puppeteer-core';
 import { CHROME } from './chromePath.mjs';
 import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { evaluateHardened, sumBakedTriangles } from './lib/r27Gates.mjs';
 
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:4186/';
 const OUT = 'artifacts';
+// QA-003 R2：本脚本注释里出现 --self-test 会被 check-gates.mjs 实跑，必须提供
+// 不启动浏览器的快速自检分支，否则 20s spawn 超时会被记成 selfTestFail。
+if (process.argv.includes('--self-test')) {
+  const { runSelfTest } = await import('./lib/r27Gates.mjs');
+  const r = runSelfTest();
+  console.log(r.all ? 'SELF_TEST=PASS' : 'SELF_TEST=FAIL');
+  console.log(`negativeCases=${r.negativeCases} total=${r.cases.length}`);
+  process.exit(r.all ? 0 : 1);
+}
 fs.mkdirSync(OUT, { recursive: true });
 
 const browser = await puppeteer.launch({
@@ -48,6 +61,14 @@ await new Promise((r) => setTimeout(r, 3000));
 
 const report = { at: new Date().toISOString(), url: URL, pageErrors: errs, steps: [] };
 const step = (k, v) => { report[k] = v; console.log(k + ':', JSON.stringify(v).slice(0, 900)); };
+/**
+ * FIX-006 R1：静态总三角数只认 BakerStats.groups[*].triangles 求和。
+ * 旧门读 assetAudit.totalTris（该字段根本不存在）→ undefined === null 短路 → 真空通过。
+ * 求和逻辑复用 lib/r27Gates.mjs 单一实现，页面只负责序列化 groups。
+ */
+const readBakedTris = async () => sumBakedTriangles({
+  groups: await page.evaluate(() => window.__qingming.world.assetAudit?.groups ?? null),
+});
 const shot = async (name) => {
   const p = `${OUT}/${name}.png`;
   await page.screenshot({ path: p });
@@ -185,6 +206,8 @@ const perfBefore = await page.evaluate(() => ({
   destruction: window.__qingming.destruction?.() ?? null,
 }));
 step('beforeDestruction', perfBefore);
+const trisBefore = await readBakedTris();
+step('bakedTrisBefore', trisBefore);
 
 // 破坏前同机位实拍
 if (hitPoint) {
@@ -298,6 +321,8 @@ const perfAfter = await page.evaluate(() => ({
   destruction: window.__qingming.destruction?.() ?? null,
 }));
 step('afterDestruction', perfAfter);
+const trisAfter = await readBakedTris();
+step('bakedTrisAfter', trisAfter);
 
 // ---- ⑩ 碎块全数回收后：空闲必须零活跃碎块、零可见实例、零 draw call ----
 // ttl 6~10s 是 **sim-time**，而本机 swiftshader 软渲染帧率低，墙钟 14s 常常只推进
@@ -355,6 +380,15 @@ const heavenHit = await page.evaluate(() => {
 });
 step('heavenDestructionProbe', heavenHit);
 
+// ---- FIX-006 / FIX-004 R4：四道硬化门（纯函数，可被 --self-test 注入负例） ----
+const hardened = evaluateHardened({
+  solids: solids0,
+  trisBefore, trisAfter,
+  physicsTrace: physTrace,
+  settle: report.firstFrameSettle,
+}, ROOT);
+step('hardenedGates', hardened);
+
 const P = {
   ledgerBuilt: !!solids0 && solids0.total > 1000 && solids0.walls > 100 && solids0.floors > 100 && solids0.cells > 100,
   // 真墙必须有碰撞面：hitPoint 是从「solidBlockedAt===true」的墙顶点里筛出来的，
@@ -371,10 +405,8 @@ const P = {
   // 视觉坍缩 ↔ 碰撞摘除闭环：命中点破坏前挡人、破坏后放行
   collisionOpenedAfterHit: blockedBeforeHit === true && blockedAfterHit === false,
   debrisPhysicsRan: early.length === 2 && !!early[0].destruction && early[0].destruction.aliveChunks > 0,
-  // 破坏物理硬证据：优先用物理引擎固定步内部轨迹（同一块碎块逐 y），
-  // 外部定时器采样可能被 77M+ tris 的渲染阻塞而全读到落地静止值，两者取其一即可。
-  debrisFell: (physTrace.length >= 3 && physDistinct >= 2)
-    || (ySeries.length >= 3 && distinctY >= 2),
+  // FIX-006 R2：旧门「≥3 样本 / ≥2 个 y 值」已被删除（远弱于对外宣称的 600 步 / 75 样本）。
+  // 硬化版在下方 hardened.bools 统一注入，此处不再保留任何宽松判定。
   // 空闲零 draw call：全数回收后 chunks=0、mesh 隐藏、count=0、统计字段为 0
   idleRecycled: !!idle.destruction && idle.destruction.aliveChunks === 0
     && idle.chunkVisible === false && idle.chunkCount === 0
@@ -385,10 +417,14 @@ const P = {
   noPersistentDrawCallCost: !!idle.destruction && idle.destruction.aliveChunks === 0
     && idle.chunkVisible === false && idle.chunkCount === 0
     && idle.destruction.drawCallsWhenIdle === 0,
-  trisUnchanged: perfBefore.totalTris === null || idle.totalTris === perfBefore.totalTris,
   actorImpactRan: !!actorImpact && actorImpact.skipped === false
     && (actorImpact.action === 'launched' || actorImpact.action === 'knockedDown'),
   noPageErrors: errs.length === 0,
+  // FIX-006 R1/R2/R3 + FIX-004 R4：四门全部 fail-closed，缺基线/跑不满 600 步一律 FAIL。
+  capNotHit: hardened.bools.capNotHit,
+  trisUnchanged: hardened.bools.trisUnchanged,
+  debrisFell: hardened.bools.debrisFell,
+  settleOk: hardened.bools.settleOk,
 };
 P.all = Object.values(P).every(Boolean);
 step('callsDelta', (idle.perf?.calls ?? 0) - (perfBefore.perf?.calls ?? 0));

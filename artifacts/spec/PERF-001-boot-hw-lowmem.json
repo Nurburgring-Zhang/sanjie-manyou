@@ -1,0 +1,77 @@
+{
+  "schema": "boot-hw/v1",
+  "sampledBy": "scripts/probe-boot-memory.mjs",
+  "url": "http://127.0.0.1:4186/",
+  "low": false,
+  "lowmemSim": true,
+  "hwProfile": {
+    "deviceMemoryGB": 2,
+    "hardwareConcurrency": 28,
+    "webgl2": true,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4090 (0x00002684) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "softwareRenderer": false,
+    "minMet": false,
+    "recommendedMet": false,
+    "failures": [
+      "内存 2GB < 最低 8GB"
+    ],
+    "warnings": []
+  },
+  "perfDecision": {
+    "mode": "low",
+    "reason": "low-device-memory",
+    "degraded": [
+      "人群 4510 → 1500",
+      "装饰几何降档（leaf / trunk / glow 按确定性哈希保留 1/3）",
+      "阴影关闭",
+      "像素比降至 0.75",
+      "solids 分坊预算：未实施（PERF-003 DEFERRED，cap 触顶仍按豁免单披露）"
+    ],
+    "prompt": true,
+    "forced": false
+  },
+  "thresholds": {
+    "minRamGB": 8,
+    "recommendedRamGB": 16,
+    "minCores": 4,
+    "lowRamGB": 4,
+    "normalCrowd": 4510,
+    "lowCrowd": 1500,
+    "lowPixelRatio": 0.75,
+    "lowShadows": false
+  },
+  "qa008": {
+    "ok": true,
+    "gate": "PASS",
+    "reason": "lowmem-sim 提示卡出现且自动进低配",
+    "promptShown": true,
+    "perfMode": "low",
+    "deviceMemoryGB": 2,
+    "bootPhase": "ready",
+    "degradedItems": [
+      "人群 4510 → 1500",
+      "装饰几何降档（leaf / trunk / glow 按确定性哈希保留 1/3）",
+      "阴影关闭",
+      "像素比降至 0.75",
+      "solids 分坊预算：未实施（PERF-003 DEFERRED，cap 触顶仍按豁免单披露）"
+    ]
+  },
+  "runtime": {
+    "bootPhase": "ready",
+    "pixelRatio": 0.75,
+    "shadowsEnabled": false,
+    "crowd": 4643,
+    "lowDecor": {
+      "enabled": true,
+      "dropped": 1421263
+    },
+    "promptShown": true,
+    "promptMode": "low",
+    "promptReason": "low-device-memory"
+  },
+  "measured": {
+    "bootSeconds": 60.37,
+    "heapPeakMB": 6388.1,
+    "settledMB": 3811.4
+  }
+}

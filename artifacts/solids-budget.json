@@ -1,0 +1,33 @@
+{
+  "schema": "solids-cap-waiver/v1",
+  "appliesTo": "MAX_TOTAL",
+  "allowance": 1323227,
+  "observedCapDropped": 1323227,
+  "observedWallReserveDropped": 474386,
+  "observedMaxTotal": 399000,
+  "observedWallReserve": 320000,
+  "requiredRegistrationsForZeroDrop": 2196613,
+  "firstDropAt": 399000,
+  "firstDropStage": "皇城·街巷铺装",
+  "firstDropGroup": "roof",
+  "firstDropKind": "roof",
+  "observedAt": "2026-11-10",
+  "owner": "R29 M2 / FIX-004 → PERF-003",
+  "expiresAt": "2026-11-30",
+  "sourceEvidence": "artifacts/spec/PROBE-SOLIDS-CAP.json",
+  "histogramEvidence": "artifacts/solids-cap-histogram.json",
+  "reason": "PERF-003 完成前的临时技术债豁免。FIX-004 首次让 cap 触顶可见，真机实测 MAX_TOTAL=399000 在『皇城·街巷铺装』阶段即触顶（不是 spec 背景判断的人界晚期），此后 1323227 个构件无碰撞体；另有 474386 个非 wall 构件因 WALL_RESERVE 让路。丢弃主体为 plant 1211906 / floor 72635 / wall 24474 / roof 14212（见直方图 byKind）。要彻底清零需登记约 2196613 个人间构件，远超 PERF-003 背景里 1.2M 的估算，故本里程碑先以精确额度记债，由 PERF-003 依据实测直方图选型扩容或分坊预算后清零。",
+  "scope": [
+    "仅豁免 MAX_TOTAL 触顶丢弃计数 capDropped",
+    "不豁免 WALL_RESERVE 让路丢弃 wallReserveDropped（单独计量并要求 PERF-003 R5 裁决）",
+    "不豁免 pageErrors、collisionAudit embedded/sunken 等任何其它硬门",
+    "allowance 必须与该次真机实测精确相等；写入大额度或过期一律 fail-closed"
+  ],
+  "debt": {
+    "resolvedBy": "PERF-003 solids 分坊预算 / 扩容",
+    "target": "capDropped === 0",
+    "gateAfterFix": "probe-solids-cap.mjs 在无本豁免单的情况下 PASS(capNotHit)",
+    "action": "M2 收口时删除本文件并同步更新 artifacts/MANIFEST.json 与 README 披露口径",
+    "specBackgroundCorrection": "FIX-004 / PERF-003 背景证据称『触顶丢弃集中在人界晚期构件』，实测首次触顶在皇城·街巷铺装（人间中段），丢弃量 1323227 而非少量；须在 PERF-003 决策记录中更正"
+  }
+}

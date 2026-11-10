@@ -9,6 +9,8 @@ import { RNG } from '../core/rng';
 import { buildMountainLife, type MountainSite } from '../sky/flora';
 // R24 山上建筑室内陈设（主庙/厢房/廊庑/六件庙观/远景地标）：确定性 hash，零共享 RNG
 import { furnishMountainBuilding, mtInteriorSeed, type MtBuildingType } from '../city/mountainInteriors';
+// PERF-001 R2：地形顶点循环接入统一 8ms 时间预算 + 真实进度上报。
+import { getBakeBudget } from '../core/bakeBudget';
 
 // ============ 方圆百里山河：程序化地形高度场（五岳/天山/昆仑/沙漠/草原/森林/河湖） ============
 
@@ -2331,7 +2333,10 @@ function buildWaterMesh(g: WaterBuild, mat: THREE.Material, name: string): THREE
 /**
  * 山河地形。**异步分片**：361,201 个顶点（600² 网格，V-02 加密）逐个算高度与 biome 色，加上 1024² 画布的 3300 次椭圆填充，
  * 一次跑完要十余秒 —— 整段主线程阻塞，玩家在加载页上看到的就是「卡住」。
- * 现在每 CHUNK 个顶点让一帧、画布分两段，单次占用降到 ~0.2–0.4s。
+ * PERF-001 R2：原「每 5000 顶点让一帧」是固定块数，单块仍可能 ~0.8s，且从不报进度，
+ * 真机相位归因显示本阶段连续 14.75s 进度条完全静止（maxStallSeconds=19.85 的主因）。
+ * 现在每 64 顶点做一次 8ms 预算 tick + 按 i/pos.count 上报真实进度；await 点仍在循环开头，
+ * 顶点计算语句与调用顺序逐字不变（INV-01，由截图 SSIM 门与 tris 冻结门复核）。
  */
 export async function buildTerrain(scene: THREE.Scene, skyBotRef?: { c: THREE.Color }, b?: Baker, sg?: SignMesher, atlas?: SignAtlas): Promise<TerrainResult> {
   const T: Record<string, number> = {};
@@ -2347,10 +2352,15 @@ export async function buildTerrain(scene: THREE.Scene, skyBotRef?: { c: THREE.Co
   /** 粗网格顶点渲染高度（剔除三角形后仍按原网格取样，河床带外缘要跟它接平） */
   const gridH = new Float32Array(pos.count);
   const c = new THREE.Color();
-  // 2 万顶点/段实测单段仍要 ~2.2s（terrainHeight+biomeColor 每点都不轻），压到 5000（18 段）
-  const CHUNK = 5000;
+  // PERF-001 R2：探测粒度 64 顶点——按 8ms 累计同步预算让帧，而不是固定 5000 顶点。
+  // 画布循环仍用原来的 yieldFrame()（它只有 3300 次轻量填充，不是停滞主因）。
+  const PROBE_EVERY = 64;
   for (let i = 0; i < pos.count; i++) {
-    if (i > 0 && i % CHUNK === 0) await yieldFrame();
+    if (i > 0 && i % PROBE_EVERY === 0) {
+      await getBakeBudget().tick();
+      // 顶点循环约占本任务 85% 的耗时，其余留给贴图/法线/山体/生态。
+      getBakeBudget().reportFraction((i / pos.count) * 0.85);
+    }
     const x = pos.getX(i), z = pos.getZ(i);
     const h = terrainHeight(x, z);
     // 城区下沉 0.5m 防共面 z-fighting；汴河廊道（|z|<34, |x|<690）再压到 -3.6 让河床与水面露出
@@ -2364,6 +2374,8 @@ export async function buildTerrain(scene: THREE.Scene, skyBotRef?: { c: THREE.Co
     colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
   }
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  // PERF-001 R2：顶点循环收口，进度推到 85%，后续阶段由任务结束时的 pushProgress 统一收口。
+  getBakeBudget().reportFraction(0.85);
   mark('vertexLoop');
   // 河道豁口：与水面带相交的三角面整片剔除（103.3m 网格仍表达不了 90–150m 的河，留着就盖住水面）
   const hole = carveRiverHoles(geo);

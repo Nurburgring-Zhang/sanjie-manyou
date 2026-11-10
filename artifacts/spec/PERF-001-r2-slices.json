@@ -1,0 +1,221 @@
+{
+  "schema": "perf-001-r2-slices/v1",
+  "sampledBy": "scripts/probe-boot-memory.mjs",
+  "source": "window.__qingming.bakeBudget() -> src/core/bakeBudget.ts",
+  "url": "http://127.0.0.1:4187/",
+  "low": false,
+  "lowmemSim": false,
+  "budgetMs": 8,
+  "slices": {
+    "budgetMs": 8,
+    "slices": 128,
+    "totalSyncMs": 959.7,
+    "maxSpanMs": 1132.9,
+    "lastSpanMs": 8,
+    "ticks": 6040,
+    "externalSlices": 52,
+    "fractionReports": 216,
+    "stages": [
+      {
+        "stage": "开天辟地",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "山河·地形",
+        "slices": 67,
+        "syncMs": 488.7
+      },
+      {
+        "stage": "山河·旷野",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "山河·四方",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·街巷基层",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·街屋群",
+        "slices": 11,
+        "syncMs": 366
+      },
+      {
+        "stage": "筑城·街屋内饰",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·樊楼相国寺",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·虹桥人流",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "皇城·宫城",
+        "slices": 20,
+        "syncMs": 105
+      },
+      {
+        "stage": "皇城·里坊民居",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "皇城·街巷铺装",
+        "slices": 12,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·水关收口",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·水系支脉",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "装点市井",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "云起天宫",
+        "slices": 3,
+        "syncMs": 0
+      },
+      {
+        "stage": "仙界装点",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·宫阙群",
+        "slices": 5,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·三殿内饰",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·瑶池水榭",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·仙植鬼植",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "三界生态·草木禽鱼",
+        "slices": 2,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·天府附院",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥开辟",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·丰都街",
+        "slices": 3,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·阎罗殿",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·孟婆庄",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "三界演员贴地校正",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "营造司·体素台",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·奈何桥",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·三生石",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·望乡台",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "合拢万象",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "众生入场",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "豪杰登台",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "神佛就位",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "化身与交互",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "名牌图鉴",
+        "slices": 0,
+        "syncMs": 0
+      }
+    ]
+  },
+  "closingTimingsMs": {
+    "compactStatic": 295,
+    "buildCloudSeaView": 0,
+    "liftHeavenResiduals": 0,
+    "applyDensity": 0,
+    "cinema+applyQuality": 0
+  },
+  "maxStallSeconds": 20.82,
+  "bootSeconds": 61.51,
+  "note": "R2 只削峰、不降常驻；heap 门结论以 boot-memory-profile.json 的 gates 为准。"
+}

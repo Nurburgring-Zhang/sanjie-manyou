@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-08T19:26:10.724Z",
+  "at": "2026-11-09T21:08:53.563Z",
   "url": "http://127.0.0.1:4186/",
   "pageErrors": [],
   "steps": [
@@ -14,7 +14,14 @@
     "broken": 0,
     "skipped": 779144,
     "cells": 126475,
-    "buildMs": 9.1
+    "buildMs": 9.3,
+    "capDropped": 1323227,
+    "capFirstDropAt": 399000,
+    "capFirstDropStage": "皇城·街巷铺装",
+    "wallReserveDropped": 474386,
+    "wallReserveUsed": 79000,
+    "maxTotal": 399000,
+    "wallReserve": 320000
   },
   "palaceWallProbe": {
     "supported": true,
@@ -77,7 +84,7 @@
   "beforeDestruction": {
     "perf": {
       "calls": 355,
-      "tris": 77652695
+      "tris": 77653451
     },
     "totalTris": null,
     "destruction": {
@@ -96,6 +103,7 @@
       "physicsTrackedId": -1
     }
   },
+  "bakedTrisBefore": 70777271,
   "destructionHit": {
     "ok": true,
     "vertsDeformed": 26999,
@@ -104,7 +112,7 @@
     "plantsFelled": 0,
     "actorsHit": 0,
     "meshesTouched": 11,
-    "note": "R27 命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+    "note": "命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
   },
   "solidsAfterHit": {
     "total": 399000,
@@ -114,26 +122,33 @@
     "broken": 89,
     "skipped": 779144,
     "cells": 126475,
-    "buildMs": 9.1
+    "buildMs": 9.3,
+    "capDropped": 1323227,
+    "capFirstDropAt": 399000,
+    "capFirstDropStage": "皇城·街巷铺装",
+    "wallReserveDropped": 474386,
+    "wallReserveUsed": 79000,
+    "maxTotal": 399000,
+    "wallReserve": 320000
   },
   "collisionAfterHit": {
     "before": true,
     "after": false
   },
   "debrisYSeries": {
-    "samples": 13,
-    "distinct": 9,
+    "samples": 56,
+    "distinct": 12,
     "head": [
-      8.365,
-      9.174,
-      9.403,
-      9.188,
-      8.599,
-      7.778,
-      6.657,
-      6.892,
-      6.63,
-      6.63
+      8.714,
+      9.148,
+      9.148,
+      9.371,
+      9.371,
+      9.371,
+      9.371,
+      9.385,
+      9.385,
+      9.188
     ],
     "tail": [
       6.63,
@@ -163,7 +178,7 @@
           "plantsFelled": 0,
           "actorsHit": 0,
           "meshesTouched": 11,
-          "note": "R27 命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+          "note": "命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
         },
         "physicsTrace": [
           8.133,
@@ -396,14 +411,23 @@
           6.63,
           6.63,
           6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
           6.63
         ],
         "physicsDistinct": 141,
         "physicsTrackedId": 1
       },
       "perf": {
-        "calls": 223,
-        "tris": 77330285
+        "calls": 236,
+        "tris": 77336066
       },
       "chunkY": 6.63,
       "chunkVisible": true,
@@ -428,7 +452,7 @@
           "plantsFelled": 0,
           "actorsHit": 0,
           "meshesTouched": 11,
-          "note": "R27 命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+          "note": "命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
         },
         "physicsTrace": [
           8.133,
@@ -684,14 +708,24 @@
           6.63,
           6.63,
           6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
           6.63
         ],
         "physicsDistinct": 141,
         "physicsTrackedId": 1
       },
       "perf": {
-        "calls": 223,
-        "tris": 77330285
+        "calls": 236,
+        "tris": 77336066
       },
       "chunkY": 6.63,
       "chunkVisible": true,
@@ -718,7 +752,7 @@
           "plantsFelled": 0,
           "actorsHit": 0,
           "meshesTouched": 11,
-          "note": "R27 命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+          "note": "命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
         },
         "physicsTrace": [
           8.133,
@@ -1119,14 +1153,23 @@
           6.63,
           6.63,
           6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
+          6.63,
           6.63
         ],
         "physicsDistinct": 141,
         "physicsTrackedId": 1
       },
       "perf": {
-        "calls": 223,
-        "tris": 77330285
+        "calls": 236,
+        "tris": 77336066
       },
       "chunkY": 6.63,
       "chunkVisible": true,
@@ -1151,7 +1194,7 @@
           "plantsFelled": 0,
           "actorsHit": 0,
           "meshesTouched": 11,
-          "note": "R27 命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+          "note": "命中 source=test kind=auto 组=building 变形26999顶点/触11网格/碎块39；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
         },
         "physicsTrace": [
           8.133,
@@ -1759,8 +1802,8 @@
         "physicsTrackedId": 1
       },
       "perf": {
-        "calls": 223,
-        "tris": 77330225
+        "calls": 236,
+        "tris": 77336006
       },
       "chunkY": 6.63,
       "chunkVisible": true,
@@ -1771,7 +1814,7 @@
     "skipped": false,
     "targetId": 177,
     "action": "launched",
-    "impactUntil": 100186.39999999851,
+    "impactUntil": 83921,
     "yOff": 0,
     "before": {
       "embedded": 0,
@@ -1787,7 +1830,7 @@
       "destruction": {
         "events": 2,
         "chunks": 73,
-        "aliveChunks": 48,
+        "aliveChunks": 57,
         "vertsDeformed": 26999,
         "solidsBroken": 89,
         "plantsFelled": 0,
@@ -1802,7 +1845,7 @@
           "plantsFelled": 0,
           "actorsHit": 1,
           "meshesTouched": 0,
-          "note": "R27 命中 source=player kind=actor 组=actor 变形0顶点/触0网格/碎块34；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+          "note": "命中 source=player kind=actor 组=actor 变形0顶点/触0网格/碎块34；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
         },
         "physicsTrace": [
           1.219,
@@ -1936,95 +1979,6 @@
           0.697,
           0.697,
           0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
-          0.697,
           0.697
         ],
         "physicsDistinct": 75,
@@ -2035,13 +1989,13 @@
   "afterDestruction": {
     "perf": {
       "calls": 223,
-      "tris": 77330393
+      "tris": 77336257
     },
     "totalTris": null,
     "destruction": {
       "events": 2,
       "chunks": 73,
-      "aliveChunks": 48,
+      "aliveChunks": 56,
       "vertsDeformed": 26999,
       "solidsBroken": 89,
       "plantsFelled": 0,
@@ -2056,7 +2010,7 @@
         "plantsFelled": 0,
         "actorsHit": 1,
         "meshesTouched": 0,
-        "note": "R27 命中 source=player kind=actor 组=actor 变形0顶点/触0网格/碎块34；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+        "note": "命中 source=player kind=actor 组=actor 变形0顶点/触0网格/碎块34；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
       },
       "physicsTrace": [
         1.219,
@@ -2202,98 +2156,15 @@
         0.697,
         0.697,
         0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
-        0.697,
         0.697
       ],
       "physicsDistinct": 75,
       "physicsTrackedId": 40
     }
   },
+  "bakedTrisAfter": 70777271,
   "recycleWait": {
-    "ms": 9165
+    "ms": 10046
   },
   "idleAfterRecycle": {
     "destruction": {
@@ -2314,7 +2185,7 @@
         "plantsFelled": 0,
         "actorsHit": 1,
         "meshesTouched": 0,
-        "note": "R27 命中 source=player kind=actor 组=actor 变形0顶点/触0网格/碎块34；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+        "note": "命中 source=player kind=actor 组=actor 变形0顶点/触0网格/碎块34；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
       },
       "physicsTrace": [
         1.219,
@@ -2923,7 +2794,7 @@
     },
     "perf": {
       "calls": 222,
-      "tris": 77329817
+      "tris": 77335585
     },
     "totalTris": null,
     "chunkVisible": false,
@@ -2970,7 +2841,134 @@
       "plantsFelled": 0,
       "actorsHit": 0,
       "meshesTouched": 12,
-      "note": "R27 命中 source=test kind=auto 组=building 变形37917顶点/触12网格/碎块14；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+      "note": "命中 source=test kind=auto 组=building 变形37917顶点/触12网格/碎块14；命中 castShadow 网格：改顶点会重复进阴影 pass（如实标注，未改阴影设置）；顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）"
+    }
+  },
+  "hardenedGates": {
+    "gates": {
+      "capNotHit": {
+        "ok": true,
+        "gate": "PASS",
+        "mode": "waived",
+        "capDropped": 1323227,
+        "allowance": 1323227,
+        "reason": "PERF-003 完成前的临时技术债豁免。FIX-004 首次让 cap 触顶可见，真机实测 MAX_TOTAL=399000 在『皇城·街巷铺装』阶段即触顶（不是 spec 背景判断的人界晚期），此后 1323227 个构件无碰撞体；另有 474386 个非 wall 构件因 WALL_RESERVE 让路。丢弃主体为 plant 1211906 / floor 72635 / wall 24474 / roof 14212（见直方图 byKind）。要彻底清零需登记约 2196613 个人间构件，远超 PERF-003 背景里 1.2M 的估算，故本里程碑先以精确额度记债，由 PERF-003 依据实测直方图选型扩容或分坊预算后清零。",
+        "expiresAt": "2026-11-30"
+      },
+      "trisUnchanged": {
+        "ok": true,
+        "gate": "PASS",
+        "reason": "tris-freeze",
+        "trisBefore": 70777271,
+        "trisAfter": 70777271,
+        "baseline": 70777271
+      },
+      "debrisFell": {
+        "ok": true,
+        "gate": "PASS",
+        "reason": "debris-fell",
+        "steps": 600,
+        "samples": 75,
+        "maxDelta": 0,
+        "tail": [
+          0.697,
+          0.697,
+          0.697,
+          0.697,
+          0.697,
+          0.697,
+          0.697,
+          0.697,
+          0.697,
+          0.697
+        ]
+      },
+      "settleOk": {
+        "ok": true,
+        "gate": "PASS",
+        "reason": "settle-clean",
+        "checked": 4510,
+        "fixed": 163
+      }
+    },
+    "bools": {
+      "capNotHit": true,
+      "trisUnchanged": true,
+      "debrisFell": true,
+      "settleOk": true
+    },
+    "all": true,
+    "thresholds": {
+      "debrisMinSteps": 600,
+      "debrisMinDistinctSamples": 75,
+      "debrisTailN": 10,
+      "debrisTailMaxDelta": 0.01,
+      "settleFailedMustBe": 0
+    },
+    "baseline": {
+      "schema": "r27-tris-baseline/v1",
+      "source": "window.__qingming.world.assetAudit (BakerStats.groups[*].triangles 求和)",
+      "sampledBy": "scripts/r27_acceptance.mjs --init-baseline",
+      "url": "http://127.0.0.1:4186/",
+      "totalTris": 70777271,
+      "groups": {
+        "ash": {
+          "vertices": 9790758,
+          "triangles": 3263586
+        },
+        "ceramic": {
+          "vertices": 14160414,
+          "triangles": 4720138
+        },
+        "earth": {
+          "vertices": 3938934,
+          "triangles": 1312978
+        },
+        "fabric": {
+          "vertices": 2172462,
+          "triangles": 724154
+        },
+        "glow": {
+          "vertices": 5335848,
+          "triangles": 1778616
+        },
+        "ground": {
+          "vertices": 1088712,
+          "triangles": 362904
+        },
+        "lacquer": {
+          "vertices": 891264,
+          "triangles": 297088
+        },
+        "leaf": {
+          "vertices": 114316389,
+          "triangles": 38105463
+        },
+        "metal": {
+          "vertices": 3619206,
+          "triangles": 1206402
+        },
+        "roof": {
+          "vertices": 16607142,
+          "triangles": 5535714
+        },
+        "trunk": {
+          "vertices": 9800754,
+          "triangles": 3266918
+        },
+        "wall": {
+          "vertices": 2906670,
+          "triangles": 968890
+        },
+        "water": {
+          "vertices": 316404,
+          "triangles": 105468
+        },
+        "wood": {
+          "vertices": 27386856,
+          "triangles": 9128952
+        }
+      }
     }
   },
   "callsDelta": -133,
@@ -2987,12 +2985,14 @@
     "solidsBroken": true,
     "collisionOpenedAfterHit": true,
     "debrisPhysicsRan": true,
-    "debrisFell": true,
     "idleRecycled": true,
     "noPersistentDrawCallCost": true,
-    "trisUnchanged": true,
     "actorImpactRan": true,
     "noPageErrors": true,
+    "capNotHit": true,
+    "trisUnchanged": true,
+    "debrisFell": true,
+    "settleOk": true,
     "all": true
   }
 }

@@ -267,7 +267,8 @@ export class DestructionSystem {
 
     // ---- 6) 报告与累计 ----
     report.ok = true;
-    const base = `R27 命中 source=${h.source} kind=${kind} 组=${clsForChunk} 变形${report.vertsDeformed}顶点/触${report.meshesTouched}网格/碎块${report.chunks}`;
+    // FIX-007 R3(a)：去掉日志里的陈旧版本标签（版本身份只能由 package.json 派生）
+  const base = `命中 source=${h.source} kind=${kind} 组=${clsForChunk} 变形${report.vertsDeformed}顶点/触${report.meshesTouched}网格/碎块${report.chunks}`;
     // 上传策略如实标注：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges）。
     notes.push('顶点上传：DynamicDrawUsage + addUpdateRange 局部区间（r180 自动合并/清空 ranges，单次命中单 mesh 仅标一次）');
     report.note = base + '；' + notes.join('；');

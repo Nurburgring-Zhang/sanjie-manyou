@@ -2,6 +2,7 @@
   "name": "cyber-qingming",
   "private": true,
   "version": "1.2.0",
+  "release": "R29",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -10,7 +11,13 @@
     "preview": "vite preview --port 4173",
     "test": "vitest run",
     "electron": "electron electron/main.cjs",
-    "dist:win": "electron-builder --win portable --publish never"
+    "dist:win": "electron-builder --win portable --publish never",
+    "atoms:rebuild": "node scripts/build-atomic-catalog.mjs && node scripts/build-scene-attribution.mjs && node scripts/annotate-atom-impl.mjs",
+    "docs:gen": "node scripts/gen-docs.mjs",
+    "docs:check": "node scripts/gen-docs.mjs --check",
+    "qa:gate": "node scripts/qa/package-gate.mjs",
+    "qa:verify": "node scripts/qa/package-gate.mjs --verify-pack",
+    "check:naming": "node scripts/check-naming.mjs"
   },
   "build": {
     "appId": "cyber.qingming.neonbianjing",
@@ -26,7 +33,7 @@
       "target": [
         "portable"
       ],
-      "artifactName": "赛博上河-CyberQingming-${version}-${arch}.${ext}",
+      "artifactName": "CyberQingming-R29-${version}-${arch}.${ext}",
       "signAndEditExecutable": false,
       "sign": null
     },

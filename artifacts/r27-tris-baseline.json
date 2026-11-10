@@ -1,0 +1,65 @@
+{
+  "schema": "r27-tris-baseline/v1",
+  "source": "window.__qingming.world.assetAudit (BakerStats.groups[*].triangles 求和)",
+  "sampledBy": "scripts/r27_acceptance.mjs --init-baseline",
+  "url": "http://127.0.0.1:4186/",
+  "totalTris": 70777271,
+  "groups": {
+    "ash": {
+      "vertices": 9790758,
+      "triangles": 3263586
+    },
+    "ceramic": {
+      "vertices": 14160414,
+      "triangles": 4720138
+    },
+    "earth": {
+      "vertices": 3938934,
+      "triangles": 1312978
+    },
+    "fabric": {
+      "vertices": 2172462,
+      "triangles": 724154
+    },
+    "glow": {
+      "vertices": 5335848,
+      "triangles": 1778616
+    },
+    "ground": {
+      "vertices": 1088712,
+      "triangles": 362904
+    },
+    "lacquer": {
+      "vertices": 891264,
+      "triangles": 297088
+    },
+    "leaf": {
+      "vertices": 114316389,
+      "triangles": 38105463
+    },
+    "metal": {
+      "vertices": 3619206,
+      "triangles": 1206402
+    },
+    "roof": {
+      "vertices": 16607142,
+      "triangles": 5535714
+    },
+    "trunk": {
+      "vertices": 9800754,
+      "triangles": 3266918
+    },
+    "wall": {
+      "vertices": 2906670,
+      "triangles": 968890
+    },
+    "water": {
+      "vertices": 316404,
+      "triangles": 105468
+    },
+    "wood": {
+      "vertices": 27386856,
+      "triangles": 9128952
+    }
+  }
+}

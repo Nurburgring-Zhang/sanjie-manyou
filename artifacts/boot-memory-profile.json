@@ -1,0 +1,531 @@
+{
+  "schema": "boot-memory-profile/v1",
+  "sampledBy": "scripts/probe-boot-memory.mjs",
+  "url": "http://127.0.0.1:4187/",
+  "runs": 1,
+  "low": false,
+  "lowmemSim": false,
+  "limits": {
+    "heapPeakMB": 1536,
+    "bootSeconds": 120,
+    "settledMB": 600,
+    "minSamples": 3,
+    "maxProgressStallSeconds": 4
+  },
+  "medianBootSeconds": 61.51,
+  "bootSeconds": [
+    61.51
+  ],
+  "heapPeakMB": 6721.3,
+  "settledMB": 5791.9,
+  "maxStallSeconds": 20.82,
+  "pageErrors": [],
+  "top3": [
+    {
+      "stage": "山河·地形",
+      "samples": 26,
+      "firstT": 1008,
+      "lastT": 9223,
+      "entryHeapMB": 97.4,
+      "maxHeapMB": 1048.8,
+      "deltaMB": 951.4,
+      "durationMs": 8215
+    },
+    {
+      "stage": "flush@山河·地形",
+      "samples": 4,
+      "firstT": 9907,
+      "lastT": 10651,
+      "entryHeapMB": 1208.9,
+      "maxHeapMB": 1779.4,
+      "deltaMB": 570.5,
+      "durationMs": 744
+    },
+    {
+      "stage": "flush@皇城·宫城",
+      "samples": 4,
+      "firstT": 13828,
+      "lastT": 14409,
+      "entryHeapMB": 2495.5,
+      "maxHeapMB": 2957.7,
+      "deltaMB": 462.2,
+      "durationMs": 581
+    }
+  ],
+  "stages": [
+    {
+      "stage": "山河·地形",
+      "samples": 26,
+      "firstT": 1008,
+      "lastT": 9223,
+      "entryHeapMB": 97.4,
+      "maxHeapMB": 1048.8,
+      "deltaMB": 951.4,
+      "durationMs": 8215
+    },
+    {
+      "stage": "flush@山河·地形",
+      "samples": 4,
+      "firstT": 9907,
+      "lastT": 10651,
+      "entryHeapMB": 1208.9,
+      "maxHeapMB": 1779.4,
+      "deltaMB": 570.5,
+      "durationMs": 744
+    },
+    {
+      "stage": "flush@皇城·宫城",
+      "samples": 4,
+      "firstT": 13828,
+      "lastT": 14409,
+      "entryHeapMB": 2495.5,
+      "maxHeapMB": 2957.7,
+      "deltaMB": 462.2,
+      "durationMs": 581
+    },
+    {
+      "stage": "flush@皇城·街巷铺装",
+      "samples": 7,
+      "firstT": 30780,
+      "lastT": 32814,
+      "entryHeapMB": 6402.5,
+      "maxHeapMB": 6721.3,
+      "deltaMB": 318.8,
+      "durationMs": 2034
+    },
+    {
+      "stage": "flush@云海·宫阙群",
+      "samples": 2,
+      "firstT": 35027,
+      "lastT": 35204,
+      "entryHeapMB": 5776.9,
+      "maxHeapMB": 5856.5,
+      "deltaMB": 79.6,
+      "durationMs": 177
+    },
+    {
+      "stage": "done",
+      "samples": 3,
+      "firstT": 59054,
+      "lastT": 61673,
+      "entryHeapMB": 5760,
+      "maxHeapMB": 5825,
+      "deltaMB": 65,
+      "durationMs": 2619
+    },
+    {
+      "stage": "云海·宫阙群",
+      "samples": 2,
+      "firstT": 33415,
+      "lastT": 33611,
+      "entryHeapMB": 6225.5,
+      "maxHeapMB": 6254.3,
+      "deltaMB": 28.8,
+      "durationMs": 196
+    },
+    {
+      "stage": "post@开天辟地",
+      "samples": 1,
+      "firstT": 912,
+      "lastT": 912,
+      "entryHeapMB": 53.6,
+      "maxHeapMB": 53.6,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "筑城·街屋群",
+      "samples": 1,
+      "firstT": 11033,
+      "lastT": 11033,
+      "entryHeapMB": 1989.6,
+      "maxHeapMB": 1989.6,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "flush@筑城·街屋群",
+      "samples": 2,
+      "firstT": 11465,
+      "lastT": 11604,
+      "entryHeapMB": 2500.8,
+      "maxHeapMB": 2500.8,
+      "deltaMB": 0,
+      "durationMs": 139
+    },
+    {
+      "stage": "post@筑城·街屋群",
+      "samples": 1,
+      "firstT": 11801,
+      "lastT": 11801,
+      "entryHeapMB": 1442.6,
+      "maxHeapMB": 1442.6,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "皇城·宫城",
+      "samples": 1,
+      "firstT": 12043,
+      "lastT": 12043,
+      "entryHeapMB": 1561.6,
+      "maxHeapMB": 1561.6,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "post@皇城·里坊民居",
+      "samples": 1,
+      "firstT": 16110,
+      "lastT": 16110,
+      "entryHeapMB": 2074.7,
+      "maxHeapMB": 2074.7,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "皇城·街巷铺装",
+      "samples": 1,
+      "firstT": 17091,
+      "lastT": 17091,
+      "entryHeapMB": 3313.9,
+      "maxHeapMB": 3313.9,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "post@装点市井",
+      "samples": 1,
+      "firstT": 33048,
+      "lastT": 33048,
+      "entryHeapMB": 6097.5,
+      "maxHeapMB": 6097.5,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "flush@云起天宫",
+      "samples": 1,
+      "firstT": 33308,
+      "lastT": 33308,
+      "entryHeapMB": 6199.5,
+      "maxHeapMB": 6199.5,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "flush@云海·三殿内饰",
+      "samples": 1,
+      "firstT": 35449,
+      "lastT": 35449,
+      "entryHeapMB": 5895.3,
+      "maxHeapMB": 5895.3,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "flush@三界生态·草木禽鱼",
+      "samples": 1,
+      "firstT": 37244,
+      "lastT": 37244,
+      "entryHeapMB": 6043.8,
+      "maxHeapMB": 6043.8,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "post@幽冥开辟",
+      "samples": 1,
+      "firstT": 37426,
+      "lastT": 37426,
+      "entryHeapMB": 6102.3,
+      "maxHeapMB": 6102.3,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "flush@幽冥·丰都街",
+      "samples": 1,
+      "firstT": 37638,
+      "lastT": 37638,
+      "entryHeapMB": 6294.3,
+      "maxHeapMB": 6294.3,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "post@合拢万象",
+      "samples": 1,
+      "firstT": 37814,
+      "lastT": 37814,
+      "entryHeapMB": 6365.1,
+      "maxHeapMB": 6365.1,
+      "deltaMB": 0,
+      "durationMs": 0
+    },
+    {
+      "stage": "compact",
+      "samples": 3,
+      "firstT": 38164,
+      "lastT": 38416,
+      "entryHeapMB": 6359.9,
+      "maxHeapMB": 6359.9,
+      "deltaMB": 0,
+      "durationMs": 252
+    }
+  ],
+  "stageCount": 22,
+  "sampleCount": 67,
+  "gates": [
+    {
+      "ok": false,
+      "gate": "FAIL",
+      "reason": "heap-peak-over-budget",
+      "heapPeakMB": 6721.3
+    }
+  ],
+  "PASS": {
+    "all": false
+  },
+  "bakeStageCount": 27,
+  "bakeTotal": {
+    "vertices": 212331813,
+    "triangles": 70777271,
+    "bytes": 5756462856
+  },
+  "bakeByRealm": {
+    "human": {
+      "tasks": 12,
+      "vertices": 185445675,
+      "triangles": 61815225,
+      "bytes": 4996377384
+    },
+    "heaven": {
+      "tasks": 6,
+      "vertices": 12812664,
+      "triangles": 4270888,
+      "bytes": 397986000
+    },
+    "underworld": {
+      "tasks": 7,
+      "vertices": 3276858,
+      "triangles": 1092286,
+      "bytes": 102694512
+    },
+    "shared": {
+      "tasks": 2,
+      "vertices": 10796616,
+      "triangles": 3598872,
+      "bytes": 259404960
+    }
+  },
+  "perfMode": "normal",
+  "bootPhase": "ready",
+  "bakeBudget": {
+    "budgetMs": 8,
+    "slices": 128,
+    "totalSyncMs": 959.7,
+    "maxSpanMs": 1132.9,
+    "lastSpanMs": 8,
+    "ticks": 6040,
+    "externalSlices": 52,
+    "fractionReports": 216,
+    "stages": [
+      {
+        "stage": "开天辟地",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "山河·地形",
+        "slices": 67,
+        "syncMs": 488.7
+      },
+      {
+        "stage": "山河·旷野",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "山河·四方",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·街巷基层",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·街屋群",
+        "slices": 11,
+        "syncMs": 366
+      },
+      {
+        "stage": "筑城·街屋内饰",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·樊楼相国寺",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·虹桥人流",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "皇城·宫城",
+        "slices": 20,
+        "syncMs": 105
+      },
+      {
+        "stage": "皇城·里坊民居",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "皇城·街巷铺装",
+        "slices": 12,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·水关收口",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "筑城·水系支脉",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "装点市井",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "云起天宫",
+        "slices": 3,
+        "syncMs": 0
+      },
+      {
+        "stage": "仙界装点",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·宫阙群",
+        "slices": 5,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·三殿内饰",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·瑶池水榭",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·仙植鬼植",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "三界生态·草木禽鱼",
+        "slices": 2,
+        "syncMs": 0
+      },
+      {
+        "stage": "云海·天府附院",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥开辟",
+        "slices": 1,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·丰都街",
+        "slices": 3,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·阎罗殿",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·孟婆庄",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "三界演员贴地校正",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "营造司·体素台",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·奈何桥",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·三生石",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "幽冥·望乡台",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "合拢万象",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "众生入场",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "豪杰登台",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "神佛就位",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "化身与交互",
+        "slices": 0,
+        "syncMs": 0
+      },
+      {
+        "stage": "名牌图鉴",
+        "slices": 0,
+        "syncMs": 0
+      }
+    ]
+  },
+  "qa008": {
+    "ok": null,
+    "gate": "SKIPPED",
+    "reason": "QA-008 断言仅在 --lowmem-sim 工况执行"
+  }
+}

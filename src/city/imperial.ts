@@ -12,6 +12,8 @@ import { buildRoomLiving } from './roomLiving';
 import { buildTradeInterior, pickTrade } from './interiors';
 // R24b：宫苑草毯也换成任意不规则自由轮廓（不再是一格格圆盘）
 import { freeBlobGeometries, putFreeBlob } from './freeBlob';
+// PERF-001 R2：让帧判定统一走 8ms 时间预算，替换本文件原来的「每 3 坊让一帧」。
+import { getBakeBudget } from '../core/bakeBudget';
 
 // ============ 十公里帝都：城墙十二门/里坊百格/宫城皇城/东西两市/御街 ============
 export const WALL = 5000;
@@ -611,11 +613,13 @@ function cityGate(b: Baker, gx: number, gz: number, ry: number, along: boolean, 
   }
 }
 
-const yieldFrameI = (): Promise<void> => new Promise((r) => { if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => r()); else setTimeout(r, 0); });
+// PERF-001 R2：原 `yieldFrameI` 固定「每 3 坊让一帧」已删除，改由
+// core/bakeBudget.ts 按 8ms 累计同步预算统一裁决；await 点位置不变，rng 消耗序不变。
 
 /**
- * 皇城 + 里坊。**异步分片**：城的构筑（墙/门/宫城）之后是逐坊民居循环，
- * 一坊 ~25 户 × 院墙/正房/厢房/窗光，整段实测 1.7s 阻塞。现在每 3 坊让一帧。
+ * 皇城 + 里坊。**异步时间预算分片**：城的构筑（墙/门/宫城）之后是逐坊民居循环，
+ * 一坊 ~25 户 × 院墙/正房/厢房/窗光，整段实测 1.7s 阻塞。现在按 8ms 预算让帧，
+ * 单坊再重也不会把主线程一次占满。
  */
 export async function buildImperialCity(b: Baker, sg: SignMesher, atlas: SignAtlas, rng: RNG): Promise<void> {
   const W = WALL;
@@ -724,9 +728,9 @@ export async function buildImperialCity(b: Baker, sg: SignMesher, atlas: SignAtl
   const reserved = (x: number, z: number): boolean =>
     Math.abs(x) < 950 || (z < -3050 && Math.abs(x) < 1500) || (Math.abs(x - 2800) < 700 && Math.abs(z - 900) < 700) || (Math.abs(x + 2800) < 700 && Math.abs(z - 900) < 700);
   let wardIdx = 0;
-  let wardNo = 0;
   for (const cell of cells) {
-    if (wardNo++ % 3 === 0) await yieldFrameI();
+    // PERF-001 R2：仍在原 await 点，只把「固定坊数」换成「8ms 累计预算」。
+    await getBakeBudget().tick();
     const { cx, cz, half } = cell;
     if (reserved(cx, cz)) continue;
     // 坊墙与地坪已移除（空中俯视呈网格线伪影；城市肌理由街道+建筑自然构成）
